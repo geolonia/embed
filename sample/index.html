@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>Mapbox GL Lazy Loading</title>
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    .place-holder {
+      height: 2000px;
+    }
+
+    .map {
+      width: 500px;
+      height: 500px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <main>
+    <div>
+      <div class="place-holder"></div>
+
+
+      <div id="tilecloud-map" class="map"></div>
+
+      <script id="tilecloud-script" src="./main.js?version=1.2.3&apiKey=anonymous" data-container-id="tilecloud-map" data-api-key="anonymous"></script>
+  </main>
+</body>
+
+</html>
