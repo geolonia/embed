@@ -1,12 +1,18 @@
 import mapboxgl from 'mapbox-gl'
 import { loadCssOnce } from './lib/css-loader'
 import { fetchStyle } from './lib/requests'
-import { isInView } from './lib/check-element-bounds'
-import defaultOptions from './default-options'
+import { isDisplayed } from './lib/bound'
 import defaultControls from './default-controls'
-import parseParams from './parse-params'
 
-const { containerId, apiKey } = parseParams()
+const MAP_TYPES = {
+  BASIC: 'tilecloud-basic',
+}
+
+const STYLE_URL = {
+  [MAP_TYPES.BASIC]: 'https://tilecloud.github.io/tiny-tileserver/style.json',
+}
+
+const API_KEY = 'anonymous'
 
 /**
  * stores map container ids already rendered to prevent run twice
@@ -14,57 +20,68 @@ const { containerId, apiKey } = parseParams()
  */
 const onceRendered = {}
 
-const {
-  mapOptions: defaultMapOptions,
-  lazyOptions: defaultLazyOptions,
-} = defaultOptions
+const mapCounter = {}
+
+const basicMapContainers = Array.prototype.slice.call(
+  document.getElementsByClassName(MAP_TYPES.BASIC),
+)
+
+// provide unique ids
+basicMapContainers.forEach(element => {
+  if (!element.id) {
+    mapCounter[MAP_TYPES.BASIC]
+      ? mapCounter[MAP_TYPES.BASIC]++
+      : (mapCounter[MAP_TYPES.BASIC] = 0)
+    element.id = `__${MAP_TYPES.BASIC}_${mapCounter[MAP_TYPES.BASIC]}`
+  }
+})
 
 /**
  * render map if it in users view
- * @param  {object|string} arg           map options
- * @param  {string}        apiKey        tilecloud api key
  * @param  {object}        [lazyOpts={}] lazy rendering options
  * @return {Promise}                     Promise for render started
  */
-export const render = (arg, apiKey, lazyOpts = {}) => {
-  let mapOpts
-
-  if (typeof arg === 'string') {
-    mapOpts = { container: arg }
-  } else if (typeof arg === 'object' && typeof arg.container === 'string') {
-    mapOpts = arg
-  } else {
-    throw new Error('Invalid argument: ' + JSON.stringify(arg))
-  }
-
+export const preRender = (containers, mapType, apiKey) => {
   // load once
   loadCssOnce()
 
-  const mapOptions = { ...defaultMapOptions(apiKey), ...mapOpts }
-  const lazyOptions = { ...defaultLazyOptions, ...lazyOpts }
+  const mapOptionsBase = {
+    style: `${STYLE_URL[mapType]}?apiKey=${apiKey}`,
+    attributionControl: true,
+    localIdeographFontFamily: 'sans-serif',
+  }
 
-  const elementId = mapOptions.container
-
-  return fetchStyle(mapOptions.style).then(
+  return fetchStyle(mapOptionsBase.style).then(
     () =>
       new Promise((resolve, reject) => {
         // define scroll handler
         const onScrollEventHandler = () => {
-          if (!onceRendered[elementId] && isInView(elementId, lazyOptions)) {
-            onceRendered[elementId] = true
-
-            let map
-            try {
-              map = new mapboxgl.Map(mapOptions)
-              defaultControls.forEach(map.addControl)
-            } catch (e) {
-              reject(e)
-            } finally {
-              // handler should fire once
-              window.removeEventListener('scroll', onScrollEventHandler)
-              resolve(map)
+          containers.forEach(container => {
+            const elementId = container.id
+            const { lat, lng, zoom } = container.dataset
+            console.log(lat, lng, zoom)
+            if (
+              !onceRendered[elementId] &&
+              isDisplayed(container, { buffer: 100 })
+            ) {
+              onceRendered[elementId] = true
+              const mapOptions = {
+                ...mapOptionsBase,
+                container,
+              }
+              let map
+              try {
+                map = new mapboxgl.Map(mapOptions)
+                defaultControls.forEach(control => map.addControl(control))
+              } catch (e) {
+                reject(e)
+              } finally {
+                // handler should fire once
+                window.removeEventListener('scroll', onScrollEventHandler)
+                resolve(map)
+              }
             }
-          }
+          })
         }
 
         // enable handler
@@ -77,4 +94,4 @@ export const render = (arg, apiKey, lazyOpts = {}) => {
 }
 
 // GO!
-render(containerId, apiKey)
+preRender(basicMapContainers, MAP_TYPES.BASIC, API_KEY)

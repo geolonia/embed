@@ -1,10 +1,15 @@
-export const isInView = (elementId, { buffer }) => {
+export const isDisplayed = (element, options = {}) => {
+  const {
+    window = global.window,
+    document = global.document,
+    buffer = 100,
+  } = options
+
   const documentTop = window.pageYOffset || document.documentElement.scrollTop
   const documentLeft = window.pageXOffset || document.documentElement.scrollLeft
   const documentBottom = documentTop + window.innerHeight
   const documentRight = documentLeft + window.innerWidth
 
-  const element = document.getElementById(elementId)
   const rect = element.getBoundingClientRect()
   const elementTop = documentTop + rect.top + buffer
   const elementLeft = documentLeft + rect.left + buffer

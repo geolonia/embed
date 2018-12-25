@@ -16,7 +16,7 @@
       height: 2000px;
     }
 
-    .map {
+    .tilecloud-basic {
       width: 500px;
       height: 500px;
     }
@@ -24,15 +24,11 @@
 </head>
 
 <body>
-
   <main>
-    <div>
-      <div class="place-holder"></div>
 
-
-      <div id="tilecloud-map" class="map"></div>
-
-      <script id="tilecloud-script" src="./main.js?version=1.2.3&apiKey=anonymous" data-container-id="tilecloud-map" data-api-key="anonymous"></script>
+    <div class="place-holder"></div>
+    <div class="tilecloud-basic" data-lat="135.0" data-lng="35.0" data-zoom="12"></div>
+    <script src="./tilecloud.js"></script>
   </main>
 </body>
 

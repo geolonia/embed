@@ -4,10 +4,12 @@
   "description": "tilecloud API",
   "main": "dist/index.js",
   "scripts": {
+    "start": "webpack-dev-server --mode development --config ./sample/webpack.config.js",
     "postinstall": "./bin/prebuild.sh",
-    "build": "[ -d ./dist ] && rm -rf ./dist ; webpack -p && cp ./dist/main.js ./sample/",
+    "build": "[ -d ./dist ] && rm -rf ./dist ; webpack -p",
     "format": "prettier-eslint \"./src/**/*.js\" --write",
-    "test": "eslint \"src/**/*.js\""
+    "lint": "eslint \"src/**/*.js\"",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -22,13 +24,16 @@
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
     "@babel/preset-env": "^7.1.0",
+    "@babel/register": "^7.0.0",
     "babel-loader": "^8.0.4",
     "babel-polyfill": "^6.26.0",
     "eslint": "^5.3.0",
+    "mocha": "^5.2.0",
     "prettier-eslint": "^8.8.2",
     "prettier-eslint-cli": "^4.7.1",
     "webpack": "^4.20.2",
-    "webpack-cli": "^3.1.1"
+    "webpack-cli": "^3.1.1",
+    "webpack-dev-server": "^3.1.14"
   },
   "dependencies": {
     "@tilecloud/mbgl-tilecloud-control": "^0.3.5",

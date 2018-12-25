@@ -1,60 +1,47 @@
 # tilecloud.js
 
-JS API for Tilecloud.js.
+JS API for Tilecloud service.
 
-## development
+## features
 
-### Run demo locally
-
-```shell
-$ cd sandbox-mapbox-Lazyload
-$ yarn # or npm install
-$ npm start
-```
-
-## build
-
-```shell
-$ npm run build # see ./dist
-```
+- webGL vector map rendering
+- simple configuration
+- map lazy rendering
 
 ## usage
 
 ```html
 <!DOCTYPE html>
 <html>
-<body>
-  <div id="map" />
-</body>
+  <body>
+    <div
+      class="tilecloud-basic"
+      data-lat="35.681"
+      data-lng="139.767"
+      data-zoom="12"
+    ></div>
+    <script src="path/to/tilecloud.js"></script>
+  </body>
 </html>
 ```
 
-```javascript
-import { render } from '@kamataryo/sandbox-mapbox-lazyload'
+## development
 
-render('map').then(map => {
-    console.log('rendering started!')
-    map.addLayer()
-})
-
-// more options
-render(mapOptions, lazyOptions).then(map => { ... })
+```shell
+$ git clone git@github.com:tilecloud/tilecloud.js.git
+$ cd tilecloud.js
+$ yarn # or npm install
 ```
 
-```javascript
-// mapOptions
-{
-  // mapbox gl option https://www.mapbox.com/mapbox-gl-js/api/#map
-  container: 'map' // id
-  style: 'https://example.com/style.json',
-  attributionControl: true,
-  localIdeographFontFamily: 'sans-serif',
-  ...
-}
+## Run demo locally
 
-// lazyOptions
-{
-  buffer: 100, // map box size extending. The larger, the earlier your map rendering starts.
-}
-)
+```shell
+$ npm start
+```
+
+## build library
+
+```shell
+$ npm run build
+$ # see ./dist
 ```
