@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import parseApiKey from './lib/parse-api-key'
 import preRender from './lib/pre-render'
 import { MAP_TYPES, STYLE_URL } from './configure'
