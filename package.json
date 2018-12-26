@@ -10,7 +10,8 @@
     "build:tilecloud": "webpack -p --entry ./src/tilecloud.js --output-filename tilecloud.js",
     "format": "prettier-eslint \"./src/**/*.js\" --write",
     "lint": "eslint \"src/**/*.js\"",
-    "test": "mocha"
+    "test": "mocha",
+    "deploy": "npm run build:tilecloud && cp ./dist/tilecloud.js ./sample/tilecloud.js && gh-pages --dist ./sample"
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,7 @@
     "babel-loader": "^8.0.4",
     "babel-polyfill": "^6.26.0",
     "eslint": "^5.3.0",
+    "gh-pages": "^2.0.1",
     "mocha": "^5.2.0",
     "prettier-eslint": "^8.8.2",
     "prettier-eslint-cli": "^4.7.1",
