@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server --mode development --config ./sample/webpack.config.js",
     "postinstall": "./bin/prebuild.sh",
-    "build": "[ -d ./dist ] && rm -rf ./dist ; webpack -p",
+    "build": "[ -d ./dist ] && rm -rf ./dist ; webpack -p --output-filename tilecloud.js",
     "format": "prettier-eslint \"./src/**/*.js\" --write",
     "lint": "eslint \"src/**/*.js\"",
     "test": "mocha"
@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "@tilecloud/mbgl-tilecloud-control": "^0.3.5",
-    "mapbox-gl": "^0.52.0-beta.2"
+    "mapbox-gl": "^0.52.0-beta.2",
+    "url-parse": "^1.4.4"
   }
 }
