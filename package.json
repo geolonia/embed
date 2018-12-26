@@ -2,11 +2,12 @@
   "name": "tilecloud.js",
   "version": "0.0.0",
   "description": "tilecloud API",
-  "main": "dist/index.js",
+  "main": "lib/index.js",
   "scripts": {
     "start": "webpack-dev-server --mode development --config ./sample/webpack.config.js",
     "postinstall": "./bin/prebuild.sh",
-    "build": "[ -d ./dist ] && rm -rf ./dist ; webpack -p --output-filename tilecloud.js",
+    "build": "babel ./src --out-dir lib --ignore ./src/tilecloud.js",
+    "build:tilecloud": "webpack -p --entry ./src/tilecloud.js --output-filename tilecloud.js",
     "format": "prettier-eslint \"./src/**/*.js\" --write",
     "lint": "eslint \"src/**/*.js\"",
     "test": "mocha"

@@ -8,20 +8,22 @@ const onceRendered = {}
 
 /**
  * render map if it in users view
- * @param  {object}        [lazyOpts={}] lazy rendering options
- * @return {Promise}                     Promise for render started
+ * @param  {HTMLElement|HTMLElement[]} containerArg rendering container
+ * @return {Promise}                              Promise to all all map has started rendering
  */
-export const preRender = (containers, styleUrl, apiKey) => {
+export const preRender = (containerArg, styleUrl) => {
   // load once
   loadCssOnce()
 
   const mapOptionsBase = {
-    style: `${styleUrl}?apiKey=${apiKey}`,
+    style: styleUrl,
     attributionControl: true,
     localIdeographFontFamily: 'sans-serif',
     hash: true,
   }
 
+  // normalize
+  const containers = Array.isArray(containerArg) ? containerArg : [containerArg]
   return Promise.all(
     containers.map(container => {
       return new Promise((resolve, reject) => {

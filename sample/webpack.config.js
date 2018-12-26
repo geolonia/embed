@@ -1,5 +1,5 @@
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/tilecloud.js',
   output: {
     path: __dirname,
     filename: 'tilecloud.js',

@@ -10,6 +10,10 @@ JS API for Tilecloud service.
 
 ## usage
 
+### zero config
+
+Specify `tilecloud-basic` class for target elements.
+
 ```html
 <!DOCTYPE html>
 <html>
@@ -20,9 +24,20 @@ JS API for Tilecloud service.
       data-lng="139.767"
       data-zoom="12"
     ></div>
-    <script src="path/to/tilecloud.js"></script>
+    <script src="path/to/tilecloud.js?apiKey=xxx"></script>
   </body>
 </html>
+```
+
+### JS API
+
+```javascript
+import { preRender } from 'tilecloud.js'
+
+const element = getElementById('map')
+const styleUrl = 'https://tilecloud.io/path/to/style.json&apiKey=xxx'
+
+preRender(element, styleUrl)
 ```
 
 ## development
@@ -33,15 +48,21 @@ $ cd tilecloud.js
 $ yarn # or npm install
 ```
 
-## Run demo locally
+### Run demo locally
 
 ```shell
 $ npm start
 ```
 
-## build library
+### build library
 
 ```shell
 $ npm run build
 $ # see ./dist
+```
+
+### build tilecloud scripts
+
+```shell
+$ npm run build:tilecloud
 ```
