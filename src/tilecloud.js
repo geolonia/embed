@@ -1,7 +1,7 @@
 import '@babel/polyfill'
 import parseApiKey from './lib/parse-api-key'
 import preRender from './lib/pre-render'
-import { MAP_TYPES, STYLE_URL } from './configure'
+import { MAP_TYPES, generateStyles } from './configure'
 
 const basicMapContainers = Array.prototype.slice.call(
   document.getElementsByClassName(MAP_TYPES.BASIC) || [],
@@ -14,9 +14,8 @@ basicMapContainers.forEach((element, i) => {
   }
 })
 
-const styleUrl = STYLE_URL[MAP_TYPES.BASIC]
-
 const API_KEY = parseApiKey()
+const style = generateStyles[MAP_TYPES.BASIC](API_KEY)
 
 // GO!
-preRender(basicMapContainers, `${styleUrl}?apiKey=${API_KEY}`)
+preRender(basicMapContainers, style)

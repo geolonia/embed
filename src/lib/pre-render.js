@@ -8,11 +8,12 @@ const onceRendered = {}
 /**
  * render map if it in users view
  * @param  {HTMLElement|HTMLElement[]} containerArg rendering container
- * @return {Promise}                              Promise to all all map has started rendering
+ * @param  {string|object}             style        style
+ * @return {Promise}                                Promise to all all map has started rendering
  */
-export const preRender = (containerArg, styleUrl) => {
+export const preRender = (containerArg, style) => {
   const mapOptionsBase = {
-    style: styleUrl,
+    style,
     attributionControl: true,
     localIdeographFontFamily: 'sans-serif',
     hash: true,
