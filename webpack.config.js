@@ -1,10 +1,11 @@
+const path = require('path')
+
 module.exports = {
   entry: './src/tilecloud.js',
   output: {
-    path: __dirname,
+    path: path.join(__dirname, 'dist'),
     filename: 'tilecloud.js',
   },
-  devtool: 'inline-source-map',
 
   module: {
     rules: [
@@ -20,13 +21,5 @@ module.exports = {
         use: ['style-loader', 'css-loader'],
       },
     ],
-  },
-
-  devServer: {
-    open: true,
-    openPage: 'index.html',
-    contentBase: __dirname,
-    watchContentBase: true,
-    port: 3000,
   },
 }

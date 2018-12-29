@@ -1,5 +1,4 @@
 import mapboxgl from 'mapbox-gl'
-import { loadCssOnce } from './load-css'
 import { isDisplayed } from './bound'
 import defaultControls from './default-controls'
 
@@ -12,9 +11,6 @@ const onceRendered = {}
  * @return {Promise}                              Promise to all all map has started rendering
  */
 export const preRender = (containerArg, styleUrl) => {
-  // load once
-  loadCssOnce()
-
   const mapOptionsBase = {
     style: styleUrl,
     attributionControl: true,

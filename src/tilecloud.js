@@ -1,10 +1,10 @@
-import 'babel-polyfill'
+import '@babel/polyfill'
 import parseApiKey from './lib/parse-api-key'
 import preRender from './lib/pre-render'
 import { MAP_TYPES, STYLE_URL } from './configure'
 
 const basicMapContainers = Array.prototype.slice.call(
-  document.getElementsByClassName(MAP_TYPES.BASIC),
+  document.getElementsByClassName(MAP_TYPES.BASIC) || [],
 )
 
 // provide unique ids
