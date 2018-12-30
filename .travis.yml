@@ -11,6 +11,10 @@ script:
   - npm run lint
   - npm test
 
+after_success:
+  - npm run build
+  - npm run build:tilecloud
+
 deploy:
   provider: script
   script: 'echo "//registry.npmjs.org/:_authToken=${API_TOKEN}" > $HOME/.npmrc && npm publish --access=public'
