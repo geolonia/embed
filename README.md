@@ -1,4 +1,7 @@
-# tilecloud.js
+# @tilecloud/js
+
+[![Build Status](https://travis-ci.org/tilecloud/tilecloud.js.svg?branch=master)](https://travis-ci.org/tilecloud/tilecloud.js)
+[![npm version](https://badge.fury.io/js/%40tilecloud%2Fjs.svg)](https://badge.fury.io/js/%40tilecloud%2Fjs)
 
 JS API for Tilecloud service.
 
