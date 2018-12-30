@@ -1,4 +1,5 @@
 import { isDisplayed } from './bound'
+import assert from 'assert'
 
 const mockDocument = {
   documentElement: {
@@ -27,6 +28,6 @@ describe('check an element is in display', () => {
       document: mockDocument,
       buffer: 0,
     })
-    console.log(result)
+    assert.equal(result, true)
   })
 })
