@@ -1,7 +1,12 @@
 import urlParse from 'url-parse'
 import qs from 'querystring'
 
-const allowedHosts = ['localhost', 'tilecloud.io', 'github.tilecloud.io']
+const allowedHosts = [
+  '127.0.0.1',
+  'localhost',
+  'tilecloud.io',
+  'github.tilecloud.io',
+]
 
 export default () => {
   const scripts = document.getElementsByTagName('script')
