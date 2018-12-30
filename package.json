@@ -1,6 +1,6 @@
 {
   "name": "@tilecloud/js",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "tilecloud API",
   "main": "lib/index.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "test": "mocha",
     "deploy": "npm run build:tilecloud && cp ./dist/tilecloud.js ./sample/tilecloud.js && gh-pages --dist ./sample"
   },
-  "author":"kamataryo",
+  "author": "kamataryo",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tilecloud/tilecloud.js.git"
