@@ -1,6 +1,6 @@
 {
   "name": "@tilecloud/js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "tilecloud API",
   "main": "lib/index.js",
   "scripts": {
