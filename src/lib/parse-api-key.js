@@ -6,6 +6,7 @@ const allowedHosts = [
   'localhost',
   'tilecloud.io',
   'github.tilecloud.io',
+  'api.tilecloud.io',
 ]
 
 export default () => {
