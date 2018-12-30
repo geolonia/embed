@@ -7,6 +7,10 @@ cache:
   directories:
     - 'node_modules'
 
+script:
+  - npm run lint
+  - npm test
+
 deploy:
   provider: script
   script: 'echo "//registry.npmjs.org/:_authToken=${API_TOKEN}" > $HOME/.npmrc && npm publish --access=public'

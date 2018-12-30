@@ -64,9 +64,7 @@ typings/
 
 .cache
 .DS_Store
-src/lib/mapbox-gl.css.js
 
 # distribution directories
 /dist
 /lib
-# /docs

@@ -29,7 +29,7 @@ Specify `tilecloud-basic` class for target elements.
 </html>
 ```
 
-### JS API
+### Use as module
 
 ```javascript
 import { preRender } from 'tilecloud.js'
@@ -58,11 +58,12 @@ $ npm start
 
 ```shell
 $ npm run build
-$ # see ./dist
+# see ./lib
 ```
 
 ### build tilecloud scripts
 
 ```shell
 $ npm run build:tilecloud
+# see ./dist
 ```
