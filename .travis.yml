@@ -1,0 +1,19 @@
+language: node_js
+node_js:
+  - '8'
+  - '10'
+cache:
+  yarn: true
+  directories:
+    - 'node_modules'
+
+deploy:
+  provider: script
+  script: 'echo "//registry.npmjs.org/:_authToken=${API_TOKEN}" > $HOME/.npmrc && npm publish --access=public'
+  on:
+    tags: true
+    condition: $TRAVIS_NODE_VERSION = 10
+  skip_cleanup: true
+
+notifications:
+  email: false
