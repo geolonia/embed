@@ -32,15 +32,19 @@ Specify `tilecloud-basic` class for target elements.
 </html>
 ```
 
-### Use as module
+### Use as a module
+
+```shell
+$ yarn add @tilecloud/js # or npm install @tilecloud/js
+```
 
 ```javascript
-import { preRender } from 'tilecloud.js'
+import { preRender } from '@tilecloud/js'
 
 const element = getElementById('map')
-const styleUrl = 'https://tilecloud.io/path/to/style.json&apiKey=xxx'
+const style = 'https://tilecloud.io/path/to/style.json' // URL or Style object
 
-preRender(element, styleUrl)
+preRender(element, style)
 ```
 
 ## development
