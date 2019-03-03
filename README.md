@@ -64,9 +64,15 @@ $ npm run build
 # see ./lib
 ```
 
-### build tilecloud scripts
+### build tilecloud scripts to distribute from tilecloud endpoint
 
 ```shell
 $ npm run build:tilecloud
 # see ./dist
+```
+
+### deploy demo site to GitHub pages
+
+```shell
+$ npm run deploy
 ```
