@@ -2,16 +2,25 @@ import mapboxgl from 'mapbox-gl'
 import { isDisplayed } from './bound'
 import defaultControls from './default-controls'
 
+/**
+ * ex. start rendering if map.top - screen.bottom < 100px
+ * @type {number}
+ */
+const defaultBuffer = 100
+
 // stores map container ids already rendered to prevent run twice
 const onceRendered = {}
 
 /**
  * render map if it in users view
- * @param  {HTMLElement|HTMLElement[]} containerArg rendering container
- * @param  {string|object}             style        style
- * @return {Promise}                                Promise to all all map has started rendering
+ * @param  {HTMLElement|HTMLElement[]} containerArg  rendering container
+ * @param  {string|object}             style         style
+ * @param  {object|void}               renderOptions option for rendering
+ * @return {Promise}                                 Promise to all all map has started rendering
  */
-export const preRender = (containerArg, style) => {
+export const preRender = (containerArg, style, renderOptions) => {
+  const { buffer = defaultBuffer } = renderOptions || { buffer: defaultBuffer }
+
   const mapOptionsBase = {
     style,
     attributionControl: true,
@@ -27,10 +36,7 @@ export const preRender = (containerArg, style) => {
         // define scroll handler
         const onScrollEventHandler = () => {
           const elementId = container.id
-          if (
-            !onceRendered[elementId] &&
-            isDisplayed(container, { buffer: 100 })
-          ) {
+          if (!onceRendered[elementId] && isDisplayed(container, { buffer })) {
             onceRendered[elementId] = true
             let map
             try {

@@ -1,7 +1,7 @@
 import urlParse from 'url-parse'
 import qs from 'querystring'
 
-export default () => {
+export default document => {
   const scripts = document.getElementsByTagName('script')
   for (const script of scripts) {
     const { query } = urlParse(script.src)
