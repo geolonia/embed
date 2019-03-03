@@ -43,7 +43,7 @@ export const preRender = (containerArg, style, renderOptions) => {
               const lat = parseFloat(container.dataset.lat)
               const lng = parseFloat(container.dataset.lng)
               const zoom = parseFloat(container.dataset.zoom)
-              const center = lat && lng && [lat, lng]
+              const center = lat && lng ? [lng, lat] : false
 
               const mapOptions = {
                 ...mapOptionsBase,
