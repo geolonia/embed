@@ -3,25 +3,49 @@
  */
 
 import '@babel/polyfill'
+import './configure'
 import parseApiKey from './lib/parse-api-key'
 import preRender from './lib/pre-render'
-import { MAP_TYPES, generateStyles } from './configure'
+import { URL_BASE } from './constants'
+
+const getStyleURL = (styleName, userKey, stage = 'v1') =>
+  `${URL_BASE}/${stage}/styles/${styleName}?key=${userKey}`
 
 const basicMapContainers = Array.prototype.slice.call(
-  document.getElementsByClassName(MAP_TYPES.BASIC) || [],
+  document.getElementsByClassName('tilecloud') || [],
 )
 
-if (basicMapContainers.length > 0) {
-  // provide unique ids
-  basicMapContainers.forEach((element, i) => {
-    if (!element.id) {
-      element.id = `__${MAP_TYPES.BASIC}_${i}`
-    }
-  })
+const main = async () => {
+  if (basicMapContainers.length > 0) {
+    // provide unique ids
+    let maps = basicMapContainers.map((container, i) => {
+      if (!container.id) {
+        container.id = `__tilecloud_${i}`
+      }
+      const styleName = container.dataset.style
+      const userKey = parseApiKey(document)
+      return { container, styleName, userKey }
+    })
 
-  const API_KEY = parseApiKey(document)
-  const style = generateStyles[MAP_TYPES.BASIC](API_KEY)
+    const styles = await Promise.all(
+      maps.map(({ styleName, userKey }) => {
+        console.log('a')
+        return fetch(getStyleURL(styleName, userKey))
+          .then(res => res.json())
+          .then(style => ({ [styleName]: style }))
+      }),
+    ).then(styles => styles.reduce((prev, style) => ({ ...prev, ...style })))
 
-  // GO!
-  preRender(basicMapContainers, style)
+    console.log(styles)
+
+    maps = maps.map(({ container, styleName }) => ({
+      container,
+      style: styles[styleName],
+    }))
+
+    return await preRender(maps)
+  }
 }
+
+// GO!
+main()

@@ -13,25 +13,24 @@ const onceRendered = {}
 
 /**
  * render map if it in users view
- * @param  {HTMLElement|HTMLElement[]} containerArg  rendering container
- * @param  {string|object}             style         style
- * @param  {object|void}               renderOptions option for rendering
- * @return {Promise}                                 Promise to all all map has started rendering
+ * @param  {{container:HTMLElement, style: object}} maps          map container element and it's style
+ * @param  {object|void}                            renderOptions option for rendering
+ * @return {Promise}                                              Promise to all all map has started rendering
  */
-export const preRender = (containerArg, style, renderOptions) => {
+export const preRender = (maps, renderOptions) => {
   const { buffer = defaultBuffer } = renderOptions || { buffer: defaultBuffer }
 
   const mapOptionsBase = {
-    style,
     attributionControl: true,
     localIdeographFontFamily: 'sans-serif',
     hash: true,
   }
 
   // normalize
-  const containers = Array.isArray(containerArg) ? containerArg : [containerArg]
+  const _maps = Array.isArray(maps) ? maps : [maps]
+
   return Promise.all(
-    containers.map(container => {
+    _maps.map(({ container, style }) => {
       return new Promise((resolve, reject) => {
         // define scroll handler
         const onScrollEventHandler = () => {
@@ -46,6 +45,7 @@ export const preRender = (containerArg, style, renderOptions) => {
               const center = lat && lng ? [lng, lat] : false
 
               const mapOptions = {
+                style,
                 ...mapOptionsBase,
                 container,
                 center: center ? center : mapOptionsBase.center,
