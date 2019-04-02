@@ -15,7 +15,7 @@ JS API for Tilecloud service.
 
 ### zero config
 
-Specify `tilecloud-basic` class for target elements.
+Specify `.tilecloud` class for target elements. If you want to call the JS-API from external origin, please specify `?tilecloud=true` query.
 
 ```html
 <!DOCTYPE html>
@@ -23,12 +23,12 @@ Specify `tilecloud-basic` class for target elements.
   <body>
     <div
       class="tilecloud"
-      data-map="osm-bright"
+      data-style="osm-bright" // 'osm-bright' is default
       data-lat="35.681"
       data-lng="139.767"
       data-zoom="12"
     ></div>
-    <script src="path/to/tilecloud.js?apiKey=xxx"></script>
+    <script src="path/to/tilecloud.js?tilecloud=true&key=api-key"></script>
   </body>
 </html>
 ```

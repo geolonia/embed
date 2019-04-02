@@ -6,7 +6,7 @@ import '@babel/polyfill'
 import './configure'
 import parseApiKey from './lib/parse-api-key'
 import preRender from './lib/pre-render'
-import { URL_BASE } from './constants'
+import { URL_BASE, DEFAULT_MAP_STYLE_NAME } from './constants'
 
 const getStyleURL = (styleName, userKey, stage = 'v1') =>
   `${URL_BASE}/${stage}/styles/${styleName}?key=${userKey}`
@@ -22,21 +22,31 @@ const main = async () => {
       if (!container.id) {
         container.id = `__tilecloud_${i}`
       }
-      const styleName = container.dataset.style
+      const styleName = container.dataset.style || DEFAULT_MAP_STYLE_NAME
       const userKey = parseApiKey(document)
       return { container, styleName, userKey }
     })
 
     const styles = await Promise.all(
       maps.map(({ styleName, userKey }) => {
-        console.log('a')
-        return fetch(getStyleURL(styleName, userKey))
-          .then(res => res.json())
-          .then(style => ({ [styleName]: style }))
+        return (
+          fetch(getStyleURL(styleName, userKey))
+            .then(res => {
+              if (!res.ok) {
+                throw new Error('unknown style')
+              }
+              return res.json()
+            })
+            // fallback
+            .catch(() =>
+              fetch(getStyleURL(DEFAULT_MAP_STYLE_NAME, userKey)).then(res =>
+                res.json(),
+              ),
+            )
+            .then(style => ({ [styleName]: style }))
+        )
       }),
     ).then(styles => styles.reduce((prev, style) => ({ ...prev, ...style })))
-
-    console.log(styles)
 
     maps = maps.map(({ container, styleName }) => ({
       container,
