@@ -22,7 +22,8 @@ Specify `tilecloud-basic` class for target elements.
 <html>
   <body>
     <div
-      class="tilecloud-basic"
+      class="tilecloud"
+      data-map="osm-bright"
       data-lat="35.681"
       data-lng="139.767"
       data-zoom="12"
@@ -79,4 +80,11 @@ $ npm run build:tilecloud
 
 ```shell
 $ npm run deploy
+```
+
+### publish package
+
+```shell
+$ npm version patch
+$ git push origin v0.1.2 # specify new version to publish
 ```
