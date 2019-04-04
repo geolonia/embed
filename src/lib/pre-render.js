@@ -60,7 +60,7 @@ export const preRender = (maps, renderOptions) => {
               if (center) {
                 const marker = new mapboxgl.Marker().setLngLat(center).addTo(map)
                 if (content) {
-                  const popup = new mapboxgl.Popup().setHTML(content);
+                  const popup = new mapboxgl.Popup().setHTML(content)
                   marker.setPopup(popup)
                 }
               }
