@@ -23,7 +23,7 @@ export default document => {
     const { query, host } = urlParse(script.src)
     const { key, apiKey, tilecloud } = qs.parse(query.replace(/^\?/, ''))
     if (tilecloud === 'true' || isKnownHost(host)) {
-      // backward compatibility for <= 0.2.3
+      // backward compatibility for <= 0.2.2
       return key || apiKey
     }
   }
