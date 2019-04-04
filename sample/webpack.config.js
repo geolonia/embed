@@ -27,6 +27,6 @@ module.exports = {
     openPage: 'index.html',
     contentBase: __dirname,
     watchContentBase: true,
-    port: 3000,
+    port: 1234,
   },
 }
