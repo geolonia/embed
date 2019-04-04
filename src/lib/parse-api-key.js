@@ -21,9 +21,10 @@ export default document => {
   const scripts = document.getElementsByTagName('script')
   for (const script of scripts) {
     const { query, host } = urlParse(script.src)
-    const { apiKey, tilecloud } = qs.parse(query.replace(/^\?/, ''))
+    const { key, apiKey, tilecloud } = qs.parse(query.replace(/^\?/, ''))
     if (tilecloud === 'true' || isKnownHost(host)) {
-      return apiKey
+      // backward compatibility for <= 0.2.3
+      return key || apiKey
     }
   }
 }

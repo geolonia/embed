@@ -26,6 +26,21 @@ describe('parse api key from dom', () => {
       }),
     )
   })
+
+  describe('known hosts with `key` parameter, not `apiKey`', () => {
+    const hosts = ['foo.tilecloud.io', 'tilecloud.github.io']
+
+    hosts.forEach(host =>
+      it(`should parse with known host ${host}`, () => {
+        const { document: mocDocument } = new JSDOM(`<html><body>
+          <script src="https://${host}/tilecloud.js?key=abc"></script>
+        </body></html>`).window
+
+        const apiKey = parseApiKey(mocDocument)
+        assert.equal(apiKey, 'abc')
+      }),
+    )
+  })
 })
 
 describe('not parse api key from dom', () => {
