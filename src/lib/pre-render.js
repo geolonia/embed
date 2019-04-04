@@ -23,6 +23,8 @@ export const preRender = (maps, renderOptions) => {
   const mapOptionsBase = {
     attributionControl: true,
     localIdeographFontFamily: 'sans-serif',
+    bearing: 0,
+    pitch: 0,
     hash: false,
   }
 
@@ -42,6 +44,8 @@ export const preRender = (maps, renderOptions) => {
               const lat = parseFloat(container.dataset.lat)
               const lng = parseFloat(container.dataset.lng)
               const zoom = parseFloat(container.dataset.zoom)
+              const bearing = parseFloat(container.dataset.bearing)
+              const pitch = parseFloat(container.dataset.pitch)
               const hash =
                 (container.dataset.hash || 'false').toUpperCase() === 'TRUE'
               const center = lat && lng ? [lng, lat] : false
@@ -51,6 +55,8 @@ export const preRender = (maps, renderOptions) => {
                 ...mapOptionsBase,
                 container,
                 center: center ? center : mapOptionsBase.center,
+                bearing: bearing ? bearing : mapOptionsBase.bearing,
+                pitch: pitch ? pitch : mapOptionsBase.pitch,
                 zoom: zoom || mapOptionsBase.center,
                 hash,
               }
