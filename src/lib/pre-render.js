@@ -35,6 +35,7 @@ export const preRender = (maps, renderOptions) => {
         // define scroll handler
         const onScrollEventHandler = () => {
           const elementId = container.id
+          const content = container.innerHTML.trim()
           if (!onceRendered[elementId] && isDisplayed(container, { buffer })) {
             onceRendered[elementId] = true
             let map
@@ -56,7 +57,13 @@ export const preRender = (maps, renderOptions) => {
               }
               map = new mapboxgl.Map(mapOptions)
               defaultControls.forEach(control => map.addControl(control))
-              center && new mapboxgl.Marker().setLngLat(center).addTo(map)
+              if (center) {
+                const marker = new mapboxgl.Marker().setLngLat(center).addTo(map)
+                if (content) {
+                  const popup = new mapboxgl.Popup().setHTML(content)
+                  marker.setPopup(popup)
+                }
+              }
             } catch (e) {
               reject(e)
             } finally {
