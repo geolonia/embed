@@ -23,7 +23,7 @@ export const preRender = (maps, renderOptions) => {
   const mapOptionsBase = {
     attributionControl: true,
     localIdeographFontFamily: 'sans-serif',
-    hash: true,
+    hash: false,
   }
 
   // normalize
@@ -42,6 +42,8 @@ export const preRender = (maps, renderOptions) => {
               const lat = parseFloat(container.dataset.lat)
               const lng = parseFloat(container.dataset.lng)
               const zoom = parseFloat(container.dataset.zoom)
+              const hash =
+                (container.dataset.hash || 'false').toUpperCase() === 'TRUE'
               const center = lat && lng ? [lng, lat] : false
 
               const mapOptions = {
@@ -50,6 +52,7 @@ export const preRender = (maps, renderOptions) => {
                 container,
                 center: center ? center : mapOptionsBase.center,
                 zoom: zoom || mapOptionsBase.center,
+                hash,
               }
               map = new mapboxgl.Map(mapOptions)
               defaultControls.forEach(control => map.addControl(control))

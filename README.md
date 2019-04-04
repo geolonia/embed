@@ -27,6 +27,7 @@ Specify `.tilecloud` class for target elements. If you want to call the JS-API f
       data-lat="35.681"
       data-lng="139.767"
       data-zoom="12"
+      data-hash="false"
     ></div>
     <script src="path/to/tilecloud.js?tilecloud=true&key=api-key"></script>
   </body>
