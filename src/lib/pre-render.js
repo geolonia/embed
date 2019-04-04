@@ -36,6 +36,7 @@ export const preRender = (maps, renderOptions) => {
         const onScrollEventHandler = () => {
           const elementId = container.id
           const content = container.innerHTML.trim()
+          container.innerHTML = ''
           if (!onceRendered[elementId] && isDisplayed(container, { buffer })) {
             onceRendered[elementId] = true
             let map
