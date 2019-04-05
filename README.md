@@ -1,9 +1,8 @@
-# @tilecloud/js
+# @tilecloud/embed
 
-[![Build Status](https://travis-ci.org/tilecloud/tilecloud.js.svg?branch=master)](https://travis-ci.org/tilecloud/tilecloud.js)
-[![npm version](https://badge.fury.io/js/%40tilecloud%2Fjs.svg)](https://badge.fury.io/js/%40tilecloud%2Fjs)
+[![Build Status](https://travis-ci.org/tilecloud/embed.svg?branch=master)](https://travis-ci.org/tilecloud/embed)
 
-JS API for Tilecloud service.
+JS embed API for TileCloud service.
 
 ## features
 
@@ -29,7 +28,7 @@ Specify `.tilecloud` class for target elements. If you want to call the JS-API f
       data-zoom="12"
       data-hash="false"
     ></div>
-    <script src="path/to/tilecloud.js?tilecloud=true&key=api-key"></script>
+    <script src="https://tilecloud.io/v1/embed?key=API-KEY"></script>
   </body>
 </html>
 ```
@@ -37,11 +36,11 @@ Specify `.tilecloud` class for target elements. If you want to call the JS-API f
 ### Use as a module
 
 ```shell
-$ yarn add @tilecloud/js # or npm install @tilecloud/js
+$ yarn add @tilecloud/embed # or npm install @tilecloud/embed
 ```
 
 ```javascript
-import { preRender } from '@tilecloud/js'
+import { preRender } from '@tilecloud/embed'
 
 const element = getElementById('map')
 const style = 'https://tilecloud.io/path/to/style.json' // URL or Style object
@@ -52,8 +51,8 @@ preRender(element, style)
 ## development
 
 ```shell
-$ git clone git@github.com:tilecloud/tilecloud.js.git
-$ cd tilecloud.js
+$ git clone git@github.com:tilecloud/embed.git
+$ cd embed
 $ yarn # or npm install
 ```
 
@@ -70,10 +69,10 @@ $ npm run build
 # see ./lib
 ```
 
-### build tilecloud scripts to distribute from tilecloud endpoint
+### build embed scripts to distribute from api.tilecloud.io
 
 ```shell
-$ npm run build:tilecloud
+$ npm run build:embed
 # see ./dist
 ```
 
@@ -83,7 +82,7 @@ $ npm run build:tilecloud
 $ npm run deploy
 ```
 
-### publish package
+### publish package (for commiters)
 
 ```shell
 $ npm version patch
