@@ -1,27 +1,27 @@
 {
-  "name": "@tilecloud/js",
+  "name": "@tilecloud/embed",
   "version": "0.2.5",
-  "description": "tilecloud API",
+  "description": "TileCloud embed JS API",
   "main": "lib/index.js",
   "scripts": {
     "start": "webpack-dev-server --mode development --config ./sample/webpack.config.js",
-    "build": "babel ./src --out-dir lib --ignore ./src/tilecloud.js",
-    "build:tilecloud": "webpack -p  --config ./webpack.config.js",
+    "build": "babel ./src --out-dir lib --ignore ./src/embed.js",
+    "build:embed": "webpack -p  --config ./webpack.config.js",
     "format": "prettier-eslint \"./src/**/*.js\" --write",
     "lint": "eslint \"src/**/*.js\"",
     "test": "mocha",
-    "deploy": "npm run build:tilecloud && cp ./dist/tilecloud.js ./sample/tilecloud.js && gh-pages --dist ./sample"
+    "deploy": "npm run build:embed && cp ./dist/embed.js ./sample/embed && gh-pages --dist ./sample"
   },
   "author": "kamataryo",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tilecloud/tilecloud.js.git"
+    "url": "git+https://github.com/tilecloud/embed.git"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tilecloud/tilecloud.js/issues"
+    "url": "https://github.com/tilecloud/embed/issues"
   },
-  "homepage": "https://github.com/tilecloud/tilecloud.js#readme",
+  "homepage": "https://github.com/tilecloud/embed#readme",
   "devDependencies": {
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",

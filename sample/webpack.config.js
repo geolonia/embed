@@ -1,8 +1,8 @@
 module.exports = {
-  entry: './src/tilecloud.js',
+  entry: './src/embed.js',
   output: {
     path: __dirname,
-    filename: 'tilecloud.js',
+    filename: 'embed',
   },
   devtool: 'inline-source-map',
 
