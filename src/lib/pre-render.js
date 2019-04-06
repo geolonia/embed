@@ -72,7 +72,7 @@ export const preRender = (maps, renderOptions) => {
                   marker.setPopup(popup)
                 }
               }
-              new GestureHandling().addTo(map);
+              new GestureHandling().addTo(map)
             } catch (e) {
               reject(e)
             } finally {
