@@ -26,7 +26,7 @@ export const preRender = (maps, renderOptions) => {
     localIdeographFontFamily: 'sans-serif',
     bearing: 0,
     pitch: 0,
-    hash: false
+    hash: false,
   }
 
   // normalize
