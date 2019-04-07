@@ -1,4 +1,5 @@
 import mapboxgl from 'mapbox-gl'
+import GestureHandling from '@tilecloud/mbgl-gesture-handling'
 import { isDisplayed } from './bound'
 import defaultControls from './default-controls'
 
@@ -71,6 +72,7 @@ export const preRender = (maps, renderOptions) => {
                   marker.setPopup(popup)
                 }
               }
+              new GestureHandling().addTo(map)
             } catch (e) {
               reject(e)
             } finally {
