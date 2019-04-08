@@ -74,7 +74,7 @@ export const preRender = (maps, renderOptions) => {
 
               defaultControls.forEach(control => map.addControl(control))
 
-              map.on('load', (event) => {
+              map.on('load', event => {
                 const map = event.target
                 if (center) {
                   const marker = new mapboxgl.Marker().setLngLat(center).addTo(map)
