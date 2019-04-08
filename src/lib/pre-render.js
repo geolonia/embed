@@ -52,7 +52,7 @@ export const preRender = (maps, renderOptions) => {
               const hash =
                 (container.dataset.hash || 'false').toUpperCase() === 'TRUE'
               const center = lat && lng ? [lng, lat] : false
-
+              const gestureHandling = (container.dataset['gesture-handling'] || 'true').toUpperCase() === 'TRUE'
               const mapOptions = {
                 style,
                 ...mapOptionsBase,
@@ -72,7 +72,9 @@ export const preRender = (maps, renderOptions) => {
                   marker.setPopup(popup)
                 }
               }
-              new GestureHandling().addTo(map)
+              if (gestureHandling) {
+                new GestureHandling().addTo(map)
+              }
             } catch (e) {
               reject(e)
             } finally {
