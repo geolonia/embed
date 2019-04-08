@@ -38,8 +38,6 @@ export const preRender = (maps, renderOptions) => {
         // define scroll handler
         const onScrollEventHandler = () => {
           const elementId = container.id
-          const content = container.innerHTML.trim()
-          container.innerHTML = ''
           if (!onceRendered[elementId] && isDisplayed(container, { buffer })) {
             onceRendered[elementId] = true
             let map
@@ -63,18 +61,29 @@ export const preRender = (maps, renderOptions) => {
                 zoom: zoom || mapOptionsBase.center,
                 hash,
               }
+
+              // Getting content should be fire just before initialize the map.
+              const content = container.innerHTML.trim()
+              container.innerHTML = ''
+
               map = new mapboxgl.Map(mapOptions)
-              defaultControls.forEach(control => map.addControl(control))
-              if (center) {
-                const marker = new mapboxgl.Marker().setLngLat(center).addTo(map)
-                if (content) {
-                  const popup = new mapboxgl.Popup().setHTML(content)
-                  marker.setPopup(popup)
-                }
-              }
+
               if (gestureHandling) {
                 new GestureHandling().addTo(map)
               }
+
+              defaultControls.forEach(control => map.addControl(control))
+
+              map.on('load', (event) => {
+                const map = event.target
+                if (center) {
+                  const marker = new mapboxgl.Marker().setLngLat(center).addTo(map)
+                  if (content) {
+                    const popup = new mapboxgl.Popup().setHTML(content)
+                    marker.setPopup(popup)
+                  }
+                }
+              })
             } catch (e) {
               reject(e)
             } finally {
