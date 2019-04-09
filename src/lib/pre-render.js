@@ -1,7 +1,7 @@
 import mapboxgl from 'mapbox-gl'
+import TilecloudControl from '@tilecloud/mbgl-tilecloud-control'
 import GestureHandling from '@tilecloud/mbgl-gesture-handling'
 import { isDisplayed } from './bound'
-import defaultControls from './default-controls'
 
 /**
  * ex. start rendering if map.top - screen.bottom < 100px
@@ -72,7 +72,9 @@ export const preRender = (maps, renderOptions) => {
                 new GestureHandling().addTo(map)
               }
 
-              defaultControls.forEach(control => map.addControl(control))
+              map.addControl(new mapboxgl.NavigationControl())
+              map.addControl(new mapboxgl.GeolocateControl())
+              map.addControl(new TilecloudControl())
 
               map.on('load', event => {
                 const map = event.target

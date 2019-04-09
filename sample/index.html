@@ -6,33 +6,98 @@
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
   <title>Mapbox GL Lazy Loading</title>
   <style>
-    html,
     body {
-      margin: 0;
-      padding: 0;
-    }
-
-    .place-holder {
-      text-align: center;
-      font-size: 200px;
-      height: 2000px;
+      width: 90%;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .tilecloud {
       width: 100%;
-      height: 500px;
+      height: 200px;
+    }
+
+    pre
+    {
+      padding: 16px;
+      background-color: #f5f5f5;
+      border: 1px solid #dedede;
+      margin: 1em 0;
+    }
+
+    #map-marker
+    {
+      fill: red;
+      display: none;
     }
   </style>
 </head>
 
 <body>
-  <div class="place-holder">↓</div>
-  <div class="tilecloud" data-style="osm-bright" data-lat="35.681236" data-lng="139.767125" data-zoom="12" data-hash="true">
-    <h2>Hello World</h2>
+  <h1>@tilecloud/embed</h1>
+
+  Examples for Embed API for the tilecloud.
+
+  <div class="example">
+    <h2>Basic Map without popup</h2>
+    <div
+      class="tilecloud"
+      data-lat="35.681236"
+      data-lng="139.767125"
+      data-zoom="12"
+      data-hash="true"
+    ></div>
   </div>
-  <div class="place-holder">↓</div>
-  <div class="tilecloud" data-style="dark-matter" data-lat="35.681236" data-lng="139.767125" data-zoom="12"></div>
-  <script src="./embed?tilecloud=true&key=anonymous"></script>
+
+  <div class="example">
+    <h2>Specify the style</h2>
+    <div
+      class="tilecloud"
+      data-style="dark-matter"
+      data-lat="35.681236"
+      data-lng="139.767125"
+      data-zoom="12"
+    ><h3>Hello World!</h3></div>
+  </div>
+
+  <div class="example">
+    <h2>Marker with Popup</h2>
+    <div
+      class="tilecloud"
+      data-lat="35.681236"
+      data-lng="139.767125"
+      data-zoom="12"
+    ><h3>Hello World!</h3></div>
+  </div>
+
+  <div class="example">
+    <h2>Pitch and Bearing</h2>
+    <div
+      class="tilecloud"
+      data-lat="35.681236"
+      data-lng="139.767125"
+      data-zoom="12"
+      data-pitch="60"
+      data-bearing="90"
+      data-marker="map-marker"
+    ><h3>Hello World!</h3></div>
+  </div>
+
+  <svg id="map-marker" style="enable-background:new 0 0 30 30;" version="1.1" viewBox="0 0 30 30" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M15,2C8.925,2,4,6.925,4,13c0,7.234,7.152,10.697,8.048,11.503c0.915,0.823,1.671,2.668,1.976,3.714  c0.148,0.508,0.564,0.765,0.976,0.776c0.413-0.012,0.828-0.269,0.976-0.776c0.305-1.046,1.061-2.89,1.976-3.714  C18.848,23.697,26,20.234,26,13C26,6.925,21.075,2,15,2z M15,16c-1.657,0-3-1.343-3-3s1.343-3,3-3s3,1.343,3,3S16.657,16,15,16z"/></svg>
+
+  <script>
+    var examples = document.querySelectorAll('.example');
+    for (var i = 0; i < examples.length; i++) {
+      var example = examples[i];
+      var html = example.querySelector('.tilecloud').outerHTML;
+      var pre = document.createElement('pre');
+      pre.innerText = html.replace(/(<div.+?)(>)/g, "$1\n$2").replace(/ ([^ ]+=[^ ]+)/g, "\n  $1");
+      example.insertBefore(pre, example.querySelector('.tilecloud'));
+    }
+  </script>
+
+  <script src="./embed?tilecloud=true&key=YOUR-API-KEY"></script>
+
 </body>
 
 </html>
