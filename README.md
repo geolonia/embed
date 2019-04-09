@@ -4,6 +4,8 @@
 
 JS embed API for TileCloud service.
 
+https://tilecloud.github.io/embed/
+
 ## features
 
 - webGL vector map rendering
