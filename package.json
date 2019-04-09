@@ -51,8 +51,6 @@
     "mapbox-gl": "^0.52"
   },
   "dependencies": {
-    "install": "^0.12.2",
-    "intersection-observer": "^0.5.1",
-    "npm": "^6.9.0"
+    "intersection-observer": "^0.5.1"
   }
 }
