@@ -7,7 +7,11 @@ const getStyleURL = (styleName, userKey, stage = 'v1') => {
   return `https://api.tilecloud.io/${stage}/styles/${styleName}?key=${userKey}`
 }
 
-
+/**
+ * Render the map
+ *
+ * @param container
+ */
 export const render = (container) => {
   const lat = parseFloat(container.dataset.lat) || 0
   const lng = parseFloat(container.dataset.lng) || 0
