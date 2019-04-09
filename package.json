@@ -50,5 +50,7 @@
     "@tilecloud/mbgl-tilecloud-control": "^0",
     "mapbox-gl": "^0.52"
   },
-  "dependencies": {}
+  "dependencies": {
+    "intersection-observer": "^0.5.1"
+  }
 }

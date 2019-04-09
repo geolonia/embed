@@ -3,59 +3,23 @@
  */
 
 import '@babel/polyfill'
-import './configure'
-import parseApiKey from './lib/parse-api-key'
-import preRender from './lib/pre-render'
-import { URL_BASE, DEFAULT_MAP_STYLE_NAME } from './constants'
+import 'intersection-observer'
+import 'mapbox-gl/dist/mapbox-gl.css'
+import render from './lib/render'
 
-const getStyleURL = (styleName, userKey, stage = 'v1') =>
-  `${URL_BASE}/${stage}/styles/${styleName}?key=${userKey}`
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(item => {
+    if (!item.isIntersecting) {
+      return
+    }
 
-const basicMapContainers = Array.prototype.slice.call(
-  document.getElementsByClassName('tilecloud') || [],
-)
+    render(item.target)
+    observer.unobserve(item.target)
+  })
+})
 
-const main = async () => {
-  if (basicMapContainers.length > 0) {
-    // provide unique ids
-    let maps = basicMapContainers.map((container, i) => {
-      if (!container.id) {
-        container.id = `__tilecloud_${i}`
-      }
-      const styleName = container.dataset.style || DEFAULT_MAP_STYLE_NAME
-      const userKey = container.dataset.key || parseApiKey(document)
-      return { container, styleName, userKey }
-    })
+const containers = document.querySelectorAll('.tilecloud')
 
-    const styles = await Promise.all(
-      maps.map(({ styleName, userKey }) => {
-        return (
-          fetch(getStyleURL(styleName, userKey))
-            .then(res => {
-              if (!res.ok) {
-                throw new Error('unknown style')
-              }
-              return res.json()
-            })
-            // fallback
-            .catch(() =>
-              fetch(getStyleURL(DEFAULT_MAP_STYLE_NAME, userKey)).then(res =>
-                res.json(),
-              ),
-            )
-            .then(style => ({ [styleName]: style }))
-        )
-      }),
-    ).then(styles => styles.reduce((prev, style) => ({ ...prev, ...style })))
-
-    maps = maps.map(({ container, styleName }) => ({
-      container,
-      style: styles[styleName],
-    }))
-
-    return await preRender(maps)
-  }
-}
-
-// GO!
-main()
+containers.forEach(container => {
+  observer.observe(container)
+})
