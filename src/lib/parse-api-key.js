@@ -17,7 +17,7 @@ const isKnownHost = host => {
   }
 }
 
-export default document => {
+export default () => {
   const scripts = document.getElementsByTagName('script')
   for (const script of scripts) {
     const { query, host } = urlParse(script.src)
