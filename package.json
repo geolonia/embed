@@ -10,7 +10,7 @@
     "build:embed": "webpack -p  --config ./webpack.config.js",
     "format": "prettier-eslint \"./src/**/*.js\" --write",
     "lint": "eslint \"src/**/*.js\"",
-    "test": "mocha",
+    "test": "npm run lint && mocha",
     "deploy": "npm run build:embed && cp ./dist/embed.js ./sample/embed && gh-pages --dist ./sample"
   },
   "author": "kamataryo",

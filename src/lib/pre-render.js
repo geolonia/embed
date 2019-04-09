@@ -84,7 +84,7 @@ export const preRender = (maps, renderOptions) => {
                     const popup = new mapboxgl.Popup().setHTML(content)
                     if (customMarkerClass) {
                       const el = document.createElement('div')
-                      el.className = customMarkerClass;
+                      el.className = customMarkerClass
                       new mapboxgl.Marker(el).setLngLat(center).addTo(map).setPopup(popup)
                     } else {
                       new mapboxgl.Marker().setLngLat(center).addTo(map).setPopup(popup)
