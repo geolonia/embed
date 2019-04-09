@@ -25,10 +25,13 @@
       margin: 1em 0;
     }
 
-    #map-marker
+    .map-marker
     {
-      fill: red;
-      display: none;
+      background-color: #ff0000;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -39,7 +42,17 @@
   Examples for Embed API for the tilecloud.
 
   <div class="example">
-    <h2>Basic Map without popup</h2>
+    <h2>Basic map</h2>
+    <div
+      class="tilecloud"
+      data-lat="35.681236"
+      data-lng="139.767125"
+      data-zoom="12"
+    ></div>
+  </div>
+
+  <div class="example">
+    <h2>Basic map with updating hash</h2>
     <div
       class="tilecloud"
       data-lat="35.681236"
@@ -79,11 +92,19 @@
       data-zoom="12"
       data-pitch="60"
       data-bearing="90"
-      data-marker="map-marker"
     ><h3>Hello World!</h3></div>
   </div>
 
-  <svg id="map-marker" style="enable-background:new 0 0 30 30;" version="1.1" viewBox="0 0 30 30" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M15,2C8.925,2,4,6.925,4,13c0,7.234,7.152,10.697,8.048,11.503c0.915,0.823,1.671,2.668,1.976,3.714  c0.148,0.508,0.564,0.765,0.976,0.776c0.413-0.012,0.828-0.269,0.976-0.776c0.305-1.046,1.061-2.89,1.976-3.714  C18.848,23.697,26,20.234,26,13C26,6.925,21.075,2,15,2z M15,16c-1.657,0-3-1.343-3-3s1.343-3,3-3s3,1.343,3,3S16.657,16,15,16z"/></svg>
+  <div class="example">
+    <h2>Custom Marker with SVG</h2>
+    <div
+      class="tilecloud"
+      data-lat="35.681236"
+      data-lng="139.767125"
+      data-zoom="12"
+      data-marker-class="map-marker"
+    ><h3>Hello World!</h3></div>
+  </div>
 
   <script>
     var examples = document.querySelectorAll('.example');

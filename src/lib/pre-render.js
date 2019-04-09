@@ -47,6 +47,7 @@ export const preRender = (maps, renderOptions) => {
               const zoom = parseFloat(container.dataset.zoom)
               const bearing = parseFloat(container.dataset.bearing)
               const pitch = parseFloat(container.dataset.pitch)
+              const customMarkerClass = container.dataset.markerClass || null
               const hash =
                 (container.dataset.hash || 'false').toUpperCase() === 'TRUE'
               const center = lat && lng ? [lng, lat] : false
@@ -79,10 +80,17 @@ export const preRender = (maps, renderOptions) => {
               map.on('load', event => {
                 const map = event.target
                 if (center) {
-                  const marker = new mapboxgl.Marker().setLngLat(center).addTo(map)
                   if (content) {
                     const popup = new mapboxgl.Popup().setHTML(content)
-                    marker.setPopup(popup)
+                    if (customMarkerClass) {
+                      const el = document.createElement('div')
+                      el.className = customMarkerClass;
+                      new mapboxgl.Marker(el).setLngLat(center).addTo(map).setPopup(popup)
+                    } else {
+                      new mapboxgl.Marker().setLngLat(center).addTo(map).setPopup(popup)
+                    }
+                  } else {
+                    new mapboxgl.Marker().setLngLat(center).addTo(map)
                   }
                 }
               })
