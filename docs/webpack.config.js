@@ -2,7 +2,7 @@ module.exports = {
   entry: './src/embed.js',
   output: {
     path: __dirname,
-    filename: 'embed',
+    filename: 'embed.js',
   },
   devtool: 'inline-source-map',
 

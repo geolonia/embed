@@ -4,16 +4,15 @@
   "description": "TileCloud embed JS API",
   "main": "lib/index.js",
   "scripts": {
-    "start": "webpack-dev-server --mode development --config ./sample/webpack.config.js",
-    "build": "npm run build:lib && npm run build:embed",
-    "build:lib": "babel ./src --out-dir lib --ignore ./src/embed.js",
+    "start": "webpack-dev-server --mode development --config ./docs/webpack.config.js",
+    "build": "npm run build:embed && npm run build:docs",
+    "build:docs": "webpack -p --config ./docs/webpack.config.js",
     "build:embed": "webpack -p  --config ./webpack.config.js",
     "format": "prettier-eslint \"./src/**/*.js\" --write",
     "lint": "eslint \"src/**/*.js\"",
-    "test": "npm run lint && mocha",
-    "deploy": "npm run build:embed && cp ./dist/embed.js ./sample/embed && gh-pages --dist ./sample"
+    "test": "npm run lint && mocha"
   },
-  "author": "kamataryo",
+  "author": "tilecloud",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tilecloud/embed.git"

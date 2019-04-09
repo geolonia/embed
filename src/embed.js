@@ -23,7 +23,7 @@ const main = async () => {
         container.id = `__tilecloud_${i}`
       }
       const styleName = container.dataset.style || DEFAULT_MAP_STYLE_NAME
-      const userKey = parseApiKey(document)
+      const userKey = container.dataset.key || parseApiKey(document)
       return { container, styleName, userKey }
     })
 
