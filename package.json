@@ -4,7 +4,7 @@
   "description": "TileCloud embed JS API",
   "main": "lib/index.js",
   "scripts": {
-    "start": "webpack-dev-server --mode development --config ./sample/webpack.config.js",
+    "start": "webpack-dev-server --mode development --config ./example/webpack.config.js",
     "build": "npm run build:embed",
     "build:embed": "webpack -p  --config ./webpack.config.js",
     "format": "prettier-eslint \"./src/**/*.js\" --write",
