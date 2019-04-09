@@ -12,7 +12,7 @@ const getStyleURL = (styleName, userKey, stage = 'v1') => {
  *
  * @param container
  */
-export const render = (container) => {
+export const render = container => {
   const lat = parseFloat(container.dataset.lat) || 0
   const lng = parseFloat(container.dataset.lng) || 0
   const zoom = parseFloat(container.dataset.zoom) || 0
@@ -23,7 +23,7 @@ export const render = (container) => {
   const center = lat && lng ? [lng, lat] : false
   const gestureHandling = (container.dataset['gesture-handling'] || 'true').toUpperCase() === 'TRUE'
   const style = container.dataset.style || 'osm-bright'
-  const key = container.dataset.key || parseApiKey()
+  const key = container.dataset.key || parseApiKey(document)
 
   const options = {
     style: getStyleURL(style, key),
@@ -41,7 +41,7 @@ export const render = (container) => {
   const content = container.innerHTML.trim()
   container.innerHTML = ''
 
-  const map = new mapboxgl.Map({...options})
+  const map = new mapboxgl.Map(options)
 
   if (gestureHandling) {
     new GestureHandling().addTo(map)
