@@ -18,7 +18,7 @@ const render = container => {
   const zoom = parseFloat(container.dataset.zoom) || 0
   const bearing = parseFloat(container.dataset.bearing) || 0
   const pitch = parseFloat(container.dataset.pitch) || 0
-  const customMarkerClass = container.dataset.markerClass || null
+  const customMarker = container.dataset.customMarker || null
   const hash = (container.dataset.hash || 'false').toUpperCase() === 'TRUE'
   const center = lat && lng ? [lng, lat] : false
   const gestureHandling = (container.dataset['gesture-handling'] || 'true').toUpperCase() === 'TRUE'
@@ -56,10 +56,11 @@ const render = container => {
     if (center) {
       if (content) {
         const popup = new mapboxgl.Popup().setHTML(content)
-        if (customMarkerClass) {
-          const el = document.createElement('div')
-          el.className = customMarkerClass
-          new mapboxgl.Marker(el).setLngLat(center).addTo(map).setPopup(popup)
+        if (customMarker) {
+          console.log(customMarker)
+          const container = document.querySelector(customMarker)
+          container.style.display = 'block'
+          new mapboxgl.Marker(container).setLngLat(center).addTo(map).setPopup(popup)
         } else {
           new mapboxgl.Marker().setLngLat(center).addTo(map).setPopup(popup)
         }

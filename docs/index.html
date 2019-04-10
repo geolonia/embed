@@ -74,28 +74,36 @@
 
   <div class="example">
     <h2>Custom HTML Marker</h2>
-    <h3>CSS</h3>
-    <pre>.map-marker
+    <h3>Custom Marker</h3>
+    <pre><code>&lt;div id=&quot;custom-marker&quot;&gt;&lt;img src=&quot;./icon.png&quot; alt=&quot;&quot;&gt;&lt;/div&gt;</code></pre>
+    <h3>CSS for the Custom Marker</h3>
+    <pre>#custom-marker
 {
-  background-image: url('./icon.png');
-  background-size: cover;
-  background-position: center;
   width: 50px;
   height: 50px;
-  border-radius: 50%;
   cursor: pointer;
+  display: none;
+}
+
+#custom-marker img
+{
+  max-width: 100%;
+  height: auto;
 }</pre>
 
-    <h3>HTML</h3>
+    <h3>HTML for the Map</h3>
     <div
       class="tilecloud"
       data-key="YOUR-API-KEY"
       data-lat="35.681236"
       data-lng="139.767125"
       data-zoom="12"
-      data-marker-class="map-marker"
+      data-custom-marker="#custom-marker"
     ><h3>Hello World!</h3></div>
   </div>
+
+
+  <div id="custom-marker"><img src="./icon.png" alt=""></div>
 
   <footer>
     &copy; <a href="https://tilecloud.io">tilecloud.io</a>
