@@ -57,7 +57,6 @@ const render = container => {
       if (content) {
         const popup = new mapboxgl.Popup().setHTML(content)
         if (customMarker) {
-          console.log(customMarker)
           const container = document.querySelector(customMarker)
           container.style.display = 'block'
           new mapboxgl.Marker(container).setLngLat(center).addTo(map).setPopup(popup)
