@@ -4,17 +4,17 @@
 
 JS embed API for TileCloud service.
 
-https://tilecloud.github.io/embed/
-
-## features
+## Features
 
 - webGL vector map rendering
 - simple configuration
 - map lazy rendering
 
-## usage
+## Examples
 
-### zero config
+https://tilecloud.github.io/embed/
+
+## Usage
 
 Specify `.tilecloud` class for target elements. If you want to call the JS-API from external origin, please specify `?tilecloud=true` query.
 
@@ -33,21 +33,6 @@ Specify `.tilecloud` class for target elements. If you want to call the JS-API f
     <script src="https://tilecloud.io/v1/embed?key=API-KEY"></script>
   </body>
 </html>
-```
-
-### Use as a module
-
-```shell
-$ yarn add @tilecloud/embed # or npm install @tilecloud/embed
-```
-
-```javascript
-import { preRender } from '@tilecloud/embed'
-
-const element = getElementById('map')
-const style = 'https://tilecloud.io/path/to/style.json' // URL or Style object
-
-preRender(element, style)
 ```
 
 ## development
