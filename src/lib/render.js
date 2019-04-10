@@ -12,7 +12,7 @@ const getStyleURL = (styleName, userKey, stage = 'v1') => {
  *
  * @param container
  */
-export const render = container => {
+const render = container => {
   const lat = parseFloat(container.dataset.lat) || 0
   const lng = parseFloat(container.dataset.lng) || 0
   const zoom = parseFloat(container.dataset.zoom) || 0
@@ -67,6 +67,8 @@ export const render = container => {
         new mapboxgl.Marker().setLngLat(center).addTo(map)
       }
     }
+
+    // TODO: Fires the custom event at here
   })
 }
 
