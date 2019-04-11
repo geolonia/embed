@@ -24,16 +24,29 @@ Specify `.tilecloud` class for target elements.
   <body>
     <div
       class="tilecloud"
-      data-key="YOUR-API-KEY"
-      data-style="osm-bright" // 'osm-bright' is default
-      data-lat="35.681"
-      data-lng="139.767"
-      data-zoom="12"
+      ...
     ></div>
-    <script src="https://tilecloud.io/v1/embed?key=API-KEY"></script>
+    <script src="https://tilecloud.io/v1/embed?tilecloud-api-key=API-KEY"></script>
   </body>
 </html>
 ```
+
+Or
+
+```html
+<!DOCTYPE html>
+<html>
+  <body>
+    <div
+      class="tilecloud"
+      data-key="YOUR-API-KEY"
+      ...
+    ></div>
+    <script src="https://tilecloud.io/v1/embed"></script>
+  </body>
+</html>
+```
+
 
 You can see more examples at [https://tilecloud.github.io/embed/](https://tilecloud.github.io/embed/).
 
