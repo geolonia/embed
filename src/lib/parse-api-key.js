@@ -21,6 +21,7 @@ export default document => {
   const scripts = document.getElementsByTagName('script')
   for (const script of scripts) {
     const { query, host } = urlParse(script.src)
+    console.log(urlParse(script.src))
     const { key } = qs.parse(query.replace(/^\?/, ''))
     if (isKnownHost(host)) {
       console.log(key)
