@@ -23,6 +23,7 @@ export default document => {
     const { query, host } = urlParse(script.src)
     const { key } = qs.parse(query.replace(/^\?/, ''))
     if (isKnownHost(host)) {
+      console.log(key)
       return key || null
     }
   }
