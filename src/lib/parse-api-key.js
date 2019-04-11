@@ -6,7 +6,9 @@ export default document => {
   for (const script of scripts) {
     const { query } = urlParse(script.src)
     const q = querystring.parse(query.replace(/^\?/, ''))
-    return q['tilecloud-api-key'] || null
+    if (q['tilecloud-api-key']) {
+      return q['tilecloud-api-key']
+    }
   }
 
   return null
