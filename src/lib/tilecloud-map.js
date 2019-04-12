@@ -20,16 +20,16 @@ export default class TilecloudMap extends mapboxgl.Map {
     const bearing = parseFloat(container.dataset.bearing) || 0
     const pitch = parseFloat(container.dataset.pitch) || 0
     const customMarker = container.dataset.customMarker || null
-    const hash = (container.dataset.hash || 'false').toUpperCase() === 'TRUE'
-    const center = lat && lng ? [lng, lat] : false
-    const gestureHandling = (container.dataset['gesture-handling'] || 'true').toUpperCase() === 'TRUE'
+    const hash = ('on' === container.dataset.hash)
+    const gestureHandling = ('off' !== container.dataset.gestureHandling)
+    const marker = ('off' !== container.dataset.marker)
     const style = container.dataset.style || 'osm-bright'
     const key = container.dataset.key || parseApiKey(document)
 
     const options = {
       style: getStyleURL(style, key),
       container,
-      center: center,
+      center: [lng, lat],
       bearing: bearing,
       pitch: pitch,
       zoom: zoom,
@@ -55,18 +55,18 @@ export default class TilecloudMap extends mapboxgl.Map {
 
     map.on('load', event => {
       const map = event.target
-      if (center) {
+      if (options.center && marker) {
         if (content) {
           const popup = new mapboxgl.Popup().setHTML(content)
           if (customMarker) {
             const container = document.querySelector(customMarker)
             container.style.display = 'block'
-            new mapboxgl.Marker(container).setLngLat(center).addTo(map).setPopup(popup)
+            new mapboxgl.Marker(container).setLngLat(options.center).addTo(map).setPopup(popup)
           } else {
-            new mapboxgl.Marker().setLngLat(center).addTo(map).setPopup(popup)
+            new mapboxgl.Marker().setLngLat(options.center).addTo(map).setPopup(popup)
           }
         } else {
-          new mapboxgl.Marker().setLngLat(center).addTo(map)
+          new mapboxgl.Marker().setLngLat(options.center).addTo(map)
         }
       }
 
