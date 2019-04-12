@@ -22,6 +22,10 @@ const render = container => {
   const hash = ('on' === container.dataset.hash)
   const gestureHandling = ('off' !== container.dataset.gestureHandling)
   const marker = ('off' !== container.dataset.marker)
+
+  const navigationControl = ('off' !== container.dataset.navigationControl)
+  const geolocateControl = ('off' !== container.dataset.geolocateControl)
+
   const style = container.dataset.style || 'osm-bright'
   const key = container.dataset.key || parseApiKey(document)
 
@@ -47,8 +51,14 @@ const render = container => {
     new GestureHandling().addTo(map)
   }
 
-  map.addControl(new mapboxgl.NavigationControl())
-  map.addControl(new mapboxgl.GeolocateControl())
+  if (navigationControl) {
+    map.addControl(new mapboxgl.NavigationControl())
+  }
+
+  if (geolocateControl) {
+    map.addControl(new mapboxgl.GeolocateControl())
+  }
+
   map.addControl(new TilecloudControl())
 
   map.on('load', event => {
