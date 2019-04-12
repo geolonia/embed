@@ -32,6 +32,18 @@
     ></div>
   </div>
 
+  <div class="example">
+    <h2>Without controls</h2>
+    <div
+      class="tilecloud"
+      data-key="YOUR-API-KEY"
+      data-navigation-control="off"
+      data-geolocate-control="off"
+      data-lat="35.681236"
+      data-lng="139.767125"
+      data-zoom="12"
+    ></div>
+  </div>
 
   <div class="example">
     <h2>Basic map with updating hash</h2>
@@ -114,6 +126,19 @@
 
   <div id="custom-marker"><img src="./icon.png" alt=""></div>
 
+  <div class="example">
+    <h2>Custom with JavaScript</h2>
+    <div
+      id="my-map"
+      data-key="YOUR-API-KEY"
+      data-lat="35.681236"
+      data-lng="139.767125"
+      data-zoom="9"
+    ></div>
+    <pre>var map = new tilecloud.Map(document.querySelector('#my-map'));
+setInterval(function() { myMap.rotateTo( myMap.getBearing() + 90 ) }, 5000);</pre>
+  </div>
+
   <footer>
     &copy; <a href="https://tilecloud.io">tilecloud.io</a>
   </footer>
@@ -122,7 +147,7 @@
     var examples = document.querySelectorAll('.example');
     for (var i = 0; i < examples.length; i++) {
       var example = examples[i];
-      var html = example.querySelector('.tilecloud').outerHTML;
+      var html = example.querySelector('.tilecloud, #my-map').outerHTML;
       var pre = document.createElement('pre');
       pre.innerText = html.replace(/(<div.+?)(>)/g, "$1\n$2").replace(/ ([^ ]+=[^ ]+)/g, "\n  $1");
       example.insertBefore(pre, example.querySelector('.tilecloud'));
@@ -133,6 +158,10 @@
 
   <script src="./embed.js"></script>
 
+  <script>
+    var myMap = new tilecloud.Map(document.querySelector('#my-map'));
+    setInterval(function() { myMap.rotateTo( myMap.getBearing() + 90 ) }, 5000);
+  </script>
 </body>
 
 </html>
