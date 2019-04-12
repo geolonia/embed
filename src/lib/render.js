@@ -20,7 +20,7 @@ const render = container => {
   const pitch = parseFloat(container.dataset.pitch) || 0
   const customMarker = container.dataset.customMarker || null
   const hash = (container.dataset.hash || 'false').toUpperCase() === 'TRUE'
-  const center = lat && lng ? [lng, lat] : false
+  const center = [lng, lat]
   const gestureHandling = (container.dataset['gesture-handling'] || 'true').toUpperCase() === 'TRUE'
   const style = container.dataset.style || 'osm-bright'
   const key = container.dataset.key || parseApiKey(document)
