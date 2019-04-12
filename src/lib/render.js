@@ -20,16 +20,15 @@ const render = container => {
   const pitch = parseFloat(container.dataset.pitch) || 0
   const customMarker = container.dataset.customMarker || null
   const hash = ('on' === container.dataset.hash)
-  const center = lat && lng ? [lng, lat] : false
-  const gestureHandling = !('off' === container.dataset.gestureHandling)
-  const marker = !('off' === container.dataset.marker)
+  const gestureHandling = ('off' !== container.dataset.gestureHandling)
+  const marker = ('off' !== container.dataset.marker)
   const style = container.dataset.style || 'osm-bright'
   const key = container.dataset.key || parseApiKey(document)
 
   const options = {
     style: getStyleURL(style, key),
     container,
-    center: center,
+    center: [lng, lat],
     bearing: bearing,
     pitch: pitch,
     zoom: zoom,
@@ -54,18 +53,18 @@ const render = container => {
 
   map.on('load', event => {
     const map = event.target
-    if (center && marker) {
+    if (options.center && marker) {
       if (content) {
         const popup = new mapboxgl.Popup().setHTML(content)
         if (customMarker) {
           const container = document.querySelector(customMarker)
           container.style.display = 'block'
-          new mapboxgl.Marker(container).setLngLat(center).addTo(map).setPopup(popup)
+          new mapboxgl.Marker(container).setLngLat(options.center).addTo(map).setPopup(popup)
         } else {
-          new mapboxgl.Marker().setLngLat(center).addTo(map).setPopup(popup)
+          new mapboxgl.Marker().setLngLat(options.center).addTo(map).setPopup(popup)
         }
       } else {
-        new mapboxgl.Marker().setLngLat(center).addTo(map)
+        new mapboxgl.Marker().setLngLat(options.center).addTo(map)
       }
     }
 
