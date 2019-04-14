@@ -1,3 +1,4 @@
 {
+  "plugins": ["@babel/plugin-transform-classes"],
   "presets": ["@babel/preset-env"]
 }

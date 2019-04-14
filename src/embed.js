@@ -19,9 +19,9 @@ const observer = new IntersectionObserver(entries => {
 
 const containers = document.querySelectorAll('.tilecloud')
 
-containers.forEach(container => {
-  observer.observe(container)
-})
+for (let i = 0; i < containers.length; i++) {
+  observer.observe(containers[i])
+}
 
 window.tilecloud = {
   Map: TilecloudMap,
