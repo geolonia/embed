@@ -1,6 +1,6 @@
 import mapboxgl from 'mapbox-gl'
 import TilecloudControl from '@tilecloud/mbgl-tilecloud-control'
-import GestureHandling from '@tilecloud/mbgl-gesture-handling'
+import GestureHandling from './mbgl-gesture-handling'
 import parseAtts from './parse-atts'
 
 const getStyleURL = (styleName, userKey, stage = 'v1') => {
