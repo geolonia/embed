@@ -2,7 +2,6 @@
  * @file Entry for tilecloud.js
  */
 
-import '@babel/polyfill'
 import 'intersection-observer'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
