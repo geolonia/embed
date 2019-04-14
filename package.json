@@ -2,7 +2,7 @@
   "name": "@tilecloud/embed",
   "version": "0.3.1",
   "description": "TileCloud embed JS API",
-  "main": "lib/index.js",
+  "main": "dist/embed.js",
   "scripts": {
     "start": "webpack-dev-server --mode development --config ./docs/webpack.config.js",
     "build": "npm run build:embed && npm run build:docs",
