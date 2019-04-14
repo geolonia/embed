@@ -1,6 +1,6 @@
 {
   "name": "@tilecloud/embed",
-  "version": "0.2.6",
+  "version": "0.3.1",
   "description": "TileCloud embed JS API",
   "main": "lib/index.js",
   "scripts": {
