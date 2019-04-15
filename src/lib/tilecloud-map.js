@@ -1,6 +1,7 @@
 import mapboxgl from 'mapbox-gl'
 import TilecloudControl from '@tilecloud/mbgl-tilecloud-control'
 import GestureHandling from './mbgl-gesture-handling'
+import simpleStyle from './simplestyle'
 import parseAtts from './parse-atts'
 
 const getStyleURL = (styleName, userKey, stage = 'v1') => {
@@ -78,7 +79,19 @@ export default class TilecloudMap extends mapboxgl.Map {
         }
       }
 
-      // TODO: Fires the custom event at here
+      if (atts.geojson) {
+        const el = document.querySelector(atts.geojson)
+        if (el) {
+          const json = JSON.parse(el.textContent)
+          new simpleStyle(json).addTo(map)
+        } else {
+          fetch(atts.geojson).then(response => {
+            return response.json()
+          }).then(json => {
+            new simpleStyle(json).addTo(map)
+          })
+        }
+      }
     })
 
     return map

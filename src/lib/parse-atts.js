@@ -18,6 +18,7 @@ export default container => {
     geolocateControl: 'off',
     fullscreenControl: 'off',
     scaleControl: 'off',
+    geojson: null,
     style: 'osm-bright',
     key: parseApiKey(document),
     ...container.dataset,
