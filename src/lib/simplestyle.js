@@ -30,7 +30,75 @@ class simpleStyle {
       features[i].properties = properties
     }
 
+    this.setPolygonGeometries(map, features)
+    this.setLineGeometries(map, features)
     this.setPointGeometries(map, features)
+  }
+
+  /**
+   * Set line geometries.
+   *
+   * @param map
+   * @param features
+   */
+  setPolygonGeometries(map, features) {
+    const polygon = _.filter(features, feature => {
+      if (feature.geometry && feature.geometry.type && 'polygon' === feature.geometry.type.toLowerCase()) {
+        return true
+      }
+    })
+
+    map.addSource('simple-style-polygons', {
+      type: 'geojson',
+      data: {
+        type: 'FeatureCollection',
+        features: polygon,
+      },
+    })
+
+    map.addLayer({
+      id: 'polygon-simple-style-simple-style-polygons',
+      type: 'fill',
+      source: 'simple-style-polygons',
+      paint: {
+        'fill-color': ['get', 'fill'],
+        'fill-opacity': ['to-number', ['get', 'fill-opacity']],
+        'fill-outline-color': ['get', 'stroke'],
+      },
+    })
+  }
+
+  /**
+   * Set line geometries.
+   *
+   * @param map
+   * @param features
+   */
+  setLineGeometries(map, features) {
+    const lines = _.filter(features, feature => {
+      if (feature.geometry && feature.geometry.type && 'linestring' === feature.geometry.type.toLowerCase()) {
+        return true
+      }
+    })
+
+    map.addSource('simple-style-lines', {
+      type: 'geojson',
+      data: {
+        type: 'FeatureCollection',
+        features: lines,
+      },
+    })
+
+    map.addLayer({
+      id: 'line-simple-style-lines',
+      type: 'line',
+      source: 'simple-style-lines',
+      paint: {
+        'line-width': ['to-number', ['get', 'stroke-width']],
+        'line-color': ['get', 'stroke'],
+        'line-opacity': ['to-number', ['get', 'stroke-opacity']],
+      },
+    })
   }
 
   /**
@@ -41,7 +109,7 @@ class simpleStyle {
    */
   setPointGeometries(map, features) {
     const points = _.filter(features, feature => {
-      if (feature.geometry && feature.geometry.type && 'Point' === feature.geometry.type) {
+      if (feature.geometry && feature.geometry.type && 'point' === feature.geometry.type.toLowerCase()) {
         return true
       }
     })
