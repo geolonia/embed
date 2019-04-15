@@ -104,7 +104,7 @@ class simpleStyle {
       const description = e.features[0].properties.description
 
       while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360
       }
 
       if (description) {
@@ -118,7 +118,7 @@ class simpleStyle {
       }
     })
 
-    map.on('mouseleave', 'circle-simple-style-points', e => {
+    map.on('mouseleave', 'circle-simple-style-points', () => {
       map.getCanvas().style.cursor = ''
     })
   }
