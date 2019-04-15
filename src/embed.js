@@ -25,5 +25,6 @@ for (let i = 0; i < containers.length; i++) {
 
 window.tilecloud = {
   Map: TilecloudMap,
-  mapboxgl,
 }
+
+window.mapboxgl = mapboxgl
