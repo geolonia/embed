@@ -1,6 +1,7 @@
 'use strict'
 
 import _ from 'lodash'
+import mapboxgl from 'mapbox-gl'
 
 class simpleStyle {
   constructor(json) {
@@ -29,6 +30,16 @@ class simpleStyle {
       features[i].properties = properties
     }
 
+    this.setPointGeometries(map, features)
+  }
+
+  /**
+   * Setup point geometries.
+   *
+   * @param map
+   * @param features
+   */
+  setPointGeometries(map, features) {
     const points = _.filter(features, feature => {
       if (feature.geometry && feature.geometry.type && 'Point' === feature.geometry.type) {
         return true
@@ -86,6 +97,29 @@ class simpleStyle {
         ],
         'text-allow-overlap': false,
       },
+    })
+
+    map.on('click', 'circle-simple-style-points', e => {
+      const coordinates = e.features[0].geometry.coordinates.slice()
+      const description = e.features[0].properties.description
+
+      while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+      }
+
+      if (description) {
+        new mapboxgl.Popup().setLngLat(coordinates).setHTML(description).addTo(map)
+      }
+    })
+
+    map.on('mouseenter', 'circle-simple-style-points', e => {
+      if (e.features[0].properties.description) {
+        map.getCanvas().style.cursor = 'pointer'
+      }
+    })
+
+    map.on('mouseleave', 'circle-simple-style-points', e => {
+      map.getCanvas().style.cursor = ''
     })
   }
 }
