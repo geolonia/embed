@@ -139,6 +139,74 @@
 setInterval(function() { myMap.rotateTo( myMap.getBearing() + 90 ) }, 5000);</pre>
   </div>
 
+  <div class="example">
+    <h2>GeoJSON with SimpleStyle</h2>
+    <script id="example-geojson" type="application/json">
+      {
+        "type": "FeatureCollection",
+        "features": [
+          {
+            "type": "Feature",
+            "properties": {
+              "title": "集合場所",
+              "marker-color": "#0096ff",
+              "marker-size": "medium",
+              "marker-symbol": ""
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                139.75642561912537,
+                35.673569928415574
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "title": "売店",
+              "marker-color": "#ff9300",
+              "marker-size": "small",
+              "marker-symbol": ""
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                139.75665628910062,
+                35.673190798997
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "title": "噴水",
+              "marker-color": "#ff2600",
+              "marker-size": "large",
+              "marker-symbol": ""
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                139.7567903995514,
+                35.67351763480974
+              ]
+            }
+          }
+        ]
+      }
+    </script>
+    <div
+      class="tilecloud"
+      data-key="YOUR-API-KEY"
+      data-lat="35.67343"
+      data-lng="139.75675"
+      data-zoom="18"
+      data-geojson="#example-geojson"
+      data-marker="off"
+    ></div>
+  </div>
+
   <footer>
     &copy; <a href="https://tilecloud.io">tilecloud.io</a>
   </footer>
