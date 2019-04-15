@@ -33,7 +33,7 @@
     "eslint": "^5.3.0",
     "gh-pages": "^2.0.1",
     "jsdom": "^13.2.0",
-    "mapbox-gl": "^0.52.0-beta.2",
+    "mapbox-gl": "^0.53.1",
     "mocha": "^5.2.0",
     "prettier-eslint": "^8.8.2",
     "prettier-eslint-cli": "^4.7.1",
@@ -44,8 +44,7 @@
     "webpack-dev-server": "^3.3.1"
   },
   "peerDependencies": {
-    "@babel/polyfill": "^7",
-    "mapbox-gl": "^0.52"
+    "mapbox-gl": "^0.53"
   },
   "dependencies": {
     "@tilecloud/mbgl-gesture-handling": "git+https://github.com/tilecloud/mbgl-gesture-handling.git",
