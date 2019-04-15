@@ -89,8 +89,6 @@ export default class TilecloudMap extends mapboxgl.Map {
             return response.json()
           }).then(json => {
             new simpleStyle(json).addTo(map)
-          }).catch(e => {
-            console.log(e)
           })
         }
       }

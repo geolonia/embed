@@ -33,7 +33,7 @@ class simpleStyle {
       if (feature.geometry && feature.geometry.type && 'Point' === feature.geometry.type) {
         return true
       }
-    });
+    })
 
     map.addSource('simple-style-points', {
       type: 'geojson',
