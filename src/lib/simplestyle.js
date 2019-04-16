@@ -131,7 +131,7 @@ class simpleStyle {
       source: 'simple-style-points',
       filter: ['has', 'point_count'],
       paint: {
-        'circle-radius': 30,
+        'circle-radius': 25,
         'circle-color': '#888888',
         'circle-opacity': 0.6,
         'circle-stroke-width': 2,
