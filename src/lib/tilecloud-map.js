@@ -89,7 +89,7 @@ export default class TilecloudMap extends mapboxgl.Map {
             return response.json()
           }).then(json => {
             new simpleStyle(json, {
-              cluster: atts.cluster,
+              cluster: ('on' === atts.cluster),
               clusterColor: atts.clusterColor,
             }).addTo(map)
           })
@@ -98,7 +98,7 @@ export default class TilecloudMap extends mapboxgl.Map {
           if (el) {
             const json = JSON.parse(el.textContent)
             new simpleStyle(json, {
-              cluster: atts.cluster,
+              cluster: ('on' === atts.cluster),
               clusterColor: atts.clusterColor,
             }).addTo(map)
           }
