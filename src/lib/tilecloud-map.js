@@ -1,4 +1,5 @@
 import 'whatwg-fetch'
+import 'promise-polyfill/src/polyfill'
 import mapboxgl from 'mapbox-gl'
 import TilecloudControl from '@tilecloud/mbgl-tilecloud-control'
 import GestureHandling from './mbgl-gesture-handling'
@@ -9,14 +10,7 @@ const getStyleURL = (styleName, userKey, stage = 'v1') => {
   return `https://api.tilecloud.io/${stage}/styles/${styleName}?key=${userKey}`
 }
 
-const isValidUrl = string => {
-  try {
-    new URL(string)
-    return true
-  } catch (_) {
-    return false
-  }
-}
+const isValidUrl = string => /^https?:\/\//.test(string)
 
 /**
  * Render the map
