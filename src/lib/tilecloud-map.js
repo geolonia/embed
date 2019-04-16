@@ -1,3 +1,4 @@
+import 'whatwg-fetch'
 import mapboxgl from 'mapbox-gl'
 import TilecloudControl from '@tilecloud/mbgl-tilecloud-control'
 import GestureHandling from './mbgl-gesture-handling'
