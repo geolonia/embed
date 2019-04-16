@@ -8,6 +8,15 @@ const getStyleURL = (styleName, userKey, stage = 'v1') => {
   return `https://api.tilecloud.io/${stage}/styles/${styleName}?key=${userKey}`
 }
 
+const isValidUrl = (string) => {
+  try {
+    new URL(string);
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
 /**
  * Render the map
  *
@@ -80,16 +89,20 @@ export default class TilecloudMap extends mapboxgl.Map {
       }
 
       if (atts.geojson) {
-        const el = document.querySelector(atts.geojson)
-        if (el) {
-          const json = JSON.parse(el.textContent)
-          new simpleStyle(json).addTo(map)
-        } else {
-          fetch(atts.geojson).then(response => {
-            return response.json()
-          }).then(json => {
+        try {
+          const el = document.querySelector(atts.geojson)
+          if (el) {
+            const json = JSON.parse(el.textContent)
             new simpleStyle(json).addTo(map)
-          })
+          }
+        } catch (e) {
+          if (isValidUrl(atts.geojson)) {
+            fetch(atts.geojson).then(response => {
+              return response.json()
+            }).then(json => {
+              new simpleStyle(json).addTo(map)
+            })
+          }
         }
       }
     })
