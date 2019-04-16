@@ -10,7 +10,7 @@ const getStyleURL = (styleName, userKey, stage = 'v1') => {
   return `https://api.tilecloud.io/${stage}/styles/${styleName}?key=${userKey}`
 }
 
-const isValidUrl = string => /^https:\/\//.test(string)
+const isValidUrl = string => /^https?:\/\//.test(string)
 
 /**
  * Render the map
