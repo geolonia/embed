@@ -120,12 +120,43 @@ class simpleStyle {
         type: 'FeatureCollection',
         features: points,
       },
+      cluster: true,
+      clusterMaxZoom: 14, // Max zoom to cluster points on
+      clusterRadius: 50, // Radius of each cluster when clustering points
+    })
+
+    map.addLayer({
+      id: 'clusters',
+      type: 'circle',
+      source: 'simple-style-points',
+      filter: ['has', 'point_count'],
+      paint: {
+        'circle-radius': 30,
+        'circle-color': '#888888',
+        'circle-opacity': 0.6,
+        'circle-stroke-width': 2,
+        'circle-stroke-color': '#555555',
+        'circle-stroke-opacity': 1,
+      },
+    })
+
+    map.addLayer({
+      id: 'cluster-count',
+      type: 'symbol',
+      source: 'simple-style-points',
+      filter: ['has', 'point_count'],
+      layout: {
+        'text-field': '{point_count_abbreviated}',
+        'text-size': 14,
+        'text-font': ['Noto Sans Regular'],
+      },
     })
 
     map.addLayer({
       id: 'circle-simple-style-points',
       type: 'circle',
       source: 'simple-style-points',
+      filter: ['!', ['has', 'point_count']],
       paint: {
         'circle-radius': [
           'case',
@@ -145,6 +176,7 @@ class simpleStyle {
       id: 'symbol-simple-style-points',
       type: 'symbol',
       source: 'simple-style-points',
+      filter: ['!', ['has', 'point_count']],
       paint: {
         'text-color': '#000000',
         'text-halo-color': 'rgba(255, 255, 255, 1)',
@@ -187,6 +219,28 @@ class simpleStyle {
     })
 
     map.on('mouseleave', 'circle-simple-style-points', () => {
+      map.getCanvas().style.cursor = ''
+    })
+
+    map.on('click', 'clusters', function (e) {
+      const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] })
+      const clusterId = features[0].properties.cluster_id
+      map.getSource('simple-style-points').getClusterExpansionZoom(clusterId, function (err, zoom) {
+        if (err)
+          return
+
+        map.easeTo({
+          center: features[0].geometry.coordinates,
+          zoom: zoom,
+        })
+      })
+    })
+
+    map.on('mouseenter', 'clusters', function () {
+      map.getCanvas().style.cursor = 'pointer'
+    })
+
+    map.on('mouseleave', 'clusters', function () {
       map.getCanvas().style.cursor = ''
     })
   }
