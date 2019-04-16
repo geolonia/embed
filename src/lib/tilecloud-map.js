@@ -89,19 +89,17 @@ export default class TilecloudMap extends mapboxgl.Map {
       }
 
       if (atts.geojson) {
-        try {
+        if (isValidUrl(atts.geojson)) {
+          fetch(atts.geojson).then(response => {
+            return response.json()
+          }).then(json => {
+            new simpleStyle(json).addTo(map)
+          })
+        } else {
           const el = document.querySelector(atts.geojson)
           if (el) {
             const json = JSON.parse(el.textContent)
             new simpleStyle(json).addTo(map)
-          }
-        } catch (e) {
-          if (isValidUrl(atts.geojson)) {
-            fetch(atts.geojson).then(response => {
-              return response.json()
-            }).then(json => {
-              new simpleStyle(json).addTo(map)
-            })
           }
         }
       }
