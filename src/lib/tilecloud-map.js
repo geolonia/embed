@@ -1,4 +1,5 @@
 import 'whatwg-fetch'
+import 'promise-polyfill/src/polyfill'
 import mapboxgl from 'mapbox-gl'
 import TilecloudControl from '@tilecloud/mbgl-tilecloud-control'
 import GestureHandling from './mbgl-gesture-handling'
@@ -9,13 +10,7 @@ const getStyleURL = (styleName, userKey, stage = 'v1') => {
   return `https://api.tilecloud.io/${stage}/styles/${styleName}?key=${userKey}`
 }
 
-const isValidUrl = string => {
-  try {
-    return (new URL(string)).origin !== 'null'
-  } catch (variable) {
-    false
-  }
-}
+const isValidUrl = string => /^https:\/\//.test(string)
 
 /**
  * Render the map
@@ -25,7 +20,6 @@ const isValidUrl = string => {
 export default class TilecloudMap extends mapboxgl.Map {
   constructor(container) {
     const atts = parseAtts(container)
-
     const options = {
       style: getStyleURL(atts.style, atts.key),
       container,
@@ -89,7 +83,6 @@ export default class TilecloudMap extends mapboxgl.Map {
       }
 
       if (atts.geojson) {
-        console.log(isValidUrl(atts.geojson))
         if (isValidUrl(atts.geojson)) {
           fetch(atts.geojson).then(response => {
             return response.json()
