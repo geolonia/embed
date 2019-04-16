@@ -88,13 +88,19 @@ export default class TilecloudMap extends mapboxgl.Map {
           fetch(atts.geojson).then(response => {
             return response.json()
           }).then(json => {
-            new simpleStyle(json).addTo(map)
+            new simpleStyle(json, {
+              cluster: atts.cluster,
+              clusterColor: atts.clusterColor,
+            }).addTo(map)
           })
         } else {
           const el = document.querySelector(atts.geojson)
           if (el) {
             const json = JSON.parse(el.textContent)
-            new simpleStyle(json).addTo(map)
+            new simpleStyle(json, {
+              cluster: atts.cluster,
+              clusterColor: atts.clusterColor,
+            }).addTo(map)
           }
         }
       }

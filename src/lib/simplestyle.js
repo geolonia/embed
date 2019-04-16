@@ -4,8 +4,14 @@ import _ from 'lodash'
 import mapboxgl from 'mapbox-gl'
 
 class simpleStyle {
-  constructor(json) {
+  constructor(json, options) {
     this.json = json
+
+    this.options = {
+      cluster: true,
+      clusterColor: '#ff0000',
+      ...options,
+    }
 
     this.defaults = {
       title: '',
@@ -120,8 +126,8 @@ class simpleStyle {
         type: 'FeatureCollection',
         features: points,
       },
-      cluster: true,
-      clusterMaxZoom: 14, // Max zoom to cluster points on
+      cluster: this.options.cluster,
+      clusterMaxZoom: 14,
       clusterRadius: 50, // Radius of each cluster when clustering points
     })
 
@@ -131,12 +137,9 @@ class simpleStyle {
       source: 'simple-style-points',
       filter: ['has', 'point_count'],
       paint: {
-        'circle-radius': 25,
-        'circle-color': '#888888',
+        'circle-radius': 20,
+        'circle-color': this.options.clusterColor,
         'circle-opacity': 0.6,
-        'circle-stroke-width': 2,
-        'circle-stroke-color': '#555555',
-        'circle-stroke-opacity': 1,
       },
     })
 

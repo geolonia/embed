@@ -19,6 +19,8 @@ export default container => {
     fullscreenControl: 'off',
     scaleControl: 'off',
     geojson: null,
+    cluster: true,
+    clusterColor: '#ff0000',
     style: 'osm-bright',
     key: parseApiKey(document),
     ...container.dataset,
