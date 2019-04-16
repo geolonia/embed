@@ -20,6 +20,7 @@ const isValidUrl = string => /^https:\/\//.test(string)
 export default class TilecloudMap extends mapboxgl.Map {
   constructor(container) {
     const atts = parseAtts(container)
+
     const options = {
       style: getStyleURL(atts.style, atts.key),
       container,
