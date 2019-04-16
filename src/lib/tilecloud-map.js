@@ -9,12 +9,12 @@ const getStyleURL = (styleName, userKey, stage = 'v1') => {
   return `https://api.tilecloud.io/${stage}/styles/${styleName}?key=${userKey}`
 }
 
-const isValidUrl = (string) => {
+const isValidUrl = string => {
   try {
-    new URL(string);
-    return true;
+    new URL(string)
+    return true
   } catch (_) {
-    return false;
+    return false
   }
 }
 
