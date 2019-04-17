@@ -6,11 +6,22 @@ import GestureHandling from './mbgl-gesture-handling'
 import simpleStyle from './simplestyle'
 import parseAtts from './parse-atts'
 
-const getStyleURL = (styleName, userKey, stage = 'v1') => {
-  return `https://api.tilecloud.io/${stage}/styles/${styleName}?key=${userKey}`
+const getStyleURL = (styleName, userKey, stage = 'v1', lang = '') => {
+  if ('en' === lang) {
+    return `https://api.tilecloud.io/${stage}/styles/${styleName}?key=${userKey}&lang=en`
+  } else {
+    return `https://api.tilecloud.io/${stage}/styles/${styleName}?key=${userKey}`
+  }
 }
 
 const isValidUrl = string => /^https?:\/\//.test(string)
+
+const getLang = () => {
+  return (window.navigator.languages && window.navigator.languages[0]) ||
+    window.navigator.language ||
+    window.navigator.userLanguage ||
+    window.navigator.browserLanguage
+}
 
 /**
  * Render the map
@@ -21,8 +32,20 @@ export default class TilecloudMap extends mapboxgl.Map {
   constructor(container) {
     const atts = parseAtts(container)
 
+    let lang = 'ja'
+    if ('auto' === atts.lang) {
+      lang = getLang()
+    } else if ('ja' !== atts.lang) {
+      lang = 'en'
+    }
+
+    let style = getStyleURL(atts.style, atts.key, 'v1')
+    if (!lang.match(/^ja/i)) {
+      style = getStyleURL(atts.style, atts.key, 'v1', 'en')
+    }
+
     const options = {
-      style: getStyleURL(atts.style, atts.key),
+      style,
       container,
       center: [parseFloat(atts.lng), parseFloat(atts.lat)],
       bearing: parseFloat(atts.bearing),

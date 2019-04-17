@@ -22,6 +22,7 @@ export default container => {
     cluster: 'on',
     clusterColor: '#ff0000',
     style: 'osm-bright',
+    lang: 'auto',
     key: parseApiKey(document),
     ...container.dataset,
   }
