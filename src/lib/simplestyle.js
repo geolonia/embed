@@ -24,8 +24,6 @@ class simpleStyle {
       'stroke-width': 2,
       fill: '#7e7e7e',
       'fill-opacity': 0.6,
-      minzoom: 0,
-      maxzoom: 22,
     }
   }
 
@@ -103,6 +101,10 @@ class simpleStyle {
         'line-width': ['to-number', ['get', 'stroke-width']],
         'line-color': ['get', 'stroke'],
         'line-opacity': ['to-number', ['get', 'stroke-opacity']],
+      },
+      layout: {
+        'line-cap': 'round',
+        'line-join': 'round',
       },
     })
   }
