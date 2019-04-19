@@ -2,6 +2,7 @@
 
 import _ from 'lodash'
 import mapboxgl from 'mapbox-gl'
+import geojsonExtent from '@mapbox/geojson-extent'
 
 class simpleStyle {
   constructor(json, options) {
@@ -37,6 +38,15 @@ class simpleStyle {
     this.setPolygonGeometries(map, features)
     this.setLineGeometries(map, features)
     this.setPointGeometries(map, features)
+
+    const { lat, lng } = map.getCenter()
+
+    if (!lng && !lat) {
+      const bounds = geojsonExtent(this.json)
+      map.fitBounds(bounds, {
+        padding: 20,
+      })
+    }
   }
 
   /**
