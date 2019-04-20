@@ -13,31 +13,48 @@ class simpleStyle {
       clusterColor: '#ff0000',
       ...options,
     }
-
-    this.defaults = {
-      title: '',
-      description: '',
-      'marker-size': 'medium',
-      'marker-symbol': '',
-      'marker-color': '#7e7e7e',
-      stroke: '#555555',
-      'stroke-opacity': 1.0,
-      'stroke-width': 2,
-      fill: '#7e7e7e',
-      'fill-opacity': 0.6,
-    }
   }
 
   addTo(map) {
     const features = this.json.features
-    for (let i = 0; i < features.length; i++) {
-      const properties = { ...this.defaults, ...features[i].properties }
-      features[i].properties = properties
-    }
 
-    this.setPolygonGeometries(map, features)
-    this.setLineGeometries(map, features)
-    this.setPointGeometries(map, features)
+    const polygonandlines = _.filter(features, feature => {
+      if (feature.geometry && feature.geometry.type && 'point' !== feature.geometry.type.toLowerCase()) {
+        return true
+      }
+    })
+
+    const points = _.filter(features, feature => {
+      if (feature.geometry && feature.geometry.type && 'point' === feature.geometry.type.toLowerCase()) {
+        return true
+      }
+    })
+
+    map.addSource('tilecloud-simple-style', {
+      type: 'geojson',
+      data: {
+        type: 'FeatureCollection',
+        features: polygonandlines,
+      },
+    })
+
+    /**
+     * Point geometries should be separated because we want to enable cluster.
+     */
+    map.addSource('tilecloud-simple-style-points', {
+      type: 'geojson',
+      data: {
+        type: 'FeatureCollection',
+        features: points,
+      },
+      cluster: this.options.cluster,
+      clusterMaxZoom: 14,
+      clusterRadius: 50,
+    })
+
+    this.setPolygonGeometries(map)
+    this.setLineGeometries(map)
+    this.setPointGeometries(map)
 
     const { lat, lng } = map.getCenter()
 
@@ -55,29 +72,16 @@ class simpleStyle {
    * @param map
    * @param features
    */
-  setPolygonGeometries(map, features) {
-    const polygon = _.filter(features, feature => {
-      if (feature.geometry && feature.geometry.type && 'polygon' === feature.geometry.type.toLowerCase()) {
-        return true
-      }
-    })
-
-    map.addSource('simple-style-polygons', {
-      type: 'geojson',
-      data: {
-        type: 'FeatureCollection',
-        features: polygon,
-      },
-    })
-
+  setPolygonGeometries(map) {
     map.addLayer({
-      id: 'polygon-simple-style-simple-style-polygons',
+      id: 'tilecloud-simple-style-polygon',
       type: 'fill',
-      source: 'simple-style-polygons',
+      source: 'tilecloud-simple-style',
+      filter: ['==', '$type', 'Polygon'],
       paint: {
-        'fill-color': ['get', 'fill'],
-        'fill-opacity': ['to-number', ['get', 'fill-opacity']],
-        'fill-outline-color': ['get', 'stroke'],
+        'fill-color': ['string', ['get', 'fill'], '#7e7e7e'],
+        'fill-opacity': ['number', ['get', 'fill-opacity'], 0.6],
+        'fill-outline-color': ['string', ['get', 'stroke'], '#555555'],
       },
     })
   }
@@ -88,29 +92,16 @@ class simpleStyle {
    * @param map
    * @param features
    */
-  setLineGeometries(map, features) {
-    const lines = _.filter(features, feature => {
-      if (feature.geometry && feature.geometry.type && 'linestring' === feature.geometry.type.toLowerCase()) {
-        return true
-      }
-    })
-
-    map.addSource('simple-style-lines', {
-      type: 'geojson',
-      data: {
-        type: 'FeatureCollection',
-        features: lines,
-      },
-    })
-
+  setLineGeometries(map) {
     map.addLayer({
-      id: 'line-simple-style-lines',
+      id: 'tilecloud-simple-style-linestring',
       type: 'line',
-      source: 'simple-style-lines',
+      source: 'tilecloud-simple-style',
+      filter: ['==', '$type', 'LineString'],
       paint: {
-        'line-width': ['to-number', ['get', 'stroke-width']],
-        'line-color': ['get', 'stroke'],
-        'line-opacity': ['to-number', ['get', 'stroke-opacity']],
+        'line-width': ['number', ['get', 'stroke-width'], 2],
+        'line-color': ['string', ['get', 'stroke'], '#555555'],
+        'line-opacity': ['number', ['get', 'stroke-opacity'], 1.0],
       },
       layout: {
         'line-cap': 'round',
@@ -123,30 +114,12 @@ class simpleStyle {
    * Setup point geometries.
    *
    * @param map
-   * @param features
    */
-  setPointGeometries(map, features) {
-    const points = _.filter(features, feature => {
-      if (feature.geometry && feature.geometry.type && 'point' === feature.geometry.type.toLowerCase()) {
-        return true
-      }
-    })
-
-    map.addSource('simple-style-points', {
-      type: 'geojson',
-      data: {
-        type: 'FeatureCollection',
-        features: points,
-      },
-      cluster: this.options.cluster,
-      clusterMaxZoom: 14,
-      clusterRadius: 50, // Radius of each cluster when clustering points
-    })
-
+  setPointGeometries(map) {
     map.addLayer({
       id: 'clusters',
       type: 'circle',
-      source: 'simple-style-points',
+      source: 'tilecloud-simple-style-points',
       filter: ['has', 'point_count'],
       paint: {
         'circle-radius': 20,
@@ -158,7 +131,7 @@ class simpleStyle {
     map.addLayer({
       id: 'cluster-count',
       type: 'symbol',
-      source: 'simple-style-points',
+      source: 'tilecloud-simple-style-points',
       filter: ['has', 'point_count'],
       layout: {
         'text-field': '{point_count_abbreviated}',
@@ -170,7 +143,7 @@ class simpleStyle {
     map.addLayer({
       id: 'circle-simple-style-points',
       type: 'circle',
-      source: 'simple-style-points',
+      source: 'tilecloud-simple-style-points',
       filter: ['!', ['has', 'point_count']],
       paint: {
         'circle-radius': [
@@ -179,18 +152,18 @@ class simpleStyle {
           ['==', 'large', ['get', 'marker-size']], 11,
           7,
         ],
-        'circle-color': ['get', 'marker-color'],
-        'circle-opacity': ['to-number', ['get', 'fill-opacity']],
-        'circle-stroke-width': ['to-number', ['get', 'stroke-width']],
-        'circle-stroke-color': ['get', 'stroke'],
-        'circle-stroke-opacity': ['to-number', ['get', 'stroke-opacity']],
+        'circle-color': ['string', ['get', 'marker-color'], '#7e7e7e'],
+        'circle-opacity': ['number', ['get', 'fill-opacity'], 0.6],
+        'circle-stroke-width': ['number', ['get', 'stroke-width'], 2],
+        'circle-stroke-color': ['string', ['get', 'stroke'], '#555555'],
+        'circle-stroke-opacity': ['number', ['get', 'stroke-opacity'], 1.0],
       },
     })
 
     map.addLayer({
       id: 'symbol-simple-style-points',
       type: 'symbol',
-      source: 'simple-style-points',
+      source: 'tilecloud-simple-style-points',
       filter: ['!', ['has', 'point_count']],
       paint: {
         'text-color': '#000000',
@@ -198,7 +171,7 @@ class simpleStyle {
         'text-halo-width': 2,
       },
       layout: {
-        'icon-image': ['get', 'marker-symbol'],
+        'icon-image': ['string', ['get', 'marker-symbol'], ''],
         'text-field': ['get', 'title'],
         'text-font': ['Noto Sans Regular'],
         'text-size': 12,
