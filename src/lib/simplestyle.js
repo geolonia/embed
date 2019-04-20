@@ -57,9 +57,9 @@ class simpleStyle {
     this.setPointGeometries(map)
     this.setCluster(map)
 
-    const { lat, lng } = map.getContainer().dataset
+    const dataset = map.getContainer().dataset
 
-    if (!lng && !lat) {
+    if (!dataset || (!dataset.lng && !dataset.lat)) {
       const bounds = geojsonExtent(this.json)
       map.fitBounds(bounds, {
         padding: 20,
