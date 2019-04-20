@@ -213,7 +213,7 @@ class simpleStyle {
     map.on('click', 'clusters', function (e) {
       const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] })
       const clusterId = features[0].properties.cluster_id
-      map.getSource('simple-style-points').getClusterExpansionZoom(clusterId, function (err, zoom) {
+      map.getSource('tilecloud-simple-style-points').getClusterExpansionZoom(clusterId, function (err, zoom) {
         if (err)
           return
 
