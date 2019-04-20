@@ -10,6 +10,7 @@ class simpleStyle {
 
     this.options = {
       cluster: true,
+      heatmap: false,
       clusterColor: '#ff0000',
       ...options,
     }
@@ -38,9 +39,10 @@ class simpleStyle {
       },
     })
 
-    /**
-     * Point geometries should be separated because we want to enable cluster.
-     */
+    this.setPolygonGeometries(map)
+    this.setLineGeometries(map)
+
+
     map.addSource('tilecloud-simple-style-points', {
       type: 'geojson',
       data: {
@@ -52,11 +54,10 @@ class simpleStyle {
       clusterRadius: 50,
     })
 
-    this.setPolygonGeometries(map)
-    this.setLineGeometries(map)
     this.setPointGeometries(map)
+    this.setCluster(map)
 
-    const {lat, lng} = map.getContainer().dataset
+    const { lat, lng } = map.getContainer().dataset
 
     if (!lng && !lat) {
       const bounds = geojsonExtent(this.json)
@@ -116,30 +117,6 @@ class simpleStyle {
    * @param map
    */
   setPointGeometries(map) {
-    map.addLayer({
-      id: 'clusters',
-      type: 'circle',
-      source: 'tilecloud-simple-style-points',
-      filter: ['has', 'point_count'],
-      paint: {
-        'circle-radius': 20,
-        'circle-color': this.options.clusterColor,
-        'circle-opacity': 0.6,
-      },
-    })
-
-    map.addLayer({
-      id: 'cluster-count',
-      type: 'symbol',
-      source: 'tilecloud-simple-style-points',
-      filter: ['has', 'point_count'],
-      layout: {
-        'text-field': '{point_count_abbreviated}',
-        'text-size': 14,
-        'text-font': ['Noto Sans Regular'],
-      },
-    })
-
     map.addLayer({
       id: 'circle-simple-style-points',
       type: 'circle',
@@ -208,6 +185,37 @@ class simpleStyle {
 
     map.on('mouseleave', 'circle-simple-style-points', () => {
       map.getCanvas().style.cursor = ''
+    })
+  }
+
+  /**
+   * Setup cluster markers
+   *
+   * @param map
+   */
+  setCluster(map) {
+    map.addLayer({
+      id: 'clusters',
+      type: 'circle',
+      source: 'tilecloud-simple-style-points',
+      filter: ['has', 'point_count'],
+      paint: {
+        'circle-radius': 20,
+        'circle-color': this.options.clusterColor,
+        'circle-opacity': 0.6,
+      },
+    })
+
+    map.addLayer({
+      id: 'cluster-count',
+      type: 'symbol',
+      source: 'tilecloud-simple-style-points',
+      filter: ['has', 'point_count'],
+      layout: {
+        'text-field': '{point_count_abbreviated}',
+        'text-size': 14,
+        'text-font': ['Noto Sans Regular'],
+      },
     })
 
     map.on('click', 'clusters', function (e) {
