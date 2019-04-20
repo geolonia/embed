@@ -56,7 +56,7 @@ class simpleStyle {
     this.setLineGeometries(map)
     this.setPointGeometries(map)
 
-    const { lat, lng } = map.getCenter()
+    const {lat, lng} = map.getContainer().dataset
 
     if (!lng && !lat) {
       const bounds = geojsonExtent(this.json)
