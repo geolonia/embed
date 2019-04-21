@@ -50,9 +50,11 @@
     "@mapbox/geojson-extent": "^0.3.2",
     "@tilecloud/mbgl-gesture-handling": "git+https://github.com/tilecloud/mbgl-gesture-handling.git",
     "@tilecloud/mbgl-tilecloud-control": "^0.3.6",
+    "@turf/center": "^6.0.1",
     "intersection-observer": "^0.5.1",
     "lodash": "^4.17.11",
     "promise-polyfill": "^8.1.0",
+    "sanitize-html": "^1.20.0",
     "whatwg-fetch": "^3.0.0"
   }
 }

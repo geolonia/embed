@@ -3,6 +3,8 @@
 import _ from 'lodash'
 import mapboxgl from 'mapbox-gl'
 import geojsonExtent from '@mapbox/geojson-extent'
+import turfCenter from '@turf/center'
+import sanitizeHtml from 'sanitize-html'
 
 class simpleStyle {
   constructor(json, options) {
@@ -42,7 +44,6 @@ class simpleStyle {
     this.setPolygonGeometries(map)
     this.setLineGeometries(map)
 
-
     map.addSource('tilecloud-simple-style-points', {
       type: 'geojson',
       data: {
@@ -66,13 +67,55 @@ class simpleStyle {
         padding: 30,
       })
     }
+
+    map.addLayer({
+      id: 'tilecloud-simple-style-polygon-symbol',
+      type: 'symbol',
+      source: 'tilecloud-simple-style',
+      filter: ['==', '$type', 'Polygon'],
+      paint: {
+        'text-color': '#000000',
+        'text-halo-color': 'rgba(255, 255, 255, 1)',
+        'text-halo-width': 2,
+      },
+      layout: {
+        'text-field': ['get', 'title'],
+        'text-font': ['Noto Sans Regular'],
+        'text-size': 12,
+        'text-anchor': 'bottom',
+        'text-max-width': 12,
+        'text-offset': [0, 0],
+        'text-allow-overlap': false,
+      },
+    })
+
+    map.addLayer({
+      id: 'tilecloud-simple-style-linestring-symbol',
+      type: 'symbol',
+      source: 'tilecloud-simple-style',
+      filter: ['==', '$type', 'LineString'],
+      paint: {
+        'text-color': '#000000',
+        'text-halo-color': 'rgba(255, 255, 255, 1)',
+        'text-halo-width': 2,
+      },
+      layout: {
+        'symbol-placement': 'line',
+        'text-field': ['get', 'title'],
+        'text-font': ['Noto Sans Regular'],
+        'text-size': 12,
+        'text-anchor': 'bottom',
+        'text-max-width': 12,
+        'text-offset': [0, 0],
+        'text-allow-overlap': false,
+      },
+    })
   }
 
   /**
    * Set line geometries.
    *
    * @param map
-   * @param features
    */
   setPolygonGeometries(map) {
     map.addLayer({
@@ -86,13 +129,14 @@ class simpleStyle {
         'fill-outline-color': ['string', ['get', 'stroke'], '#555555'],
       },
     })
+
+    this.setPopup(map, 'tilecloud-simple-style-polygon')
   }
 
   /**
    * Set line geometries.
    *
    * @param map
-   * @param features
    */
   setLineGeometries(map) {
     map.addLayer({
@@ -110,6 +154,8 @@ class simpleStyle {
         'line-join': 'round',
       },
     })
+
+    this.setPopup(map, 'tilecloud-simple-style-linestring')
   }
 
   /**
@@ -165,26 +211,26 @@ class simpleStyle {
       },
     })
 
-    map.on('click', 'circle-simple-style-points', e => {
-      const coordinates = e.features[0].geometry.coordinates.slice()
+    this.setPopup(map, 'circle-simple-style-points')
+  }
+
+  setPopup(map, source) {
+    map.on('click', source, e => {
+      const center = turfCenter(e.features[0]).geometry.coordinates
       const description = e.features[0].properties.description
 
-      while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360
-      }
-
       if (description) {
-        new mapboxgl.Popup().setLngLat(coordinates).setHTML(description).addTo(map)
+        new mapboxgl.Popup().setLngLat(center).setHTML(sanitizeHtml(description)).addTo(map)
       }
     })
 
-    map.on('mouseenter', 'circle-simple-style-points', e => {
+    map.on('mouseenter', source, e => {
       if (e.features[0].properties.description) {
         map.getCanvas().style.cursor = 'pointer'
       }
     })
 
-    map.on('mouseleave', 'circle-simple-style-points', () => {
+    map.on('mouseleave', source, () => {
       map.getCanvas().style.cursor = ''
     })
   }
