@@ -62,7 +62,8 @@ class simpleStyle {
     if (!container.dataset || (!container.dataset.lng && !container.dataset.lat)) {
       const bounds = geojsonExtent(this.json)
       map.fitBounds(bounds, {
-        padding: 20,
+        duration: 0,
+        padding: 30,
       })
     }
   }
