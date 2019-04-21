@@ -87,7 +87,7 @@ export default class TilecloudMap extends mapboxgl.Map {
 
     map.on('load', event => {
       const map = event.target
-      if (options.center && 'on' === atts.marker) {
+      if (atts.lat && atts.lng && 'on' === atts.marker) {
         if (content) {
           const popup = new mapboxgl.Popup().setHTML(content)
           let marker
