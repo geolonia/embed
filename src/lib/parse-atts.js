@@ -25,7 +25,7 @@ export default container => {
     geojson: '',
     cluster: 'on',
     clusterColor: '#ff0000',
-    style: 'osm-bright',
+    style: 'tilecloud-basic',
     lang: 'auto',
     key: parseApiKey(document),
     ...container.dataset,
