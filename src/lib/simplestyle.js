@@ -1,6 +1,5 @@
 'use strict'
 
-import _ from 'lodash'
 import mapboxgl from 'mapbox-gl'
 import geojsonExtent from '@mapbox/geojson-extent'
 import turfCenter from '@turf/center'
@@ -20,18 +19,8 @@ class simpleStyle {
 
   addTo(map) {
     const features = this.json.features
-
-    const polygonandlines = _.filter(features, feature => {
-      if (feature.geometry && feature.geometry.type && 'point' !== feature.geometry.type.toLowerCase()) {
-        return true
-      }
-    })
-
-    const points = _.filter(features, feature => {
-      if (feature.geometry && feature.geometry.type && 'point' === feature.geometry.type.toLowerCase()) {
-        return true
-      }
-    })
+    const polygonandlines = features.filter(feature => ('point' !== feature.geometry.type.toLowerCase()))
+    const points = features.filter(feature => ('point' === feature.geometry.type.toLowerCase()))
 
     map.addSource('tilecloud-simple-style', {
       type: 'geojson',
