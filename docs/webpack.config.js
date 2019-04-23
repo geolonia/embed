@@ -27,6 +27,8 @@ module.exports = {
     openPage: 'index.html',
     contentBase: __dirname,
     watchContentBase: true,
-    port: 1234,
+    host: '0.0.0.0',
+    port: 3000,
+    disableHostCheck: true
   },
 }
