@@ -71,9 +71,7 @@ class simpleStyle {
         'text-field': ['get', 'title'],
         'text-font': ['Noto Sans Regular'],
         'text-size': 12,
-        'text-anchor': 'bottom',
         'text-max-width': 12,
-        'text-offset': [0, 0],
         'text-allow-overlap': false,
       },
     })
@@ -93,9 +91,7 @@ class simpleStyle {
         'text-field': ['get', 'title'],
         'text-font': ['Noto Sans Regular'],
         'text-size': 12,
-        'text-anchor': 'bottom',
         'text-max-width': 12,
-        'text-offset': [0, 0],
         'text-allow-overlap': false,
       },
     })
@@ -184,7 +180,7 @@ class simpleStyle {
         'text-halo-width': 2,
       },
       layout: {
-        'icon-image': ['string', ['get', 'marker-symbol'], ''],
+        'icon-image': "{marker-symbol}-11",
         'text-field': ['get', 'title'],
         'text-font': ['Noto Sans Regular'],
         'text-size': 12,
