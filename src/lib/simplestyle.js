@@ -180,7 +180,7 @@ class simpleStyle {
         'text-halo-width': 2,
       },
       layout: {
-        'icon-image': "{marker-symbol}-11",
+        'icon-image': '{marker-symbol}-11',
         'text-field': ['get', 'title'],
         'text-font': ['Noto Sans Regular'],
         'text-size': 12,
