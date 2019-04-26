@@ -44,19 +44,6 @@ class simpleStyle {
       clusterRadius: 50,
     })
 
-    this.setPointGeometries(map)
-    this.setCluster(map)
-
-    const container = map.getContainer()
-
-    if (!container.dataset || (!container.dataset.lng && !container.dataset.lat)) {
-      const bounds = geojsonExtent(this.json)
-      map.fitBounds(bounds, {
-        duration: 0,
-        padding: 30,
-      })
-    }
-
     map.addLayer({
       id: 'tilecloud-simple-style-polygon-symbol',
       type: 'symbol',
@@ -95,6 +82,19 @@ class simpleStyle {
         'text-allow-overlap': false,
       },
     })
+
+    this.setPointGeometries(map)
+    this.setCluster(map)
+
+    const container = map.getContainer()
+
+    if (!container.dataset || (!container.dataset.lng && !container.dataset.lat)) {
+      const bounds = geojsonExtent(this.json)
+      map.fitBounds(bounds, {
+        duration: 0,
+        padding: 30,
+      })
+    }
   }
 
   /**
