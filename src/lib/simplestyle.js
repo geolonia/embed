@@ -158,8 +158,8 @@ class simpleStyle {
         'circle-radius': [
           'case',
           ['==', 'small', ['get', 'marker-size']], 3,
-          ['==', 'large', ['get', 'marker-size']], 11,
-          7,
+          ['==', 'large', ['get', 'marker-size']], 13,
+          9,
         ],
         'circle-color': ['string', ['get', 'marker-color'], '#7e7e7e'],
         'circle-opacity': ['number', ['get', 'fill-opacity'], 0.6],
@@ -189,8 +189,8 @@ class simpleStyle {
         'text-offset': [
           'case',
           ['==', 'small', ['get', 'marker-size']], ['literal', [0, 0.4]],
-          ['==', 'large', ['get', 'marker-size']], ['literal', [0, 1]],
-          ['literal', [0, 0.8]],
+          ['==', 'large', ['get', 'marker-size']], ['literal', [0, 1.2]],
+          ['literal', [0, 1]],
         ],
         'text-allow-overlap': false,
       },
