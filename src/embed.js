@@ -6,7 +6,15 @@ import 'intersection-observer'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import TilecloudMap from './lib/tilecloud-map'
 
-window.tilecloud = {}
+const tilecloudMapQueue = []
+
+class ObserverBeforeLoad {
+  constructor(...args) {
+    return new Promise((resolve, reject) => tilecloudMapQueue.push({ args, resolve, reject }))
+  }
+}
+
+window.tilecloud = { Map: ObserverBeforeLoad }
 
 const observer = new IntersectionObserver(entries => {
   entries.forEach(item => {
@@ -19,6 +27,17 @@ const observer = new IntersectionObserver(entries => {
         const Map = TilecloudMap(mapboxgl)
         new Map(item.target)
         window.mapboxgl = mapboxgl
+        // replace
+        while (tilecloudMapQueue.length > 0) {
+          const { args, resolve, reject } = tilecloudMapQueue.pop()
+          let map
+          try {
+            map = new Map(...args)
+            resolve(map)
+          } catch (e) {
+            reject(e)
+          }
+        }
         window.tilecloud.Map = Map
       })
 

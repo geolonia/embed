@@ -150,8 +150,10 @@
       data-lng="139.767125"
       data-zoom="9"
     ></div>
-    <pre>var map = new tilecloud.Map(document.querySelector('#my-map'));
-setInterval(function() { myMap.rotateTo( myMap.getBearing() + 90 ) }, 5000);</pre>
+    <pre>new tilecloud.Map(document.querySelector('#my-map'))
+  .then(function(myMap) {
+    setInterval(function() { myMap.rotateTo( myMap.getBearing() + 90 ) }, 5000);
+  })</pre>
   </div>
 
   <div class="example">
@@ -377,8 +379,9 @@ setInterval(function() { myMap.rotateTo( myMap.getBearing() + 90 ) }, 5000);</pr
   <script src="./embed.js"></script>
 
   <script>
-    // var myMap = new tilecloud.Map(document.querySelector('#my-map'));
-    // setInterval(function() { myMap.rotateTo( myMap.getBearing() + 90 ) }, 5000);
+    new tilecloud.Map(document.querySelector('#my-map')).then(function(myMap) {
+      setInterval(function() { myMap.rotateTo( myMap.getBearing() + 90 ) }, 5000);
+    })
   </script>
 </body>
 
