@@ -1,9 +1,10 @@
 'use strict'
 
-import mapboxgl from 'mapbox-gl'
 import geojsonExtent from '@mapbox/geojson-extent'
 import turfCenter from '@turf/center'
 import sanitizeHtml from 'sanitize-html'
+
+const { mapboxgl } = window
 
 class simpleStyle {
   constructor(json, options) {

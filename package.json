@@ -26,6 +26,7 @@
   "devDependencies": {
     "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.4",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/plugin-transform-classes": "^7.4.4",
     "@babel/preset-env": "^7.4.4",
     "@babel/register": "^7.4.4",
@@ -52,6 +53,7 @@
     "@tilecloud/mbgl-gesture-handling": "git+https://github.com/tilecloud/mbgl-gesture-handling.git",
     "@tilecloud/mbgl-tilecloud-control": "^0.3.6",
     "@turf/center": "^6.0.1",
+    "babel-eslint": "^10.0.1",
     "intersection-observer": "^0.5.1",
     "promise-polyfill": "^8.1.0",
     "sanitize-html": "^1.20.1",
