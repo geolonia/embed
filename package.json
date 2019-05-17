@@ -5,6 +5,7 @@
   "main": "dist/embed.js",
   "scripts": {
     "start": "webpack-dev-server --mode development --config ./docs/webpack.config.js",
+    "start:bundle-analyze": "webpack -p --config ./webpack.bundle-analyzer.config.js",
     "build": "npm run build:embed && npm run build:docs",
     "build:docs": "webpack -p --config ./docs/webpack.config.js",
     "build:embed": "webpack -p  --config ./webpack.config.js",
@@ -54,6 +55,7 @@
     "intersection-observer": "^0.5.1",
     "promise-polyfill": "^8.1.0",
     "sanitize-html": "^1.20.1",
+    "webpack-bundle-analyzer": "^3.3.2",
     "whatwg-fetch": "^3.0.0"
   }
 }
