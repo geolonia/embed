@@ -8,6 +8,7 @@
     "build": "NODE_ENV=production npm run build:embed && NODE_ENV=production npm run build:docs",
     "build:docs": "webpack -p --config ./docs/webpack.config.js",
     "build:embed": "webpack -p  --config ./webpack.config.js",
+    "analyze": "NODE_ENV=production webpack -p --config ./webpack.bundle-analyze.config.js",
     "format": "prettier-eslint \"./src/**/*.js\" --write",
     "lint": "eslint \"src/**/*.js\"",
     "test": "npm run lint && mocha"
@@ -41,6 +42,7 @@
     "style-loader": "^0.23.1",
     "url-parse": "^1.4.7",
     "webpack": "^4.30.0",
+    "webpack-bundle-analyzer": "^3.3.2",
     "webpack-cli": "^3.3.1",
     "webpack-dev-server": "^3.3.1"
   },
