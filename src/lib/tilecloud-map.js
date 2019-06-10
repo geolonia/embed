@@ -70,6 +70,21 @@ export default class TilecloudMap extends mapboxgl.Map {
     }
 
     if ('on' === atts.fullscreenControl) {
+      // IE patch for fullscreen mode
+      if (!container.classList.contains('tilecloud')) {
+        document.onmsfullscreenchange = () => {
+          const isFullscreen = document.msFullscreenElement === container
+          if (isFullscreen) {
+            map._beforeFullscreenWidth = container.style.width
+            map._beforeFullscreenHeight = container.style.height
+            container.style.width = '100%'
+            container.style.height = '100%'
+          } else {
+            container.style.width = map._beforeFullscreenWidth
+            container.style.height = map._beforeFullscreenHeight
+          }
+        }
+      }
       map.addControl(new mapboxgl.FullscreenControl())
     }
 
