@@ -5,6 +5,7 @@
 import 'intersection-observer'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
+import './style.css'
 import TilecloudMap from './lib/tilecloud-map'
 
 const observer = new IntersectionObserver(entries => {
