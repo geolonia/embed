@@ -8,12 +8,28 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 import './style.css'
 import TilecloudMap from './lib/tilecloud-map'
 
+let isDOMContentLoaded = false
+const alreadyRenderedMaps = []
+const plugins = []
+
+document.addEventListener('DOMContentLoaded', () => {
+  isDOMContentLoaded = true
+  alreadyRenderedMaps.forEach(({ map, target }) => plugins.forEach(plugin => plugin(map, target)))
+  // clear
+  alreadyRenderedMaps.splice(0, alreadyRenderedMaps.length)
+})
+
 const observer = new IntersectionObserver(entries => {
   entries.forEach(item => {
     if (!item.isIntersecting) {
       return
     }
-    new TilecloudMap(item.target)
+    const map = new TilecloudMap(item.target)
+    if (isDOMContentLoaded) {
+      plugins.forEach(plugin => plugin(map, item.target))
+    } else {
+      alreadyRenderedMaps.push({ map, target: item.target })
+    }
     observer.unobserve(item.target)
   })
 })
@@ -26,6 +42,7 @@ for (let i = 0; i < containers.length; i++) {
 
 window.tilecloud = {
   Map: TilecloudMap,
+  registerPlugin: plugin => typeof plugin === 'function' && plugins.push(plugin),
 }
 
 window.mapboxgl = mapboxgl
