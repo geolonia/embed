@@ -14,7 +14,10 @@ const plugins = []
 
 document.addEventListener('DOMContentLoaded', () => {
   isDOMContentLoaded = true
-  alreadyRenderedMaps.forEach(({ map, target }) => plugins.forEach(plugin => plugin(map, target)))
+  alreadyRenderedMaps.forEach(
+    ({ map, target, pluginEnabled }) =>
+      pluginEnabled && plugins.forEach(plugin => plugin(map, target)),
+  )
   // clear
   alreadyRenderedMaps.splice(0, alreadyRenderedMaps.length)
 })
@@ -24,11 +27,12 @@ const observer = new IntersectionObserver(entries => {
     if (!item.isIntersecting) {
       return
     }
+    const pluginEnabled = (item.target.dataset || {}).plugin === 'on'
     const map = new TilecloudMap(item.target)
     if (isDOMContentLoaded) {
-      plugins.forEach(plugin => plugin(map, item.target))
+      pluginEnabled && plugins.forEach(plugin => plugin(map, item.target))
     } else {
-      alreadyRenderedMaps.push({ map, target: item.target })
+      alreadyRenderedMaps.push({ map, target: item.target, pluginEnabled })
     }
     observer.unobserve(item.target)
   })
@@ -42,7 +46,8 @@ for (let i = 0; i < containers.length; i++) {
 
 window.tilecloud = {
   Map: TilecloudMap,
-  registerPlugin: plugin => typeof plugin === 'function' && plugins.push(plugin),
+  registerPlugin: plugin =>
+    typeof plugin === 'function' && plugins.push(plugin),
 }
 
 window.mapboxgl = mapboxgl
