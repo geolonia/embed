@@ -1,7 +1,7 @@
 import 'whatwg-fetch'
 import 'promise-polyfill/src/polyfill'
 import mapboxgl from 'mapbox-gl'
-import TilecloudControl from '@tilecloud/mbgl-tilecloud-control'
+import GeoloniaControl from '@geolonia/mbgl-geolonia-control'
 import GestureHandling from './mbgl-gesture-handling'
 import simpleStyle from './simplestyle'
 import parseAtts from './parse-atts'
@@ -63,7 +63,7 @@ export default class TilecloudMap extends mapboxgl.Map {
     super(options)
     const map = this
 
-    map.addControl(new TilecloudControl())
+    map.addControl(new GeoloniaControl())
 
     if ('on' === atts.gestureHandling) {
       new GestureHandling().addTo(map)
