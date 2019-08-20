@@ -27,6 +27,7 @@ export default container => {
     clusterColor: '#ff0000',
     style: 'tilecloud-basic',
     lang: 'auto',
+    plugin: 'off',
     key: parseApiKey(document),
     ...container.dataset,
   }
