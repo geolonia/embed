@@ -11,12 +11,16 @@ describe('parse api key from dom', () => {
     const apiKey = parseApiKey(mocDocument)
     assert.deepEqual('abc', apiKey)
   })
+
   it('should parse with geolonia flag', () => {
     const { document: mocDocument } = new JSDOM(`<html><body>
       <script src="https://external.example.com/jquery.js"></script>
       <script src="https://external.example.com/?geolonia-api-key=def"></script>
     </body></html>`).window
 
+    const apiKey = parseApiKey(mocDocument)
+    assert.deepEqual('def', apiKey)
+  })
 
   it('should parse with tilecloud flag', () => {
     const { document: mocDocument } = new JSDOM(`<html><body>
@@ -26,6 +30,7 @@ describe('parse api key from dom', () => {
     const apiKey = parseApiKey(mocDocument)
     assert.deepEqual('abc', apiKey)
   })
+
   it('should parse with tilecloud flag', () => {
     const { document: mocDocument } = new JSDOM(`<html><body>
       <script src="https://external.example.com/jquery.js"></script>
