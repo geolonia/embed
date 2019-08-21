@@ -22,7 +22,7 @@ class simpleStyle {
     const polygonandlines = features.filter(feature => ('point' !== feature.geometry.type.toLowerCase()))
     const points = features.filter(feature => ('point' === feature.geometry.type.toLowerCase()))
 
-    map.addSource('tilecloud-simple-style', {
+    map.addSource('geolonia-simple-style', {
       type: 'geojson',
       data: {
         type: 'FeatureCollection',
@@ -33,7 +33,7 @@ class simpleStyle {
     this.setPolygonGeometries(map)
     this.setLineGeometries(map)
 
-    map.addSource('tilecloud-simple-style-points', {
+    map.addSource('geolonia-simple-style-points', {
       type: 'geojson',
       data: {
         type: 'FeatureCollection',
@@ -45,9 +45,9 @@ class simpleStyle {
     })
 
     map.addLayer({
-      id: 'tilecloud-simple-style-polygon-symbol',
+      id: 'geolonia-simple-style-polygon-symbol',
       type: 'symbol',
-      source: 'tilecloud-simple-style',
+      source: 'geolonia-simple-style',
       filter: ['==', '$type', 'Polygon'],
       paint: {
         'text-color': '#000000',
@@ -64,9 +64,9 @@ class simpleStyle {
     })
 
     map.addLayer({
-      id: 'tilecloud-simple-style-linestring-symbol',
+      id: 'geolonia-simple-style-linestring-symbol',
       type: 'symbol',
-      source: 'tilecloud-simple-style',
+      source: 'geolonia-simple-style',
       filter: ['==', '$type', 'LineString'],
       paint: {
         'text-color': '#000000',
@@ -104,9 +104,9 @@ class simpleStyle {
    */
   setPolygonGeometries(map) {
     map.addLayer({
-      id: 'tilecloud-simple-style-polygon',
+      id: 'geolonia-simple-style-polygon',
       type: 'fill',
-      source: 'tilecloud-simple-style',
+      source: 'geolonia-simple-style',
       filter: ['==', '$type', 'Polygon'],
       paint: {
         'fill-color': ['string', ['get', 'fill'], '#7e7e7e'],
@@ -115,7 +115,7 @@ class simpleStyle {
       },
     })
 
-    this.setPopup(map, 'tilecloud-simple-style-polygon')
+    this.setPopup(map, 'geolonia-simple-style-polygon')
   }
 
   /**
@@ -125,9 +125,9 @@ class simpleStyle {
    */
   setLineGeometries(map) {
     map.addLayer({
-      id: 'tilecloud-simple-style-linestring',
+      id: 'geolonia-simple-style-linestring',
       type: 'line',
-      source: 'tilecloud-simple-style',
+      source: 'geolonia-simple-style',
       filter: ['==', '$type', 'LineString'],
       paint: {
         'line-width': ['number', ['get', 'stroke-width'], 2],
@@ -140,7 +140,7 @@ class simpleStyle {
       },
     })
 
-    this.setPopup(map, 'tilecloud-simple-style-linestring')
+    this.setPopup(map, 'geolonia-simple-style-linestring')
   }
 
   /**
@@ -152,7 +152,7 @@ class simpleStyle {
     map.addLayer({
       id: 'circle-simple-style-points',
       type: 'circle',
-      source: 'tilecloud-simple-style-points',
+      source: 'geolonia-simple-style-points',
       filter: ['!', ['has', 'point_count']],
       paint: {
         'circle-radius': [
@@ -172,7 +172,7 @@ class simpleStyle {
     map.addLayer({
       id: 'symbol-simple-style-points',
       type: 'symbol',
-      source: 'tilecloud-simple-style-points',
+      source: 'geolonia-simple-style-points',
       filter: ['!', ['has', 'point_count']],
       paint: {
         'text-color': '#000000',
@@ -229,7 +229,7 @@ class simpleStyle {
     map.addLayer({
       id: 'clusters',
       type: 'circle',
-      source: 'tilecloud-simple-style-points',
+      source: 'geolonia-simple-style-points',
       filter: ['has', 'point_count'],
       paint: {
         'circle-radius': 20,
@@ -241,7 +241,7 @@ class simpleStyle {
     map.addLayer({
       id: 'cluster-count',
       type: 'symbol',
-      source: 'tilecloud-simple-style-points',
+      source: 'geolonia-simple-style-points',
       filter: ['has', 'point_count'],
       layout: {
         'text-field': '{point_count_abbreviated}',
@@ -253,7 +253,7 @@ class simpleStyle {
     map.on('click', 'clusters', function (e) {
       const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] })
       const clusterId = features[0].properties.cluster_id
-      map.getSource('tilecloud-simple-style-points').getClusterExpansionZoom(clusterId, function (err, zoom) {
+      map.getSource('geolonia-simple-style-points').getClusterExpansionZoom(clusterId, function (err, zoom) {
         if (err)
           return
 

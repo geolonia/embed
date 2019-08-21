@@ -25,7 +25,7 @@ export default container => {
     geojson: '',
     cluster: 'on',
     clusterColor: '#ff0000',
-    style: 'tilecloud-basic',
+    style: 'geolonia-basic',
     lang: 'auto',
     plugin: 'off',
     key: parseApiKey(document),

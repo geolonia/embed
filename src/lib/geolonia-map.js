@@ -8,9 +8,9 @@ import parseAtts from './parse-atts'
 
 const getStyleURL = (styleName, userKey, stage = 'v1', lang = '') => {
   if ('en' === lang) {
-    return `https://api.tilecloud.io/${stage}/styles/${styleName}?key=${userKey}&lang=en`
+    return `https://api.geolonia.com/${stage}/styles/${styleName}?key=${userKey}&lang=en`
   } else {
-    return `https://api.tilecloud.io/${stage}/styles/${styleName}?key=${userKey}`
+    return `https://api.geolonia.com/${stage}/styles/${styleName}?key=${userKey}`
   }
 }
 
@@ -28,7 +28,7 @@ const getLang = () => {
  *
  * @param container
  */
-export default class TilecloudMap extends mapboxgl.Map {
+export default class GeoloniaMap extends mapboxgl.Map {
   constructor(container) {
     const atts = parseAtts(container)
 
@@ -71,7 +71,10 @@ export default class TilecloudMap extends mapboxgl.Map {
 
     if ('on' === atts.fullscreenControl) {
       // IE patch for fullscreen mode
-      if (!container.classList.contains('tilecloud')) {
+      if (
+        !container.classList.contains('tilecloud') && // For backward compatibility
+        !container.classList.contains('geolonia')
+      ) {
         document.onmsfullscreenchange = () => {
           const isFullscreen = document.msFullscreenElement === container
           if (isFullscreen) {
