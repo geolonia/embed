@@ -2,9 +2,9 @@
 
 ## @geolonia/embed
 
-### v1.0.0
+### nightly
 
-- Renamed as `@Geolonia/embed`
+- Renamed as `@geolonia/embed`
 - plugin system
 
 ### v0.2.5
