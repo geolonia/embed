@@ -1,8 +1,8 @@
-# @tilecloud/embed
+# @geolonia/embed
 
-[![Build Status](https://travis-ci.org/tilecloud/embed.svg?branch=master)](https://travis-ci.org/tilecloud/embed)
+[![Build Status](https://travis-ci.org/geolonia/embed.svg?branch=master)](https://travis-ci.org/geolonia/embed)
 
-JS embed API for TileCloud service.
+JS embed API for Geolonia service.
 
 ## Features
 
@@ -12,21 +12,21 @@ JS embed API for TileCloud service.
 
 ## Examples
 
-https://tilecloud.github.io/embed/
+https://geolonia.github.io/embed/
 
 ## Usage
 
-Specify `.tilecloud` class for target elements.
+Specify `.geolonia` class for target elements.
 
 ```html
 <!DOCTYPE html>
 <html>
   <body>
     <div
-      class="tilecloud"
+      class="geolonia"
       ...
     ></div>
-    <script src="https://tilecloud.io/v1/embed?tilecloud-api-key=API-KEY"></script>
+    <script src="https://api.geolonia.com/v1/embed?geolonia-api-key=API-KEY"></script>
   </body>
 </html>
 ```
@@ -38,24 +38,24 @@ Or
 <html>
   <body>
     <div
-      class="tilecloud"
+      class="geolonia"
       data-key="YOUR-API-KEY"
       ...
     ></div>
-    <script src="https://tilecloud.io/v1/embed"></script>
+    <script src="https://api.geolonia.com/v1/embed"></script>
   </body>
 </html>
 ```
 
 
-You can see more examples at [https://tilecloud.github.io/embed/](https://tilecloud.github.io/embed/).
+You can see more examples at [https://geolonia.github.io/embed/](https://geolonia.github.io/embed/).
 
 # Contributing
 
 ## Development
 
 ```shell
-$ git clone git@github.com:tilecloud/embed.git
+$ git clone git@github.com:geolonia/embed.git
 $ cd embed
 $ yarn # or npm install
 $ npm start

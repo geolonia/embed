@@ -1,7 +1,7 @@
 {
-  "name": "@tilecloud/embed",
+  "name": "@geolonia/embed",
   "version": "0.12.0",
-  "description": "TileCloud embed JS API",
+  "description": "Geolonia embed JS API",
   "main": "dist/embed.js",
   "scripts": {
     "start": "webpack-dev-server --mode development --config ./docs/webpack.config.js",
@@ -12,16 +12,16 @@
     "lint": "eslint \"src/**/*.js\"",
     "test": "npm run lint && mocha"
   },
-  "author": "tilecloud",
+  "author": "Geolonia inc.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tilecloud/embed.git"
+    "url": "git+https://github.com/geolonia/embed.git"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tilecloud/embed/issues"
+    "url": "https://github.com/geolonia/embed/issues"
   },
-  "homepage": "https://github.com/tilecloud/embed#readme",
+  "homepage": "https://github.com/geolonia/embed#readme",
   "devDependencies": {
     "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.4",
@@ -49,7 +49,7 @@
   "dependencies": {
     "@geolonia/mbgl-geolonia-control": "^0.3.8",
     "@mapbox/geojson-extent": "^0.3.2",
-    "@tilecloud/mbgl-gesture-handling": "git+https://github.com/tilecloud/mbgl-gesture-handling.git",
+    "@tilecloud/mbgl-gesture-handling": "git+https://github.com/geolonia/mbgl-gesture-handling.git",
     "@turf/center": "^6.0.1",
     "core-js": "^2.6.8",
     "intersection-observer": "^0.5.1",

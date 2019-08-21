@@ -6,7 +6,9 @@ export default document => {
   for (const script of scripts) {
     const { query } = urlParse(script.src)
     const q = querystring.parse(query.replace(/^\?/, ''))
-    if (q['tilecloud-api-key']) {
+    if (q['geolonia-api-key']) {
+      return q['geolonia-api-key']
+    } else if (q['tilecloud-api-key']) { // For backward compatibility
       return q['tilecloud-api-key']
     }
   }

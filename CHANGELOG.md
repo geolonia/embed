@@ -1,12 +1,11 @@
 # Change Logs
 
-## @tilecloud/embed
+## @geolonia/embed
 
 ### nightly
 
-- renamed
-
-## @tilecloud/js (old name)
+- Renamed as `@geolonia/embed`
+- plugin system
 
 ### v0.2.5
 

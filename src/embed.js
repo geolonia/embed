@@ -1,12 +1,12 @@
 /**
- * @file Entry for tilecloud.js
+ * @file Entry for embed.js
  */
 
 import 'intersection-observer'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import './style.css'
-import TilecloudMap from './lib/tilecloud-map'
+import GeoloniaMap from './lib/geolonia-map'
 
 let isDOMContentLoaded = false
 const alreadyRenderedMaps = []
@@ -26,7 +26,7 @@ const observer = new IntersectionObserver(entries => {
     if (!item.isIntersecting) {
       return
     }
-    const map = new TilecloudMap(item.target)
+    const map = new GeoloniaMap(item.target)
     if (isDOMContentLoaded) {
       plugins.forEach(plugin => plugin(map, item.target))
     } else {
@@ -36,18 +36,21 @@ const observer = new IntersectionObserver(entries => {
   })
 })
 
-const containers = document.querySelectorAll('.tilecloud')
+const containers = document.querySelectorAll('.tilecloud, .geolonia')
 
 for (let i = 0; i < containers.length; i++) {
   observer.observe(containers[i])
 }
 
-window.tilecloud = {
-  Map: TilecloudMap,
+window.geolonia = {
+  Map: GeoloniaMap,
   registerPlugin: plugin => {
     plugins.push(plugin)
     return void 0
   },
 }
+
+// for backward compatibility
+window.tilecloud = window.geolonia
 
 window.mapboxgl = mapboxgl
