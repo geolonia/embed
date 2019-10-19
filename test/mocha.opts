@@ -1,5 +1,4 @@
 --require @babel/register
 --recursive
---reporter dot
 
 ./src/**/*.test.js

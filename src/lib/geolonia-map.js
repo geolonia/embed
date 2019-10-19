@@ -6,6 +6,8 @@ import GestureHandling from './mbgl-gesture-handling'
 import simpleStyle from './simplestyle'
 import parseAtts from './parse-atts'
 
+import * as util from './util'
+
 const getStyleURL = (styleName, userKey, stage = 'v1', lang = '') => {
   if ('en' === lang) {
     return `https://api.geolonia.com/${stage}/styles/${styleName}?key=${userKey}&lang=en`
@@ -40,7 +42,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
     }
 
     let style = ''
-    if (atts.style.match(/^https?:\/\//)) {
+    if (util.isURL(atts.style)) {
       style = atts.style
     } else {
       style = getStyleURL(atts.style, atts.key, 'v1')
