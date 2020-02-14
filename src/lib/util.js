@@ -1,12 +1,20 @@
 'use strict'
 
+/**
+ *
+ * @param {string} str target URL string
+ * @return {string|false} Resolved URL or false if not resolved
+ */
 export function isURL(str) {
   if (str.match(/^https?:\/\//)) {
-    return true
-  } else if (str.match(/^\//)) {
-    return true
-  } else if (str.match(/^\.\.?/)) {
-    return true
+    return str
+  } else if (str.match(/^\//) || str.match(/^\.\.?/)) {
+    try {
+      return new URL(str, location.href).href
+    } catch (error) {
+      console.error(error)
+      return false
+    }
   }
 
   return false
