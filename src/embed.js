@@ -42,7 +42,7 @@ for (let i = 0; i < containers.length; i++) {
   observer.observe(containers[i])
 }
 
-window.geolonia = mapboxgl
+window.geolonia = { ...mapboxgl }
 window.geolonia.Map = GeoloniaMap
 window.geolonia.registerPlugin = plugin => {
   plugins.push(plugin)
