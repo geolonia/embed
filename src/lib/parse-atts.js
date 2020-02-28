@@ -29,6 +29,7 @@ export default container => {
     lang: 'auto',
     plugin: 'off',
     key: parseApiKey(document),
+    __geolonia__stage: 'v1',
     ...container.dataset,
   }
 }
