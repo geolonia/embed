@@ -6,7 +6,7 @@ export default container => {
   if (!container.dataset) {
     container.dataset = {}
   }
-  console.log(container.dataset)
+
   return {
     lat: 0,
     lng: 0,
