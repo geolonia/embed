@@ -6,7 +6,7 @@ export default container => {
   if (!container.dataset) {
     container.dataset = {}
   }
-
+  console.log(container.dataset)
   return {
     lat: 0,
     lng: 0,
@@ -29,7 +29,7 @@ export default container => {
     lang: 'auto',
     plugin: 'off',
     key: parseApiKey(document),
-    __geolonia__stage: 'v1',
+    __geoloniaStage: 'v1',
     ...container.dataset,
   }
 }
