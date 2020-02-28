@@ -1,6 +1,6 @@
 {
   "name": "@geolonia/embed",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "description": "Geolonia embed JS API",
   "main": "dist/embed.js",
   "scripts": {
@@ -36,7 +36,7 @@
     "mapbox-gl": "^1.8.0",
     "mocha": "^5.2.0",
     "prettier-eslint": "^8.8.2",
-    "prettier-eslint-cli": "^4.7.1",
+    "prettier-eslint-cli": "^5.0.0",
     "style-loader": "^0.23.1",
     "url-parse": "^1.4.7",
     "webpack": "^4.41.6",

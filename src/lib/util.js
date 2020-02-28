@@ -12,7 +12,7 @@ export function isURL(str) {
     try {
       return new URL(str, location.href).href
     } catch (error) {
-      console.error(error)
+      console.error(error) // eslint-disable-line
       return false
     }
   }
