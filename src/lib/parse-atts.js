@@ -7,6 +7,8 @@ export default container => {
     container.dataset = {}
   }
 
+  const params = parseApiKey(document)
+
   return {
     lat: 0,
     lng: 0,
@@ -28,7 +30,8 @@ export default container => {
     style: 'geolonia/basic',
     lang: 'auto',
     plugin: 'off',
-    key: parseApiKey(document),
+    key: params.key,
+    stage: params.stage,
     ...container.dataset,
   }
 }

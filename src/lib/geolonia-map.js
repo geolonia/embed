@@ -8,7 +8,7 @@ import parseAtts from './parse-atts'
 
 import * as util from './util'
 
-const getStyleURL = (styleName, userKey, stage = 'v1', lang = '') => {
+const getStyleURL = (styleName, userKey, stage = 'dev', lang = '') => {
   if ('en' === lang) {
     return `https://api.geolonia.com/${stage}/styles/${styleName}?key=${userKey}&lang=en`
   } else {
@@ -43,9 +43,9 @@ export default class GeoloniaMap extends mapboxgl.Map {
 
     let style = util.isURL(atts.style)
     if (!style) {
-      style = getStyleURL(atts.style, atts.key, 'v1')
+      style = getStyleURL(atts.style, atts.key, atts.stage)
       if (!lang.match(/^ja/i)) {
-        style = getStyleURL(atts.style, atts.key, 'v1', 'en')
+        style = getStyleURL(atts.style, atts.key, atts.stage, 'en')
       }
     }
 
