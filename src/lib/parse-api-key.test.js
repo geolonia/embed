@@ -66,4 +66,15 @@ describe('parse api key from dom', () => {
     assert.deepEqual('YOUR-API-KEY', params.key)
     assert.deepEqual('v1', params.stage)
   })
+
+  it('should be "YOUR-API-KEY" and "v123.4"', () => {
+    const { document: mocDocument } = new JSDOM(`<html><body>
+      <script src="https://external.example.com/jquery.js"></script>
+      <script type="text/javascript" src="https://api.geolonia.com/v123.4/embed?geolonia-api-key=YOUR-API-KEY"></script>
+    </body></html>`).window
+
+    const params = parseApiKey(mocDocument)
+    assert.deepEqual('YOUR-API-KEY', params.key)
+    assert.deepEqual('v123.4', params.stage)
+  })
 })

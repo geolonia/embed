@@ -13,8 +13,12 @@ export default document => {
     const q = querystring.parse(query.replace(/^\?/, ''))
 
     if (q['geolonia-api-key'] || q['tilecloud-api-key']) {
-      params.key = q['geolonia-api-key'] || q['tilecloud-api-key'] || 'YOUR-API-KEY',
-      params.stage = (pathname.match( /^\/v1/ )) ? 'v1' : 'dev'
+      params.key = q['geolonia-api-key'] || q['tilecloud-api-key'] || 'YOUR-API-KEY'
+
+      const res = pathname.match( /^\/(v[0-9\.]+)\/embed/ )
+      if (res) {
+        params.stage = res[1]
+      }
 
       break
     }
