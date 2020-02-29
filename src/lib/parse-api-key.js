@@ -15,7 +15,7 @@ export default document => {
     if (q['geolonia-api-key'] || q['tilecloud-api-key']) {
       params.key = q['geolonia-api-key'] || q['tilecloud-api-key'] || 'YOUR-API-KEY'
 
-      const res = pathname.match( /^\/(v[0-9\.]+)\/embed/ )
+      const res = pathname.match( /^\/(v[0-9.]+)\/embed/ )
       if (res) {
         params.stage = res[1]
       }
