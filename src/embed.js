@@ -55,5 +55,5 @@ if ( window === window.parent ) {
 
   window.mapboxgl = mapboxgl
 } else {
-  console.error( '[Geolonia] We are very sorry, but we can\'t display our map in iframe.' ) // eslint-disbale-line
+  console.error( '[Geolonia] We are very sorry, but we can\'t display our map in iframe.' ) // eslint-disable-line
 }

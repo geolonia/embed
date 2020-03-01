@@ -3,15 +3,26 @@ import querystring from 'querystring'
 
 export default document => {
   const scripts = document.getElementsByTagName('script')
+  const params = {
+    key: 'YOUR-API-KEY',
+    stage: 'dev',
+  }
+
   for (const script of scripts) {
-    const { query } = urlParse(script.src)
+    const { pathname, query } = urlParse(script.src)
     const q = querystring.parse(query.replace(/^\?/, ''))
-    if (q['geolonia-api-key']) {
-      return q['geolonia-api-key']
-    } else if (q['tilecloud-api-key']) { // For backward compatibility
-      return q['tilecloud-api-key']
+
+    if (q['geolonia-api-key'] || q['tilecloud-api-key']) {
+      params.key = q['geolonia-api-key'] || q['tilecloud-api-key'] || 'YOUR-API-KEY'
+
+      const res = pathname.match( /^\/(v[0-9.]+)\/embed/ )
+      if (res) {
+        params.stage = res[1]
+      }
+
+      break
     }
   }
 
-  return null
+  return params
 }
