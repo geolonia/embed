@@ -2,8 +2,6 @@
 
 import parseApiKey from './parse-api-key'
 
-const query = parseApiKey(document)
-
 /**
  *
  * @param {string} str target URL string
@@ -30,6 +28,8 @@ export function checkPermission() {
     return true
   }
 
+  const query = parseApiKey(window.document)
+
   // Always returs true if API key isn't 'YOUR-API-KEY'.
   if ('YOUR-API-KEY' !== query.key) {
     return true
@@ -43,7 +43,7 @@ export function checkPermission() {
    * another one is in new window.
    */
   if (window.self.location.origin.match(/csb\.app$/)) {
-    if (window.self !== window.parent && document.referrer.match(/^https:\/\/codesandbox.io/)) {
+    if (window.self !== window.parent && window.document.referrer.match(/^https:\/\/codesandbox.io/)) {
       return true
     }
   }
@@ -56,7 +56,7 @@ export function checkPermission() {
     if (window.self.location.origin === window.parent.location.origin) {
       return true
     }
-  } catch(e) {
+  } catch (e) {
     return false
   }
 
