@@ -8,7 +8,7 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 import './style.css'
 import GeoloniaMap from './lib/geolonia-map'
 
-if ( window.location.origin === window.parent.location.origin ) {
+if ( window.location === window.parent.location ) {
   let isDOMContentLoaded = false
   const alreadyRenderedMaps = []
   const plugins = []
