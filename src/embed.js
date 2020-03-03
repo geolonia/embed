@@ -7,11 +7,9 @@ import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import './style.css'
 import GeoloniaMap from './lib/geolonia-map'
-import parseApiKey from './lib/parse-api-key'
+import * as util from './lib/util'
 
-const query = parseApiKey(document)
-
-if ( ('YOUR-API-KEY' !== query.key) || (window.self.location.origin === window.parent.location.origin) ) {
+if ( util.checkPermission() ) {
   let isDOMContentLoaded = false
   const alreadyRenderedMaps = []
   const plugins = []
