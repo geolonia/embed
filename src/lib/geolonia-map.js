@@ -37,7 +37,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
     let style = util.isURL(atts.style)
     if (!style) {
       style = getStyleURL(atts.style, atts.key, atts.stage)
-      if (!lang.match(/^ja/i)) {
+      if ('ja' !== lang) {
         style = getStyleURL(atts.style, atts.key, atts.stage, 'en')
       }
     }
