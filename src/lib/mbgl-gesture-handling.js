@@ -44,23 +44,23 @@ class GestureHandling {
       textBox.innerText = ''
 
       this.helpElement.appendChild(textBox)
-      document.body.appendChild(this.helpElement)
     }
   }
 
   showHelp(map, message) {
-    const rect = map.getContainer().getBoundingClientRect()
-    this.helpElement.style.top = `${rect.top + window.pageYOffset}px`
-    this.helpElement.style.left = `${rect.left + window.pageXOffset}px`
-    this.helpElement.style.width = `${rect.width}px`
-    this.helpElement.style.height = `${rect.height}px`
+    this.helpElement.style.top = 0
+    this.helpElement.style.left = 0
+    this.helpElement.style.width = '100%'
+    this.helpElement.style.height = '100%'
     this.helpElement.style.display = 'flex'
 
     this.helpElement.querySelector('div').innerText = message
+
+    map.getContainer().appendChild(this.helpElement)
   }
 
-  hideHelp() {
-    this.helpElement.style.display = 'none'
+  hideHelp(map) {
+    map.getContainer().removeChild(this.helpElement)
   }
 
   addTo(map) {
@@ -69,11 +69,11 @@ class GestureHandling {
     this.helpElement.addEventListener('wheel', event => {
       if (event.altKey || true === this.fullscreen) {
         event.preventDefault()
-        this.hideHelp()
+        this.hideHelp(map)
       } else {
         clearTimeout(this.timer)
         this.timer = setTimeout(() => {
-          this.hideHelp()
+          this.hideHelp(map)
         }, this.settings.timeout)
       }
     })
@@ -88,7 +88,7 @@ class GestureHandling {
         map.scrollZoom.disable()
         this.showHelp(map, this.settings.textMessage)
         this.timer = setTimeout(() => {
-          this.hideHelp()
+          this.hideHelp(map)
         }, this.settings.timeout)
       }
     })
@@ -96,7 +96,7 @@ class GestureHandling {
     this.helpElement.addEventListener('touchstart', event => {
       if (event.touches && (2 <= event.touches.length || true === this.fullscreen)) {
         clearTimeout(this.timer)
-        this.hideHelp()
+        this.hideHelp(map)
         map.dragPan.enable()
         event.preventDefault()
       }
@@ -109,7 +109,7 @@ class GestureHandling {
         map.dragPan.disable()
         this.timer = setTimeout(() => {
           map.dragPan.enable()
-          this.hideHelp()
+          this.hideHelp(map)
         }, this.settings.timeout)
       }
     })

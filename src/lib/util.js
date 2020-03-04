@@ -66,7 +66,7 @@ export function checkPermission() {
 
 export function getLang() {
   const lang = window.navigator.language.toLowerCase()
-  console.log(lang)
+
   if ('ja' === lang || 'ja-jp' === lang) {
     return 'ja'
   } else {
