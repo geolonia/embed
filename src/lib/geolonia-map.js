@@ -18,13 +18,6 @@ const getStyleURL = (styleName, userKey, stage = 'dev', lang = '') => {
 
 const isValidUrl = string => /^https?:\/\//.test(string)
 
-const getLang = () => {
-  return (window.navigator.languages && window.navigator.languages[0]) ||
-    window.navigator.language ||
-    window.navigator.userLanguage ||
-    window.navigator.browserLanguage
-}
-
 /**
  * Render the map
  *
@@ -36,7 +29,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
 
     let lang = 'ja'
     if ('auto' === atts.lang) {
-      lang = getLang()
+      lang = util.getLang()
     } else if ('ja' !== atts.lang) {
       lang = 'en'
     }

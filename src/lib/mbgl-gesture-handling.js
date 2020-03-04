@@ -1,5 +1,7 @@
 'use strict'
 
+import * as util from './util'
+
 class GestureHandling {
   constructor(options) {
     this.fullscreen = false
@@ -7,11 +9,19 @@ class GestureHandling {
     GestureHandling.count++
     this.timer = null
 
+    let textMessage = 'Use alt + scroll to zoom the map.'
+    let textMessageMobile = 'Use two fingers to move the map.'
+
+    if ('ja' === util.getLang()) {
+      textMessage = 'Alt キーを押しながらスクロールしてください。'
+      textMessageMobile = '2本指を使って操作してください。'
+    }
+
     this.settings = {
       backgroundColor: 'rgba(0, 0, 0, 0.8)',
       textColor: '#ffffff',
-      textMessage: 'Use alt + scroll to zoom the map.',
-      textMessageMobile: 'Use two fingers to move the map.',
+      textMessage: textMessage,
+      textMessageMobile: textMessageMobile,
       timeout: 2000,
       ...options,
     }
@@ -40,8 +50,8 @@ class GestureHandling {
 
   showHelp(map, message) {
     const rect = map.getContainer().getBoundingClientRect()
-    this.helpElement.style.top = `${rect.top + window.scrollY}px`
-    this.helpElement.style.left = `${rect.left + window.scrollX}px`
+    this.helpElement.style.top = `${rect.top + window.pageYOffset}px`
+    this.helpElement.style.left = `${rect.left + window.pageXOffset}px`
     this.helpElement.style.width = `${rect.width}px`
     this.helpElement.style.height = `${rect.height}px`
     this.helpElement.style.display = 'flex'
