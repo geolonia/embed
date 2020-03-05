@@ -14,6 +14,19 @@ if ( util.checkPermission() ) {
   const alreadyRenderedMaps = []
   const plugins = []
 
+  /**
+   *
+   * @param {HTMLElement} target
+   */
+  const renderGeoloniaMap = target => {
+    const map = new GeoloniaMap(target)
+    if (isDOMContentLoaded) {
+      plugins.forEach(plugin => plugin(map, target))
+    } else {
+      alreadyRenderedMaps.push({ map, target: target })
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     isDOMContentLoaded = true
     alreadyRenderedMaps.forEach(({ map, target }) =>
@@ -28,20 +41,20 @@ if ( util.checkPermission() ) {
       if (!item.isIntersecting) {
         return
       }
-      const map = new GeoloniaMap(item.target)
-      if (isDOMContentLoaded) {
-        plugins.forEach(plugin => plugin(map, item.target))
-      } else {
-        alreadyRenderedMaps.push({ map, target: item.target })
-      }
+      renderGeoloniaMap(item.target)
       observer.unobserve(item.target)
     })
   })
 
-  const containers = document.querySelectorAll('.tilecloud, .geolonia')
+  const containers = document.querySelectorAll('.tilecloud[data-lazy="off"], .geolonia[data-lazy="off"]')
+  const lazyContainers = document.querySelectorAll('.tilecloud:not([data-lazy="off"]), .geolonia:not([data-lazy="off"])')
 
-  for (let i = 0; i < containers.length; i++) {
-    observer.observe(containers[i])
+  // render Map immediately
+  containers.forEach(container => renderGeoloniaMap(container))
+
+  // set intersection observer
+  for (let i = 0; i < lazyContainers.length; i++) {
+    observer.observe(lazyContainers[i])
   }
 
   window.geolonia = mapboxgl
