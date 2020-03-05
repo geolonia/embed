@@ -58,10 +58,12 @@ export default class GeoloniaMap extends mapboxgl.Map {
     const content = container.innerHTML.trim()
     container.innerHTML = ''
 
-    const loading = document.createElement('div')
+    let loading
     if ('off' !== atts.loader) {
+      loading = document.createElement('div')
       loading.className = 'loading-geolonia-map'
-      loading.innerHTML = '<div class="lds-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>'
+      loading.innerHTML = `<div class="lds-grid"><div></div><div></div><div></div>
+          <div></div><div></div><div></div><div></div><div></div><div></div></div>`
       container.appendChild(loading)
     }
 
@@ -70,7 +72,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
 
     map.addControl(new GeoloniaControl())
 
-    if ('on' === atts.gestureHandling) {
+    if ('off' !== atts.gestureHandling) {
       new GestureHandling({ lang: atts.lang }).addTo(map)
     }
 
