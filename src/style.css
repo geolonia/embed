@@ -1,4 +1,4 @@
-/* Make fullscreen mode works with ie11 */;
+/* Make fullscreen mode works with ie11 */
 .geolonia:-ms-fullscreen {
   width: 100%;
   height: 100%;
