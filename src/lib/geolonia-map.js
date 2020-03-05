@@ -64,7 +64,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
     loading.style.left = 0
     loading.style.width = '100%'
     loading.style.height = '100%'
-    loading.style.backgroundColor = "rgba(238, 238, 238, 0.8)"
+    loading.style.backgroundColor = 'rgba(238, 238, 238, 0.8)'
     loading.style.zIndex = 9999
     loading.style.justifyContent = 'center'
     loading.style.alignItems = 'center'
