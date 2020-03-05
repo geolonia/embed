@@ -131,6 +131,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
           if ('on' === atts.openPopup) {
             marker.togglePopup()
           }
+          marker.getElement().classList.add('geolonia-clickable-popup')
         } else {
           new mapboxgl.Marker().setLngLat(options.center).addTo(map)
         }

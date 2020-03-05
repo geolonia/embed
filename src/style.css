@@ -1,3 +1,7 @@
+.geolonia-clickable-popup {
+  cursor: pointer;
+}
+
 /* Make fullscreen mode works with ie11 */
 .geolonia:-ms-fullscreen {
   width: 100%;
