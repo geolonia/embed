@@ -60,7 +60,11 @@ class GestureHandling {
   }
 
   hideHelp(map) {
-    map.getContainer().removeChild(this.helpElement)
+    try {
+      map.getContainer().removeChild(this.helpElement)
+    } catch (e) {
+      // nothing to do
+    }
   }
 
   addTo(map) {
