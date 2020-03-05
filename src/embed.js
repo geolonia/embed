@@ -50,7 +50,9 @@ if ( util.checkPermission() ) {
   const lazyContainers = document.querySelectorAll('.geolonia:not([data-lazy="off"])')
 
   // render Map immediately
-  containers.forEach(container => renderGeoloniaMap(container))
+  for (let i = 0; i < containers.length; i++) {
+    renderGeoloniaMap(containers[i])
+  }
 
   // set intersection observer
   for (let i = 0; i < lazyContainers.length; i++) {
