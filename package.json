@@ -49,7 +49,6 @@
   "dependencies": {
     "@geolonia/mbgl-geolonia-control": "^0.3.8",
     "@mapbox/geojson-extent": "^0.3.2",
-    "@tilecloud/mbgl-gesture-handling": "git+https://github.com/geolonia/mbgl-gesture-handling.git",
     "@turf/center": "^6.0.1",
     "core-js": "^2.6.11",
     "intersection-observer": "^0.5.1",

@@ -24,27 +24,6 @@ describe('parse api key from dom', () => {
     assert.deepEqual('dev', params.stage)
   })
 
-  it('should parse with tilecloud flag', () => {
-    const { document: mocDocument } = new JSDOM(`<html><body>
-      <script src="https://external.example.com/?tilecloud-api-key=abc"></script>
-    </body></html>`).window
-
-    const params = parseApiKey(mocDocument)
-    assert.deepEqual('abc', params.key)
-    assert.deepEqual('dev', params.stage)
-  })
-
-  it('should parse with tilecloud flag', () => {
-    const { document: mocDocument } = new JSDOM(`<html><body>
-      <script src="https://external.example.com/jquery.js"></script>
-      <script src="https://external.example.com/?tilecloud-api-key=def"></script>
-    </body></html>`).window
-
-    const params = parseApiKey(mocDocument)
-    assert.deepEqual('def', params.key)
-    assert.deepEqual('dev', params.stage)
-  })
-
   it('should be "YOUR-API-KEY" and "dev"', () => {
     const { document: mocDocument } = new JSDOM(`<html><body>
       <script src="https://external.example.com/jquery.js"></script>

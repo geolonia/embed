@@ -12,8 +12,8 @@ export default document => {
     const { pathname, query } = urlParse(script.src)
     const q = querystring.parse(query.replace(/^\?/, ''))
 
-    if (q['geolonia-api-key'] || q['tilecloud-api-key']) {
-      params.key = q['geolonia-api-key'] || q['tilecloud-api-key'] || 'YOUR-API-KEY'
+    if (q['geolonia-api-key']) {
+      params.key = q['geolonia-api-key'] || 'YOUR-API-KEY'
 
       const res = pathname.match( /^\/(v[0-9.]+)\/embed/ )
       if (res) {
