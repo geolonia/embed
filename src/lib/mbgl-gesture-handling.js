@@ -3,7 +3,7 @@
 import * as util from './util'
 
 class GestureHandling {
-  constructor(options) {
+  constructor(options = {}) {
     this.fullscreen = false
     this.id = `mbgl-gesture-handling-help-container-${GestureHandling.count}`
     GestureHandling.count++
@@ -11,8 +11,8 @@ class GestureHandling {
 
     let textMessage = 'Use alt + scroll to zoom the map.'
     let textMessageMobile = 'Use two fingers to move the map.'
-
-    if ('ja' === util.getLang()) {
+    const lang = options.lang || util.getLang()
+    if ('ja' === lang) {
       textMessage = 'Alt キーを押しながらスクロールしてください。'
       textMessageMobile = '2本指を使って操作してください。'
     }

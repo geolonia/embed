@@ -64,7 +64,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
     map.addControl(new GeoloniaControl())
 
     if ('on' === atts.gestureHandling) {
-      new GestureHandling().addTo(map)
+      new GestureHandling({ lang: atts.lang }).addTo(map)
     }
 
     if ('on' === atts.fullscreenControl) {
