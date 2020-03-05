@@ -59,19 +59,11 @@ export default class GeoloniaMap extends mapboxgl.Map {
     container.innerHTML = ''
 
     const loading = document.createElement('div')
-    loading.style.position = 'absolute'
-    loading.style.top = 0
-    loading.style.left = 0
-    loading.style.width = '100%'
-    loading.style.height = '100%'
-    loading.style.backgroundColor = 'rgba(238, 238, 238, 0.8)'
-    loading.style.zIndex = 9999
-    loading.style.justifyContent = 'center'
-    loading.style.alignItems = 'center'
-    loading.style.display = 'flex'
-    loading.style.color = '#555555'
-    loading.textContent = 'Loading ...'
-    container.appendChild(loading)
+    if ('off' !== atts.loader) {
+      loading.className = 'loading-geolonia-map'
+      loading.innerHTML = '<div class="lds-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>'
+      container.appendChild(loading)
+    }
 
     super(options)
     const map = this
@@ -114,10 +106,12 @@ export default class GeoloniaMap extends mapboxgl.Map {
     }
 
     map.on('load', event => {
-      try {
-        container.removeChild(loading)
-      } catch (e) {
-        // Nothing to do.
+      if ('off' !== atts.loader) {
+        try {
+          container.removeChild(loading)
+        } catch (e) {
+          // Nothing to do.
+        }
       }
 
       const map = event.target
