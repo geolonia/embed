@@ -36,6 +36,15 @@ export function checkPermission() {
   }
 
   /**
+   * For the https://codepen.io/
+   */
+  if ('https://cdpn.io' === window.self.location.origin) {
+    if (window.self !== window.parent && 'https://codepen.io/' === window.document.referrer) {
+      return true
+    }
+  }
+
+  /**
    * For the https://codesandbox.io/
    *
    * Note:
