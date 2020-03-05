@@ -40,4 +40,26 @@ describe('Tests for util.js', () => {
   it('Name should not be detected', () => {
     assert.deepEqual(false, util.isURL('example.com/hello'))
   })
+
+  describe('language detection', () => {
+    it('should work with Chrome', () => {
+      global.window = {
+        navigator: {
+          language: 'ja',
+          languages: ['ja', 'en', 'en-US', 'ar'],
+        },
+      }
+      assert.equal(util.getLang(), 'ja')
+    })
+
+    it('should work with iOS safari', () => {
+      global.window = {
+        navigator: {
+          language: 'ja-JP',
+          languages: ['ja-JP'],
+        },
+      }
+      assert.equal(util.getLang(), 'ja')
+    })
+  })
 })
