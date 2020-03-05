@@ -11,7 +11,7 @@ class GestureHandling {
 
     let textMessage = 'Use alt + scroll to zoom the map.'
     let textMessageMobile = 'Use two fingers to move the map.'
-    const lang = options.lang || util.getLang()
+    const lang = (options.lang === 'auto' || !options.lang) ? util.getLang() : options.lang
     if ('ja' === lang) {
       textMessage = 'Alt キーを押しながらスクロールしてください。'
       textMessageMobile = '2本指を使って操作してください。'
