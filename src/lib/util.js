@@ -63,7 +63,6 @@ export function checkPermission() {
   return false
 }
 
-
 export function getLang() {
   const lang = (
     window.navigator.languages &&

@@ -69,10 +69,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
 
     if ('on' === atts.fullscreenControl) {
       // IE patch for fullscreen mode
-      if (
-        !container.classList.contains('tilecloud') && // For backward compatibility
-        !container.classList.contains('geolonia')
-      ) {
+      if (!container.classList.contains('geolonia')) {
         document.onmsfullscreenchange = () => {
           const isFullscreen = document.msFullscreenElement === container
           if (isFullscreen) {

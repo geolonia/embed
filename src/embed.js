@@ -46,8 +46,8 @@ if ( util.checkPermission() ) {
     })
   })
 
-  const containers = document.querySelectorAll('.tilecloud[data-lazy="off"], .geolonia[data-lazy="off"]')
-  const lazyContainers = document.querySelectorAll('.tilecloud:not([data-lazy="off"]), .geolonia:not([data-lazy="off"])')
+  const containers = document.querySelectorAll('.geolonia[data-lazy="off"]')
+  const lazyContainers = document.querySelectorAll('.geolonia:not([data-lazy="off"])')
 
   // render Map immediately
   for (let i = 0; i < containers.length; i++) {
