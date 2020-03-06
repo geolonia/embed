@@ -32,6 +32,7 @@ export default container => {
     plugin: 'off',
     key: params.key,
     stage: params.stage,
+    loader: 'on',
     ...container.dataset,
   }
 }
