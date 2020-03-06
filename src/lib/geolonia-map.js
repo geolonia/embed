@@ -58,12 +58,21 @@ export default class GeoloniaMap extends mapboxgl.Map {
     const content = container.innerHTML.trim()
     container.innerHTML = ''
 
+    let loading
+    if ('off' !== atts.loader) {
+      loading = document.createElement('div')
+      loading.className = 'loading-geolonia-map'
+      loading.innerHTML = `<div class="lds-grid"><div></div><div></div><div></div>
+          <div></div><div></div><div></div><div></div><div></div><div></div></div>`
+      container.appendChild(loading)
+    }
+
     super(options)
     const map = this
 
     map.addControl(new GeoloniaControl())
 
-    if ('on' === atts.gestureHandling) {
+    if ('off' !== atts.gestureHandling) {
       new GestureHandling({ lang: atts.lang }).addTo(map)
     }
 
@@ -99,6 +108,14 @@ export default class GeoloniaMap extends mapboxgl.Map {
     }
 
     map.on('load', event => {
+      if ('off' !== atts.loader) {
+        try {
+          container.removeChild(loading)
+        } catch (e) {
+          // Nothing to do.
+        }
+      }
+
       const map = event.target
       if (atts.lat && atts.lng && 'on' === atts.marker) {
         if (content) {
@@ -114,6 +131,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
           if ('on' === atts.openPopup) {
             marker.togglePopup()
           }
+          marker.getElement().classList.add('geolonia-clickable-marker')
         } else {
           new mapboxgl.Marker().setLngLat(options.center).addTo(map)
         }
