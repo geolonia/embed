@@ -72,10 +72,6 @@ export default class GeoloniaMap extends mapboxgl.Map {
 
     map.addControl(new GeoloniaControl())
 
-    if ('off' !== atts.gestureHandling && util.isScrollable()) {
-      new GestureHandling({ lang: atts.lang }).addTo(map)
-    }
-
     if ('on' === atts.fullscreenControl) {
       // IE patch for fullscreen mode
       if (!container.classList.contains('geolonia')) {
@@ -108,6 +104,8 @@ export default class GeoloniaMap extends mapboxgl.Map {
     }
 
     map.on('load', event => {
+      const map = event.target
+
       if ('off' !== atts.loader) {
         try {
           container.removeChild(loading)
@@ -116,7 +114,10 @@ export default class GeoloniaMap extends mapboxgl.Map {
         }
       }
 
-      const map = event.target
+      if ('off' !== atts.gestureHandling && util.isScrollable()) {
+        new GestureHandling({ lang: atts.lang }).addTo(map)
+      }
+
       if (atts.lat && atts.lng && 'on' === atts.marker) {
         if (content) {
           const popup = new mapboxgl.Popup().setHTML(content)
