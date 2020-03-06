@@ -85,3 +85,17 @@ export function getLang() {
     return 'en'
   }
 }
+
+/**
+ * Detects the window is scrollable.
+ */
+export function isScrollable() {
+  const { height: bodyHeight } = document.body.getBoundingClientRect()
+  const windowHeight = window.innerHeight
+
+  if (bodyHeight > windowHeight) {
+    return true
+  } else {
+    return false
+  }
+}
