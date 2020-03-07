@@ -119,12 +119,12 @@ export function isDomElement(o) {
  * @param {*} arg
  */
 export function getContainer(arg) {
-  if (this.isDomElement(arg)) {
+  if (isDomElement(arg)) {
     return arg
   } else if ('string' === typeof arg && document.querySelector(arg)) {
     return document.querySelector(arg)
   } else if (arg.container) {
-    if (this.isDomElement(arg.container)) {
+    if (isDomElement(arg.container)) {
       return arg.container
     } else if (document.querySelector(arg.container)) {
       return document.querySelector(arg.container)
