@@ -28,15 +28,17 @@ export default class GeoloniaMap extends mapboxgl.Map {
     const container = util.getContainer(params)
     const atts = parseAtts(container)
 
-    let lang = 'ja'
+    let lang = 'atuo'
     if ('auto' === atts.lang) {
       lang = util.getLang()
-    } else if ('ja' !== atts.lang) {
+    } else if ('ja' === atts.lang) {
+      lang = 'ja'
+    } else {
       lang = 'en'
     }
 
-    let style = util.isURL(atts.style)
-    if (!style) {
+    let style = atts.style || params.style
+    if (!util.isURL(style)) {
       style = getStyleURL(atts.style, atts.key, atts.stage)
       if ('ja' !== lang) {
         style = getStyleURL(atts.style, atts.key, atts.stage, 'en')
