@@ -99,3 +99,36 @@ export function isScrollable() {
     return false
   }
 }
+
+/**
+ * Detects the object is HTMLElment?
+ *
+ * @param {*} o
+ */
+export function isDomElement(o) {
+  return (
+    typeof HTMLElement === "object" ? o instanceof HTMLElement : //DOM2
+    o && typeof o === "object" && o !== null && o.nodeType === 1 && typeof o.nodeName==="string"
+  );
+}
+
+/**
+ * Gets the HTMLElement for the map.
+ *
+ * @param {*} arg
+ */
+export function getContainer(arg) {
+  if (this.isDomElement(arg)) {
+    return arg
+  } else if ('string' === arg) {
+    return document.querySelector(arg)
+  } else if (arg.container) {
+    if (this.isDomElement(arg.container)) {
+      return arg.container
+    } else {
+      return document.querySelector(arg.container)
+    }
+  }
+
+  return false
+}

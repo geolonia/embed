@@ -24,7 +24,8 @@ const isValidUrl = string => /^https?:\/\//.test(string)
  * @param container
  */
 export default class GeoloniaMap extends mapboxgl.Map {
-  constructor(container) {
+  constructor(params) {
+    const container = util.getContainer(params)
     const atts = parseAtts(container)
 
     let lang = 'ja'
@@ -52,6 +53,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
       hash: ('on' === atts.hash),
       localIdeographFontFamily: 'sans-serif',
       attributionControl: true,
+      ...params
     }
 
     // Getting content should be fire just before initialize the map.
