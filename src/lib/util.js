@@ -114,18 +114,19 @@ export function isDomElement(o) {
 
 /**
  * Gets the HTMLElement for the map.
+ * Possibility args are HTMLElement or CSS selector or object that has container property.
  *
  * @param {*} arg
  */
 export function getContainer(arg) {
   if (this.isDomElement(arg)) {
     return arg
-  } else if ('string' === arg) {
+  } else if ('string' === typeof arg && document.querySelector(arg)) {
     return document.querySelector(arg)
   } else if (arg.container) {
     if (this.isDomElement(arg.container)) {
       return arg.container
-    } else {
+    } else if (document.querySelector(arg.container)) {
       return document.querySelector(arg.container)
     }
   }
