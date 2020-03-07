@@ -53,7 +53,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
       hash: ('on' === atts.hash),
       localIdeographFontFamily: 'sans-serif',
       attributionControl: true,
-      ...params
+      ...params,
     }
 
     // Getting content should be fire just before initialize the map.
