@@ -131,14 +131,14 @@ export default class GeoloniaMap extends mapboxgl.Map {
             container.style.display = 'block'
             marker = new window.geolonia.Marker(container).setLngLat(options.center).addTo(map).setPopup(popup)
           } else {
-            marker = new window.geolonia.Marker({color: atts.markerColor}).setLngLat(options.center).addTo(map).setPopup(popup)
+            marker = new window.geolonia.Marker({ color: atts.markerColor }).setLngLat(options.center).addTo(map).setPopup(popup)
           }
           if ('on' === atts.openPopup) {
             marker.togglePopup()
           }
           marker.getElement().classList.add('geolonia-clickable-marker')
         } else {
-          new window.geolonia.Marker({color: atts.markerColor}).setLngLat(options.center).addTo(map)
+          new window.geolonia.Marker({ color: atts.markerColor }).setLngLat(options.center).addTo(map)
         }
       }
 

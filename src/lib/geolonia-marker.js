@@ -11,22 +11,15 @@ import * as util from './util'
  * @param container
  */
 export default class GeoloniaMarker extends mapboxgl.Marker {
-  constructor(options, legacyOptions = {}) {
-    if (options && util.isDomElement(options)) {
-      options = {
-        element: options,
-        ...legacyOptions,
-      }
-    } else if (!options) {
-      options = {}
-    }
+  constructor(options = {}, legacyOptions = {}) {
+    options = util.handleMarkerOptions(options, legacyOptions)
 
     if (!options.element) {
       const markerElement = document.createElement('div')
       markerElement.className = 'geolonia-default-marker'
       markerElement.innerHTML = markerSVG
 
-      // The dimention of marker.svg is 52:67.
+      // Following shoud follow the dimention of marker.svg 52:67.
       markerElement.style.margin = 0
       markerElement.style.padding = 0
       markerElement.style.width = '25.5px'
