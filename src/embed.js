@@ -61,6 +61,7 @@ if ( util.checkPermission() ) {
   }
 
   window.geolonia = mapboxgl
+  window.geolonia.Map = GeoloniaMap
   window.geolonia.Marker = GeoloniaMarker
   window.geolonia.registerPlugin = plugin => {
     plugins.push(plugin)
