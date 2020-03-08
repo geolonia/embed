@@ -9,10 +9,7 @@ cache:
 script:
   - npm run lint
   - npm test
-
-after_success:
   - npm run build
-  - npm run build:embed
 
 deploy:
   provider: script
