@@ -99,3 +99,37 @@ export function isScrollable() {
     return false
   }
 }
+
+/**
+ * Detects the object is HTMLElment?
+ *
+ * @param {*} o
+ */
+export function isDomElement(o) {
+  return (
+    typeof HTMLElement === 'object' ? o instanceof HTMLElement : // DOM2
+      o && typeof o === 'object' && o !== null && o.nodeType === 1 && typeof o.nodeName === 'string'
+  )
+}
+
+/**
+ * Gets the HTMLElement for the map.
+ * Possibility args are HTMLElement or CSS selector or object that has container property.
+ *
+ * @param {*} arg
+ */
+export function getContainer(arg) {
+  if (isDomElement(arg)) {
+    return arg
+  } else if ('string' === typeof arg && document.querySelector(arg)) {
+    return document.querySelector(arg)
+  } else if (arg.container) {
+    if (isDomElement(arg.container)) {
+      return arg.container
+    } else if (document.querySelector(arg.container)) {
+      return document.querySelector(arg.container)
+    }
+  }
+
+  return false
+}

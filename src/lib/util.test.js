@@ -1,4 +1,7 @@
+'use strict'
+
 import assert from 'assert'
+import { JSDOM } from 'jsdom'
 import * as util from './util'
 
 const base = 'https://base.example.com/parent/'
@@ -39,6 +42,36 @@ describe('Tests for util.js', () => {
 
   it('Name should not be detected', () => {
     assert.deepEqual(false, util.isURL('example.com/hello'))
+  })
+
+  it('should detect the object is DOM correctly', () => {
+    const { document: mocDocument } = new JSDOM(`<html><body>
+      <div class="test-class"></div>
+    </body></html>`).window
+
+    assert.deepEqual(true, util.isDomElement(mocDocument.querySelector('.test-class')))
+    assert.deepEqual(false, util.isDomElement('hello world'))
+    assert.deepEqual(false, util.isDomElement({ hello: 'world' }))
+  })
+
+  it('should be able to get dom', () => {
+    const dom = new JSDOM(`<html><body>
+      <div id="test-element"></div>
+    </body></html>`)
+
+    global.window = dom.window
+    global.document = dom.window.document
+
+    const el = document.querySelector('#test-element')
+    assert.deepEqual(el, util.getContainer(el))
+    const params = { container: el }
+    assert.deepEqual(el, util.getContainer(params))
+
+    assert.deepEqual(el, util.getContainer('#test-element'))
+    assert.deepEqual(el, util.getContainer({ container: '#test-element' }))
+
+    assert.deepEqual(false, util.getContainer('#fail-element'))
+    assert.deepEqual(false, util.getContainer({ container: '#fail-element' }))
   })
 
   describe('language detection', () => {
