@@ -68,9 +68,6 @@ if ( util.checkPermission() ) {
     return void 0
   }
 
-  // for backward compatibility
-  window.tilecloud = window.geolonia
-
   window.mapboxgl = mapboxgl
 } else {
   console.error( '[Geolonia] We are very sorry, but we can\'t display our map in iframe.' ) // eslint-disable-line
