@@ -76,39 +76,39 @@ export default class GeoloniaMap extends mapboxgl.Map {
 
     map.addControl(new GeoloniaControl())
 
-    if ('on' === atts.fullscreenControl) {
-      // IE patch for fullscreen mode
-      if (!container.classList.contains('geolonia')) {
-        document.onmsfullscreenchange = () => {
-          const isFullscreen = document.msFullscreenElement === container
-          if (isFullscreen) {
-            map._beforeFullscreenWidth = container.style.width
-            map._beforeFullscreenHeight = container.style.height
-            container.style.width = '100%'
-            container.style.height = '100%'
-          } else {
-            container.style.width = map._beforeFullscreenWidth
-            container.style.height = map._beforeFullscreenHeight
-          }
-        }
-      }
-      map.addControl(new mapboxgl.FullscreenControl())
-    }
-
-    if ('on' === atts.navigationControl) {
-      map.addControl(new mapboxgl.NavigationControl())
-    }
-
-    if ('on' === atts.geolocateControl) {
-      map.addControl(new mapboxgl.GeolocateControl())
-    }
-
-    if ('on' === atts.scaleControl) {
-      map.addControl(new mapboxgl.ScaleControl())
-    }
-
     map.on('load', event => {
       const map = event.target
+
+      if ('on' === atts.fullscreenControl) {
+        // IE patch for fullscreen mode
+        if (!container.classList.contains('geolonia')) {
+          document.onmsfullscreenchange = () => {
+            const isFullscreen = document.msFullscreenElement === container
+            if (isFullscreen) {
+              map._beforeFullscreenWidth = container.style.width
+              map._beforeFullscreenHeight = container.style.height
+              container.style.width = '100%'
+              container.style.height = '100%'
+            } else {
+              container.style.width = map._beforeFullscreenWidth
+              container.style.height = map._beforeFullscreenHeight
+            }
+          }
+        }
+        map.addControl(new window.geolonia.FullscreenControl())
+      }
+
+      if ('on' === atts.navigationControl) {
+        map.addControl(new window.geolonia.NavigationControl())
+      }
+
+      if ('on' === atts.geolocateControl) {
+        map.addControl(new window.geolonia.GeolocateControl())
+      }
+
+      if ('on' === atts.scaleControl) {
+        map.addControl(new window.geolonia.ScaleControl())
+      }
 
       if ('off' !== atts.loader) {
         try {
@@ -124,21 +124,21 @@ export default class GeoloniaMap extends mapboxgl.Map {
 
       if (atts.lat && atts.lng && 'on' === atts.marker) {
         if (content) {
-          const popup = new mapboxgl.Popup().setHTML(content)
+          const popup = new window.geolonia.Popup().setHTML(content)
           let marker
           if (atts.customMarker) {
             const container = document.querySelector(atts.customMarker)
             container.style.display = 'block'
-            marker = new mapboxgl.Marker(container).setLngLat(options.center).addTo(map).setPopup(popup)
+            marker = new window.geolonia.Marker(container).setLngLat(options.center).addTo(map).setPopup(popup)
           } else {
-            marker = new mapboxgl.Marker().setLngLat(options.center).addTo(map).setPopup(popup)
+            marker = new window.geolonia.Marker({ color: atts.markerColor }).setLngLat(options.center).addTo(map).setPopup(popup)
           }
           if ('on' === atts.openPopup) {
             marker.togglePopup()
           }
           marker.getElement().classList.add('geolonia-clickable-marker')
         } else {
-          new mapboxgl.Marker().setLngLat(options.center).addTo(map)
+          new window.geolonia.Marker({ color: atts.markerColor }).setLngLat(options.center).addTo(map)
         }
       }
 

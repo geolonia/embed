@@ -38,6 +38,7 @@
     "prettier-eslint": "^8.8.2",
     "prettier-eslint-cli": "^5.0.0",
     "style-loader": "^0.23.1",
+    "svg-inline-loader": "^0.8.2",
     "url-parse": "^1.4.7",
     "webpack": "^4.41.6",
     "webpack-cli": "^3.3.11",
@@ -54,6 +55,7 @@
     "intersection-observer": "^0.5.1",
     "promise-polyfill": "^8.1.0",
     "sanitize-html": "^1.21.1",
+    "tinycolor2": "^1.4.1",
     "whatwg-fetch": "^3.0.0"
   }
 }

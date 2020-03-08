@@ -8,6 +8,9 @@
   height: 100%;
 }
 
+/**
+ * Styles for loading effect.
+ */
 .loading-geolonia-map {
   position: absolute;
   top: 0;

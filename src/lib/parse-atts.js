@@ -17,6 +17,7 @@ export default container => {
     pitch: 0,
     hash: 'off',
     marker: 'on',
+    markerColor: '',
     openPopup: 'off',
     customMarker: '',
     gestureHandling: 'on',

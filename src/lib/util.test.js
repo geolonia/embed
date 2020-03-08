@@ -74,6 +74,25 @@ describe('Tests for util.js', () => {
     assert.deepEqual(false, util.getContainer({ container: '#fail-element' }))
   })
 
+  it('should merge legacyoptions into options as expected.', () => {
+    const dom = new JSDOM(`<html><body>
+      <div id="test-element"></div>
+    </body></html>`)
+
+    global.window = dom.window
+    global.document = dom.window.document
+
+    const options1 = util.handleMarkerOptions(document.getElementById('test-element'), { foo: 'bar' })
+    assert.deepEqual(document.getElementById('test-element'), options1.element)
+    assert.deepEqual('bar', options1.foo)
+
+    const options2 = util.handleMarkerOptions(false, { foo: 'bar' })
+    assert.deepEqual('bar', options2.foo)
+
+    const options3 = util.handleMarkerOptions({ hello: 'world' }, { foo: 'bar' })
+    assert.deepEqual('world', options3.hello)
+  })
+
   describe('language detection', () => {
     it('should work with Chrome', () => {
       global.window = {

@@ -133,3 +133,22 @@ export function getContainer(arg) {
 
   return false
 }
+
+/**
+ * Merge legacyOptions into options for geolonia.Marker class
+ *
+ * @param {*} options
+ * @param {*} legacyOptions
+ */
+export function handleMarkerOptions(options, legacyOptions) {
+  if (options && isDomElement(options)) {
+    options = {
+      element: options,
+      ...legacyOptions,
+    }
+  } else if (!options) {
+    options = legacyOptions
+  }
+
+  return options
+}
