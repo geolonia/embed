@@ -7,6 +7,7 @@ import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import './style.css'
 import GeoloniaMap from './lib/geolonia-map'
+import GeoloniaMarker from './lib/geolonia-marker'
 import * as util from './lib/util'
 
 if ( util.checkPermission() ) {
@@ -60,7 +61,7 @@ if ( util.checkPermission() ) {
   }
 
   window.geolonia = mapboxgl
-  window.geolonia.Map = GeoloniaMap
+  window.geolonia.Marker = GeoloniaMarker
   window.geolonia.registerPlugin = plugin => {
     plugins.push(plugin)
     return void 0
