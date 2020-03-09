@@ -8,13 +8,13 @@ module.exports = {
   },
 
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.svg$/,
-        loader: 'svg-inline-loader'
-      }
-    ],
-    rules: [
+        use: {
+          loader: 'svg-inline-loader',
+        },
+      },
       {
         test: /\.m?js$/,
         exclude: /node_modules/,

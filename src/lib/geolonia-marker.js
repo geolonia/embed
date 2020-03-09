@@ -2,7 +2,7 @@
 
 import mapboxgl from 'mapbox-gl'
 import tinycolor from 'tinycolor2'
-import markerSVG from 'svg-inline-loader!./marker.svg'
+import markerSVG from './marker.svg'
 import * as util from './util'
 
 /**
