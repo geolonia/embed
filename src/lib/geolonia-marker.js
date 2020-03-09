@@ -32,12 +32,12 @@ export default class GeoloniaMarker extends mapboxgl.Marker {
       options.element = markerElement
 
       if (options.color) {
-        const color = tinycolor(options.color).darken().toString()
         markerElement.querySelector('.left').style.fill = options.color
-        markerElement.querySelector('.right').style.fill = color
+        markerElement.querySelector('.right').style.fill = tinycolor(options.color).darken().toString()
       } else {
-        markerElement.querySelector('.left').style.fill = '#EE730F'
-        markerElement.querySelector('.right').style.fill = '#E84130'
+        const defaultColor = '#E4402F'
+        markerElement.querySelector('.left').style.fill = defaultColor
+        markerElement.querySelector('.right').style.fill = tinycolor(defaultColor).darken().toString()
       }
 
       options.offset = [0, -17.25]
