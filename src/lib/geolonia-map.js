@@ -45,6 +45,8 @@ export default class GeoloniaMap extends mapboxgl.Map {
       }
     }
 
+    delete params.container // Don't overwrite container.
+
     const options = {
       style,
       container,
