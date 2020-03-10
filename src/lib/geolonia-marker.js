@@ -22,8 +22,8 @@ export default class GeoloniaMarker extends mapboxgl.Marker {
       // Following shoud follow the dimention of marker.svg 52:67.
       markerElement.style.margin = 0
       markerElement.style.padding = 0
-      markerElement.style.width = '25.5px'
-      markerElement.style.height = '34.5px'
+      markerElement.style.width = '26px'
+      markerElement.style.height = '34px'
 
       const markerObj = markerElement.querySelector('svg')
       markerObj.style.width = '100%'
@@ -40,7 +40,7 @@ export default class GeoloniaMarker extends mapboxgl.Marker {
         markerElement.querySelector('.right').style.fill = tinycolor(defaultColor).darken().toString()
       }
 
-      options.offset = [0, -17.25]
+      options.offset = [0, -17]
     }
 
     super(options)
