@@ -20,6 +20,7 @@ export default container => {
     markerColor: '#E4402F',
     openPopup: 'off',
     customMarker: '',
+    customMarkerOffset: '0, 0',
     gestureHandling: 'on',
     navigationControl: 'on',
     geolocateControl: 'off',
