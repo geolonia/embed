@@ -129,9 +129,15 @@ export default class GeoloniaMap extends mapboxgl.Map {
           const popup = new window.geolonia.Popup().setHTML(content)
           let marker
           if (atts.customMarker) {
+            const offset = atts.customMarkerOffset.split(/,/).map(n => {
+              return Number(n.trim())
+            })
             const container = document.querySelector(atts.customMarker)
             container.style.display = 'block'
-            marker = new window.geolonia.Marker(container).setLngLat(options.center).addTo(map).setPopup(popup)
+            marker = new window.geolonia.Marker({
+              element: container,
+              offset: offset,
+            }).setLngLat(options.center).addTo(map).setPopup(popup)
           } else {
             marker = new window.geolonia.Marker({ color: atts.markerColor }).setLngLat(options.center).addTo(map).setPopup(popup)
           }
