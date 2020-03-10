@@ -74,6 +74,10 @@ export default class GeoloniaMap extends mapboxgl.Map {
     super(options)
     const map = this
 
+    // Note: GeoloniaControl should be placed before another controls.
+    // Because this control should be "very" bottom-left.
+    map.addControl(new GeoloniaControl())
+
     if ('on' === atts.fullscreenControl) {
       // IE patch for fullscreen mode
       if (!container.classList.contains('geolonia')) {
@@ -104,8 +108,6 @@ export default class GeoloniaMap extends mapboxgl.Map {
     if ('on' === atts.scaleControl) {
       map.addControl(new window.geolonia.ScaleControl())
     }
-
-    map.addControl(new GeoloniaControl())
 
     map.on('load', event => {
       const map = event.target
