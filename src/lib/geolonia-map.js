@@ -74,41 +74,41 @@ export default class GeoloniaMap extends mapboxgl.Map {
     super(options)
     const map = this
 
+    if ('on' === atts.fullscreenControl) {
+      // IE patch for fullscreen mode
+      if (!container.classList.contains('geolonia')) {
+        document.onmsfullscreenchange = () => {
+          const isFullscreen = document.msFullscreenElement === container
+          if (isFullscreen) {
+            map._beforeFullscreenWidth = container.style.width
+            map._beforeFullscreenHeight = container.style.height
+            container.style.width = '100%'
+            container.style.height = '100%'
+          } else {
+            container.style.width = map._beforeFullscreenWidth
+            container.style.height = map._beforeFullscreenHeight
+          }
+        }
+      }
+      map.addControl(new window.geolonia.FullscreenControl())
+    }
+
+    if ('on' === atts.navigationControl) {
+      map.addControl(new window.geolonia.NavigationControl())
+    }
+
+    if ('on' === atts.geolocateControl) {
+      map.addControl(new window.geolonia.GeolocateControl())
+    }
+
+    if ('on' === atts.scaleControl) {
+      map.addControl(new window.geolonia.ScaleControl())
+    }
+
     map.addControl(new GeoloniaControl())
 
     map.on('load', event => {
       const map = event.target
-
-      if ('on' === atts.fullscreenControl) {
-        // IE patch for fullscreen mode
-        if (!container.classList.contains('geolonia')) {
-          document.onmsfullscreenchange = () => {
-            const isFullscreen = document.msFullscreenElement === container
-            if (isFullscreen) {
-              map._beforeFullscreenWidth = container.style.width
-              map._beforeFullscreenHeight = container.style.height
-              container.style.width = '100%'
-              container.style.height = '100%'
-            } else {
-              container.style.width = map._beforeFullscreenWidth
-              container.style.height = map._beforeFullscreenHeight
-            }
-          }
-        }
-        map.addControl(new window.geolonia.FullscreenControl())
-      }
-
-      if ('on' === atts.navigationControl) {
-        map.addControl(new window.geolonia.NavigationControl())
-      }
-
-      if ('on' === atts.geolocateControl) {
-        map.addControl(new window.geolonia.GeolocateControl())
-      }
-
-      if ('on' === atts.scaleControl) {
-        map.addControl(new window.geolonia.ScaleControl())
-      }
 
       if ('off' !== atts.loader) {
         try {
