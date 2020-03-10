@@ -50,16 +50,6 @@ if ( util.checkPermission() ) {
   const containers = document.querySelectorAll('.geolonia[data-lazy="off"]')
   const lazyContainers = document.querySelectorAll('.geolonia:not([data-lazy="off"])')
 
-  // render Map immediately
-  for (let i = 0; i < containers.length; i++) {
-    renderGeoloniaMap(containers[i])
-  }
-
-  // set intersection observer
-  for (let i = 0; i < lazyContainers.length; i++) {
-    observer.observe(lazyContainers[i])
-  }
-
   window.geolonia = mapboxgl
   window.geolonia.Map = GeoloniaMap
   window.geolonia.Marker = GeoloniaMarker
@@ -69,6 +59,16 @@ if ( util.checkPermission() ) {
   }
 
   window.mapboxgl = mapboxgl
+
+  // render Map immediately
+  for (let i = 0; i < containers.length; i++) {
+    renderGeoloniaMap(containers[i])
+  }
+
+  // set intersection observer
+  for (let i = 0; i < lazyContainers.length; i++) {
+    observer.observe(lazyContainers[i])
+  }
 } else {
   console.error( '[Geolonia] We are very sorry, but we can\'t display our map in iframe.' ) // eslint-disable-line
 }
