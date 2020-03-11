@@ -40,7 +40,7 @@ export default class GeoloniaMarker extends mapboxgl.Marker {
         markerElement.querySelector('.right').style.fill = tinycolor(defaultColor).darken().toString()
       }
 
-      options.offset = [0, -17]
+      options.offset = [0, -15]
     }
 
     super(options)
