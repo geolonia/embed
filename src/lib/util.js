@@ -44,6 +44,15 @@ export function checkPermission() {
     }
   }
 
+    /**
+   * For the https://jsfiddle.net/
+   */
+  if ('https://fiddle.jshell.net' === window.self.location.origin) {
+    if (window.self !== window.parent && 'https://jsfiddle.net/' === window.document.referrer) {
+      return true
+    }
+  }
+
   /**
    * For the https://codesandbox.io/
    *
