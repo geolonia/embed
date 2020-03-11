@@ -44,7 +44,7 @@ export function checkPermission() {
     }
   }
 
-    /**
+  /**
    * For the https://jsfiddle.net/
    */
   if ('https://fiddle.jshell.net' === window.self.location.origin) {
