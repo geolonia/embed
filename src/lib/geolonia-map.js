@@ -17,10 +17,20 @@ const getStyleURL = (styleName, userKey, stage = 'dev', lang = '') => {
 }
 
 const isCssSelector = string => {
-  try {
-    return document.querySelector(string)
-  } catch (e) {
+  if (/^https?:\/\//.test(string)) {
     return false
+  } else if (/^\//.test(string)) {
+    return false
+  } else if (/^\.\//.test(string)) {
+    return false
+  } else if (/^\.\.\//.test(string)) {
+    return false
+  } else {
+    try {
+      return document.querySelector(string)
+    } catch (e) {
+      return false
+    }
   }
 }
 
