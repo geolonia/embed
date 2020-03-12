@@ -16,7 +16,23 @@ const getStyleURL = (styleName, userKey, stage = 'dev', lang = '') => {
   }
 }
 
-const isValidUrl = string => /^https?:\/\//.test(string)
+const isCssSelector = string => {
+  if (/^https?:\/\//.test(string)) {
+    return false
+  } else if (/^\//.test(string)) {
+    return false
+  } else if (/^\.\//.test(string)) {
+    return false
+  } else if (/^\.\.\//.test(string)) {
+    return false
+  } else {
+    try {
+      return document.querySelector(string)
+    } catch (e) {
+      return false
+    }
+  }
+}
 
 /**
  * Render the map
@@ -153,7 +169,14 @@ export default class GeoloniaMap extends mapboxgl.Map {
       }
 
       if (atts.geojson) {
-        if (isValidUrl(atts.geojson)) {
+        const el = isCssSelector(atts.geojson)
+        if (el) {
+          const json = JSON.parse(el.textContent)
+          new simpleStyle(json, {
+            cluster: ('on' === atts.cluster),
+            clusterColor: atts.clusterColor,
+          }).addTo(map)
+        } else {
           fetch(atts.geojson).then(response => {
             return response.json()
           }).then(json => {
@@ -162,15 +185,6 @@ export default class GeoloniaMap extends mapboxgl.Map {
               clusterColor: atts.clusterColor,
             }).addTo(map)
           })
-        } else {
-          const el = document.querySelector(atts.geojson)
-          if (el) {
-            const json = JSON.parse(el.textContent)
-            new simpleStyle(json, {
-              cluster: ('on' === atts.cluster),
-              clusterColor: atts.clusterColor,
-            }).addTo(map)
-          }
         }
       }
     })
