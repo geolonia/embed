@@ -29,33 +29,29 @@
     "@babel/preset-env": "^7.8.4",
     "@babel/register": "^7.8.3",
     "babel-loader": "^8.0.4",
+    "core-js": "^3.6.4",
     "css-loader": "^2.1.0",
     "eslint": "^5.3.0",
-    "gh-pages": "^2.2.0",
-    "jsdom": "^13.2.0",
+    "jsdom": "^16.2.1",
     "mapbox-gl": "^1.8.1",
     "mocha": "^5.2.0",
     "prettier-eslint": "^8.8.2",
     "prettier-eslint-cli": "^5.0.0",
     "style-loader": "^0.23.1",
     "svg-inline-loader": "^0.8.2",
-    "url-parse": "^1.4.7",
     "webpack": "^4.41.6",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3"
-  },
-  "peerDependencies": {
-    "mapbox-gl": "^0.54"
   },
   "dependencies": {
     "@geolonia/mbgl-geolonia-control": "^0.3.8",
     "@mapbox/geojson-extent": "^0.3.2",
     "@turf/center": "^6.0.1",
-    "core-js": "^2.6.11",
     "intersection-observer": "^0.5.1",
     "promise-polyfill": "^8.1.0",
     "sanitize-html": "^1.21.1",
     "tinycolor2": "^1.4.1",
+    "url-parse": "^1.4.7",
     "whatwg-fetch": "^3.0.0"
   }
 }
