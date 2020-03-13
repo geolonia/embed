@@ -134,7 +134,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
       const circleSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" height="10px" width="10px">
                 <circle fill="#000000" cx="10" cy="10" r="10" fill-rule="evenodd"/></svg>`
       img.src = `data:image/svg+xml;utf8,${circleSVG.replace('#', '%23')}`
-    });
+    })
 
     map.on('load', event => {
       const map = event.target
