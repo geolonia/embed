@@ -71,7 +71,7 @@ export function checkPermission() {
    *  So, it should be catched.
    */
   try {
-    if (window.self.location.origin === window.parent.location.origin) {
+    if (window.self.location.origin === window.top.location.origin) {
       return true
     }
   } catch (e) {
