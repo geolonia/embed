@@ -127,6 +127,15 @@ export default class GeoloniaMap extends mapboxgl.Map {
       map.addControl(new window.geolonia.ScaleControl())
     }
 
+    map.on('styleimagemissing', function(e) {
+      const id = e.id
+      let img = new Image(7, 7)
+      img.onload = () => map.addImage(id, img)
+      const circleSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" height="10px" width="10px">
+                <circle fill="#000000" cx="10" cy="10" r="10" fill-rule="evenodd"/></svg>`
+      img.src = `data:image/svg+xml;utf8,${circleSVG.replace('#', '%23')}`
+    })
+
     map.on('load', event => {
       const map = event.target
 
