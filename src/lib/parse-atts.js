@@ -1,6 +1,7 @@
 'use strict'
 
 import parseApiKey from './parse-api-key'
+import * as util from './util'
 
 export default container => {
   if (!container.dataset) {
@@ -8,6 +9,15 @@ export default container => {
   }
 
   const params = parseApiKey(document)
+
+  let lang = 'auto'
+  if (container.dataset.lang && 'auto' === container.dataset.lang) {
+    lang = util.getLang()
+  } else if (container.dataset.lang && 'ja' === container.dataset.lang) {
+    lang = 'ja'
+  } else {
+    lang = 'en'
+  }
 
   return {
     lat: 0,
@@ -30,7 +40,7 @@ export default container => {
     cluster: 'on',
     clusterColor: '#ff0000',
     style: 'geolonia/basic',
-    lang: 'auto',
+    lang: lang,
     plugin: 'off',
     key: params.key,
     stage: params.stage,
