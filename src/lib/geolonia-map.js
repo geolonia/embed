@@ -52,7 +52,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
     delete params.container // Don't overwrite container.
 
     const options = {
-      style: atts.style || params.style,
+      style: atts.style || params.style, // Validation for value of `style` will be processed on `setStyle()`.
       container,
       center: [parseFloat(atts.lng), parseFloat(atts.lat)],
       bearing: parseFloat(atts.bearing),
@@ -181,6 +181,8 @@ export default class GeoloniaMap extends mapboxgl.Map {
   }
 
   setStyle(style, options = {}) {
+    // It can't access `this` because `setStyle()` will be called with `super()`.
+    // So, we need to run `parseAtts()` again(?)
     const atts = parseAtts(this.getContainer())
     style = getStyleURL(style, atts)
 
