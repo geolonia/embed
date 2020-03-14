@@ -15,8 +15,10 @@ export default container => {
     lang = util.getLang()
   } else if (container.dataset.lang && 'ja' === container.dataset.lang) {
     lang = 'ja'
-  } else {
+  } else if (container.dataset.lang && 'ja' !== container.dataset.lang) {
     lang = 'en'
+  } else {
+    lang = util.getLang()
   }
 
   return {
