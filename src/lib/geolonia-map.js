@@ -187,7 +187,6 @@ export default class GeoloniaMap extends mapboxgl.Map {
     style = getStyleURL(style, atts)
 
     // Calls `mapboxgl.Map.setStyle()`.
-    const parent = Object.getPrototypeOf(this)
-    parent.__proto__.setStyle.call(this, style, options)
+    super.setStyle.call(this, style, options)
   }
 }
