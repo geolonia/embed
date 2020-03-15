@@ -8,7 +8,7 @@ export default container => {
     container.dataset = {}
   }
 
-  const params = parseApiKey(document)
+  parseApiKey(document)
 
   let lang = 'auto'
   if (container.dataset.lang && 'auto' === container.dataset.lang) {
@@ -44,8 +44,8 @@ export default container => {
     style: 'geolonia/basic',
     lang: lang,
     plugin: 'off',
-    key: params.key,
-    stage: params.stage,
+    key: window.geolonia.geolonia.key,
+    stage: window.geolonia.geolonia.stage,
     loader: 'on',
     ...container.dataset,
   }
