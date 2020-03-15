@@ -8,11 +8,16 @@ import parseAtts from './parse-atts'
 
 import * as util from './util'
 
-const getStyleURL = (styleName, userKey, stage = 'dev', lang = '') => {
-  if ('en' === lang) {
-    return `https://api.geolonia.com/${stage}/styles/${styleName}?key=${userKey}&lang=en`
+const getStyleURL = (style, atts) => {
+  const styleUrl = util.isURL(style)
+  if (styleUrl) {
+    return styleUrl
   } else {
-    return `https://api.geolonia.com/${stage}/styles/${styleName}?key=${userKey}`
+    if ('en' === atts.lang) {
+      return `https://api.geolonia.com/${atts.stage}/styles/${style}?key=${atts.key}&lang=en`
+    } else {
+      return `https://api.geolonia.com/${atts.stage}/styles/${style}?key=${atts.key}`
+    }
   }
 }
 
@@ -44,27 +49,10 @@ export default class GeoloniaMap extends mapboxgl.Map {
     const container = util.getContainer(params)
     const atts = parseAtts(container)
 
-    let lang = 'atuo'
-    if ('auto' === atts.lang) {
-      lang = util.getLang()
-    } else if ('ja' === atts.lang) {
-      lang = 'ja'
-    } else {
-      lang = 'en'
-    }
-
-    let style = atts.style || params.style
-    if (!util.isURL(style)) {
-      style = getStyleURL(atts.style, atts.key, atts.stage)
-      if ('ja' !== lang) {
-        style = getStyleURL(atts.style, atts.key, atts.stage, 'en')
-      }
-    }
-
     delete params.container // Don't overwrite container.
 
     const options = {
-      style,
+      style: atts.style || params.style, // Validation for value of `style` will be processed on `setStyle()`.
       container,
       center: [parseFloat(atts.lng), parseFloat(atts.lat)],
       bearing: parseFloat(atts.bearing),
@@ -190,5 +178,16 @@ export default class GeoloniaMap extends mapboxgl.Map {
     })
 
     return map
+  }
+
+  setStyle(style, options = {}) {
+    // It can't access `this` because `setStyle()` will be called with `super()`.
+    // So, we need to run `parseAtts()` again(?)
+    const atts = parseAtts(this.getContainer())
+    style = getStyleURL(style, atts)
+
+    // Calls `mapboxgl.Map.setStyle()`.
+    const parent = Object.getPrototypeOf(this)
+    parent.__proto__.setStyle.call(this, style, options)
   }
 }
