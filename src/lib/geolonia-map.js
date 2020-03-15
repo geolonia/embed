@@ -180,14 +180,10 @@ export default class GeoloniaMap extends mapboxgl.Map {
     return map
   }
 
-  setStyle(style, options = {}) {
-    // It can't access `this` because `setStyle()` will be called with `super()`.
-    // So, we need to run `parseAtts()` again(?)
+  setStyle = (style, options = {}) => {
     const atts = parseAtts(this.getContainer())
     style = getStyleURL(style, atts)
 
-    // Calls `mapboxgl.Map.setStyle()`.
-    const parent = Object.getPrototypeOf(this)
-    parent.__proto__.setStyle.call(this, style, options)
+    super.setStyle(style, options)
   }
 }
