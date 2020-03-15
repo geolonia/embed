@@ -1,14 +1,11 @@
 'use strict'
 
-import parseApiKey from './parse-api-key'
 import * as util from './util'
 
 export default container => {
   if (!container.dataset) {
     container.dataset = {}
   }
-
-  parseApiKey(document)
 
   let lang = 'auto'
   if (container.dataset.lang && 'auto' === container.dataset.lang) {

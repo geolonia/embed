@@ -2,10 +2,6 @@ import urlParse from 'url-parse'
 import querystring from 'querystring'
 
 export default document => {
-  if (window.geolonia.geolonia && window.geolonia.geolonia.key && window.geolonia.geolonia.stage) {
-    return
-  }
-
   const scripts = document.getElementsByTagName('script')
   const params = {
     key: 'YOUR-API-KEY',
@@ -28,8 +24,5 @@ export default document => {
     }
   }
 
-  window.geolonia.geolonia = {
-    key: params.key,
-    stage: params.stage,
-  }
+  return params
 }
