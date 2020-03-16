@@ -1,14 +1,11 @@
 'use strict'
 
-import parseApiKey from './parse-api-key'
 import * as util from './util'
 
 export default container => {
   if (!container.dataset) {
     container.dataset = {}
   }
-
-  const params = parseApiKey(document)
 
   let lang = 'auto'
   if (container.dataset.lang && 'auto' === container.dataset.lang) {
@@ -44,8 +41,8 @@ export default container => {
     style: 'geolonia/basic',
     lang: lang,
     plugin: 'off',
-    key: params.key,
-    stage: params.stage,
+    key: window.geolonia.geolonia.key,
+    stage: window.geolonia.geolonia.stage,
     loader: 'on',
     ...container.dataset,
   }
