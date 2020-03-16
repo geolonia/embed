@@ -161,3 +161,16 @@ export function handleMarkerOptions(options, legacyOptions) {
 
   return options
 }
+
+export function getStyleURL(style, atts) {
+  const styleUrl = isURL(style)
+  if (styleUrl) {
+    return styleUrl
+  } else {
+    if ('en' === atts.lang) {
+      return `${atts.apiUrl}/styles/${style}?key=${atts.key}&lang=en`
+    } else {
+      return `${atts.apiUrl}/styles/${style}?key=${atts.key}`
+    }
+  }
+}
