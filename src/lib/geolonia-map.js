@@ -8,19 +8,6 @@ import parseAtts from './parse-atts'
 
 import * as util from './util'
 
-const getStyleURL = (style, atts) => {
-  const styleUrl = util.isURL(style)
-  if (styleUrl) {
-    return styleUrl
-  } else {
-    if ('en' === atts.lang) {
-      return `https://api.geolonia.com/${atts.stage}/styles/${style}?key=${atts.key}&lang=en`
-    } else {
-      return `https://api.geolonia.com/${atts.stage}/styles/${style}?key=${atts.key}`
-    }
-  }
-}
-
 const isCssSelector = string => {
   if (/^https?:\/\//.test(string)) {
     return false
@@ -184,7 +171,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
     // It can't access `this` because `setStyle()` will be called with `super()`.
     // So, we need to run `parseAtts()` again(?)
     const atts = parseAtts(this.getContainer())
-    style = getStyleURL(style, atts)
+    style = util.getStyleURL(style, atts)
 
     // Calls `mapboxgl.Map.setStyle()`.
     super.setStyle.call(this, style, options)

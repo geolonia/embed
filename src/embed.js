@@ -52,7 +52,9 @@ if ( util.checkPermission() ) {
   const lazyContainers = document.querySelectorAll('.geolonia:not([data-lazy="off"])')
 
   window.geolonia = mapboxgl
-  window.geolonia.geolonia = parseApiKey(document)
+  const { key, stage } = parseApiKey(document)
+  window.geolonia.accessToken = key
+  window.geolonia.baseApiUrl = `https://api.geolonia.com/${stage}`
   window.geolonia.Map = GeoloniaMap
   window.geolonia.Marker = GeoloniaMarker
   window.geolonia.registerPlugin = plugin => {

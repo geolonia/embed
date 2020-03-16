@@ -41,8 +41,8 @@ export default container => {
     style: 'geolonia/basic',
     lang: lang,
     plugin: 'off',
-    key: window.geolonia.geolonia.key,
-    stage: window.geolonia.geolonia.stage,
+    key: window.geolonia.config.ACCESS_TOKEN,
+    apiUrl: window.geolonia.config.API_URL,
     loader: 'on',
     ...container.dataset,
   }
