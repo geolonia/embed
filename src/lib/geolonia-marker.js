@@ -44,8 +44,6 @@ export default class GeoloniaMarker extends mapboxgl.Marker {
     }
 
     super(options)
-    const marker = this
-
-    return marker
+    return this
   }
 }
