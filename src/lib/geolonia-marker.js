@@ -14,7 +14,7 @@ export default class GeoloniaMarker extends mapboxgl.Marker {
   constructor(options = {}, legacyOptions = {}) {
     options = util.handleMarkerOptions(options, legacyOptions)
 
-    if (!options.element) {
+    if (!options || !options.element) {
       const markerElement = document.createElement('div')
       markerElement.className = 'geolonia-default-marker'
       markerElement.innerHTML = markerSVG
