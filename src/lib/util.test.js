@@ -126,4 +126,8 @@ describe('Tests for util.js', () => {
     assert.deepEqual('https://base.example.com/parent/style.json', util.getStyleURL('./style.json', atts))
     assert.deepEqual('https://base.example.com/style.json', util.getStyleURL('/style.json', atts))
   })
+
+  it('should be true', () => {
+
+  })
 })

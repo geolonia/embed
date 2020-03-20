@@ -39,7 +39,7 @@ export function checkPermission() {
    * For the https://codepen.io/
    */
   if ('https://cdpn.io' === window.self.location.origin) {
-    if (window.self !== window.parent && 'https://codepen.io/' === window.document.referrer) {
+    if (window.self !== window.parent && 0 === window.document.referrer.indexOf('https://codepen.io/')) {
       return true
     }
   }
@@ -48,7 +48,7 @@ export function checkPermission() {
    * For the https://jsfiddle.net/
    */
   if ('https://fiddle.jshell.net' === window.self.location.origin) {
-    if (window.self !== window.parent && 'https://jsfiddle.net/' === window.document.referrer) {
+    if (window.self !== window.parent && 0 === window.document.referrer.indexOf('https://jsfiddle.net/')) {
       return true
     }
   }
@@ -61,7 +61,7 @@ export function checkPermission() {
    * another one is in new window.
    */
   if (window.self.location.origin.match(/csb\.app$/)) {
-    if (window.self !== window.parent && window.document.referrer.match(/^https:\/\/codesandbox.io/)) {
+    if (window.self !== window.parent && 0 === window.document.referrer.indexOf('https://codesandbox.io/')) {
       return true
     }
   }
