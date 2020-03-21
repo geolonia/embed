@@ -121,10 +121,10 @@ describe('Tests for util.js', () => {
       key: '1234',
     }
 
-    assert.deepEqual('https://example.com/styles/hello/world?key=1234', util.getStyleURL('hello/world', atts))
-    assert.deepEqual('https://example.com/style.json', util.getStyleURL('https://example.com/style.json', atts))
-    assert.deepEqual('https://base.example.com/parent/style.json', util.getStyleURL('./style.json', atts))
-    assert.deepEqual('https://base.example.com/style.json', util.getStyleURL('/style.json', atts))
+    assert.deepEqual('https://cdn.geolonia.com/style/hello/world/en.json', util.getStyle('hello/world', atts))
+    assert.deepEqual('https://example.com/style.json', util.getStyle('https://example.com/style.json', atts))
+    assert.deepEqual('https://base.example.com/parent/style.json', util.getStyle('./style.json', atts))
+    assert.deepEqual('https://base.example.com/style.json', util.getStyle('/style.json', atts))
   })
 
   it('should be true', () => {
