@@ -162,15 +162,11 @@ export function handleMarkerOptions(options, legacyOptions) {
   return options
 }
 
-export function getStyleURL(style, atts) {
+export function getStyle(style, atts) {
   const styleUrl = isURL(style)
   if (styleUrl) {
     return styleUrl
   } else {
-    if ('en' === atts.lang) {
-      return `${atts.apiUrl}/styles/${style}?key=${atts.key}&lang=en`
-    } else {
-      return `${atts.apiUrl}/styles/${style}?key=${atts.key}`
-    }
+    return `https://cdn.geolonia.com/style/${style}/style.json`
   }
 }
