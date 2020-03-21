@@ -64,6 +64,17 @@ export default class GeoloniaMap extends mapboxgl.Map {
       container.appendChild(loading)
     }
 
+    // Pass API key to `/sources` (tile json).
+    options.transformRequest = (url, resourceType) => {
+      if (resourceType === 'Source' && url.startsWith('https://api.geolonia.com')) {
+        return {
+          url: url,
+          headers: { 'X-Geolonia-Api-Key': atts.key },
+        }
+      }
+    }
+
+    // Generate Map
     super(options)
     const map = this
 
