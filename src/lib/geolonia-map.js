@@ -67,6 +67,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
     // Pass API key to `/sources` (tile json).
     options.transformRequest = (url, resourceType) => {
       if (resourceType === 'Source' && url.startsWith('https://api.geolonia.com')) {
+        url = `${atts.apiUrl}/sources`
         return {
           url: url,
           headers: { 'X-Geolonia-Api-Key': atts.key },
@@ -182,7 +183,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
     // It can't access `this` because `setStyle()` will be called with `super()`.
     // So, we need to run `parseAtts()` again(?)
     const atts = parseAtts(this.getContainer())
-    style = util.getStyleURL(style, atts)
+    style = util.getStyle(style, atts)
 
     // Calls `mapboxgl.Map.setStyle()`.
     super.setStyle.call(this, style, options)
