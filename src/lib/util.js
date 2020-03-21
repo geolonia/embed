@@ -167,6 +167,10 @@ export function getStyle(style, atts) {
   if (styleUrl) {
     return styleUrl
   } else {
-    return `https://cdn.geolonia.com/style/${style}/style.json`
+    if ('ja' === atts.lang) {
+      return `https://cdn.geolonia.com/style/${style}/ja.json`
+    } else {
+      return `https://cdn.geolonia.com/style/${style}/en.json`
+    }
   }
 }
