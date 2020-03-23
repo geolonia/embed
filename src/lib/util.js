@@ -194,7 +194,6 @@ export function getOptions(container, params, atts) {
     hash: ('on' === atts.hash),
     localIdeographFontFamily: 'sans-serif',
     attributionControl: true,
-    ...params,
   }
 
   if ('' !== atts.minZoom && (0 === Number(atts.minZoom) || Number(atts.minZoom))) {
@@ -204,6 +203,8 @@ export function getOptions(container, params, atts) {
   if ('' !== atts.maxZoom && Number(atts.maxZoom)) {
     options.maxZoom = Number(atts.maxZoom)
   }
+
+  Object.assign(options, params)
 
   return options
 }

@@ -127,7 +127,27 @@ describe('Tests for util.js', () => {
     assert.deepEqual('https://base.example.com/style.json', util.getStyle('/style.json', atts))
   })
 
-  it('should be true', () => {
+  it('should handle mapboxgl options `minZoom` and `maxZoom` well', () => {
+    {
+      const atts = { minZoom: '', maxZoom: '10' }
+      const options = util.getOptions({}, {}, atts)
+      assert.deepEqual('undefined', typeof options.minZoom)
+      assert.deepEqual(10, options.maxZoom)
+    }
 
+    {
+      const atts = { minZoom: '0', maxZoom: '' }
+      const options = util.getOptions({}, {}, atts)
+      assert.deepEqual(0, options.minZoom)
+      assert.deepEqual('undefined', typeof options.maxZoom)
+    }
+
+    {
+      const atts = { minZoom: '0', maxZoom: '' }
+      const params = { minZoom: 7 }
+      const options = util.getOptions({}, params, atts)
+      assert.deepEqual(7, options.minZoom)
+      assert.deepEqual('undefined', typeof options.maxZoom)
+    }
   })
 })
