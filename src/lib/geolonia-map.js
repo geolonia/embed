@@ -37,6 +37,9 @@ export default class GeoloniaMap extends mapboxgl.Map {
     const atts = parseAtts(container)
 
     delete params.container // Don't overwrite container.
+    if (params === container) {
+      params = {} // `params` is HTMLElement, so we shouldn't merge it into options.
+    }
 
     const options = {
       style: atts.style || params.style, // Validation for value of `style` will be processed on `setStyle()`.
@@ -49,6 +52,14 @@ export default class GeoloniaMap extends mapboxgl.Map {
       localIdeographFontFamily: 'sans-serif',
       attributionControl: true,
       ...params,
+    }
+
+    if ('' !== atts.minZoom && (0 === Number(atts.minZoom) || Number(atts.minZoom))) {
+      options.minZoom = Number(atts.minZoom)
+    }
+
+    if ('' !== atts.maxZoom && Number(atts.maxZoom)) {
+      options.maxZoom = Number(atts.maxZoom)
     }
 
     // Getting content should be fire just before initialize the map.

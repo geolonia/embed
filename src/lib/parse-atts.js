@@ -44,6 +44,8 @@ export default container => {
     key: window.geolonia.config.ACCESS_TOKEN,
     apiUrl: window.geolonia.config.API_URL,
     loader: 'on',
+    minZoom: '',
+    maxZoom: '',
     ...container.dataset,
   }
 }
