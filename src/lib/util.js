@@ -174,3 +174,36 @@ export function getStyle(style, atts) {
     }
   }
 }
+
+export function getOptions(container, params, atts) {
+  if (params.container) {
+    delete params.container // Don't overwrite container.
+  }
+
+  if (params === container) {
+    params = {} // `params` is HTMLElement, so we shouldn't merge it into options.
+  }
+
+  const options = {
+    style: atts.style || params.style, // Validation for value of `style` will be processed on `setStyle()`.
+    container,
+    center: [parseFloat(atts.lng), parseFloat(atts.lat)],
+    bearing: parseFloat(atts.bearing),
+    pitch: parseFloat(atts.pitch),
+    zoom: parseFloat(atts.zoom),
+    hash: ('on' === atts.hash),
+    localIdeographFontFamily: 'sans-serif',
+    attributionControl: true,
+    ...params,
+  }
+
+  if ('' !== atts.minZoom && (0 === Number(atts.minZoom) || Number(atts.minZoom))) {
+    options.minZoom = Number(atts.minZoom)
+  }
+
+  if ('' !== atts.maxZoom && Number(atts.maxZoom)) {
+    options.maxZoom = Number(atts.maxZoom)
+  }
+
+  return options
+}
