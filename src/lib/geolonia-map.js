@@ -36,20 +36,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
     const container = util.getContainer(params)
     const atts = parseAtts(container)
 
-    delete params.container // Don't overwrite container.
-
-    const options = {
-      style: atts.style || params.style, // Validation for value of `style` will be processed on `setStyle()`.
-      container,
-      center: [parseFloat(atts.lng), parseFloat(atts.lat)],
-      bearing: parseFloat(atts.bearing),
-      pitch: parseFloat(atts.pitch),
-      zoom: parseFloat(atts.zoom),
-      hash: ('on' === atts.hash),
-      localIdeographFontFamily: 'sans-serif',
-      attributionControl: true,
-      ...params,
-    }
+    const options = util.getOptions(container, params, atts)
 
     // Getting content should be fire just before initialize the map.
     const content = container.innerHTML.trim()
