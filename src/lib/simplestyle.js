@@ -130,7 +130,7 @@ class simpleStyle {
       source: 'geolonia-simple-style',
       filter: ['==', '$type', 'LineString'],
       paint: {
-        'line-width': ['number', ['get', 'stroke-width'], 2],
+        'line-width': ['number', ['get', 'stroke-width'], 1],
         'line-color': ['string', ['get', 'stroke'], '#555555'],
         'line-opacity': ['number', ['get', 'stroke-opacity'], 1.0],
       },
@@ -163,7 +163,7 @@ class simpleStyle {
         ],
         'circle-color': ['string', ['get', 'marker-color'], '#7e7e7e'],
         'circle-opacity': ['number', ['get', 'fill-opacity'], 1.0],
-        'circle-stroke-width': ['number', ['get', 'stroke-width'], 2],
+        'circle-stroke-width': ['number', ['get', 'stroke-width'], 1],
         'circle-stroke-color': ['string', ['get', 'stroke'], '#555555'],
         'circle-stroke-opacity': ['number', ['get', 'stroke-opacity'], 1.0],
       },
