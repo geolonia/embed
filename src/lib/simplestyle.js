@@ -110,7 +110,7 @@ class simpleStyle {
       filter: ['==', '$type', 'Polygon'],
       paint: {
         'fill-color': ['string', ['get', 'fill'], '#7e7e7e'],
-        'fill-opacity': ['number', ['get', 'fill-opacity'], 0.6],
+        'fill-opacity': ['number', ['get', 'fill-opacity'], 1.0],
         'fill-outline-color': ['string', ['get', 'stroke'], '#555555'],
       },
     })
@@ -162,7 +162,7 @@ class simpleStyle {
           9,
         ],
         'circle-color': ['string', ['get', 'marker-color'], '#7e7e7e'],
-        'circle-opacity': ['number', ['get', 'fill-opacity'], 0.6],
+        'circle-opacity': ['number', ['get', 'fill-opacity'], 1.0],
         'circle-stroke-width': ['number', ['get', 'stroke-width'], 2],
         'circle-stroke-color': ['string', ['get', 'stroke'], '#555555'],
         'circle-stroke-opacity': ['number', ['get', 'stroke-opacity'], 1.0],
@@ -234,7 +234,7 @@ class simpleStyle {
       paint: {
         'circle-radius': 20,
         'circle-color': this.options.clusterColor,
-        'circle-opacity': 0.6,
+        'circle-opacity': 1.0,
       },
     })
 
