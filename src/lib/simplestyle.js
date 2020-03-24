@@ -1,277 +1,169 @@
-'use strict'
+/**
+ * All properties should have prefix `user_`.
+ * See https://github.com/mapbox/mapbox-gl-draw/blob/master/docs/API.md
+ */
 
-import mapboxgl from 'mapbox-gl'
-import geojsonExtent from '@mapbox/geojson-extent'
-import turfCenter from '@turf/center'
-import sanitizeHtml from 'sanitize-html'
-
-class simpleStyle {
-  constructor(json, options) {
-    this.json = json
-
-    this.options = {
-      cluster: true,
-      heatmap: false,
-      clusterColor: '#ff0000',
-      ...options,
-    }
+export default [
+  {
+    id: 'draw-polygon',
+    type: 'fill',
+    filter: ['all',
+      ['==', '$type', 'Polygon'],
+      ['==', 'meta', 'feature']
+    ],
+    paint: {
+      'fill-color': ['string', ['get', 'user_fill'], '#7e7e7e'],
+      'fill-opacity': [
+        'case',
+        ['==', ['get', 'active'], 'true'], 0.4,
+        ['number', ['get', 'user_fill-opacity'], 1.0],
+      ],
+      'fill-outline-color': [
+        'case',
+        ['==', ['get', 'active'], 'true'], '#ff6600',
+        ['string', ['get', 'user_stroke'], '#555555'],
+      ],
+    },
+  },
+  {
+    id: 'draw-linestring',
+    type: 'line',
+    filter: ['all',
+      ['==', '$type', 'LineString'],
+      ['==', 'meta', 'feature']
+    ],
+    paint: {
+      'line-width': ['number', ['get', 'user_stroke-width'], 1],
+      'line-color': [
+        'case',
+        ['==', ['get', 'active'], 'true'], '#ff6600',
+        ['string', ['get', 'user_stroke'], '#555555'],
+      ],
+      'line-opacity': [
+        'case',
+        ['==', ['get', 'active'], 'true'], 0.4,
+        ['number', ['get', 'user_stroke-opacity'], 1.0],
+      ],
+    },
+    layout: {
+      'line-cap': 'round',
+      'line-join': 'round',
+    },
+  },
+  {
+    id: 'draw-active-points',
+    type: 'circle',
+    filter: ['all',
+      ['==', '$type', 'Point'],
+      ['==', 'meta', 'feature']
+    ],
+    paint: {
+      'circle-radius': [
+        'case',
+        ['==', 'small', ['get', 'user_marker-size']], 3,
+        ['==', 'large', ['get', 'user_marker-size']], 13,
+        9,
+      ],
+      'circle-color': ['string', ['get', 'user_marker-color'], '#7e7e7e'],
+      'circle-opacity': [
+        'case',
+        ['==', ['get', 'active'], 'true'], 0.4,
+        ['number', ['get', 'user_fill-opacity'], 1.0],
+      ],
+      'circle-stroke-width': ['number', ['get', 'user_stroke-width'], 2],
+      'circle-stroke-color': [
+        'case',
+        ['==', ['get', 'active'], 'true'], '#ff6600',
+        ['string', ['get', 'user_stroke'], '#555555'],
+      ],
+      'circle-stroke-opacity': ['number', ['get', 'user_stroke-opacity'], 1.0],
+    },
+  },
+  {
+    id: 'draw-linestring-symbol',
+    type: 'symbol',
+    filter: ['all',
+      ['==', '$type', 'LineString'],
+      ['==', 'meta', 'feature']
+    ],
+    paint: {
+      'text-color': '#000000',
+      'text-halo-color': 'rgba(255, 255, 255, 1)',
+      'text-halo-width': 1,
+    },
+    layout: {
+      'symbol-placement': 'line',
+      'text-field': [
+        'case',
+        ['==', ['get', 'active'], 'true'], '',
+        ['==', ['get', 'active'], 'false'], ['get', 'user_title'],
+        ''
+      ],
+      'text-font': ['Noto Sans Regular'],
+      'text-size': 12,
+      'text-max-width': 12,
+      'text-allow-overlap': false,
+    },
+  },
+  {
+    id: 'draw-polygon-symbol',
+    type: 'symbol',
+    filter: ['all',
+      ['==', '$type', 'Polygon'],
+      ['==', 'meta', 'feature']
+    ],
+    paint: {
+      'text-color': '#000000',
+      'text-halo-color': 'rgba(255, 255, 255, 1)',
+      'text-halo-width': 1,
+    },
+    layout: {
+      'text-field': [
+        'case',
+        ['==', ['get', 'active'], 'false'], ['get', 'user_title'],
+        ''
+      ],
+      'text-font': ['Noto Sans Regular'],
+      'text-size': 12,
+      'text-max-width': 12,
+      'text-offset': [0, 0],
+      'text-allow-overlap': false,
+    },
+  },
+  {
+    id: 'draw-point-symbol',
+    type: 'symbol',
+    filter: ['all',
+      ['==', '$type', 'Point'],
+      ['==', 'meta', 'feature']
+    ],
+    paint: {
+      'text-color': '#333333',
+      'text-halo-color': 'rgba(255, 255, 255, 1)',
+      'text-halo-width': 1,
+    },
+    layout: {
+      'icon-image': [
+        'case',
+        ['==', ['get', 'active'], 'false'], ['concat', ['get', 'user_marker-symbol'], '-11'],
+        ''
+      ],
+      'text-field': [
+        'case',
+        ['==', ['get', 'active'], 'false'], ['get', 'user_title'],
+        ''
+      ],
+      'text-font': ['Noto Sans Regular'],
+      'text-size': 12,
+      'text-anchor': 'top',
+      'text-max-width': 12,
+      'text-offset': [
+        'case',
+        ['==', 'small', ['get', 'user_marker-size']], ['literal', [0, 0.4]],
+        ['==', 'large', ['get', 'user_marker-size']], ['literal', [0, 1.2]],
+        ['literal', [0, 1]],
+      ],
+      'text-allow-overlap': false,
+    },
   }
-
-  addTo(map) {
-    const features = this.json.features
-    const polygonandlines = features.filter(feature => ('point' !== feature.geometry.type.toLowerCase()))
-    const points = features.filter(feature => ('point' === feature.geometry.type.toLowerCase()))
-
-    map.addSource('geolonia-simple-style', {
-      type: 'geojson',
-      data: {
-        type: 'FeatureCollection',
-        features: polygonandlines,
-      },
-    })
-
-    this.setPolygonGeometries(map)
-    this.setLineGeometries(map)
-
-    map.addSource('geolonia-simple-style-points', {
-      type: 'geojson',
-      data: {
-        type: 'FeatureCollection',
-        features: points,
-      },
-      cluster: this.options.cluster,
-      clusterMaxZoom: 14,
-      clusterRadius: 50,
-    })
-
-    map.addLayer({
-      id: 'geolonia-simple-style-polygon-symbol',
-      type: 'symbol',
-      source: 'geolonia-simple-style',
-      filter: ['==', '$type', 'Polygon'],
-      paint: {
-        'text-color': '#000000',
-        'text-halo-color': 'rgba(255, 255, 255, 1)',
-        'text-halo-width': 2,
-      },
-      layout: {
-        'text-field': ['get', 'title'],
-        'text-font': ['Noto Sans Regular'],
-        'text-size': 12,
-        'text-max-width': 12,
-        'text-allow-overlap': false,
-      },
-    })
-
-    map.addLayer({
-      id: 'geolonia-simple-style-linestring-symbol',
-      type: 'symbol',
-      source: 'geolonia-simple-style',
-      filter: ['==', '$type', 'LineString'],
-      paint: {
-        'text-color': '#000000',
-        'text-halo-color': 'rgba(255, 255, 255, 1)',
-        'text-halo-width': 2,
-      },
-      layout: {
-        'symbol-placement': 'line',
-        'text-field': ['get', 'title'],
-        'text-font': ['Noto Sans Regular'],
-        'text-size': 12,
-        'text-max-width': 12,
-        'text-allow-overlap': false,
-      },
-    })
-
-    this.setPointGeometries(map)
-    this.setCluster(map)
-
-    const container = map.getContainer()
-
-    if (!container.dataset || (!container.dataset.lng && !container.dataset.lat)) {
-      const bounds = geojsonExtent(this.json)
-      map.fitBounds(bounds, {
-        duration: 0,
-        padding: 30,
-      })
-    }
-  }
-
-  /**
-   * Set line geometries.
-   *
-   * @param map
-   */
-  setPolygonGeometries(map) {
-    map.addLayer({
-      id: 'geolonia-simple-style-polygon',
-      type: 'fill',
-      source: 'geolonia-simple-style',
-      filter: ['==', '$type', 'Polygon'],
-      paint: {
-        'fill-color': ['string', ['get', 'fill'], '#7e7e7e'],
-        'fill-opacity': ['number', ['get', 'fill-opacity'], 0.6],
-        'fill-outline-color': ['string', ['get', 'stroke'], '#555555'],
-      },
-    })
-
-    this.setPopup(map, 'geolonia-simple-style-polygon')
-  }
-
-  /**
-   * Set line geometries.
-   *
-   * @param map
-   */
-  setLineGeometries(map) {
-    map.addLayer({
-      id: 'geolonia-simple-style-linestring',
-      type: 'line',
-      source: 'geolonia-simple-style',
-      filter: ['==', '$type', 'LineString'],
-      paint: {
-        'line-width': ['number', ['get', 'stroke-width'], 2],
-        'line-color': ['string', ['get', 'stroke'], '#555555'],
-        'line-opacity': ['number', ['get', 'stroke-opacity'], 1.0],
-      },
-      layout: {
-        'line-cap': 'round',
-        'line-join': 'round',
-      },
-    })
-
-    this.setPopup(map, 'geolonia-simple-style-linestring')
-  }
-
-  /**
-   * Setup point geometries.
-   *
-   * @param map
-   */
-  setPointGeometries(map) {
-    map.addLayer({
-      id: 'circle-simple-style-points',
-      type: 'circle',
-      source: 'geolonia-simple-style-points',
-      filter: ['!', ['has', 'point_count']],
-      paint: {
-        'circle-radius': [
-          'case',
-          ['==', 'small', ['get', 'marker-size']], 3,
-          ['==', 'large', ['get', 'marker-size']], 13,
-          9,
-        ],
-        'circle-color': ['string', ['get', 'marker-color'], '#7e7e7e'],
-        'circle-opacity': ['number', ['get', 'fill-opacity'], 0.6],
-        'circle-stroke-width': ['number', ['get', 'stroke-width'], 2],
-        'circle-stroke-color': ['string', ['get', 'stroke'], '#555555'],
-        'circle-stroke-opacity': ['number', ['get', 'stroke-opacity'], 1.0],
-      },
-    })
-
-    map.addLayer({
-      id: 'symbol-simple-style-points',
-      type: 'symbol',
-      source: 'geolonia-simple-style-points',
-      filter: ['!', ['has', 'point_count']],
-      paint: {
-        'text-color': '#000000',
-        'text-halo-color': 'rgba(255, 255, 255, 1)',
-        'text-halo-width': 2,
-      },
-      layout: {
-        'icon-image': '{marker-symbol}-11',
-        'text-field': ['get', 'title'],
-        'text-font': ['Noto Sans Regular'],
-        'text-size': 12,
-        'text-anchor': 'top',
-        'text-max-width': 12,
-        'text-offset': [
-          'case',
-          ['==', 'small', ['get', 'marker-size']], ['literal', [0, 0.4]],
-          ['==', 'large', ['get', 'marker-size']], ['literal', [0, 1.2]],
-          ['literal', [0, 1]],
-        ],
-        'text-allow-overlap': false,
-      },
-    })
-
-    this.setPopup(map, 'circle-simple-style-points')
-  }
-
-  setPopup(map, source) {
-    map.on('click', source, e => {
-      const center = turfCenter(e.features[0]).geometry.coordinates
-      const description = e.features[0].properties.description
-
-      if (description) {
-        new mapboxgl.Popup().setLngLat(center).setHTML(sanitizeHtml(description)).addTo(map)
-      }
-    })
-
-    map.on('mouseenter', source, e => {
-      if (e.features[0].properties.description) {
-        map.getCanvas().style.cursor = 'pointer'
-      }
-    })
-
-    map.on('mouseleave', source, () => {
-      map.getCanvas().style.cursor = ''
-    })
-  }
-
-  /**
-   * Setup cluster markers
-   *
-   * @param map
-   */
-  setCluster(map) {
-    map.addLayer({
-      id: 'clusters',
-      type: 'circle',
-      source: 'geolonia-simple-style-points',
-      filter: ['has', 'point_count'],
-      paint: {
-        'circle-radius': 20,
-        'circle-color': this.options.clusterColor,
-        'circle-opacity': 0.6,
-      },
-    })
-
-    map.addLayer({
-      id: 'cluster-count',
-      type: 'symbol',
-      source: 'geolonia-simple-style-points',
-      filter: ['has', 'point_count'],
-      layout: {
-        'text-field': '{point_count_abbreviated}',
-        'text-size': 14,
-        'text-font': ['Noto Sans Regular'],
-      },
-    })
-
-    map.on('click', 'clusters', function (e) {
-      const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] })
-      const clusterId = features[0].properties.cluster_id
-      map.getSource('geolonia-simple-style-points').getClusterExpansionZoom(clusterId, function (err, zoom) {
-        if (err)
-          return
-
-        map.easeTo({
-          center: features[0].geometry.coordinates,
-          zoom: zoom,
-        })
-      })
-    })
-
-    map.on('mouseenter', 'clusters', function () {
-      map.getCanvas().style.cursor = 'pointer'
-    })
-
-    map.on('mouseleave', 'clusters', function () {
-      map.getCanvas().style.cursor = ''
-    })
-  }
-}
-
-export default simpleStyle
+]
