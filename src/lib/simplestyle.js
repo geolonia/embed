@@ -52,7 +52,7 @@ class simpleStyle {
       paint: {
         'text-color': '#000000',
         'text-halo-color': 'rgba(255, 255, 255, 1)',
-        'text-halo-width': 2,
+        'text-halo-width': 1,
       },
       layout: {
         'text-field': ['get', 'title'],
@@ -71,7 +71,7 @@ class simpleStyle {
       paint: {
         'text-color': '#000000',
         'text-halo-color': 'rgba(255, 255, 255, 1)',
-        'text-halo-width': 2,
+        'text-halo-width': 1,
       },
       layout: {
         'symbol-placement': 'line',
@@ -177,7 +177,7 @@ class simpleStyle {
       paint: {
         'text-color': '#000000',
         'text-halo-color': 'rgba(255, 255, 255, 1)',
-        'text-halo-width': 2,
+        'text-halo-width': 1,
       },
       layout: {
         'icon-image': '{marker-symbol}-11',
