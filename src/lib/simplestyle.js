@@ -52,7 +52,7 @@ class simpleStyle {
       paint: {
         'text-color': '#000000',
         'text-halo-color': 'rgba(255, 255, 255, 1)',
-        'text-halo-width': 2,
+        'text-halo-width': 1,
       },
       layout: {
         'text-field': ['get', 'title'],
@@ -71,7 +71,7 @@ class simpleStyle {
       paint: {
         'text-color': '#000000',
         'text-halo-color': 'rgba(255, 255, 255, 1)',
-        'text-halo-width': 2,
+        'text-halo-width': 1,
       },
       layout: {
         'symbol-placement': 'line',
@@ -110,7 +110,7 @@ class simpleStyle {
       filter: ['==', '$type', 'Polygon'],
       paint: {
         'fill-color': ['string', ['get', 'fill'], '#7e7e7e'],
-        'fill-opacity': ['number', ['get', 'fill-opacity'], 0.6],
+        'fill-opacity': ['number', ['get', 'fill-opacity'], 1.0],
         'fill-outline-color': ['string', ['get', 'stroke'], '#555555'],
       },
     })
@@ -130,7 +130,7 @@ class simpleStyle {
       source: 'geolonia-simple-style',
       filter: ['==', '$type', 'LineString'],
       paint: {
-        'line-width': ['number', ['get', 'stroke-width'], 2],
+        'line-width': ['number', ['get', 'stroke-width'], 1],
         'line-color': ['string', ['get', 'stroke'], '#555555'],
         'line-opacity': ['number', ['get', 'stroke-opacity'], 1.0],
       },
@@ -162,8 +162,8 @@ class simpleStyle {
           9,
         ],
         'circle-color': ['string', ['get', 'marker-color'], '#7e7e7e'],
-        'circle-opacity': ['number', ['get', 'fill-opacity'], 0.6],
-        'circle-stroke-width': ['number', ['get', 'stroke-width'], 2],
+        'circle-opacity': ['number', ['get', 'fill-opacity'], 1.0],
+        'circle-stroke-width': ['number', ['get', 'stroke-width'], 1],
         'circle-stroke-color': ['string', ['get', 'stroke'], '#555555'],
         'circle-stroke-opacity': ['number', ['get', 'stroke-opacity'], 1.0],
       },
@@ -177,7 +177,7 @@ class simpleStyle {
       paint: {
         'text-color': '#000000',
         'text-halo-color': 'rgba(255, 255, 255, 1)',
-        'text-halo-width': 2,
+        'text-halo-width': 1,
       },
       layout: {
         'icon-image': '{marker-symbol}-11',
@@ -234,7 +234,7 @@ class simpleStyle {
       paint: {
         'circle-radius': 20,
         'circle-color': this.options.clusterColor,
-        'circle-opacity': 0.6,
+        'circle-opacity': 1.0,
       },
     })
 
