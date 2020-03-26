@@ -5,6 +5,9 @@ import geojsonExtent from '@mapbox/geojson-extent'
 import turfCenter from '@turf/center'
 import sanitizeHtml from 'sanitize-html'
 
+const backgroundColor = 'rgba(255, 0, 0, 0.4)'
+const strokeColor = '#FFFFFF'
+
 class simpleStyle {
   constructor(json, options) {
     this.json = json
@@ -98,7 +101,7 @@ class simpleStyle {
   }
 
   /**
-   * Set line geometries.
+   * Set polygon geometries.
    *
    * @param map
    */
@@ -109,9 +112,9 @@ class simpleStyle {
       source: 'geolonia-simple-style',
       filter: ['==', '$type', 'Polygon'],
       paint: {
-        'fill-color': ['string', ['get', 'fill'], '#7e7e7e'],
+        'fill-color': ['string', ['get', 'fill'], backgroundColor],
         'fill-opacity': ['number', ['get', 'fill-opacity'], 1.0],
-        'fill-outline-color': ['string', ['get', 'stroke'], '#555555'],
+        'fill-outline-color': ['string', ['get', 'stroke'], strokeColor],
       },
     })
 
@@ -130,8 +133,8 @@ class simpleStyle {
       source: 'geolonia-simple-style',
       filter: ['==', '$type', 'LineString'],
       paint: {
-        'line-width': ['number', ['get', 'stroke-width'], 1],
-        'line-color': ['string', ['get', 'stroke'], '#555555'],
+        'line-width': ['number', ['get', 'stroke-width'], 2],
+        'line-color': ['string', ['get', 'stroke'], backgroundColor],
         'line-opacity': ['number', ['get', 'stroke-opacity'], 1.0],
       },
       layout: {
@@ -161,10 +164,10 @@ class simpleStyle {
           ['==', 'large', ['get', 'marker-size']], 13,
           9,
         ],
-        'circle-color': ['string', ['get', 'marker-color'], '#7e7e7e'],
+        'circle-color': ['string', ['get', 'marker-color'], backgroundColor],
         'circle-opacity': ['number', ['get', 'fill-opacity'], 1.0],
         'circle-stroke-width': ['number', ['get', 'stroke-width'], 1],
-        'circle-stroke-color': ['string', ['get', 'stroke'], '#555555'],
+        'circle-stroke-color': ['string', ['get', 'stroke'], strokeColor],
         'circle-stroke-opacity': ['number', ['get', 'stroke-opacity'], 1.0],
       },
     })
