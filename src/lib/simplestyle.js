@@ -183,7 +183,7 @@ class simpleStyle {
         'text-halo-width': 1,
       },
       layout: {
-        'icon-image': '{marker-symbol}-11',
+        'icon-image': '{marker-symbol}-15',
         'text-field': ['get', 'title'],
         'text-font': ['Noto Sans Regular'],
         'text-size': 12,
