@@ -47,7 +47,7 @@
     "@turf/center": "^6.0.1",
     "core-js": "^3.6.4",
     "intersection-observer": "^0.5.1",
-    "mapbox-gl": "^1.8.1",
+    "mapbox-gl": "^1.9.0",
     "promise-polyfill": "^8.1.0",
     "sanitize-html": "^1.21.1",
     "tinycolor2": "^1.4.1",
