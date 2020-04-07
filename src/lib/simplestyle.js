@@ -160,7 +160,7 @@ class simpleStyle {
       paint: {
         'circle-radius': [
           'case',
-          ['==', 'small', ['get', 'marker-size']], 3,
+          ['==', 'small', ['get', 'marker-size']], 7,
           ['==', 'large', ['get', 'marker-size']], 13,
           9,
         ],
