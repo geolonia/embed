@@ -183,7 +183,11 @@ class simpleStyle {
         'text-halo-width': 1,
       },
       layout: {
-        'icon-image': ['image', ['concat', ['get', 'marker-symbol'], '-15']],
+        'icon-image': [
+          'case',
+          ['==', 'large', ['get', 'user_marker-size']], ['image', ['concat', ['get', 'user_marker-symbol'], '-15']],
+          ['image', ['concat', ['get', 'user_marker-symbol'], '-11']]
+        ],
         'text-field': ['get', 'title'],
         'text-font': ['Noto Sans Regular'],
         'text-size': 12,
