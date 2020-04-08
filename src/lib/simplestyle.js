@@ -186,7 +186,7 @@ class simpleStyle {
         'icon-image': [
           'case',
           ['==', 'large', ['get', 'user_marker-size']], ['image', ['concat', ['get', 'user_marker-symbol'], '-15']],
-          ['image', ['concat', ['get', 'user_marker-symbol'], '-11']]
+          ['image', ['concat', ['get', 'user_marker-symbol'], '-11']],
         ],
         'text-field': ['get', 'title'],
         'text-font': ['Noto Sans Regular'],
