@@ -5,6 +5,8 @@ import geojsonExtent from '@mapbox/geojson-extent'
 import turfCenter from '@turf/center'
 import sanitizeHtml from 'sanitize-html'
 
+const textColor = '#000000'
+const textHaloColor = '#FFFFFF'
 const backgroundColor = 'rgba(255, 0, 0, 0.4)'
 const strokeColor = '#FFFFFF'
 
@@ -53,8 +55,8 @@ class simpleStyle {
       source: 'geolonia-simple-style',
       filter: ['==', '$type', 'Polygon'],
       paint: {
-        'text-color': '#000000',
-        'text-halo-color': 'rgba(255, 255, 255, 1)',
+        'text-color': ['string', ['get', 'text-color'], textColor],
+        'text-halo-color': ['string', ['get', 'text-halo-color'], textHaloColor],
         'text-halo-width': 1,
       },
       layout: {
@@ -72,8 +74,8 @@ class simpleStyle {
       source: 'geolonia-simple-style',
       filter: ['==', '$type', 'LineString'],
       paint: {
-        'text-color': '#000000',
-        'text-halo-color': 'rgba(255, 255, 255, 1)',
+        'text-color': ['string', ['get', 'text-color'], textColor],
+        'text-halo-color': ['string', ['get', 'text-halo-color'], textHaloColor],
         'text-halo-width': 1,
       },
       layout: {
@@ -178,8 +180,8 @@ class simpleStyle {
       source: 'geolonia-simple-style-points',
       filter: ['!', ['has', 'point_count']],
       paint: {
-        'text-color': '#000000',
-        'text-halo-color': 'rgba(255, 255, 255, 1)',
+        'text-color': ['string', ['get', 'text-color'], textColor],
+        'text-halo-color': ['string', ['get', 'text-halo-color'], textHaloColor],
         'text-halo-width': 1,
       },
       layout: {
@@ -196,8 +198,8 @@ class simpleStyle {
         'text-offset': [
           'case',
           ['==', 'small', ['get', 'marker-size']], ['literal', [0, 0.4]],
-          ['==', 'large', ['get', 'marker-size']], ['literal', [0, 1.2]],
-          ['literal', [0, 1]],
+          ['==', 'large', ['get', 'marker-size']], ['literal', [0, 1]],
+          ['literal', [0, 0.6]],
         ],
         'text-allow-overlap': false,
       },
