@@ -166,11 +166,18 @@ export default class GeoloniaMap extends mapboxgl.Map {
     return map
   }
 
+  /**
+   *
+   * @param {string|null} style style identity or `null` when map.remove()
+   * @param {*} options
+   */
   setStyle(style, options = {}) {
+    if (style !== null) {
     // It can't access `this` because `setStyle()` will be called with `super()`.
     // So, we need to run `parseAtts()` again(?)
-    const atts = parseAtts(this.getContainer())
-    style = util.getStyle(style, atts)
+      const atts = parseAtts(this.getContainer())
+      style = util.getStyle(style, atts)
+    }
 
     // Calls `mapboxgl.Map.setStyle()`.
     super.setStyle.call(this, style, options)
