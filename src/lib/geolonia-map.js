@@ -176,7 +176,11 @@ export default class GeoloniaMap extends mapboxgl.Map {
     // It can't access `this` because `setStyle()` will be called with `super()`.
     // So, we need to run `parseAtts()` again(?)
       const atts = parseAtts(this.getContainer())
-      style = util.getStyle(style, atts)
+
+      // If style is object, it must be passed as it.
+      if ('string' === typeof style) {
+        style = util.getStyle(style, atts)
+      }
     }
 
     // Calls `mapboxgl.Map.setStyle()`.
