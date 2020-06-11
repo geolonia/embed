@@ -46,7 +46,7 @@ export default container => {
     loader: 'on',
     minZoom: '',
     maxZoom: '',
-    "3d": '',
+    '3d': '',
     ...container.dataset,
   }
 }
