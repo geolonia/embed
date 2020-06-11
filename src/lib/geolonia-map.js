@@ -161,6 +161,21 @@ export default class GeoloniaMap extends mapboxgl.Map {
           })
         }
       }
+
+      if (atts['3d']) {
+        const style = map.getStyle()
+        style.layers.forEach(layer => {
+          if ('on' === atts['3d'] && layer.metadata && true === layer.metadata['visible-on-3d']) {
+            map.setLayoutProperty(layer.id, 'visibility', 'visible')
+          } else if ('off' === atts['3d'] && layer.metadata && true === layer.metadata['visible-on-3d']) {
+            map.setLayoutProperty(layer.id, 'visibility', 'none')
+          } else if ('on' === atts['3d'] && layer.metadata && true === layer.metadata['hide-on-3d']) {
+            map.setLayoutProperty(layer.id, 'visibility', 'none')
+          } else if ('off' === atts['3d'] && layer.metadata && true === layer.metadata['hide-on-3d']) {
+            map.setLayoutProperty(layer.id, 'visibility', 'visible')
+          }
+        })
+      }
     })
 
     return map
