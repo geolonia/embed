@@ -48,8 +48,8 @@ if ( util.checkPermission() ) {
     })
   })
 
-  const containers = document.querySelectorAll('.geolonia[data-lazy="off"]')
-  const lazyContainers = document.querySelectorAll('.geolonia:not([data-lazy="off"])')
+  const containers = document.querySelectorAll('.geolonia[data-lazy-loading="off"]')
+  const lazyContainers = document.querySelectorAll('.geolonia:not([data-lazy-loading="off"])')
 
   window.geolonia = mapboxgl
   const { key, stage } = parseApiKey(document)
