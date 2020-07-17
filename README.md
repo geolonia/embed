@@ -26,7 +26,7 @@ Specify `.geolonia` class for target elements.
       class="geolonia"
       ...
     ></div>
-    <script src="https://api.geolonia.com/v1/embed?geolonia-api-key=API-KEY"></script>
+    <script src="https://cdn.geolonia.com/v1/embed?geolonia-api-key=API-KEY"></script>
   </body>
 </html>
 ```
@@ -42,7 +42,7 @@ Or
       data-key="YOUR-API-KEY"
       ...
     ></div>
-    <script src="https://api.geolonia.com/v1/embed"></script>
+    <script src="https://cdn.geolonia.com/v1/embed"></script>
   </body>
 </html>
 ```
