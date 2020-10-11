@@ -10,6 +10,7 @@ import parseApiKey from './lib/parse-api-key'
 import GeoloniaMap from './lib/geolonia-map'
 import GeoloniaMarker from './lib/geolonia-marker'
 import * as util from './lib/util'
+import parseAtts from './lib/parse-atts'
 
 if ( util.checkPermission() ) {
   let isDOMContentLoaded = false
@@ -22,17 +23,20 @@ if ( util.checkPermission() ) {
    */
   const renderGeoloniaMap = target => {
     const map = new GeoloniaMap(target)
+
+    // plugin
+    const atts = parseAtts(target)
     if (isDOMContentLoaded) {
-      plugins.forEach(plugin => plugin(map, target))
+      plugins.forEach(plugin => plugin(map, target, atts))
     } else {
-      alreadyRenderedMaps.push({ map, target: target })
+      alreadyRenderedMaps.push({ map, target: target, atts })
     }
   }
 
   document.addEventListener('DOMContentLoaded', () => {
     isDOMContentLoaded = true
-    alreadyRenderedMaps.forEach(({ map, target }) =>
-      plugins.forEach(plugin => plugin(map, target)),
+    alreadyRenderedMaps.forEach(({ map, target, atts }) =>
+      plugins.forEach(plugin => plugin(map, target, atts)),
     )
     // clear
     alreadyRenderedMaps.splice(0, alreadyRenderedMaps.length)
