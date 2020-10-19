@@ -3,6 +3,7 @@
   "version": "1.12.1",
   "description": "Geolonia embed JS API",
   "main": "dist/embed.js",
+  "types": "src/embed.d.ts",
   "scripts": {
     "start": "webpack-dev-server --mode development --config ./docs/webpack.config.js",
     "build": "npm run build:embed && npm run build:docs",
