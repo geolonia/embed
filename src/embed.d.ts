@@ -1,5 +1,8 @@
 import * as mapboxgl from 'mapbox-gl'
-export interface EmbedAttribute {
+
+export type Map = mapboxgl.Map
+export type Marker = mapboxgl.Marker
+export interface EmbedAttributes {
   lat: string;
   lng: string;
   zoom: string;
@@ -30,5 +33,16 @@ export interface EmbedAttribute {
   '3d': string;
   [otherKey: string]: string;
 }
-export type EmbedPlugin = (map: mapboxgl.Map, target: HTMLElement, atts: EmbedAttribute) => void
+export type EmbedPlugin = (map: Map, target: HTMLElement, atts: EmbedAttributes) => void
+
+declare global {
+  interface Window {
+    geolonia: {
+      accessToken: string
+      baseApiUrl: string
+      Map: Map
+      Marker: Marker
+      registerPlugin: (embedPlugin: EmbedPlugin) => void
+    }
+  }
 }
