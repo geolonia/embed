@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/geolonia/embed#readme",
   "devDependencies": {
-    "@babel/cli": "^7.10.1",
+    "@babel/cli": "^7.12.1",
     "@babel/core": "^7.10.2",
     "@babel/plugin-transform-classes": "^7.10.1",
     "@babel/preset-env": "^7.10.2",
