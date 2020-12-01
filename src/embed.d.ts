@@ -2,7 +2,7 @@ import * as mapboxgl from 'mapbox-gl'
 
 export type Map = mapboxgl.Map
 export type Marker = mapboxgl.Marker
-export interface EmbedAttributes {
+export type EmbedAttributes = {
   lat: string;
   lng: string;
   zoom: string;
@@ -33,7 +33,8 @@ export interface EmbedAttributes {
   '3d': string;
   [otherKey: string]: string;
 }
-export type EmbedPlugin = (map: Map, target: HTMLElement, atts: EmbedAttributes) => void
+
+export type EmbedPlugin<PluginAttributes extends { [otherKey: string]: string } = {}> = (map: Map, target: HTMLElement, atts: EmbedAttributes & PluginAttributes) => void
 
 declare global {
   interface Window {
