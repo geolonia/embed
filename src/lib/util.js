@@ -38,7 +38,10 @@ export function checkPermission() {
   /**
    * For the https://codepen.io/
    */
-  if ('https://cdpn.io' === window.self.location.origin) {
+  if (
+    'https://cdpn.io' === window.self.location.origin ||
+    'https://codepen.io' === window.self.location.origin
+    ) {
     if (window.self !== window.parent && 0 === window.document.referrer.indexOf('https://codepen.io')) {
       return true
     }
