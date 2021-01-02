@@ -37,11 +37,12 @@ export function checkPermission() {
 
   /**
    * For the https://codepen.io/
+   * iFrame による Codepen の地図の認可外のサイトへの埋め込みを許可しない
    */
   if (
     'https://cdpn.io' === window.self.location.origin ||
     'https://codepen.io' === window.self.location.origin
-    ) {
+  ) {
     if (window.self !== window.parent && 0 === window.document.referrer.indexOf('https://codepen.io')) {
       return true
     }
@@ -53,7 +54,7 @@ export function checkPermission() {
   if ('https://fiddle.jshell.net' === window.self.location.origin) {
     if (window.self !== window.parent && 0 === window.document.referrer.indexOf('https://jsfiddle.net')) {
       return true
-    }
+    } 
   }
 
   /**
