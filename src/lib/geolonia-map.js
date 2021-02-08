@@ -52,6 +52,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
     }
 
     // Pass API key to `/sources` (tile json).
+    const _transformRequest = options.transformRequest
     options.transformRequest = (url, resourceType) => {
       if (resourceType === 'Source' && url.startsWith('https://api.geolonia.com')) {
         url = `${atts.apiUrl}/sources`
@@ -59,6 +60,11 @@ export default class GeoloniaMap extends mapboxgl.Map {
           url: `${url}?key=${atts.key}`,
           headers: { 'X-Geolonia-Api-Key': atts.key },
         }
+      }
+
+      // Additional transformation
+      if (typeof _transformRequest === 'function') {
+        return _transformRequest(url, resourceType)
       }
     }
 
