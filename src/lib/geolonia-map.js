@@ -52,7 +52,8 @@ export default class GeoloniaMap extends mapboxgl.Map {
     }
 
     // Pass API key to `/sources` (tile json).
-    const transformRequest = (url, resourceType) => {
+    const _transformRequest = options.transformRequest
+    options.transformRequest = (url, resourceType) => {
       if (resourceType === 'Source' && url.startsWith('https://api.geolonia.com')) {
         url = `${atts.apiUrl}/sources`
         return {
@@ -62,13 +63,13 @@ export default class GeoloniaMap extends mapboxgl.Map {
       }
 
       // Additional transformation
-      if (typeof options.transformRequest === 'function') {
-        return options.transformRequest(url, resourceType)
+      if (typeof _transformRequest === 'function') {
+        return _transformRequest(url, resourceType)
       }
     }
 
     // Generate Map
-    super({ ...options, transformRequest })
+    super(options)
     const map = this
 
     // Note: GeoloniaControl should be placed before another controls.
