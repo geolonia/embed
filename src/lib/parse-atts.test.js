@@ -45,7 +45,7 @@ describe('tests for parse Attributes', () => {
       apiUrl: void 0,
       loader: 'on',
       minZoom: '',
-      maxZoom: '',
+      maxZoom: 20,
       '3d': '',
     })
   })
