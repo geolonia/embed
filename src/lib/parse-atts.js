@@ -45,7 +45,7 @@ export default container => {
     apiUrl: window.geolonia.config.API_URL,
     loader: 'on',
     minZoom: '',
-    maxZoom: '20',
+    maxZoom: 20,
     '3d': '',
     ...container.dataset,
   }
