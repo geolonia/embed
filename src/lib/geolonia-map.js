@@ -74,7 +74,6 @@ export default class GeoloniaMap extends mapboxgl.Map {
 
     // Generate Map
     super(options)
-    console.log(options)
     const map = this
 
     // Note: GeoloniaControl should be placed before another controls.
