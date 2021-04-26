@@ -34,6 +34,10 @@ const isCssSelector = string => {
 export default class GeoloniaMap extends mapboxgl.Map {
   constructor(params) {
     const container = util.getContainer(params)
+    if (container.geoloniaMap) {
+      return container.geoloniaMap
+    }
+
     const atts = parseAtts(container)
 
     const options = util.getOptions(container, params, atts)
@@ -70,7 +74,6 @@ export default class GeoloniaMap extends mapboxgl.Map {
 
     // Generate Map
     super(options)
-    console.log(options)
     const map = this
 
     // Note: GeoloniaControl should be placed before another controls.
@@ -184,6 +187,8 @@ export default class GeoloniaMap extends mapboxgl.Map {
         })
       }
     })
+
+    container.geoloniaMap = map
 
     return map
   }
