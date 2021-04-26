@@ -27,13 +27,18 @@ const isCssSelector = string => {
 }
 
 /**
- * Render the map with `class=geolonia`.
+ * Render the map.
  *
  * @param container
  */
-export class GeoloniaDefaultMap extends mapboxgl.Map {
-  constructor(params) {
+export default class GeoloniaMap extends mapboxgl.Map {
+  constructor(params, embedOptions = {}) {
     const container = util.getContainer(params)
+
+    if (!embedOptions.__allowGeoloniaClassName && container.classList.contains('geolonia')) {
+      throw new Error('[Geolonia] You cannot use `class=geolonia` with advanced customization with `new geolonia.Map()`.')
+    }
+
     const atts = parseAtts(container)
 
     const options = util.getOptions(container, params, atts)
@@ -207,21 +212,5 @@ export class GeoloniaDefaultMap extends mapboxgl.Map {
 
     // Calls `mapboxgl.Map.setStyle()`.
     super.setStyle.call(this, style, options)
-  }
-}
-
-/**
- *  Render the map with `new window.geolonia.Map()`.
- *
- */
-export class GeoloniaMap extends GeoloniaDefaultMap {
-  constructor(params) {
-    const container = util.getContainer(params)
-    // Prevent `.geolonia` because those containers should be already rendered.
-    if (container.classList.contains('geolonia')) {
-      throw new Error('You cannot use　`class=geolonia` with `new geolonia.Map`.')
-    } else {
-      super(params)
-    }
   }
 }

@@ -7,7 +7,7 @@ import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import './style.css'
 import parseApiKey from './lib/parse-api-key'
-import { GeoloniaMap, GeoloniaDefaultMap } from './lib/geolonia-map'
+import GeoloniaMap from './lib/geolonia-map'
 import GeoloniaMarker from './lib/geolonia-marker'
 import * as util from './lib/util'
 import parseAtts from './lib/parse-atts'
@@ -18,11 +18,11 @@ if ( util.checkPermission() ) {
   const plugins = []
 
   /**
-   *
+   * render maps with .geolonia
    * @param {HTMLElement} target
    */
   const renderGeoloniaMap = target => {
-    const map = new GeoloniaDefaultMap(target)
+    const map = new GeoloniaMap(target, { __allowGeoloniaClassName: true })
 
     // plugin
     const atts = parseAtts(target)
