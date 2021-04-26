@@ -36,7 +36,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
     const container = util.getContainer(params)
 
     if (!embedOptions.__allowGeoloniaClassName && container.classList.contains('geolonia')) {
-      throw new Error('[Geolonia]  `class=geolonia` is not available for advanced customization using `geolonia.Map()`.')
+      throw new Error('[Geolonia] `class=geolonia` is not available for advanced customization using `geolonia.Map()`.')
     }
 
     const atts = parseAtts(container)
