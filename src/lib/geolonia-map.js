@@ -31,7 +31,7 @@ const isCssSelector = string => {
  *
  * @param container
  */
-export default class GeoloniaMap extends mapboxgl.Map {
+export class GeoloniaDefaultMap extends mapboxgl.Map {
   constructor(params) {
     const container = util.getContainer(params)
     const atts = parseAtts(container)
@@ -207,5 +207,17 @@ export default class GeoloniaMap extends mapboxgl.Map {
 
     // Calls `mapboxgl.Map.setStyle()`.
     super.setStyle.call(this, style, options)
+  }
+}
+
+// Prevent `.geolonia` to be rendered with `new window.geolonia.Map()`
+export class GeoloniaMap extends GeoloniaDefaultMap {
+  constructor(params) {
+    const container = util.getContainer(params)
+    if (container.classList.contains('geolonia')) {
+      throw new Error('You cannot use　`class=geolonia` with `new geolonia.Map`.')
+    } else {
+      super(params)
+    }
   }
 }
