@@ -34,8 +34,8 @@ const isCssSelector = string => {
 export default class GeoloniaMap extends mapboxgl.Map {
   constructor(params) {
     const container = util.getContainer(params)
-    if (container._GeoloniaMap) {
-      return container._GeoloniaMap
+    if (container.geoloniaMap) {
+      return container.geoloniaMap
     }
 
     const atts = parseAtts(container)
@@ -188,7 +188,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
       }
     })
 
-    container._GeoloniaMap = map
+    container.geoloniaMap = map
 
     return map
   }
