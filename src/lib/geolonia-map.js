@@ -55,26 +55,57 @@ export default class GeoloniaMap extends mapboxgl.Map {
       container.appendChild(loading)
     }
 
-    // Pass API key to `/sources` (tile json).
+    let sourcesUrl = new URL(`${atts.apiUrl}/sources`)
+    if (options.baseTilesVersion !== '') {
+      sourcesUrl = new URL(`${atts.apiUrl}/sources_v2`)
+      sourcesUrl.searchParams.set('ver', options.baseTilesVersion)
+    }
+    sourcesUrl.searchParams.set('key', atts.key)
+
+    let __insertRefreshedAuthParams
+    // Pass API key and requested tile version to `/sources` (tile json).
     const _transformRequest = options.transformRequest
     options.transformRequest = (url, resourceType) => {
       if (resourceType === 'Source' && url.startsWith('https://api.geolonia.com')) {
-        url = `${atts.apiUrl}/sources`
         return {
-          url: `${url}?key=${atts.key}`,
+          url: sourcesUrl.toString(),
           headers: { 'X-Geolonia-Api-Key': atts.key },
         }
       }
 
+      let request
       // Additional transformation
       if (typeof _transformRequest === 'function') {
-        return _transformRequest(url, resourceType)
+        request = _transformRequest(url, resourceType)
       }
+
+      if (typeof __insertRefreshedAuthParams !== 'undefined') {
+        request = __insertRefreshedAuthParams(request, url)
+      }
+
+      return request
     }
 
     // Generate Map
     super(options)
     const map = this
+    this.geoloniaSourcesUrl = sourcesUrl
+
+    // this function requires `this`, which is not set before `super`
+    __insertRefreshedAuthParams = (request, url) => {
+      if (typeof this._currentAuthParams !== 'undefined') {
+        const purl = new URL((request && request.url) || url)
+        const q = purl.searchParams
+        if (q.get('key') && q.get('expires') && q.get('Policy') && q.get('Key-Pair-Id')) {
+          purl.search = this._currentAuthParams
+
+          return {
+            url: purl.toString(),
+          }
+        }
+      }
+      return request
+    }
 
     // Note: GeoloniaControl should be placed before another controls.
     // Because this control should be "very" bottom-left.
@@ -186,11 +217,27 @@ export default class GeoloniaMap extends mapboxgl.Map {
           }
         })
       }
+
+      if (options.baseTilesVersion !== '') {
+        // トークンが60分で失効するので毎20分で更新する
+        map._tileUrlRefreshIntervalId = setInterval(map.refreshTileUrls, 1800000)
+      }
     })
 
     container.geoloniaMap = map
 
     return map
+  }
+
+  async refreshTileUrls() {
+    const resp = await fetch(this.geoloniaSourcesUrl)
+    if (!resp.ok) {
+      // Error
+      return
+    }
+    const sources = await resp.json()
+    const url = new URL(sources.tiles[0])
+    this._currentAuthParams = url.searchParams
   }
 
   /**

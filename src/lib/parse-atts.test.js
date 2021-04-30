@@ -46,6 +46,7 @@ describe('tests for parse Attributes', () => {
       loader: 'on',
       minZoom: '',
       maxZoom: 20,
+      baseTilesVersion: '',
       '3d': '',
     })
   })
