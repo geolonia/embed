@@ -51,7 +51,7 @@
     "intersection-observer": "^0.5.1",
     "mapbox-gl": "^1.13.0",
     "promise-polyfill": "^8.1.0",
-    "sanitize-html": "^1.26.0",
+    "sanitize-html": "^2.3.2",
     "tinycolor2": "^1.4.1",
     "url-parse": "^1.4.7",
     "whatwg-fetch": "^3.0.0"
