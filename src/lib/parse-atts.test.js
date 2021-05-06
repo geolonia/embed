@@ -1,5 +1,6 @@
 import parseAtts from './parse-atts'
 import assert from 'assert'
+import { JSDOM } from 'jsdom'
 
 describe('tests for parse Attributes', () => {
 
@@ -13,11 +14,11 @@ describe('tests for parse Attributes', () => {
   })
 
   it('should parse attribute', () => {
-    const container = {
-      dataset: {},
-    }
+    const { document: mocDocument } = new JSDOM(`<html><body>
+          <script type="text/javascript" src="https://cdn.geolonia.com/v1/embed?geolonia-api-key=YOUR-API-KEY"></script>
+          </body></html>`).window
 
-    const atts = parseAtts(container)
+    const atts = parseAtts(mocDocument)
     assert.deepStrictEqual(atts, {
       lat: 0,
       lng: 0,
@@ -41,8 +42,8 @@ describe('tests for parse Attributes', () => {
       style: 'geolonia/basic',
       lang: 'ja',
       plugin: 'off',
-      key: void 0,
-      apiUrl: void 0,
+      key: 'YOUR-API-KEY',
+      apiUrl: 'https://api.geolonia.com/v1',
       loader: 'on',
       minZoom: '',
       maxZoom: 20,
