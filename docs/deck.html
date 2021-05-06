@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="./style.css">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>Deck.GL + @geolonia/embed</title>
+  <style>
+    body {
+      margin: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body>
+
+  <script src="https://unpkg.com/deck.gl@latest/dist.min.js"></script>
+  <script src="./embed.js?geolonia-api-key=YOUR-API-KEY"></script>
+
+  <script>
+    const { DeckGL } = deck;
+
+    const map = new DeckGL({
+      mapStyle: 'geolonia/basic',
+      initialViewState: {
+        longitude: 139.7450316,
+        latitude: 35.6759323,
+        zoom: 8,
+        maxZoom: 20,
+        pitch: 0,
+        bearing: 0
+      },
+      controller: true,
+      layers: []
+    });
+
+  </script>
+
+</body>
+</html>

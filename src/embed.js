@@ -6,7 +6,6 @@ import 'intersection-observer'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import './style.css'
-import parseApiKey from './lib/parse-api-key'
 import GeoloniaMap from './lib/geolonia-map'
 import GeoloniaMarker from './lib/geolonia-marker'
 import * as util from './lib/util'
@@ -55,18 +54,14 @@ if ( util.checkPermission() ) {
   const containers = document.querySelectorAll('.geolonia[data-lazy-loading="off"]')
   const lazyContainers = document.querySelectorAll('.geolonia:not([data-lazy-loading="off"])')
 
-  window.geolonia = mapboxgl
-  const { key, stage } = parseApiKey(document)
-  window.geolonia.accessToken = key
-  window.geolonia.baseApiUrl = `https://api.geolonia.com/${stage}`
+  window.geolonia = window.mapboxgl = mapboxgl
+
   window.geolonia.Map = GeoloniaMap
   window.geolonia.Marker = GeoloniaMarker
   window.geolonia.registerPlugin = plugin => {
     plugins.push(plugin)
     return void 0
   }
-
-  window.mapboxgl = mapboxgl
 
   // render Map immediately
   for (let i = 0; i < containers.length; i++) {
