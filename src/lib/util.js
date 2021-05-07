@@ -54,7 +54,7 @@ export function checkPermission() {
   if ('https://fiddle.jshell.net' === window.self.location.origin) {
     if (window.self !== window.parent && 0 === window.document.referrer.indexOf('https://jsfiddle.net')) {
       return true
-    } 
+    }
   }
 
   /**
@@ -198,6 +198,7 @@ export function getOptions(container, params, atts) {
     hash: ('on' === atts.hash),
     localIdeographFontFamily: 'sans-serif',
     attributionControl: true,
+    baseTilesVersion: params.baseTilesVersion || atts.baseTilesVersion,
   }
 
   if ('' !== atts.minZoom && (0 === Number(atts.minZoom) || Number(atts.minZoom))) {
