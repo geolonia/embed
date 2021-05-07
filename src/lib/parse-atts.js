@@ -3,7 +3,7 @@
 import parseApiKey from './parse-api-key'
 import * as util from './util'
 
-export default container => {
+export default (container, params = {}) => {
   if (!container.dataset) {
     container.dataset = {}
   }
@@ -33,8 +33,8 @@ export default container => {
     openPopup: 'off',
     customMarker: '',
     customMarkerOffset: '0, 0',
-    gestureHandling: 'on',
-    navigationControl: 'on',
+    gestureHandling: params.interactive? 'on': 'off',
+    navigationControl: params.interactive? 'on': 'off',
     geolocateControl: 'off',
     fullscreenControl: 'off',
     scaleControl: 'off',
