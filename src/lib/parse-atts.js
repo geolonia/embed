@@ -1,5 +1,6 @@
 'use strict'
 
+import parseApiKey from './parse-api-key'
 import * as util from './util'
 
 export default container => {
@@ -17,6 +18,8 @@ export default container => {
   } else {
     lang = util.getLang()
   }
+
+  const { key, stage } = parseApiKey(container)
 
   return {
     lat: 0,
@@ -41,8 +44,8 @@ export default container => {
     style: 'geolonia/basic',
     lang: lang,
     plugin: 'off',
-    key: window.geolonia.config.ACCESS_TOKEN,
-    apiUrl: window.geolonia.config.API_URL,
+    key: key,
+    apiUrl: `https://api.geolonia.com/${stage}`,
     loader: 'on',
     minZoom: '',
     maxZoom: 20,

@@ -10,7 +10,7 @@ describe('parse api key from dom', () => {
 
     const params = parseApiKey(mocDocument)
     assert.deepEqual('abc', params.key)
-    assert.deepEqual('v1', params.stage)
+    assert.deepEqual('dev', params.stage)
   })
 
   it('should parse with geolonia flag', () => {
@@ -21,7 +21,7 @@ describe('parse api key from dom', () => {
 
     const params = parseApiKey(mocDocument)
     assert.deepEqual('def', params.key)
-    assert.deepEqual('v1', params.stage)
+    assert.deepEqual('dev', params.stage)
   })
 
   it('should be "YOUR-API-KEY" and "dev"', () => {
@@ -32,7 +32,7 @@ describe('parse api key from dom', () => {
 
     const params = parseApiKey(mocDocument)
     assert.deepEqual('YOUR-API-KEY', params.key)
-    assert.deepEqual('v1', params.stage)
+    assert.deepEqual('dev', params.stage)
   })
 
   it('should be "YOUR-API-KEY" and "v1"', () => {

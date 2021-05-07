@@ -5,7 +5,7 @@ export default document => {
   const scripts = document.getElementsByTagName('script')
   const params = {
     key: 'YOUR-API-KEY',
-    stage: 'v1',
+    stage: 'dev',
   }
 
   for (const script of scripts) {
@@ -16,7 +16,7 @@ export default document => {
       params.key = q['geolonia-api-key'] || 'YOUR-API-KEY'
 
       const res = pathname.match( /^\/(v[0-9.]+)\/embed/ )
-      if (res && res[1] !== 'dev') {
+      if (res && res[1]) {
         params.stage = res[1]
       }
 

@@ -39,7 +39,6 @@ export default class GeoloniaMap extends mapboxgl.Map {
     }
 
     const atts = parseAtts(container)
-
     const options = util.getOptions(container, params, atts)
 
     // Getting content should be fire just before initialize the map.

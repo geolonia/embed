@@ -6,6 +6,7 @@
   "types": "src/embed.d.ts",
   "scripts": {
     "start": "webpack-dev-server --mode development --config ./docs/webpack.config.js",
+    "start:deck": "webpack-dev-server --mode development --config ./docs/webpack.deck-config.js",
     "build": "npm run build:embed && npm run build:docs",
     "build:docs": "webpack -p --config ./docs/webpack.config.js",
     "build:embed": "webpack -p  --config ./webpack.config.js",
