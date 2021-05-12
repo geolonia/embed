@@ -8,6 +8,8 @@ describe('parse api key from dom', () => {
       <script src="https://external.example.com/?geolonia-api-key=abc"></script>
     </body></html>`).window
 
+    window.geolonia = {}
+
     const params = parseApiKey(mocDocument)
     assert.deepEqual('abc', params.key)
     assert.deepEqual('dev', params.stage)
@@ -18,6 +20,8 @@ describe('parse api key from dom', () => {
       <script src="https://external.example.com/jquery.js"></script>
       <script src="https://external.example.com/?geolonia-api-key=def"></script>
     </body></html>`).window
+
+    window.geolonia = {}
 
     const params = parseApiKey(mocDocument)
     assert.deepEqual('def', params.key)
@@ -30,6 +34,8 @@ describe('parse api key from dom', () => {
       <script type="text/javascript" src="https://api.geolonia.com/dev/embed?geolonia-api-key=YOUR-API-KEY"></script>
     </body></html>`).window
 
+    window.geolonia = {}
+
     const params = parseApiKey(mocDocument)
     assert.deepEqual('YOUR-API-KEY', params.key)
     assert.deepEqual('dev', params.stage)
@@ -41,6 +47,8 @@ describe('parse api key from dom', () => {
       <script type="text/javascript" src="https://api.geolonia.com/v1/embed?geolonia-api-key=YOUR-API-KEY"></script>
     </body></html>`).window
 
+    window.geolonia = {}
+
     const params = parseApiKey(mocDocument)
     assert.deepEqual('YOUR-API-KEY', params.key)
     assert.deepEqual('v1', params.stage)
@@ -51,6 +59,8 @@ describe('parse api key from dom', () => {
       <script src="https://external.example.com/jquery.js"></script>
       <script type="text/javascript" src="https://api.geolonia.com/v123.4/embed?geolonia-api-key=YOUR-API-KEY"></script>
     </body></html>`).window
+
+    window.geolonia = {}
 
     const params = parseApiKey(mocDocument)
     assert.deepEqual('YOUR-API-KEY', params.key)
