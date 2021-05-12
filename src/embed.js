@@ -10,6 +10,7 @@ import GeoloniaMap from './lib/geolonia-map'
 import GeoloniaMarker from './lib/geolonia-marker'
 import * as util from './lib/util'
 import parseAtts from './lib/parse-atts'
+import parseApiKey from './lib/parse-api-key'
 
 if ( util.checkPermission() ) {
   let isDOMContentLoaded = false
@@ -55,6 +56,11 @@ if ( util.checkPermission() ) {
   const lazyContainers = document.querySelectorAll('.geolonia:not([data-lazy-loading="off"])')
 
   window.geolonia = window.mapboxgl = mapboxgl
+
+  // This is required for correct initialization! Don't delete!
+  const { key, stage } = parseApiKey(document)
+  window.geolonia.accessToken = key
+  window.geolonia.baseApiUrl = `https://api.geolonia.com/${stage}`
 
   window.geolonia.Map = GeoloniaMap
   window.geolonia.Marker = GeoloniaMarker
