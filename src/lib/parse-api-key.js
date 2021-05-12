@@ -2,10 +2,10 @@ import urlParse from 'url-parse'
 import querystring from 'querystring'
 
 export default document => {
-  if (window.geolonia.apiKey && window.geolonia.stage) {
+  if (window.geolonia._apiKey && window.geolonia._stage) {
     return {
-      key: window.geolonia.apiKey,
-      stage: window.geolonia.stage,
+      key: window.geolonia._apiKey,
+      stage: window.geolonia._stage,
     }
   }
 
@@ -31,8 +31,8 @@ export default document => {
     }
   }
 
-  window.geolonia.apiKey = params.key
-  window.geolonia.stage = params.stage
+  window.geolonia._apiKey = params.key
+  window.geolonia._stage = params.stage
 
   return params
 }
