@@ -58,9 +58,10 @@ if ( util.checkPermission() ) {
   window.geolonia = window.mapboxgl = mapboxgl
 
   // This is required for correct initialization! Don't delete!
-  const { key, stage } = parseApiKey(document)
-  window.geolonia.accessToken = key
-  window.geolonia.baseApiUrl = `https://api.geolonia.com/${stage}`
+  const { key } = parseApiKey(document)
+  if ('no-api-key' === key) {
+    console.error('Missing API key.') // eslint-disable-line
+  }
 
   window.geolonia.Map = GeoloniaMap
   window.geolonia.Marker = GeoloniaMarker
