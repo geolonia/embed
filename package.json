@@ -12,7 +12,8 @@
     "build:embed": "webpack -p  --config ./webpack.config.js",
     "format": "prettier-eslint \"./src/**/*.js\" --write",
     "lint": "eslint \"src/**/*.js\"",
-    "test": "npm run lint && mocha -r jsdom-global/register"
+    "test": "npm run lint && mocha ./src/**/*.test.js --recursive -r jsdom-global/register -r @babel/register",
+    "test:integration": "mkdir -p snapshots && mocha test/integration.test.js --timeout 20000"
   },
   "author": "Geolonia inc.",
   "repository": {
@@ -36,8 +37,10 @@
     "jsdom": "^16.2.2",
     "jsdom-global": "^3.0.2",
     "mocha": "^5.2.0",
+    "pngjs": "^6.0.0",
     "prettier-eslint": "^12.0.0",
     "prettier-eslint-cli": "^5.0.0",
+    "puppeteer": "^9.1.1",
     "style-loader": "^0.23.1",
     "svg-inline-loader": "^0.8.2",
     "webpack": "^4.43.0",
