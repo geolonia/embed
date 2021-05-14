@@ -92,6 +92,15 @@ $ git clone git@github.com:geolonia/embed.git
 $ cd embed
 $ yarn # or npm install
 $ npm start
+$ npm test
 ```
 
 Then you can see `http://localhost:1234/`.
+
+## Integration test
+
+```shell
+$ cp .envrc.sample .envrc
+$ vi .envrc
+$ npm run test:integration
+```

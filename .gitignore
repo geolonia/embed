@@ -62,8 +62,11 @@ typings/
 # next.js build output
 .next
 
-# Others
+# secrets
+.envrc
 
+# Others
 /dist
+/snapshots
 .cache
 .DS_Store
