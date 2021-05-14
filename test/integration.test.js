@@ -1,6 +1,6 @@
 const assert = require('assert')
 const puppeteer = require('puppeteer')
-const fs = require('fs/promises')
+const fs = require('fs').promises
 const path = require('path')
 const http = require('http')
 const { isWhiteout } = require('./util')
