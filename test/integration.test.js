@@ -9,10 +9,12 @@ const sleep = msec => new Promise(resolve => setTimeout(resolve, msec))
 
 describe('Tests for Maps.', () => {
   let browser
+  let page
   let embedServer
+  const capturedErrors = []
+  const reports = []
 
   before(async () => {
-    browser = await puppeteer.launch()
     const embed = (
       await fs.readFile(path.resolve(__dirname, '..', 'dist', 'embed.js'))
     ).toString()
@@ -22,14 +24,11 @@ describe('Tests for Maps.', () => {
       response.end()
     })
     embedServer.listen(8080)
-  })
 
-  after(async () => {
-    await browser.close()
-    embedServer.close()
-  })
+    // prepare pupeteer
+    browser = await puppeteer.launch()
+    page = await browser.newPage()
 
-  it('The map should be displayed as expected', async () => {
     // navigation
     const template = await (
       await fs.readFile(path.resolve(__dirname, 'assets', 'map.html.template'))
@@ -37,21 +36,43 @@ describe('Tests for Maps.', () => {
     const content = template
       .replace(/%ORIGIN%/g, 'http://127.0.0.1:8080')
       .replace(/%API_KEY%/g, process.env.GEOLONIA_API_KEY)
-    const page = await browser.newPage()
     await page.goto('https://geolonia.com')
+    page.on('pageerror', error => capturedErrors.push(error))
     await page.setContent(content)
-    await sleep(10000)
+    await sleep(5000)
+  })
 
-    // pixel testing
-    const nextImage = await page.screenshot()
-    const whiteoutRate = await isWhiteout(nextImage)
-    process.stdout.write(`[test] 白色(#fefefe - #ffffff) の閉める割合: ${Math.round(10000 * whiteoutRate) / 100}%`)
-    await fs.writeFile(path.resolve('__dirname', '..', 'snapshots', 'map.png'), nextImage)
-    assert.strictEqual(whiteoutRate < 0.8, true)
+  after(async () => {
+    reports.forEach(report => process.stdout.write(`[report] ${report}\n`))
+    await browser.close()
+    embedServer.close()
+  })
 
-    // DOM testing
+  it('should not emit JS errors', () => {
+    assert.strictEqual(capturedErrors.length, 0)
+  })
+
+  it('should build DOM as expected', async () => {
     const map = await page.$('#map div:first-child')
     const className = await (await map.getProperty('className')).jsonValue()
     assert.strictEqual('mapboxgl-canary', className)
-  }, 20000)
+  })
+
+  it('should render map', async () => {
+    const nextImage = await page.screenshot()
+    const whiteoutRate = await isWhiteout(nextImage)
+
+    reports.push(
+      `白色(#fefefe - #ffffff) の占める割合: ${
+        Math.round(10000 * whiteoutRate) / 100
+      }%`,
+    )
+    // Store the image for human
+    await fs.writeFile(
+      path.resolve('__dirname', '..', 'snapshots', 'map.png'),
+      nextImage,
+    )
+
+    assert.strictEqual(whiteoutRate < 0.8, true)
+  })
 })
