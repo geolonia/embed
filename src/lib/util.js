@@ -213,3 +213,19 @@ export function getOptions(container, params, atts) {
 
   return options
 }
+
+/**
+ * 
+ * @param {string} an data-*-control Embed attribute
+ * @returns { enabled: bolean, position: 'top-right' | 'bottom-right' | 'bottom-left' | 'top-left' | void }
+ */
+export function parseControlOption(att) {
+  const normalizedAtt = att.toLowerCase()
+  if (['top-right', 'bottom-right', 'bottom-left', 'top-left'].includes(normalizedAtt)) {
+    return { enabled: true, position: normalizedAtt }
+  } else if (['on', 'off'].includes(normalizedAtt)) {
+    return { enabled: normalizedAtt === 'on', position: void 0 }
+  } else {
+    return { enabled: false, position: void 0 }
+  }
+}

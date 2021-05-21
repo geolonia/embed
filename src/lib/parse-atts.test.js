@@ -36,6 +36,7 @@ describe('tests for parse Attributes', () => {
       geolocateControl: 'off',
       fullscreenControl: 'off',
       scaleControl: 'off',
+      geoloniaControl: 'on',
       geojson: '',
       cluster: 'on',
       clusterColor: '#ff0000',
