@@ -19,6 +19,11 @@ export type EmbedAttributes = {
   geolocateControl: string;
   fullscreenControl: string;
   scaleControl: string;
+  navigationControlPosition: string,
+  geolocateControlPosition: string,
+  fullscreenControlPosition: string,
+  scaleControlPositon: string,
+  geoloniaControlPosition: string, 
   geojson: string;
   cluster: string;
   clusterColor: string;

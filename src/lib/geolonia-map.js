@@ -107,8 +107,11 @@ export default class GeoloniaMap extends mapboxgl.Map {
     }
 
     // Note: GeoloniaControl should be placed before another controls.
-    // Because this control should be "very" bottom-left.
-    map.addControl(new GeoloniaControl())
+    // Because this control should be "very" bottom-left(default) or the attributed position.
+    map.addControl(
+      new GeoloniaControl(),
+      atts.geoloniaControlPosition || void 0,
+    )
 
     if ('on' === atts.fullscreenControl) {
       // IE patch for fullscreen mode
@@ -126,19 +129,31 @@ export default class GeoloniaMap extends mapboxgl.Map {
           }
         }
       }
-      map.addControl(new window.geolonia.FullscreenControl())
+      map.addControl(
+        new window.geolonia.FullscreenControl(),
+        atts.fullscreenControlPosition || void 0,
+      )
     }
 
     if ('on' === atts.navigationControl) {
-      map.addControl(new window.geolonia.NavigationControl())
+      map.addControl(
+        new window.geolonia.NavigationControl(),
+        atts.navigationControlPosition || void 0,
+      )
     }
 
     if ('on' === atts.geolocateControl) {
-      map.addControl(new window.geolonia.GeolocateControl())
+      map.addControl(
+        new window.geolonia.GeolocateControl(),
+        atts.geolocateControlPosition || void 0,
+      )
     }
 
     if ('on' === atts.scaleControl) {
-      map.addControl(new window.geolonia.ScaleControl())
+      map.addControl(
+        new window.geolonia.ScaleControl(),
+        atts.scaleControlPosition || void 0,
+      )
     }
 
     map.on('load', event => {
