@@ -48,6 +48,12 @@ export default class GeoloniaMap extends mapboxgl.Map {
     let loading
     if ('off' !== atts.loader) {
       loading = document.createElement('div')
+      // prevent pinchin & pinchout
+      loading.addEventListener('touchmove', e => {
+        if (e.touches && 1 < e.touches.length) {
+          e.preventDefault()
+        }
+      })
       loading.className = 'loading-geolonia-map'
       loading.innerHTML = `<div class="lds-grid"><div></div><div></div><div></div>
           <div></div><div></div><div></div><div></div><div></div><div></div></div>`
