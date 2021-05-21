@@ -150,4 +150,25 @@ describe('Tests for util.js', () => {
       assert.deepEqual('undefined', typeof options.maxZoom)
     }
   })
+
+  it('should handle control position options.', () => {
+    const att = 'top-left'
+    const { enabled, position } = util.parseControlOption(att)
+    assert.strictEqual(true, enabled)
+    assert.strictEqual('top-left', position)
+  })
+
+  it('should handle control position on.', () => {
+    const att = 'on'
+    const { enabled, position } = util.parseControlOption(att)
+    assert.strictEqual(true, enabled)
+    assert.strictEqual(void 0, position)
+  })
+
+  it('should handle control position off.', () => {
+    const att = 'off'
+    const { enabled, position } = util.parseControlOption(att)
+    assert.strictEqual(false, enabled)
+    assert.strictEqual(void 0, position)
+  })
 })
