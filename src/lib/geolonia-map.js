@@ -108,12 +108,11 @@ export default class GeoloniaMap extends mapboxgl.Map {
 
     // Note: GeoloniaControl should be placed before another controls.
     // Because this control should be "very" bottom-left(default) or the attributed position.
-    map.addControl(
-      new GeoloniaControl(),
-      atts.geoloniaControlPosition || void 0,
-    )
+    const { position: geoloniaControlPosition } = util.parseControlOption(atts.geoloniaControl)
+    map.addControl(new GeoloniaControl(),  geoloniaControlPosition)
 
-    if ('on' === atts.fullscreenControl) {
+    const { enabled: fullscreenControlEnabled, position: fullscreenControlPosition } = util.parseControlOption(atts.fullscreenControl)
+    if (fullscreenControlEnabled) {
       // IE patch for fullscreen mode
       if (!container.classList.contains('geolonia')) {
         document.onmsfullscreenchange = () => {
@@ -129,31 +128,22 @@ export default class GeoloniaMap extends mapboxgl.Map {
           }
         }
       }
-      map.addControl(
-        new window.geolonia.FullscreenControl(),
-        atts.fullscreenControlPosition || void 0,
-      )
+      map.addControl(new window.geolonia.FullscreenControl(), fullscreenControlPosition)
     }
 
-    if ('on' === atts.navigationControl) {
-      map.addControl(
-        new window.geolonia.NavigationControl(),
-        atts.navigationControlPosition || void 0,
-      )
+    const { enabled: navigationControlEnabled, position: navigationControlPosition } = util.parseControlOption(atts.navigationControl)
+    if (navigationControlEnabled) {
+      map.addControl(new window.geolonia.NavigationControl(), navigationControlPosition)
     }
 
-    if ('on' === atts.geolocateControl) {
-      map.addControl(
-        new window.geolonia.GeolocateControl(),
-        atts.geolocateControlPosition || void 0,
-      )
+    const { enabled: geolocateControlEnabled, position: geolocateControlPosition } = util.parseControlOption(atts.geolocateControl)
+    if (geolocateControlEnabled) {
+      map.addControl(new window.geolonia.GeolocateControl(), geolocateControlPosition)
     }
 
-    if ('on' === atts.scaleControl) {
-      map.addControl(
-        new window.geolonia.ScaleControl(),
-        atts.scaleControlPosition || void 0,
-      )
+    const { enabled: scaleControlEnabled, position: scaleControlPosition } = util.parseControlOption(atts.scaleControl)
+    if (scaleControlEnabled) {
+      map.addControl(new window.geolonia.ScaleControl(),  scaleControlPosition)
     }
 
     map.on('load', event => {
