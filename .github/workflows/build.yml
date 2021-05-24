@@ -50,10 +50,19 @@ jobs:
     needs: build
     if: ${{ github.ref == 'refs/heads/master' }}
     steps:
-      - name: Deploy Github Pages
+
+      - name: Clean repo
         run: |
           git checkout --orphan gh-pages
           git rm -rf . > /dev/null 2>&1
+
+      - name: load the built
+        uses: actions/download-artifact@v2
+        with:
+          name: the-built
+
+      - name: Setup and deploy Github Pages
+        run: |
           mv docs/* .
           git config user.name "$GITHUB_ACTOR"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
