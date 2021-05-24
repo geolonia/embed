@@ -61,10 +61,8 @@ jobs:
           name: the-built
       - name: Setup and deploy Github Pages
         run: |
-          ls
           rm -rf dist
           mv docs/* .
-          ls
           git config user.name "$GITHUB_ACTOR"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
           git add . > /dev/null 2>&1
