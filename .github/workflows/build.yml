@@ -48,7 +48,7 @@ jobs:
     name: 'Host with GitHub Pages'
     runs-on: ubuntu-latest
     needs: build
-    if: ${{ github.ref == 'refs/heads/master' }}
+    if: ${{ github.ref == 'refs/heads/issue-198__ignore-docs-to-prevent-conflict' }}
     steps:
 
       - name: Clean repo
@@ -63,8 +63,10 @@ jobs:
 
       - name: Setup and deploy Github Pages
         run: |
+          ls
           rm -rf dist
           mv docs/* .
+          ls
           git config user.name "$GITHUB_ACTOR"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
           git add . > /dev/null 2>&1
