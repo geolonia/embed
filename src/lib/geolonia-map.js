@@ -2,7 +2,7 @@ import 'whatwg-fetch'
 import 'promise-polyfill/src/polyfill'
 import mapboxgl from 'mapbox-gl'
 import GeoloniaControl from '@geolonia/mbgl-geolonia-control'
-import GestureHandling from './mbgl-gesture-handling'
+import GestureHandling from '@geolonia/mbgl-gesture-handling'
 import simpleStyle from './simplestyle'
 import parseAtts from './parse-atts'
 
