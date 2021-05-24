@@ -74,7 +74,6 @@ export default class GeoloniaMap extends mapboxgl.Map {
       if (resourceType === 'Source' && url.startsWith('https://api.geolonia.com')) {
         return {
           url: sourcesUrl.toString(),
-          headers: { 'X-Geolonia-Api-Key': atts.key },
         }
       }
 
