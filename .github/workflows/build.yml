@@ -43,6 +43,24 @@ jobs:
           path: |
             dist/
             docs/
+
+  gh-page:
+    name: 'Host with GitHub Pages'
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ github.ref == 'refs/heads/master' }}
+    steps:
+      - name: Deploy Github Pages
+        run: |
+          git checkout --orphan gh-pages
+          git rm -rf . > /dev/null 2>&1
+          mv docs/* .
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          git add . > /dev/null 2>&1
+          git commit -m "Deploy" > /dev/null 2>&1
+          git push --force origin gh-pages
+ 
   publish:
     name: 'Publish npm package'
     runs-on: ubuntu-latest
