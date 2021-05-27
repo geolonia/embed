@@ -14,36 +14,33 @@ import parseApiKey from './lib/parse-api-key'
 import { version } from '../package.json'
 import { applyPlugins, registerPluginHook } from './lib/plugin'
 
-let isDOMContentLoaded = false
-
-/**
- * Wait until DOMContentLoaded
- * @returns {Promise<void>}
- */
-const waitDOMContentLoad = () => new Promise(resolve => {
-  if (isDOMContentLoaded) {
-    resolve()
-  }
-  document.addEventListener('DOMContentLoaded', () => {
-    isDOMContentLoaded = true
-    resolve()
-  })
-})
-
-
 if ( util.checkPermission() ) {
+  let isDOMContentLoaded = false
+  const alreadyRenderedMaps = []
 
   /**
    * Render Map and apply plugins
    * @param {HTMLElement} target 
    */
   const renderGeoloniaMap = async target => {
-    await waitDOMContentLoad()
     const atts = parseAtts(target)
     const options = applyPlugins('before-map', [target, atts, {}])
     const map = new GeoloniaMap({ container: target, ...options })
-    map.on('load', () => { applyPlugins('after-map', [map, target, atts]) }) 
+    if (isDOMContentLoaded) {
+      map.on('load', () => { applyPlugins('after-map', [map, target, atts]) })
+    } else {
+      alreadyRenderedMaps.push({ map, target, atts })
+    }
   }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    isDOMContentLoaded = true
+    alreadyRenderedMaps.forEach(({ map, target, atts }) => {
+      map.on('load', () => { applyPlugins('after-map', [map, target, atts]) })     
+    })
+    // clear
+    alreadyRenderedMaps.splice(0, alreadyRenderedMaps.length)
+  })
 
   const observer = new IntersectionObserver(entries => {
     entries.forEach(item => {
@@ -70,9 +67,10 @@ if ( util.checkPermission() ) {
   window.geolonia.Marker = GeoloniaMarker
   window.geolonia.embedVersion = version
   window.geolonia.registerPlugin = plugin => {
-    registerPluginHook(plugin)
+    registerPluginHook('default', plugin)
     return void 0
   }
+  window.geolonia.registerPluginHook = registerPluginHook
 
   // render Map immediately
   for (let i = 0; i < containers.length; i++) {
