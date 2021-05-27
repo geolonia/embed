@@ -12,7 +12,7 @@ import * as util from './lib/util'
 import parseAtts from './lib/parse-atts'
 import parseApiKey from './lib/parse-api-key'
 import { version } from '../package.json'
-import { applyPlugins, registerPluginHook } from './lib/plugin-registration'
+import { applyPlugins, registerPluginHook } from './lib/plugin'
 
 if ( util.checkPermission() ) {
 
