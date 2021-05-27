@@ -12,36 +12,20 @@ import * as util from './lib/util'
 import parseAtts from './lib/parse-atts'
 import parseApiKey from './lib/parse-api-key'
 import { version } from '../package.json'
+import { applyPlugins, registerPluginHook } from './lib/plugin-registration'
 
 if ( util.checkPermission() ) {
-  let isDOMContentLoaded = false
-  const alreadyRenderedMaps = []
-  const plugins = []
 
   /**
-   *
-   * @param {HTMLElement} target
+   * Render Map and apply plugins
+   * @param {HTMLElement} target 
    */
   const renderGeoloniaMap = target => {
-    const map = new GeoloniaMap(target)
-
-    // plugin
     const atts = parseAtts(target)
-    if (isDOMContentLoaded) {
-      plugins.forEach(plugin => plugin(map, target, atts))
-    } else {
-      alreadyRenderedMaps.push({ map, target: target, atts })
-    }
+    const options = applyPlugins('before-map', [target, atts, {}])
+    const map = new GeoloniaMap({ container: target, ...options })
+    map.on('load', () => { applyPlugins('after-map', [map, target, atts]) })
   }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    isDOMContentLoaded = true
-    alreadyRenderedMaps.forEach(({ map, target, atts }) =>
-      plugins.forEach(plugin => plugin(map, target, atts)),
-    )
-    // clear
-    alreadyRenderedMaps.splice(0, alreadyRenderedMaps.length)
-  })
 
   const observer = new IntersectionObserver(entries => {
     entries.forEach(item => {
@@ -68,7 +52,7 @@ if ( util.checkPermission() ) {
   window.geolonia.Marker = GeoloniaMarker
   window.geolonia.embedVersion = version
   window.geolonia.registerPlugin = plugin => {
-    plugins.push(plugin)
+    registerPluginHook(plugin)
     return void 0
   }
 
