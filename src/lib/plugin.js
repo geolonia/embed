@@ -1,5 +1,5 @@
 /**
- * store plugin array with [name] key
+ * stores plugin array with [name] key
  */
 const pluginRegistrationMap = {}
 
@@ -9,14 +9,28 @@ const pluginRegistrationMap = {}
 const pluginReducers = {
   'before-map': {
     func: (target, atts) => async (prevOptions, pluginFunc) => {
-      const nextOptions = pluginFunc(target, atts, await prevOptions)
-      return nextOptions
+      try {
+        const nextOptions = await pluginFunc(target, atts, await prevOptions)
+        return nextOptions        
+      } catch (error) {
+        // pass through with plugin crash
+        console.error(error) // eslint-disable-line
+        return prevOptions
+      }
+
     },
     init: async (_target, _atts, options) => options,
   },
   // sipmle action, no side effects
   default: {
-    func: (map, target, atts) => async (prev, pluginFunc) => { pluginFunc(map, target, atts) },
+    func: (map, target, atts) => async (prev, pluginFunc) => {
+      try {
+        pluginFunc(map, target, atts)        
+      } catch (error) {
+        // pass through with plugin crash
+        console.error(error) // eslint-disable-line
+      }
+    },
     init: async () => void 0,
   },
 }

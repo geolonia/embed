@@ -33,4 +33,21 @@ describe('tests for plugin registration.', () => {
     const nextOptions = await applyPlugins('before-map', [{}, {}, {}])
     assert.strictEqual(nextOptions.count, 2)
   })
+
+  it('should skip if a plugin crashes.', async () => {
+    const noCrashPlugin = (container, atts, options) => {
+      return { ...options, works: true }
+    }
+    const asyncCrashPlugin = async () => {
+      throw new Error('crash')
+    }
+    const crashPlugin = () => {
+      throw new Error('crash')
+    }
+    registerPluginHook('before-map', noCrashPlugin)
+    registerPluginHook('before-map', asyncCrashPlugin)
+    registerPluginHook('before-map', crashPlugin)
+    const nextOptions = await applyPlugins('before-map', [{}, {}, {}])
+    assert.strictEqual(nextOptions.works, true)
+  })
 })
