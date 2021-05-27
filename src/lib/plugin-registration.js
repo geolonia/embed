@@ -15,7 +15,7 @@ const pluginReducers = {
     init: (_target, _atts, options) => options,
   },
   default: {
-    func: () => (prev, pluginFunc) => { pluginFunc() },
+    func: (map, target, atts) => (prev, pluginFunc) => { pluginFunc(map, target, atts) },
     init: () => void 0,
   },
 }
