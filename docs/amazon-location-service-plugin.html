@@ -52,6 +52,7 @@
       await credentials.getPromise()
       return {
         ...options,
+        minZoom: 1,
         transformRequest: (url, resourceType) => {
           if (url.includes("amazonaws.com")) {
           // only sign AWS requests (with the signature as part of the query string)
