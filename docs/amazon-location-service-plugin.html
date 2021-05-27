@@ -50,23 +50,31 @@
         IdentityPoolId: identityPoolId,
       });
       await credentials.getPromise()
+
+      const transformRequest = (url, resourceType) => {
+        if (url.includes("amazonaws.com")) {
+          // only sign AWS requests (with the signature as part of the query string)
+          return {
+            url: Signer.signUrl(url, {
+              access_key: credentials.accessKeyId,
+              secret_key: credentials.secretAccessKey,
+              session_token: credentials.sessionToken,
+            }),
+          };
+        }
+
+        // Additional transformation
+        if (typeof options.transformRequest === 'function') {
+          return options.transformRequest(url, resourceType)
+        } else {
+          return { url }
+        }
+      }
+
       return {
         ...options,
-        minZoom: 1,
-        transformRequest: (url, resourceType) => {
-          if (url.includes("amazonaws.com")) {
-          // only sign AWS requests (with the signature as part of the query string)
-            return {
-              url: Signer.signUrl(url, {
-                access_key: credentials.accessKeyId,
-                secret_key: credentials.secretAccessKey,
-                session_token: credentials.sessionToken,
-              }),
-            };
-          }
-          // don't sign
-          return { url };
-        }
+        minZoom: 1, // no 0/0/0 tile
+        transformRequest
       }
     }
     window.geolonia.registerPluginHook('before-map', amazonLocationServicePlugin)
