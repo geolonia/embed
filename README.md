@@ -50,37 +50,16 @@ Geolonia Embed Plugin should be just a function.
 To define a plugin, call `window.registerPlugin(yourPlugin)`.
 More detailed features are described below as the TypeScript section.
 
-### Plugin Development with TypeScript
+### Plugin
 
-```typescript
-import * as Geolonia from "@geolonia/embed";
-
-const myPlugin: Geolonia.EmbedPlugin = (
-  map: Geolonia.Map, // mapboxgl.Map instance.
-  target: HTMLElement, // HTML Element. The Map will be rendered here.
-  atts: Geolonia.EmbedAttributes // data-x attributes specified at target element.
-) => {
-  /* Do anything with those arguments. */
-};
-
-// be sure to register plugin.
-window.geolonia.registerPligin(myPlugin);
-```
-
-### Plugin Usage
-
-Load the plugins after loading Embed API.
+`before-map` fires before `new Map()` and filter parameters. `after-map` fires after `new Map()`.
 
 ```html
-<!DOCTYPE html>
-<html>
-  <body>
-    <div class="geolonia" ...></div>
-    <script src="https://cdn.geolonia.com/v1/embed?geolonia-api-key=API-KEY"></script>
-    <script src="https://example.com/path/to/your/plugin1.js"></script>
-    <script src="https://example.com/path/to/your/plugin2.js"></script>
-  </body>
-</html>
+<script src="https://cdn.geolonia.com/v1/embed?geolonia-api-key=YOUR-API-KEY">
+<script>
+window.geolonia.registerPliginHook('after-map', (target, atts, options) => { /* plugin code */ });
+window.geolonia.registerPliginHook('after-map', (map, target, atts) => { /* plugin code */ });
+<script>
 ```
 
 # Contributing
