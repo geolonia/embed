@@ -14,17 +14,35 @@ import parseApiKey from './lib/parse-api-key'
 import { version } from '../package.json'
 import { applyPlugins, registerPluginHook } from './lib/plugin'
 
+let isDOMContentLoaded = false
+
+/**
+ * Wait until DOMContentLoaded
+ * @returns {Promise<void>}
+ */
+const waitDOMContentLoad = () => new Promise(resolve => {
+  if (isDOMContentLoaded) {
+    resolve()
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    isDOMContentLoaded = true
+    resolve()
+  })
+})
+
+
 if ( util.checkPermission() ) {
 
   /**
    * Render Map and apply plugins
    * @param {HTMLElement} target 
    */
-  const renderGeoloniaMap = target => {
+  const renderGeoloniaMap = async target => {
+    await waitDOMContentLoad()
     const atts = parseAtts(target)
     const options = applyPlugins('before-map', [target, atts, {}])
     const map = new GeoloniaMap({ container: target, ...options })
-    map.on('load', () => { applyPlugins('after-map', [map, target, atts]) })
+    map.on('load', () => { applyPlugins('after-map', [map, target, atts]) }) 
   }
 
   const observer = new IntersectionObserver(entries => {
