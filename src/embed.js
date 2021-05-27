@@ -20,7 +20,7 @@ if ( util.checkPermission() ) {
 
   /**
    * Render Map and apply plugins
-   * @param {HTMLElement} target 
+   * @param {HTMLElement} target
    */
   const renderGeoloniaMap = async target => {
     const atts = parseAtts(target)
@@ -67,7 +67,7 @@ if ( util.checkPermission() ) {
   window.geolonia.Marker = GeoloniaMarker
   window.geolonia.embedVersion = version
 
-  // regacy feature
+  // deprecated
   window.geolonia.registerPlugin = plugin => {
     registerPluginHook('default', plugin)
     return void 0
