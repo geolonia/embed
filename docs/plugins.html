@@ -16,7 +16,15 @@
   <div class="example">
     <h2>plugins</h2>
     <div
-      style="height: 300px"
+      style="height: 600px"
+      class="geolonia"
+    ></div>
+  </div>
+
+  <div class="example">
+    <h2>plugins</h2>
+    <div
+      style="height: 600px"
       class="geolonia"
     ></div>
   </div>
@@ -34,9 +42,16 @@
   </script>
   <script src="./embed.js?geolonia-api-key=YOUR-API-KEY"></script>
   <script>
-    window.geolonia.registerPluginHook('before-map', () => alert('plugin loaded 1'))
-    window.geolonia.registerPluginHook('before-map', () => alert('plugin loaded 2'))
-    window.geolonia.registerPluginHook('after-map', () => alert('plugin loaded after map loaded'))
+    const beforeMapSamplePlugin = (target, atts, options) => {
+      alert(`before-map: ${options.loadcount || 1}`)
+      return { ...options, loadcount: (options.loadcount || 1) + 1 }
+    }
+    const afterMapSamplePlugin = (map, target, atts) => {
+      alert(`after-map`)
+    }
+    window.geolonia.registerPluginHook('before-map', beforeMapSamplePlugin)
+    window.geolonia.registerPluginHook('before-map', beforeMapSamplePlugin)
+    window.geolonia.registerPluginHook('after-map', afterMapSamplePlugin)
   </script>
 </body>
 
