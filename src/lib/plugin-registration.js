@@ -36,10 +36,10 @@ export const registerPluginHook = (name, pluginCallback) => {
 /**
  * 
  * @param {string} name plugin hook point name
- * @param  {...any} args plugin arguments
+ * @param  {any[]} args plugin arguments
  * @returns reduced values for multiple filter plugins
  */
-export const applyPlugins = (name, ...args) => {
+export const applyPlugins = (name, args) => {
   const pluginRegistrations = pluginRegistrationMap[name] || []
   const pluginReducer = pluginReducers[name] || pluginReducers.default
   const reduceFunction = pluginReducer.func(...args)
