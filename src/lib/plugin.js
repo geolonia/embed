@@ -8,16 +8,16 @@ const pluginRegistrationMap = {}
  */
 const pluginReducers = {
   'before-map': {
-    func: (target, atts) => (prevOptions, pluginFunc) => {
-      const nextOptions = pluginFunc(target, atts, prevOptions)
+    func: (target, atts) => async (prevOptions, pluginFunc) => {
+      const nextOptions = pluginFunc(target, atts, await prevOptions)
       return nextOptions
     },
-    init: (_target, _atts, options) => options,
+    init: async (_target, _atts, options) => options,
   },
   // sipmle action, no side effects
   default: {
-    func: (map, target, atts) => (prev, pluginFunc) => { pluginFunc(map, target, atts) },
-    init: () => void 0,
+    func: (map, target, atts) => async (prev, pluginFunc) => { pluginFunc(map, target, atts) },
+    init: async () => void 0,
   },
 }
 
@@ -40,10 +40,14 @@ export const registerPluginHook = (name, plugin) => {
  * @param  {any[]} args plugin arguments
  * @returns reduced values for multiple filter plugins
  */
-export const applyPlugins = (name, args) => {
+export const applyPlugins = async (name, args) => {
   const pluginRegistrations = pluginRegistrationMap[name] || []
   const pluginReducer = pluginReducers[name] || pluginReducers.default
   const reduceFunction = pluginReducer.func(...args)
   const reduceInitialValue = pluginReducer.init(...args)
-  return pluginRegistrations.reduce(reduceFunction, reduceInitialValue)
+  return await pluginRegistrations.reduce(reduceFunction, reduceInitialValue)
+}
+
+export const clearRegistraitions = () => {
+  Object.keys(pluginRegistrationMap).forEach(key => delete pluginRegistrationMap[key])
 }

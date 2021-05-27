@@ -18,8 +18,9 @@
     <div
       style="height: 600px"
       class="geolonia"
-      data-amzn-cognito-identity-provider="aaa"
-      data-amzn-location-service-map-name="bbb"
+      data-style="./amzn-loc-style.json"
+      data-amzn-cognito-identity-pool-id="ap-northeast-1:d995db2c-8646-4ed2-8122-45dbd2c80019"
+      data-amzn-location-service-map-name="test-3d"
     ></div>
   </div>
 
@@ -35,9 +36,37 @@
     }
   </script>
   <script src="./embed.js?geolonia-api-key=YOUR-API-KEY"></script>
+  <script src="https://sdk.amazonaws.com/js/aws-sdk-2.775.0.min.js"></script>
+  <script src="https://unpkg.com/@aws-amplify/core@3.7.0/dist/aws-amplify-core.min.js"></script>
   <script>
-    const amazonLocationServicePlugin = (target, atts, options) => {
-      return {...options, transformRequest: () => {}}
+    const amazonLocationServicePlugin = async (target, atts, options) => {
+      const { Signer } = window.aws_amplify_core;
+      const {
+        amznCognitoIdentityPoolId: identityPoolId,
+        amznLocationServiceMapName: mapName,
+      } = atts
+      AWS.config.region = identityPoolId.split(":")[0];
+      const credentials = new AWS.CognitoIdentityCredentials({
+        IdentityPoolId: identityPoolId,
+      });
+      await credentials.getPromise()
+      return {
+        ...options,
+        transformRequest: (url, resourceType) => {
+          if (url.includes("amazonaws.com")) {
+          // only sign AWS requests (with the signature as part of the query string)
+            return {
+              url: Signer.signUrl(url, {
+                access_key: credentials.accessKeyId,
+                secret_key: credentials.secretAccessKey,
+                session_token: credentials.sessionToken,
+              }),
+            };
+          }
+          // don't sign
+          return { url };
+        }
+      }
     }
     window.geolonia.registerPluginHook('before-map', amazonLocationServicePlugin)
   </script>

@@ -24,7 +24,7 @@ if ( util.checkPermission() ) {
    */
   const renderGeoloniaMap = async target => {
     const atts = parseAtts(target)
-    const options = applyPlugins('before-map', [target, atts, {}])
+    const options = await applyPlugins('before-map', [target, atts, {}])
     const map = new GeoloniaMap({ container: target, ...options })
     if (isDOMContentLoaded) {
       map.on('load', () => { applyPlugins('after-map', [map, target, atts]) })
