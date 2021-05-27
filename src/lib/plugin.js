@@ -14,6 +14,7 @@ const pluginReducers = {
     },
     init: (_target, _atts, options) => options,
   },
+  // sipmle action, no side effects
   default: {
     func: (map, target, atts) => (prev, pluginFunc) => { pluginFunc(map, target, atts) },
     init: () => void 0,
@@ -23,13 +24,13 @@ const pluginReducers = {
 /**
  * 
  * @param {string} name plugin hook point name
- * @param {*} pluginCallback the plugin
+ * @param {*} plugin the plugin
  */
-export const registerPluginHook = (name, pluginCallback) => {
+export const registerPluginHook = (name, plugin) => {
   if (pluginRegistrationMap[name]) {
-    pluginRegistrationMap[name].push(pluginCallback)
+    pluginRegistrationMap[name].push(plugin)
   } else {
-    pluginRegistrationMap[name] = [pluginCallback]
+    pluginRegistrationMap[name] = [plugin]
   }
 }
 

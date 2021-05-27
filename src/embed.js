@@ -66,6 +66,8 @@ if ( util.checkPermission() ) {
   window.geolonia.Map = GeoloniaMap
   window.geolonia.Marker = GeoloniaMarker
   window.geolonia.embedVersion = version
+
+  // regacy feature
   window.geolonia.registerPlugin = plugin => {
     registerPluginHook('default', plugin)
     return void 0
