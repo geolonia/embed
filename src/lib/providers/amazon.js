@@ -16,30 +16,40 @@ export class AmazonLocationServiceMapProvider {
     this.mapName = mapName
   }
 
-  async _loadAwsSdk() {
-    const AwsSdk = document.createElement('script')
-    const Amplify = document.createElement('script')
-    AwsSdk.setAttribute('src', AWS_SDK_URL)
-    Amplify.setAttribute('src', AMPLIFY_URL)
-    document.body.appendChild(AwsSdk)
-    document.body.appendChild(Amplify)
-  }
+  /**
+   * Load AWS SDK et al. if not exists.
+   * @param {{timeout}} 
+   * @returns Promise<{aws_amplify_core, AWS, geolonia}>
+   */
+  _loadAwsSdk({ timeout }) {
+    const { aws_amplify_core, AWS, geolonia } = window
+    if (aws_amplify_core && AWS && geolonia) {
+      return Promise.resolve({ aws_amplify_core, AWS, geolonia })
+    } else {
+      // Dynamic loading
+      const AwsSdk = document.createElement('script')
+      const Amplify = document.createElement('script')
+      AwsSdk.setAttribute('src', AWS_SDK_URL)
+      Amplify.setAttribute('src', AMPLIFY_URL)
+      document.body.appendChild(AwsSdk)
+      document.body.appendChild(Amplify)
 
-  _waitSDK({ timeout }) {
-    return new Promise((resolve, reject) => {
-      let isTimeout = false
-      setTimeout(() => { isTimeout = true }, timeout)
-      const timerId = setInterval(() => {
-        const { aws_amplify_core, AWS, geolonia } = window
-        if (aws_amplify_core && AWS && geolonia) {
-          clearInterval(timerId)
-          return resolve({ aws_amplify_core, AWS, geolonia })
-        } else if (isTimeout) {
-          clearInterval(timerId)
-          return reject(new Error('Failed to load the AWS SDK.'))
-        }
-      }, 50)
-    })
+      // Wait until ready
+      return new Promise((resolve, reject) => {
+        let isTimeout = false
+        setTimeout(() => { isTimeout = true }, timeout)
+        const timerId = setInterval(() => {
+          const { aws_amplify_core, AWS, geolonia } = window
+          if (aws_amplify_core && AWS && geolonia) {
+            clearInterval(timerId)
+            return resolve({ aws_amplify_core, AWS, geolonia })
+          } else if (isTimeout) {
+            clearInterval(timerId)
+            return reject(new Error('Failed to load the AWS SDK.'))
+          }
+        }, 50)
+      })
+    }
   }
 
   _fetchStyle(url) {
@@ -47,16 +57,15 @@ export class AmazonLocationServiceMapProvider {
   }
 
   async initMap(options) {
-    this._loadAwsSdk()
-    const { aws_amplify_core, AWS, geolonia } = await this._waitSDK({ timeout: 10000 })
+    const { aws_amplify_core, AWS, geolonia } = await this._loadAwsSdk({ timeout: 10000 })
+    
+    // Sign with AWS SDK
     const { Signer } = aws_amplify_core
-
-    AWS.config.region = this.cognitoIdentityPoolId.split(':')[0]
+    const region = this.cognitoIdentityPoolId.split(':')[0]
     const credentials = new AWS.CognitoIdentityCredentials({
       IdentityPoolId: this.cognitoIdentityPoolId,
-    })
+    }, { region })
     await credentials.getPromise()
-
     const transformRequest = (url, resourceType) => {
       if (url.includes('amazonaws.com')) {
         // only sign AWS requests (with the signature as part of the query string)
