@@ -3,7 +3,6 @@ import 'promise-polyfill/src/polyfill'
 import mapboxgl from 'mapbox-gl'
 import GeoloniaControl from '@geolonia/mbgl-geolonia-control'
 import GestureHandling from '@geolonia/mbgl-gesture-handling'
-import simpleStyle from './simplestyle'
 import parseAtts from './parse-atts'
 
 import * as util from './util'
@@ -194,22 +193,24 @@ export default class GeoloniaMap extends mapboxgl.Map {
 
       if (atts.geojson) {
         const el = isCssSelector(atts.geojson)
-        if (el) {
-          const json = JSON.parse(el.textContent)
-          new simpleStyle(json, {
-            cluster: ('on' === atts.cluster),
-            clusterColor: atts.clusterColor,
-          }).addTo(map)
-        } else {
-          fetch(atts.geojson).then(response => {
-            return response.json()
-          }).then(json => {
+        import('./simplestyle').then(simpleStyle => {
+          if (el) {
+            const json = JSON.parse(el.textContent)
             new simpleStyle(json, {
               cluster: ('on' === atts.cluster),
               clusterColor: atts.clusterColor,
             }).addTo(map)
-          })
-        }
+          } else {
+            fetch(atts.geojson).then(response => {
+              return response.json()
+            }).then(json => {
+              new simpleStyle(json, {
+                cluster: ('on' === atts.cluster),
+                clusterColor: atts.clusterColor,
+              }).addTo(map)
+            })
+          }
+        })
       }
 
       if (atts['3d']) {
