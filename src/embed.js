@@ -8,6 +8,7 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 import './style.css'
 import GeoloniaMap from './lib/geolonia-map'
 import GeoloniaMarker from './lib/geolonia-marker'
+import { AmazonLocationServiceMapProvider } from './lib/providers/amazon'
 import * as util from './lib/util'
 import parseAtts from './lib/parse-atts'
 import parseApiKey from './lib/parse-api-key'
@@ -66,6 +67,7 @@ if ( util.checkPermission() ) {
 
   window.geolonia.Map = GeoloniaMap
   window.geolonia.Marker = GeoloniaMarker
+  window.geolonia.AmazonLocationServiceMapProvider = AmazonLocationServiceMapProvider
   window.geolonia.embedVersion = version
   window.geolonia.registerPlugin = plugin => {
     plugins.push(plugin)
