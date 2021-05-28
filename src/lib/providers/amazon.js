@@ -1,8 +1,9 @@
-const AWS_SDK_URL = 'https://sdk.amazonaws.com/js/aws-sdk-2.775.0.min.js'
-const AMPLIFY_URL = 'https://unpkg.com/@aws-amplify/core@3.7.0/dist/aws-amplify-core.min.js'
-
+import 'whatwg-fetch'
 import { getContainer } from '../util'
 
+const AWS_SDK_URL = 'https://sdk.amazonaws.com/js/aws-sdk-2.775.0.min.js'
+const AMPLIFY_URL = 'https://unpkg.com/@aws-amplify/core@3.7.0/dist/aws-amplify-core.min.js'
+const STYLE_URL = 'https://geolonia.github.io/embed/docs/amzn-loc-style.json'
 export class AmazonLocationServiceMapProvider {
 
   constructor(awsconfig = {}) {
@@ -38,6 +39,10 @@ export class AmazonLocationServiceMapProvider {
         }
       }, 50)
     })
+  }
+
+  _fetchStyle(url) {
+    return fetch(url).then(res => res.json())
   }
 
   async initMap(options) {
@@ -80,7 +85,9 @@ export class AmazonLocationServiceMapProvider {
     // override style if not specified
     const container = getContainer(options.container)
     if (container && !container.dataset.style) {
-      mapOptions.style = 'https://geolonia.github.io/embed/docs/amzn-loc-style.json'
+      const style = await this._fetchStyle(STYLE_URL)
+      style.sources.omv.tiles = style.sources.omv.tiles.map(url => url.replace('explore.map', this.mapName))
+      mapOptions.style = style
     }
 
     return new geolonia.Map(mapOptions)
