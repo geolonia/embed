@@ -1,6 +1,8 @@
 const AWS_SDK_URL = 'https://sdk.amazonaws.com/js/aws-sdk-2.775.0.min.js'
 const AMPLIFY_URL = 'https://unpkg.com/@aws-amplify/core@3.7.0/dist/aws-amplify-core.min.js'
 
+import { getContainer } from '../util'
+
 export class AmazonLocationServiceMapProvider {
 
   constructor(awsconfig = {}) {
@@ -69,10 +71,18 @@ export class AmazonLocationServiceMapProvider {
       }
     }
 
-    return new geolonia.Map({
+    const mapOptions = {
       minZoom: 1, // no 0/0/0 tile
       ...options,
       transformRequest,
-    })
+    }
+
+    // override style if not specified
+    const container = getContainer(options.container)
+    if (container && !container.dataset.style) {
+      mapOptions.style = 'https://geolonia.github.io/embed/docs/amzn-loc-style.json'
+    }
+
+    return new geolonia.Map(mapOptions)
   }
 }
