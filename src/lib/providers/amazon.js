@@ -70,8 +70,8 @@ export class AmazonLocationServiceMapProvider {
     }
 
     return new geolonia.Map({
-      ...options,
       minZoom: 1, // no 0/0/0 tile
+      ...options,
       transformRequest,
     })
   }
