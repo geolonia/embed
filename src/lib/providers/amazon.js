@@ -1,5 +1,6 @@
 import 'whatwg-fetch'
 import { getContainer } from '../util'
+import GeoloniaControl from '@geolonia/mbgl-geolonia-control'
 
 const AWS_SDK_URL = 'https://sdk.amazonaws.com/js/aws-sdk-2.775.0.min.js'
 const AMPLIFY_URL = 'https://unpkg.com/@aws-amplify/core@3.7.0/dist/aws-amplify-core.min.js'
@@ -90,6 +91,17 @@ export class AmazonLocationServiceMapProvider {
       mapOptions.style = style
     }
 
-    return new geolonia.Map(mapOptions)
+    const map = new geolonia.Map(mapOptions)
+    try {
+      map._controls.forEach(control => {
+        if (control instanceof GeoloniaControl) {
+          map.removeControl(control)
+        }
+      })    
+    } catch (error) {
+      // nothing to do
+    }
+
+    return map
   }
 }
