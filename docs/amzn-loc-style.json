@@ -7,7 +7,7 @@
       "attribution": "Esri, HERE, Garmin, FAO, NOAA, USGS, © OpenStreetMap contributors, and the GIS User Community",
       "maxzoom": 15,
       "tiles": [
-        "https://maps.geo.ap-northeast-1.amazonaws.com/maps/v0/maps/%MAP_NAME%/tiles/{z}/{x}/{y}"
+        "https://maps.geo.%REGION%.amazonaws.com/maps/v0/maps/%MAP_NAME%/tiles/{z}/{x}/{y}"
       ],
       "type": "vector"
     },
