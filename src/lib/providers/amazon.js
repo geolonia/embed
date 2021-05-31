@@ -8,12 +8,13 @@ const STYLE_URL = 'https://geolonia.github.io/embed/docs/amzn-loc-style.json'
 export class AmazonLocationServiceMapProvider {
 
   constructor(awsconfig = {}) {
-    const { cognitoIdentityPoolId, mapName = 'explore.map' } = awsconfig
+    const { cognitoIdentityPoolId, mapName = 'explore.map', region = 'ap-northeast-1' } = awsconfig
     if (!cognitoIdentityPoolId) {
       throw new Error('Invalid options. awsconfig.cognitoIdentityPoolId is required.')
     }
     this.cognitoIdentityPoolId = cognitoIdentityPoolId
     this.mapName = mapName
+    this.region = region
   }
 
   /**
@@ -61,10 +62,10 @@ export class AmazonLocationServiceMapProvider {
     
     // Sign with AWS SDK
     const { Signer } = aws_amplify_core
-    const region = this.cognitoIdentityPoolId.split(':')[0]
+    const cognitoRegion = this.cognitoIdentityPoolId.split(':')[0]
     const credentials = new AWS.CognitoIdentityCredentials({
       IdentityPoolId: this.cognitoIdentityPoolId,
-    }, { region })
+    }, { region: cognitoRegion })
     await credentials.getPromise()
     const transformRequest = (url, resourceType) => {
       if (url.includes('amazonaws.com')) {
@@ -96,7 +97,11 @@ export class AmazonLocationServiceMapProvider {
     const container = getContainer(options.container)
     if (container && !container.dataset.style) {
       const style = await this._fetchStyle(STYLE_URL)
-      style.sources.omv.tiles = style.sources.omv.tiles.map(url => url.replace('explore.map', this.mapName))
+      style.sources.omv.tiles = style.sources.omv.tiles.map(url => {
+        return url
+          .replace('%MAP_NAME%', this.mapName)
+          .replace('%REGION%', this.region)
+      })
       mapOptions.style = style
     }
 
