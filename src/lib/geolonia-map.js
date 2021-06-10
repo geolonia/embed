@@ -193,24 +193,25 @@ export default class GeoloniaMap extends mapboxgl.Map {
 
       if (atts.geojson) {
         const el = isCssSelector(atts.geojson)
-        import('./simplestyle').then(simpleStyle => {
+        ;(async () => {
+          const ssPromise = import('./simplestyle')
           if (el) {
             const json = JSON.parse(el.textContent)
+            const simpleStyle = await ssPromise
             new simpleStyle(json, {
               cluster: ('on' === atts.cluster),
               clusterColor: atts.clusterColor,
             }).addTo(map)
-          } else {
-            fetch(atts.geojson).then(response => {
-              return response.json()
-            }).then(json => {
-              new simpleStyle(json, {
-                cluster: ('on' === atts.cluster),
-                clusterColor: atts.clusterColor,
-              }).addTo(map)
-            })
+            return
           }
-        })
+
+          const [simpleStyle, response] = Promise.all(ssPromise, fetch(atts.geojson))
+          const json = await response.json()
+          new simpleStyle(json, {
+            cluster: ('on' === atts.cluster),
+            clusterColor: atts.clusterColor,
+          }).addTo(map)
+        })()
       }
 
       if (atts['3d']) {
