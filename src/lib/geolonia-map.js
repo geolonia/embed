@@ -75,6 +75,10 @@ export default class GeoloniaMap extends mapboxgl.Map {
         return {
           url: sourcesUrl.toString(),
         }
+      } else if (resourceType === 'Source' && url.startsWith('https://tileserver.geolonia.com')) {
+        return {
+          url: url.replace('YOUR-API-KEY', atts.key),
+        }
       }
 
       let request
