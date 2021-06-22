@@ -60,12 +60,14 @@ export default class GeoloniaMap extends mapboxgl.Map {
       container.appendChild(loading)
     }
 
+    const sessionId = util.getSessionId(40)
     let sourcesUrl = new URL(`${atts.apiUrl}/sources`)
     if (options.baseTilesVersion !== '') {
       sourcesUrl = new URL(`${atts.apiUrl}/sources_v2`)
       sourcesUrl.searchParams.set('ver', options.baseTilesVersion)
     }
     sourcesUrl.searchParams.set('key', atts.key)
+    sourcesUrl.searchParams.set('sessionId', sessionId)
 
     let __insertRefreshedAuthParams
     // Pass API key and requested tile version to `/sources` (tile json).
@@ -75,9 +77,13 @@ export default class GeoloniaMap extends mapboxgl.Map {
         return {
           url: sourcesUrl.toString(),
         }
-      } else if (resourceType === 'Source' && url.startsWith('https://tileserver.geolonia.com')) {
+      }
+      if (resourceType === 'Source' && url.startsWith('https://tileserver.geolonia.com')) {
+        const tileserverSourcesUrl = new URL(url)
+        tileserverSourcesUrl.searchParams.set('sessionId', sessionId)
+        tileserverSourcesUrl.searchParams.set('key', atts.key)       
         return {
-          url: url.replace('YOUR-API-KEY', atts.key),
+          url: tileserverSourcesUrl.toString(),
         }
       }
 

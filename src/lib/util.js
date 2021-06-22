@@ -229,3 +229,27 @@ export function parseControlOption(att) {
     return { enabled: false, position: void 0 }
   }
 }
+
+/**
+ * keep session
+ */
+let sessionId = ''
+
+/**
+ * 
+ * @param {number} digits for session
+ * @returns sessionId
+ */
+export const getSessionId = digit => {
+  if (sessionId) {
+    return sessionId
+  } else {
+    const array = new Uint8Array(digit / 2);
+    (window.crypto || window.msCrypto).getRandomValues(array)
+    const value = Array
+      .from(array, dec => dec.toString(16).padStart(2, '0'))
+      .join('')
+    sessionId = value
+    return value
+  }
+}
