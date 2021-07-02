@@ -28,7 +28,7 @@ class SimpleStyleVector {
       id: 'vt-geolonia-simple-style-polygon-symbol',
       type: 'symbol',
       source: 'vt-geolonia-simple-style',
-      'source-layer': 'vtGeoloniaSimpleStyle',
+      'source-layer': 'geolonia',
       filter: ['==', '$type', 'Polygon'],
       paint: {
         'text-color': ['string', ['get', 'text-color'], textColor],
@@ -48,7 +48,7 @@ class SimpleStyleVector {
       id: 'vt-geolonia-simple-style-linestring-symbol',
       type: 'symbol',
       source: 'vt-geolonia-simple-style',
-      'source-layer': 'vtGeoloniaSimpleStyle',
+      'source-layer': 'geolonia',
       filter: ['==', '$type', 'LineString'],
       paint: {
         'text-color': ['string', ['get', 'text-color'], textColor],
@@ -88,7 +88,7 @@ class SimpleStyleVector {
       id: 'vt-geolonia-simple-style-polygon',
       type: 'fill',
       source: 'vt-geolonia-simple-style',
-      'source-layer': 'vtGeoloniaSimpleStyle',
+      'source-layer': 'geolonia',
       filter: ['==', '$type', 'Polygon'],
       paint: {
         'fill-color': ['string', ['get', 'fill'], backgroundColor],
@@ -110,7 +110,7 @@ class SimpleStyleVector {
       id: 'vt-geolonia-simple-style-linestring',
       type: 'line',
       source: 'vt-geolonia-simple-style',
-      'source-layer': 'vtGeoloniaSimpleStyle',
+      'source-layer': 'geolonia',
       filter: ['==', '$type', 'LineString'],
       paint: {
         'line-width': ['number', ['get', 'stroke-width'], 2],
@@ -136,7 +136,7 @@ class SimpleStyleVector {
       id: 'vt-circle-simple-style-points',
       type: 'circle',
       source: 'vt-geolonia-simple-style',
-      'source-layer': 'vtGeoloniaSimpleStyle',
+      'source-layer': 'geolonia',
       filter: ['==', '$type', 'Point'],
       paint: {
         'circle-radius': [
@@ -157,7 +157,7 @@ class SimpleStyleVector {
       id: 'vt-geolonia-simple-style-points',
       type: 'symbol',
       source: 'vt-geolonia-simple-style',
-      'source-layer': 'vtGeoloniaSimpleStyle',
+      'source-layer': 'geolonia',
       filter: ['==', '$type', 'Point'],
       paint: {
         'text-color': ['string', ['get', 'text-color'], textColor],
