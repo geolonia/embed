@@ -17,8 +17,8 @@ class SimpleStyleVector {
 
   addTo(map) {
     map.addSource('vt-geolonia-simple-style', {
-      "type": "vector",
-      "url": this.url
+      type: 'vector',
+      url: this.url,
     })
 
     this.setPolygonGeometries(map)
