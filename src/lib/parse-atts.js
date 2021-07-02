@@ -40,6 +40,7 @@ export default (container, params = {}) => {
     scaleControl: 'off',
     geoloniaControl: 'on',
     geojson: '',
+    simpleVector: '',
     cluster: 'on',
     clusterColor: '#ff0000',
     style: 'geolonia/basic',

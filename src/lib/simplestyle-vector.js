@@ -10,49 +10,25 @@ const textHaloColor = '#FFFFFF'
 const backgroundColor = 'rgba(255, 0, 0, 0.4)'
 const strokeColor = '#FFFFFF'
 
-class SimpleStyle {
-  constructor(json, options) {
-    this.json = json
-
-    this.options = {
-      cluster: true,
-      heatmap: false,
-      clusterColor: '#ff0000',
-      ...options,
-    }
+class SimpleStyleVector {
+  constructor(url) {
+    this.url = url
   }
 
   addTo(map) {
-    const features = this.json.features
-    const polygonandlines = features.filter(feature => ('point' !== feature.geometry.type.toLowerCase()))
-    const points = features.filter(feature => ('point' === feature.geometry.type.toLowerCase()))
-
-    map.addSource('geolonia-simple-style', {
-      type: 'geojson',
-      data: {
-        type: 'FeatureCollection',
-        features: polygonandlines,
-      },
+    map.addSource('vt-geolonia-simple-style', {
+      type: 'vector',
+      url: this.url,
     })
 
     this.setPolygonGeometries(map)
     this.setLineGeometries(map)
 
-    map.addSource('geolonia-simple-style-points', {
-      type: 'geojson',
-      data: {
-        type: 'FeatureCollection',
-        features: points,
-      },
-      cluster: this.options.cluster,
-      clusterMaxZoom: 14,
-      clusterRadius: 50,
-    })
-
     map.addLayer({
-      id: 'geolonia-simple-style-polygon-symbol',
+      id: 'vt-geolonia-simple-style-polygon-symbol',
       type: 'symbol',
-      source: 'geolonia-simple-style',
+      source: 'vt-geolonia-simple-style',
+      'source-layer': 'g-simplestyle-v1',
       filter: ['==', '$type', 'Polygon'],
       paint: {
         'text-color': ['string', ['get', 'text-color'], textColor],
@@ -69,9 +45,10 @@ class SimpleStyle {
     })
 
     map.addLayer({
-      id: 'geolonia-simple-style-linestring-symbol',
+      id: 'vt-geolonia-simple-style-linestring-symbol',
       type: 'symbol',
-      source: 'geolonia-simple-style',
+      source: 'vt-geolonia-simple-style',
+      'source-layer': 'g-simplestyle-v1',
       filter: ['==', '$type', 'LineString'],
       paint: {
         'text-color': ['string', ['get', 'text-color'], textColor],
@@ -89,8 +66,7 @@ class SimpleStyle {
     })
 
     this.setPointGeometries(map)
-    this.setCluster(map)
-
+  
     const container = map.getContainer()
 
     if (!container.dataset || (!container.dataset.lng && !container.dataset.lat)) {
@@ -109,9 +85,10 @@ class SimpleStyle {
    */
   setPolygonGeometries(map) {
     map.addLayer({
-      id: 'geolonia-simple-style-polygon',
+      id: 'vt-geolonia-simple-style-polygon',
       type: 'fill',
-      source: 'geolonia-simple-style',
+      source: 'vt-geolonia-simple-style',
+      'source-layer': 'g-simplestyle-v1',
       filter: ['==', '$type', 'Polygon'],
       paint: {
         'fill-color': ['string', ['get', 'fill'], backgroundColor],
@@ -120,7 +97,7 @@ class SimpleStyle {
       },
     })
 
-    this.setPopup(map, 'geolonia-simple-style-polygon')
+    this.setPopup(map, 'vt-geolonia-simple-style-polygon')
   }
 
   /**
@@ -130,9 +107,10 @@ class SimpleStyle {
    */
   setLineGeometries(map) {
     map.addLayer({
-      id: 'geolonia-simple-style-linestring',
+      id: 'vt-geolonia-simple-style-linestring',
       type: 'line',
-      source: 'geolonia-simple-style',
+      source: 'vt-geolonia-simple-style',
+      'source-layer': 'g-simplestyle-v1',
       filter: ['==', '$type', 'LineString'],
       paint: {
         'line-width': ['number', ['get', 'stroke-width'], 2],
@@ -145,7 +123,7 @@ class SimpleStyle {
       },
     })
 
-    this.setPopup(map, 'geolonia-simple-style-linestring')
+    this.setPopup(map, 'vt-geolonia-simple-style-linestring')
   }
 
   /**
@@ -155,10 +133,11 @@ class SimpleStyle {
    */
   setPointGeometries(map) {
     map.addLayer({
-      id: 'circle-simple-style-points',
+      id: 'vt-circle-simple-style-points',
       type: 'circle',
-      source: 'geolonia-simple-style-points',
-      filter: ['!', ['has', 'point_count']],
+      source: 'vt-geolonia-simple-style',
+      'source-layer': 'g-simplestyle-v1',
+      filter: ['==', '$type', 'Point'],
       paint: {
         'circle-radius': [
           'case',
@@ -175,10 +154,11 @@ class SimpleStyle {
     })
 
     map.addLayer({
-      id: 'symbol-simple-style-points',
+      id: 'vt-geolonia-simple-style-points',
       type: 'symbol',
-      source: 'geolonia-simple-style-points',
-      filter: ['!', ['has', 'point_count']],
+      source: 'vt-geolonia-simple-style',
+      'source-layer': 'g-simplestyle-v1',
+      filter: ['==', '$type', 'Point'],
       paint: {
         'text-color': ['string', ['get', 'text-color'], textColor],
         'text-halo-color': ['string', ['get', 'text-halo-color'], textHaloColor],
@@ -205,7 +185,7 @@ class SimpleStyle {
       },
     })
 
-    this.setPopup(map, 'circle-simple-style-points')
+    this.setPopup(map, 'vt-circle-simple-style-points')
   }
 
   setPopup(map, source) {
@@ -228,59 +208,6 @@ class SimpleStyle {
       map.getCanvas().style.cursor = ''
     })
   }
-
-  /**
-   * Setup cluster markers
-   *
-   * @param map
-   */
-  setCluster(map) {
-    map.addLayer({
-      id: 'clusters',
-      type: 'circle',
-      source: 'geolonia-simple-style-points',
-      filter: ['has', 'point_count'],
-      paint: {
-        'circle-radius': 20,
-        'circle-color': this.options.clusterColor,
-        'circle-opacity': 1.0,
-      },
-    })
-
-    map.addLayer({
-      id: 'cluster-count',
-      type: 'symbol',
-      source: 'geolonia-simple-style-points',
-      filter: ['has', 'point_count'],
-      layout: {
-        'text-field': '{point_count_abbreviated}',
-        'text-size': 14,
-        'text-font': ['Noto Sans Regular'],
-      },
-    })
-
-    map.on('click', 'clusters', function (e) {
-      const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] })
-      const clusterId = features[0].properties.cluster_id
-      map.getSource('geolonia-simple-style-points').getClusterExpansionZoom(clusterId, function (err, zoom) {
-        if (err)
-          return
-
-        map.easeTo({
-          center: features[0].geometry.coordinates,
-          zoom: zoom,
-        })
-      })
-    })
-
-    map.on('mouseenter', 'clusters', function () {
-      map.getCanvas().style.cursor = 'pointer'
-    })
-
-    map.on('mouseleave', 'clusters', function () {
-      map.getCanvas().style.cursor = ''
-    })
-  }
 }
 
-export default SimpleStyle
+export default SimpleStyleVector
