@@ -224,7 +224,11 @@ export default class GeoloniaMap extends mapboxgl.Map {
       }
 
       if (atts.simpleVector) {
-        new simpleStyleVector(atts.simpleVector).addTo(map)
+        fetch(atts.simpleVector).then(response => {
+          return response.json()
+        }).then(tileJson => {
+          new simpleStyleVector(atts.simpleVector,tileJson).addTo(map)
+        })
       }
 
       if (atts['3d']) {

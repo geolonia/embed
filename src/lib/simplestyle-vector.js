@@ -11,59 +11,66 @@ const backgroundColor = 'rgba(255, 0, 0, 0.4)'
 const strokeColor = '#FFFFFF'
 
 class simpleStyleVector {
-  constructor(json) {
-    this.json = json
+  constructor(url, tileJson) {
+    this.url = url
+    this.tileJson = tileJson
   }
 
   addTo(map) {
     map.addSource('vt-geolonia-simple-style', {
       "type": "vector",
-      "url": this.json
+      "url": this.url
     })
 
-    this.setPolygonGeometries(map)
-    this.setLineGeometries(map)
+    this.tileJson.vector_layers.forEach(layer => {
 
-    map.addLayer({
-      id: 'vt-geolonia-simple-style-polygon-symbol',
-      type: 'symbol',
-      source: 'vt-geolonia-simple-style',
-      filter: ['==', '$type', 'Polygon'],
-      paint: {
-        'text-color': ['string', ['get', 'text-color'], textColor],
-        'text-halo-color': ['string', ['get', 'text-halo-color'], textHaloColor],
-        'text-halo-width': 1,
-      },
-      layout: {
-        'text-field': ['get', 'title'],
-        'text-font': ['Noto Sans Regular'],
-        'text-size': 12,
-        'text-max-width': 12,
-        'text-allow-overlap': false,
-      },
-    })
-
-    map.addLayer({
-      id: 'vt-geolonia-simple-style-linestring-symbol',
-      type: 'symbol',
-      source: 'vt-geolonia-simple-style',
-      filter: ['==', '$type', 'LineString'],
-      paint: {
-        'text-color': ['string', ['get', 'text-color'], textColor],
-        'text-halo-color': ['string', ['get', 'text-halo-color'], textHaloColor],
-        'text-halo-width': 1,
-      },
-      layout: {
-        'symbol-placement': 'line',
-        'text-field': ['get', 'title'],
-        'text-font': ['Noto Sans Regular'],
-        'text-size': 12,
-        'text-max-width': 12,
-        'text-allow-overlap': false,
-      },
-    })
-
-    this.setPointGeometries(map)
+      this.setPolygonGeometries(map, layer)
+      this.setLineGeometries(map, layer)
+  
+      map.addLayer({
+        id: 'vt-geolonia-simple-style-polygon-symbol',
+        type: 'symbol',
+        source: 'vt-geolonia-simple-style',
+        'source-layer': layer.id,
+        filter: ['==', '$type', 'Polygon'],
+        paint: {
+          'text-color': ['string', ['get', 'text-color'], textColor],
+          'text-halo-color': ['string', ['get', 'text-halo-color'], textHaloColor],
+          'text-halo-width': 1,
+        },
+        layout: {
+          'text-field': ['get', 'title'],
+          'text-font': ['Noto Sans Regular'],
+          'text-size': 12,
+          'text-max-width': 12,
+          'text-allow-overlap': false,
+        },
+      })
+  
+      map.addLayer({
+        id: 'vt-geolonia-simple-style-linestring-symbol',
+        type: 'symbol',
+        source: 'vt-geolonia-simple-style',
+        'source-layer': layer.id,
+        filter: ['==', '$type', 'LineString'],
+        paint: {
+          'text-color': ['string', ['get', 'text-color'], textColor],
+          'text-halo-color': ['string', ['get', 'text-halo-color'], textHaloColor],
+          'text-halo-width': 1,
+        },
+        layout: {
+          'symbol-placement': 'line',
+          'text-field': ['get', 'title'],
+          'text-font': ['Noto Sans Regular'],
+          'text-size': 12,
+          'text-max-width': 12,
+          'text-allow-overlap': false,
+        },
+      })
+  
+      this.setPointGeometries(map, layer)
+  
+    });
 
     const container = map.getContainer()
 
@@ -81,11 +88,12 @@ class simpleStyleVector {
    *
    * @param map
    */
-  setPolygonGeometries(map) {
+  setPolygonGeometries(map, layer) {
     map.addLayer({
       id: 'vt-geolonia-simple-style-polygon',
       type: 'fill',
       source: 'vt-geolonia-simple-style',
+      'source-layer': layer.id,
       filter: ['==', '$type', 'Polygon'],
       paint: {
         'fill-color': ['string', ['get', 'fill'], backgroundColor],
@@ -102,11 +110,12 @@ class simpleStyleVector {
    *
    * @param map
    */
-  setLineGeometries(map) {
+  setLineGeometries(map, layer) {
     map.addLayer({
       id: 'vt-geolonia-simple-style-linestring',
       type: 'line',
       source: 'vt-geolonia-simple-style',
+      'source-layer': layer.id,
       filter: ['==', '$type', 'LineString'],
       paint: {
         'line-width': ['number', ['get', 'stroke-width'], 2],
@@ -127,11 +136,12 @@ class simpleStyleVector {
    *
    * @param map
    */
-  setPointGeometries(map) {
+  setPointGeometries(map, layer) {
     map.addLayer({
       id: 'vt-circle-simple-style-points',
       type: 'circle',
       source: 'vt-geolonia-simple-style',
+      'source-layer': layer.id,
       filter: ['!', ['has', 'point_count']],
       paint: {
         'circle-radius': [
@@ -152,6 +162,7 @@ class simpleStyleVector {
       id: 'vt-geolonia-simple-style-points',
       type: 'symbol',
       source: 'vt-geolonia-simple-style',
+      'source-layer': layer.id,
       filter: ['!', ['has', 'point_count']],
       paint: {
         'text-color': ['string', ['get', 'text-color'], textColor],
