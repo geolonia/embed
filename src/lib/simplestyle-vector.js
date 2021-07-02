@@ -137,7 +137,7 @@ class SimpleStyleVector {
       type: 'circle',
       source: 'vt-geolonia-simple-style',
       'source-layer': 'vtGeoloniaSimpleStyle',
-      filter: ['!', ['has', 'point_count']],
+      filter: ['==', '$type', 'Point'],
       paint: {
         'circle-radius': [
           'case',
@@ -158,7 +158,7 @@ class SimpleStyleVector {
       type: 'symbol',
       source: 'vt-geolonia-simple-style',
       'source-layer': 'vtGeoloniaSimpleStyle',
-      filter: ['!', ['has', 'point_count']],
+      filter: ['==', '$type', 'Point'],
       paint: {
         'text-color': ['string', ['get', 'text-color'], textColor],
         'text-halo-color': ['string', ['get', 'text-halo-color'], textHaloColor],
