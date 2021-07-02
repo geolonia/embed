@@ -10,7 +10,7 @@ const textHaloColor = '#FFFFFF'
 const backgroundColor = 'rgba(255, 0, 0, 0.4)'
 const strokeColor = '#FFFFFF'
 
-class simpleStyle {
+class SimpleStyle {
   constructor(json, options) {
     this.json = json
 
@@ -283,4 +283,4 @@ class simpleStyle {
   }
 }
 
-export default simpleStyle
+export default SimpleStyle

@@ -10,7 +10,7 @@ const textHaloColor = '#FFFFFF'
 const backgroundColor = 'rgba(255, 0, 0, 0.4)'
 const strokeColor = '#FFFFFF'
 
-class simpleStyleVector {
+class SimpleStyleVector {
   constructor(url) {
     this.url = url
   }
@@ -210,4 +210,4 @@ class simpleStyleVector {
   }
 }
 
-export default simpleStyleVector
+export default SimpleStyleVector
