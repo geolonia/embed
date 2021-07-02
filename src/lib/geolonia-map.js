@@ -203,6 +203,10 @@ export default class GeoloniaMap extends mapboxgl.Map {
         }
       }
 
+      if (atts.simpleVector) {
+        new SimpleStyleVector(atts.simpleVector).addTo(map)
+      }
+
       if (atts.geojson) {
         const el = isCssSelector(atts.geojson)
         if (el) {
@@ -221,10 +225,6 @@ export default class GeoloniaMap extends mapboxgl.Map {
             }).addTo(map)
           })
         }
-      }
-
-      if (atts.simpleVector) {
-        new SimpleStyleVector(atts.simpleVector).addTo(map)
       }
 
       if (atts['3d']) {
