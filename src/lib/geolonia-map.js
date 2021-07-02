@@ -4,6 +4,7 @@ import mapboxgl from 'mapbox-gl'
 import GeoloniaControl from '@geolonia/mbgl-geolonia-control'
 import GestureHandling from '@geolonia/mbgl-gesture-handling'
 import simpleStyle from './simplestyle'
+import simpleStyleVector from './simplestyle-vector'
 import parseAtts from './parse-atts'
 
 import * as util from './util'
@@ -220,6 +221,10 @@ export default class GeoloniaMap extends mapboxgl.Map {
             }).addTo(map)
           })
         }
+      }
+
+      if (atts.simpleVector) {
+        new simpleStyleVector(atts.simpleVector).addTo(map)
       }
 
       if (atts['3d']) {

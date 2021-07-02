@@ -16,10 +16,9 @@ class simpleStyleVector {
   }
 
   addTo(map) {
-
     map.addSource('vt-geolonia-simple-style', {
       "type": "vector",
-      "url": json
+      "url": this.json
     })
 
     this.setPolygonGeometries(map)
@@ -132,7 +131,7 @@ class simpleStyleVector {
     map.addLayer({
       id: 'vt-circle-simple-style-points',
       type: 'circle',
-      source: 'vt-geolonia-simple-style-points',
+      source: 'vt-geolonia-simple-style',
       filter: ['!', ['has', 'point_count']],
       paint: {
         'circle-radius': [
@@ -150,9 +149,9 @@ class simpleStyleVector {
     })
 
     map.addLayer({
-      id: 'vt-symbol-simple-style-points',
+      id: 'vt-geolonia-simple-style-points',
       type: 'symbol',
-      source: 'vt-geolonia-simple-style-points',
+      source: 'vt-geolonia-simple-style',
       filter: ['!', ['has', 'point_count']],
       paint: {
         'text-color': ['string', ['get', 'text-color'], textColor],
