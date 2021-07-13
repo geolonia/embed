@@ -82,7 +82,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
       if (resourceType === 'Source' && url.startsWith('https://tileserver.geolonia.com')) {
         const tileserverSourcesUrl = new URL(url)
         tileserverSourcesUrl.searchParams.set('sessionId', sessionId)
-        tileserverSourcesUrl.searchParams.set('key', atts.key)       
+        tileserverSourcesUrl.searchParams.set('key', atts.key)
         return {
           url: tileserverSourcesUrl.toString(),
         }
@@ -105,6 +105,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
     super(options)
     const map = this
     this.geoloniaSourcesUrl = sourcesUrl
+    this.__styleExtensionLoadRequired = true
 
     // this function requires `this`, which is not set before `super`
     __insertRefreshedAuthParams = (request, url) => {
@@ -203,6 +204,19 @@ export default class GeoloniaMap extends mapboxgl.Map {
         }
       }
 
+      if (options.baseTilesVersion !== '') {
+        // トークンが60分で失効するので毎20分で更新する
+        map._tileUrlRefreshIntervalId = setInterval(map.refreshTileUrls, 1800000)
+      }
+    })
+
+    map.on('styledata', event => {
+      if (!this.__styleExtensionLoadRequired) {
+        return
+      }
+      this.__styleExtensionLoadRequired = false
+
+      const map = event.target
       if (atts.simpleVector) {
         new SimpleStyleVector(atts.simpleVector).addTo(map)
       }
@@ -241,11 +255,6 @@ export default class GeoloniaMap extends mapboxgl.Map {
           }
         })
       }
-
-      if (options.baseTilesVersion !== '') {
-        // トークンが60分で失効するので毎20分で更新する
-        map._tileUrlRefreshIntervalId = setInterval(map.refreshTileUrls, 1800000)
-      }
     })
 
     container.geoloniaMap = map
@@ -271,8 +280,9 @@ export default class GeoloniaMap extends mapboxgl.Map {
    */
   setStyle(style, options = {}) {
     if (style !== null) {
-    // It can't access `this` because `setStyle()` will be called with `super()`.
-    // So, we need to run `parseAtts()` again(?)
+      // It can't access `this` because `setStyle()` will be called with `super()`.
+      // So, we need to run `parseAtts()` again(?)
+      // Run parseAtts again to get the latest values from DOM.
       const atts = parseAtts(this.getContainer())
 
       // If style is object, it must be passed as it.
@@ -281,6 +291,8 @@ export default class GeoloniaMap extends mapboxgl.Map {
       }
     }
 
+    // Tell the `styledata` event handler to load style extensions again
+    this.__styleExtensionLoadRequired = true
     // Calls `mapboxgl.Map.setStyle()`.
     super.setStyle.call(this, style, options)
   }
