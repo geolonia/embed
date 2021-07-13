@@ -211,12 +211,13 @@ export default class GeoloniaMap extends mapboxgl.Map {
     })
 
     map.on('styledata', event => {
+      const map = event.target
+
       if (!this.__styleExtensionLoadRequired) {
         return
       }
       this.__styleExtensionLoadRequired = false
 
-      const map = event.target
       if (atts.simpleVector) {
         new SimpleStyleVector(atts.simpleVector).addTo(map)
       }
