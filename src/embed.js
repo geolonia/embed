@@ -13,6 +13,7 @@ import * as util from './lib/util'
 import parseAtts from './lib/parse-atts'
 import parseApiKey from './lib/parse-api-key'
 import { version } from '../package.json'
+import './lib/experimentals/web-components'
 
 if ( util.checkPermission() ) {
   let isDOMContentLoaded = false
