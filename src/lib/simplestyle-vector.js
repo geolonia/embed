@@ -1,7 +1,6 @@
 'use strict'
 
 import mapboxgl from 'mapbox-gl'
-import geojsonExtent from '@mapbox/geojson-extent'
 import turfCenter from '@turf/center'
 import sanitizeHtml from 'sanitize-html'
 
@@ -12,11 +11,30 @@ const strokeColor = '#FFFFFF'
 
 class SimpleStyleVector {
   constructor(url) {
+    this.sourceName = 'vt-geolonia-simple-style'
     this.url = url
   }
 
   addTo(map) {
-    map.addSource('vt-geolonia-simple-style', {
+    const container = map.getContainer()
+
+    if (!container.dataset || (!container.dataset.lng && !container.dataset.lat)) {
+      let initialZoomDone = false
+      map.on('sourcedata', event => {
+        if (initialZoomDone) { return }
+        if (event.isSourceLoaded !== true) { return }
+        if (event.sourceId === this.sourceName) {
+          initialZoomDone = true
+          const source = map.getSource(event.sourceId)
+          map.fitBounds(source.bounds, {
+            duration: 0,
+            padding: 30,
+          })
+        }
+      })
+    }
+
+    map.addSource(this.sourceName, {
       type: 'vector',
       url: this.url,
     })
@@ -27,7 +45,7 @@ class SimpleStyleVector {
     map.addLayer({
       id: 'vt-geolonia-simple-style-polygon-symbol',
       type: 'symbol',
-      source: 'vt-geolonia-simple-style',
+      source: this.sourceName,
       'source-layer': 'g-simplestyle-v1',
       filter: ['==', '$type', 'Polygon'],
       paint: {
@@ -47,7 +65,7 @@ class SimpleStyleVector {
     map.addLayer({
       id: 'vt-geolonia-simple-style-linestring-symbol',
       type: 'symbol',
-      source: 'vt-geolonia-simple-style',
+      source: this.sourceName,
       'source-layer': 'g-simplestyle-v1',
       filter: ['==', '$type', 'LineString'],
       paint: {
@@ -66,16 +84,6 @@ class SimpleStyleVector {
     })
 
     this.setPointGeometries(map)
-  
-    const container = map.getContainer()
-
-    if (!container.dataset || (!container.dataset.lng && !container.dataset.lat)) {
-      const bounds = geojsonExtent(this.json)
-      map.fitBounds(bounds, {
-        duration: 0,
-        padding: 30,
-      })
-    }
   }
 
   /**
@@ -87,7 +95,7 @@ class SimpleStyleVector {
     map.addLayer({
       id: 'vt-geolonia-simple-style-polygon',
       type: 'fill',
-      source: 'vt-geolonia-simple-style',
+      source: this.sourceName,
       'source-layer': 'g-simplestyle-v1',
       filter: ['==', '$type', 'Polygon'],
       paint: {
@@ -109,7 +117,7 @@ class SimpleStyleVector {
     map.addLayer({
       id: 'vt-geolonia-simple-style-linestring',
       type: 'line',
-      source: 'vt-geolonia-simple-style',
+      source: this.sourceName,
       'source-layer': 'g-simplestyle-v1',
       filter: ['==', '$type', 'LineString'],
       paint: {
@@ -135,7 +143,7 @@ class SimpleStyleVector {
     map.addLayer({
       id: 'vt-circle-simple-style-points',
       type: 'circle',
-      source: 'vt-geolonia-simple-style',
+      source: this.sourceName,
       'source-layer': 'g-simplestyle-v1',
       filter: ['==', '$type', 'Point'],
       paint: {
@@ -156,7 +164,7 @@ class SimpleStyleVector {
     map.addLayer({
       id: 'vt-geolonia-simple-style-points',
       type: 'symbol',
-      source: 'vt-geolonia-simple-style',
+      source: this.sourceName,
       'source-layer': 'g-simplestyle-v1',
       filter: ['==', '$type', 'Point'],
       paint: {

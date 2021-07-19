@@ -79,7 +79,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
           url: sourcesUrl.toString(),
         }
       }
-      if (resourceType === 'Source' && url.startsWith('https://tileserver.geolonia.com')) {
+      if (resourceType === 'Source' && url.match(/^https:\/\/tileserver(-[^.]+)?\.geolonia\.com/)) {
         const tileserverSourcesUrl = new URL(url)
         tileserverSourcesUrl.searchParams.set('sessionId', sessionId)
         tileserverSourcesUrl.searchParams.set('key', atts.key)
