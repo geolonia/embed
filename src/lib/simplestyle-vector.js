@@ -21,16 +21,24 @@ class SimpleStyleVector {
     if (!container.dataset || (!container.dataset.lng && !container.dataset.lat)) {
       let initialZoomDone = false
       map.on('sourcedata', event => {
+        // skip events for sources that don't concern us
+        if (event.sourceId !== this.sourceName) { return }
+
+        const source = map.getSource(event.sourceId)
+        // query the map to see if the source is actually loaded or not. We can't trust `isSourceLoaded` in the event
+        // because it's unreliable and often incorrect.
+        const isLoaded = source && source.loaded()
+
+        if (isLoaded !== true) { return }
+
+        // Only zoom once.
         if (initialZoomDone) { return }
-        if (event.isSourceLoaded !== true) { return }
-        if (event.sourceId === this.sourceName) {
-          initialZoomDone = true
-          const source = map.getSource(event.sourceId)
-          map.fitBounds(source.bounds, {
-            duration: 0,
-            padding: 30,
-          })
-        }
+        initialZoomDone = true
+
+        map.fitBounds(source.bounds, {
+          duration: 0,
+          padding: 30,
+        })
       })
     }
 
