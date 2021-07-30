@@ -33,6 +33,7 @@ jobs:
         uses: actions/upload-artifact@v2
         if: "!failure()"
         with:
+          retention-days: 1
           name: the-built
           path: |
             dist/
