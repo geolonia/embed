@@ -171,4 +171,35 @@ describe('Tests for util.js', () => {
     assert.strictEqual(false, enabled)
     assert.strictEqual(void 0, position)
   })
+
+  it('should parse simple vector value with http.', () => {
+    const attributeValue = 'https://example.com/path/to/tile.json'
+    assert.strictEqual(
+      attributeValue,
+      util.parseSimpleVector(attributeValue),
+    )
+  })
+
+  it('should parse simple vector value with geolonia schema.', () => {
+    const attributeValue = 'geolonia://tiles/username/ct_123'
+    assert.strictEqual(
+      'https://tileserver.geolonia.com/customtiles/ct_123/tiles.json',
+      util.parseSimpleVector(attributeValue, 'https://tileserver.geolonia.com'),
+    )
+  })
+
+  it('should parse simple vector value with customtile ID', () => {
+    const attributeValue = 'ct_123'
+    assert.strictEqual(
+      'https://tileserver.geolonia.com/customtiles/ct_123/tiles.json',
+      util.parseSimpleVector(attributeValue, 'https://tileserver.geolonia.com'),
+    )
+  })
+  it('should parse simple vector value with stage identifier', () => {
+    const attributeValue = 'ct_123'
+    assert.strictEqual(
+      'https://tileserver-test.geolonia.com/customtiles/ct_123/tiles.json',
+      util.parseSimpleVector(attributeValue, 'https://tileserver-test.geolonia.com'),
+    )
+  })
 })

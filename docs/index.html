@@ -328,7 +328,25 @@ setInterval(function() { myMap.rotateTo( myMap.getBearing() + 90 ) }, 5000);</pr
     <h2>Vector Tile with SimpleStyle</h2>
     <div
       class="geolonia"
-      data-simple-vector="https://tileserver.geolonia.com/embed-simple-vector-sample/tiles.json?key=YOUR-API-KEY"
+      data-simple-vector="https://tileserver.geolonia.com/embed-simple-vector-sample/tiles.json"
+      data-marker="off"
+    ></div>
+  </div>
+
+  <div class="example">
+    <h2>Vector Tile with geolonia:// scheme</h2>
+    <div
+      class="geolonia"
+      data-simple-vector="geolonia://tiles/geolonia/2743bbe4da254ab2b6a6477129203d60"
+      data-marker="off"
+    ></div>
+  </div>
+
+  <div class="example">
+    <h2>Vector Tile with customtile ID</h2>
+    <div
+      class="geolonia"
+      data-simple-vector="2743bbe4da254ab2b6a6477129203d60"
       data-marker="off"
     ></div>
   </div>
