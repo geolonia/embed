@@ -46,6 +46,7 @@ describe('tests for parse Attributes', () => {
       plugin: 'off',
       key: 'YOUR-API-KEY',
       apiUrl: 'https://api.geolonia.com/v1',
+      customtileUrl: 'https://tileserver.geolonia.com',
       loader: 'on',
       minZoom: '',
       maxZoom: 20,

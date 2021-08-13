@@ -219,7 +219,8 @@ export default class GeoloniaMap extends mapboxgl.Map {
       this.__styleExtensionLoadRequired = false
 
       if (atts.simpleVector) {
-        new SimpleStyleVector(atts.simpleVector).addTo(map)
+        const simpleVectorAttributeValue = util.parseSimpleVector(atts.simpleVector, atts.customtileUrl)
+        new SimpleStyleVector(simpleVectorAttributeValue).addTo(map)
       }
 
       if (atts.geojson) {

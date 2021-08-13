@@ -215,7 +215,7 @@ export function getOptions(container, params, atts) {
 }
 
 /**
- * 
+ *
  * @param {string} an data-*-control Embed attribute
  * @returns { enabled: bolean, position: 'top-right' | 'bottom-right' | 'bottom-left' | 'top-left' | void }
  */
@@ -236,7 +236,7 @@ export function parseControlOption(att) {
 let sessionId = ''
 
 /**
- * 
+ *
  * @param {number} digits for session
  * @returns sessionId
  */
@@ -251,5 +251,19 @@ export const getSessionId = digit => {
       .join('')
     sessionId = value
     return value
+  }
+}
+
+export const parseSimpleVector = (attributeValue, customtileUrl) => {
+  if (/^https?:\/\//.test(attributeValue)) {
+    return attributeValue
+  } else {
+    const match = attributeValue.match(/^geolonia:\/\/tiles\/(?<username>.+)\/(?<customtileId>.+)/)
+    if (match) {
+      return `${customtileUrl}/customtiles/${match.groups.customtileId}/tiles.json`
+    } else {
+      // TODO: inject dev
+      return `${customtileUrl}/customtiles/${attributeValue}/tiles.json`
+    }
   }
 }
