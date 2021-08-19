@@ -198,7 +198,6 @@ export function getOptions(container, params, atts) {
     hash: ('on' === atts.hash),
     localIdeographFontFamily: 'sans-serif',
     attributionControl: true,
-    baseTilesVersion: params.baseTilesVersion || atts.baseTilesVersion,
   }
 
   if ('' !== atts.minZoom && (0 === Number(atts.minZoom) || Number(atts.minZoom))) {

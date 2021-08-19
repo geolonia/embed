@@ -52,7 +52,6 @@ export default (container, params = {}) => {
     loader: 'on',
     minZoom: '',
     maxZoom: 20,
-    baseTilesVersion: '',
     '3d': '',
     ...container.dataset,
   }
