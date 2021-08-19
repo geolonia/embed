@@ -254,16 +254,16 @@ export const getSessionId = digit => {
   }
 }
 
-export const parseSimpleVector = (attributeValue, customtileUrl) => {
+export const parseSimpleVector = attributeValue => {
   if (/^https?:\/\//.test(attributeValue)) {
     return attributeValue
   } else {
     const match = attributeValue.match(/^geolonia:\/\/tiles\/(?<username>.+)\/(?<customtileId>.+)/)
     if (match) {
-      return `${customtileUrl}/customtiles/${match.groups.customtileId}/tiles.json`
+      return `https://tileserver.geolonia.com/customtiles/${match.groups.customtileId}/tiles.json`
     } else {
       // TODO: inject dev
-      return `${customtileUrl}/customtiles/${attributeValue}/tiles.json`
+      return `https://tileserver.geolonia.com/customtiles/${attributeValue}/tiles.json`
     }
   }
 }

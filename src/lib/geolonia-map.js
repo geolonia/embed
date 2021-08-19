@@ -81,6 +81,9 @@ export default class GeoloniaMap extends mapboxgl.Map {
       }
       if (resourceType === 'Source' && url.match(/^https:\/\/tileserver(-[^.]+)?\.geolonia\.com/)) {
         const tileserverSourcesUrl = new URL(url)
+        if (atts.stage !== 'v1') {
+          tileserverSourcesUrl.hostname = `tileserver-${atts.stage}.geolonia.com`
+        }
         tileserverSourcesUrl.searchParams.set('sessionId', sessionId)
         tileserverSourcesUrl.searchParams.set('key', atts.key)
         return {
@@ -219,7 +222,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
       this.__styleExtensionLoadRequired = false
 
       if (atts.simpleVector) {
-        const simpleVectorAttributeValue = util.parseSimpleVector(atts.simpleVector, atts.customtileUrl)
+        const simpleVectorAttributeValue = util.parseSimpleVector(atts.simpleVector)
         new SimpleStyleVector(simpleVectorAttributeValue).addTo(map)
       }
 
