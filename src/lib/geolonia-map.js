@@ -79,8 +79,17 @@ export default class GeoloniaMap extends mapboxgl.Map {
           url: sourcesUrl.toString(),
         }
       }
-      if (resourceType === 'Source' && url.match(/^https:\/\/tileserver(-[^.]+)?\.geolonia\.com/)) {
-        const tileserverSourcesUrl = new URL(url)
+
+      let transformedUrl = url
+      if (url.startsWith('geolonia://')) {
+        const tilesMatch = url.match(/^geolonia:\/\/tiles\/(?<username>.+)\/(?<customtileId>.+)/)
+        if (tilesMatch) {
+          transformedUrl = `https://tileserver.geolonia.com/customtiles/${tilesMatch.groups.customtileId}/tiles.json`
+        }
+      }
+
+      if (resourceType === 'Source' && transformedUrl.startsWith('https://tileserver.geolonia.com')) {
+        const tileserverSourcesUrl = new URL(transformedUrl)
         if (atts.stage !== 'v1') {
           tileserverSourcesUrl.hostname = `tileserver-${atts.stage}.geolonia.com`
         }
@@ -94,11 +103,11 @@ export default class GeoloniaMap extends mapboxgl.Map {
       let request
       // Additional transformation
       if (typeof _transformRequest === 'function') {
-        request = _transformRequest(url, resourceType)
+        request = _transformRequest(transformedUrl, resourceType)
       }
 
       if (typeof __insertRefreshedAuthParams !== 'undefined') {
-        request = __insertRefreshedAuthParams(request, url)
+        request = __insertRefreshedAuthParams(request, transformedUrl)
       }
 
       return request
