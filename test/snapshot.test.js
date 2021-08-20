@@ -27,9 +27,10 @@ describe('Tests for Maps.', () => {
 
     // prepare pupeteer
     browser = await puppeteer.launch({
-      args: process.env.NO_SANDBOX === 'true'
-        ? ['--no-sandbox', '--disable-setuid-sandbox'] // for Docker env
-        : [],
+      args:
+        process.env.NO_SANDBOX === 'true'
+          ? ['--no-sandbox', '--disable-setuid-sandbox'] // for Docker env
+          : [],
     })
     page = await browser.newPage()
 
@@ -62,26 +63,30 @@ describe('Tests for Maps.', () => {
     assert.strictEqual('mapboxgl-canary', className)
   })
 
-  it('should match the snapshot at 99.9%', async () => {
-    const snapshotPath = path.resolve(
-      '__dirname',
-      '..',
-      'snapshots',
-      'map.png.snapshot',
-    )
+  it('should match the snapshot at >99.00%', async () => {
+    const snapshotBasePath = path.resolve('__dirname', '..', 'snapshots')
+    const snapshotPath = path.resolve(snapshotBasePath, 'map.png.snapshot')
+    const tmpSnapshotPath = path.resolve(snapshotBasePath, 'map.png')
     const [nextImage, prevImage] = await Promise.all([
       page.screenshot(),
-      fs.readFile(snapshotPath),
+      fs.readFile(snapshotPath).catch(() => null),
     ])
-    const matchRate = await pngDiff(prevImage, nextImage)
+    await fs.writeFile(tmpSnapshotPath, nextImage)
 
-    const formattedMatchRate = Math.round(10000 * matchRate) / 100
-    reports.push(`スナップショットとのマッチ率: ${formattedMatchRate}%`)
-    // Store snapshot
-    if (process.env.UPDATE_SNAPSHOT === 'true') {
+    if (
+      process.env.SNAPSHOT_UPDATABLE === 'true' &&
+      (process.env.UPDATE_SNAPSHOT === 'true' || !prevImage)
+    ) {
+      // Store snapshot
+      reports.push('A snapshot has been updated.')
       await fs.writeFile(snapshotPath, nextImage)
     } else {
-      assert.strictEqual(matchRate > 0.999, true)
+      const matchRate = await pngDiff(prevImage, nextImage)
+      const matchRateLabel =
+        ((Math.round(10000 * matchRate) + 0.1) / 100).toString().slice(0, 5) +
+        '%'
+      reports.push(`Snapshot matching rate: ${matchRateLabel}`)
+      assert.strictEqual(matchRate > 0.99, true)
     }
   })
 })

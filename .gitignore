@@ -69,5 +69,6 @@ typings/
 /dist
 /docs/embed.js
 /docs/v1/embed.js
+/snapshots/*.png
 .cache
 .DS_Store

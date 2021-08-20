@@ -44,4 +44,5 @@ COPY . .
 RUN npm install
 ENV GEOLONIA_API_KEY=YOUR-API-KEY
 ENV NO_SANDBOX=true
-ENTRYPOINT ["npm", "run", "test:all"]
+ENV SNAPSHOT_UPDATABLE=true
+ENTRYPOINT ["npm", "run", "test:snapshot"]

@@ -108,7 +108,7 @@ $ npm run build
 $ docker build . -t geolonia/embed
 ```
 
-### run snapshot test
+### run snapshot test with Docker
 
 ```shell
 # Run snapshot test

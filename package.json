@@ -13,7 +13,7 @@
     "format": "prettier-eslint \"./src/**/*.js\" --write",
     "lint": "eslint \"src/**/*.js\"",
     "test": "npm run lint && mocha ./src/**/*.test.js --recursive -r jsdom-global/register -r @babel/register",
-    "test:snapshot": "mkdir -p snapshots && mocha test/integration.test.js --timeout 30000"
+    "test:snapshot": "mkdir -p snapshots && mocha test/snapshot.test.js --timeout 30000"
   },
   "author": "Geolonia inc.",
   "repository": {
