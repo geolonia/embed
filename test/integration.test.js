@@ -3,7 +3,7 @@ const puppeteer = require('puppeteer')
 const fs = require('fs').promises
 const path = require('path')
 const http = require('http')
-const { isWhiteout } = require('./util')
+const { pngDiff } = require('./util')
 
 const sleep = msec => new Promise(resolve => setTimeout(resolve, msec))
 
@@ -26,7 +26,11 @@ describe('Tests for Maps.', () => {
     embedServer.listen(8080)
 
     // prepare pupeteer
-    browser = await puppeteer.launch()
+    browser = await puppeteer.launch({
+      args: process.env.NO_SANDBOX === 'true'
+        ? ['--no-sandbox', '--disable-setuid-sandbox'] // for Docker env
+        : [],
+    })
     page = await browser.newPage()
 
     // navigation
@@ -39,7 +43,7 @@ describe('Tests for Maps.', () => {
     await page.goto('https://geolonia.com')
     page.on('pageerror', error => capturedErrors.push(error))
     await page.setContent(content)
-    await sleep(5000)
+    await sleep(15000)
   })
 
   after(async () => {
@@ -58,21 +62,26 @@ describe('Tests for Maps.', () => {
     assert.strictEqual('mapboxgl-canary', className)
   })
 
-  it('should render map', async () => {
-    const nextImage = await page.screenshot()
-    const whiteoutRate = await isWhiteout(nextImage)
-
-    reports.push(
-      `白色(#fefefe - #ffffff) の占める割合: ${
-        Math.round(10000 * whiteoutRate) / 100
-      }%`,
+  it('should match the snapshot at 99.9%', async () => {
+    const snapshotPath = path.resolve(
+      '__dirname',
+      '..',
+      'snapshots',
+      'map.png.snapshot',
     )
-    // Store the image for human
-    await fs.writeFile(
-      path.resolve('__dirname', '..', 'snapshots', 'map.png'),
-      nextImage,
-    )
+    const [nextImage, prevImage] = await Promise.all([
+      page.screenshot(),
+      fs.readFile(snapshotPath),
+    ])
+    const matchRate = await pngDiff(prevImage, nextImage)
 
-    assert.strictEqual(whiteoutRate < 0.8, true)
+    const formattedMatchRate = Math.round(10000 * matchRate) / 100
+    reports.push(`スナップショットとのマッチ率: ${formattedMatchRate}%`)
+    // Store snapshot
+    if (process.env.UPDATE_SNAPSHOT === 'true') {
+      await fs.writeFile(snapshotPath, nextImage)
+    } else {
+      assert.strictEqual(matchRate > 0.999, true)
+    }
   })
 })

@@ -95,12 +95,24 @@ $ npm start
 $ npm test
 ```
 
-Then you can see `http://localhost:1234/`.
+Then you can see `http://localhost:3000/`.
 
-## Integration test
+## Snapshot testing
+
+### preparation
 
 ```shell
 $ cp .envrc.sample .envrc
 $ vi .envrc
-$ npm run test:integration
+$ npm run build
+$ docker build . -t geolonia/embed
+```
+
+### run snapshot test
+
+```shell
+# Run snapshot test
+$ docker run -v $(pwd)/snapshots:/app/snapshots --rm geolonia/embed
+# Update snapshot manually
+$ docker run -v $(pwd)/snapshots:/app/snapshots -e UPDATE_SNAPSHOT=true --rm geolonia/embed
 ```

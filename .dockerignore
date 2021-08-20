@@ -1,0 +1,6 @@
+node_modules
+*.log
+screenshots
+.DS_Store
+.git
+Dockerfile
