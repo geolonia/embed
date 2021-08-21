@@ -29,14 +29,6 @@ jobs:
       - run: "npm run test:snapshot"
         env:
           GEOLONIA_API_KEY: ${{ secrets.GEOLONIA_API_KEY }}
-      - name: 'send diff'
-        run: |
-            curl \
-            -F "initial_comment=difference from previous snapshot" \
-            -F file=@snapshots/diff.png \
-            -F "channels=$SLACK_NOTIFICATION_CHANNEL_ID" \
-            -H "Authorization: Bearer $SLACK_BOT_USER_OAUTH_TOKEN" \
-            https://slack.com/api/files.upload
 
       - name: save the built
         uses: actions/upload-artifact@v2
@@ -47,6 +39,28 @@ jobs:
           path: |
             dist/
             docs/
+            snapshots/
+
+  snapshot-diff:
+    name: 'Send snapshots'
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: the-built
+      - name: 'send diff'
+        env:
+          SLACK_NOTIFICATION_CHANNEL_ID: ${{ secrets.SLACK_NOTIFICATION_CHANNEL_ID }}
+          SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
+        run: |
+          curl \
+            -F "initial_comment=difference from previous snapshot" \
+            -F file=@snapshots/diff.png \
+            -F "channels=$SLACK_NOTIFICATION_CHANNEL_ID" \
+            -H "Authorization: Bearer $SLACK_BOT_USER_OAUTH_TOKEN" \
+            https://slack.com/api/files.upload
 
   gh-pages:
     name: 'Host with GitHub Pages'
