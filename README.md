@@ -115,4 +115,6 @@ $ docker build . -t geolonia/embed
 $ docker run -v $(pwd)/snapshots:/app/snapshots --rm geolonia/embed
 # Update snapshot manually
 $ docker run -v $(pwd)/snapshots:/app/snapshots -e UPDATE_SNAPSHOT=true --rm geolonia/embed
+# check diff on your eyes
+$ open snapshots
 ```
