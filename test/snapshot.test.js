@@ -3,7 +3,7 @@ const puppeteer = require('puppeteer')
 const fs = require('fs').promises
 const path = require('path')
 const http = require('http')
-const { pngDiff } = require('./util')
+const { pngDiff, niceDiff } = require('./util')
 
 const sleep = msec => new Promise(resolve => setTimeout(resolve, msec))
 
@@ -67,6 +67,7 @@ describe('Tests for Maps.', () => {
     const snapshotBasePath = path.resolve('__dirname', '..', 'snapshots')
     const snapshotPath = path.resolve(snapshotBasePath, 'map.png.snapshot')
     const tmpSnapshotPath = path.resolve(snapshotBasePath, 'map.png')
+    const diffSnapshotPath = path.resolve(snapshotBasePath, 'diff.png')
     const [nextImage, prevImage] = await Promise.all([
       page.screenshot(),
       fs.readFile(snapshotPath).catch(() => null),
@@ -81,7 +82,12 @@ describe('Tests for Maps.', () => {
       reports.push('A snapshot has been updated.')
       await fs.writeFile(snapshotPath, nextImage)
     } else {
-      const matchRate = await pngDiff(prevImage, nextImage)
+      const [matchRate, diffImage] = await Promise.all([
+        pngDiff(prevImage, nextImage),
+        niceDiff(prevImage, nextImage),
+      ])
+      await fs.writeFile(diffSnapshotPath, diffImage)
+
       const matchRateLabel =
         ((Math.round(10000 * matchRate) + 0.1) / 100).toString().slice(0, 5) +
         '%'

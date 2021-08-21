@@ -29,6 +29,15 @@ jobs:
       - run: "npm run test:snapshot"
         env:
           GEOLONIA_API_KEY: ${{ secrets.GEOLONIA_API_KEY }}
+      - name: 'send diff'
+        run: |
+            curl \
+            -F "initial_comment=difference from previous snapshot" \
+            -F file=@snapshots/diff.png \
+            -F "channels=$SLACK_NOTIFICATION_CHANNEL_ID" \
+            -H "Authorization: Bearer $SLACK_BOT_USER_OAUTH_TOKEN" \
+            https://slack.com/api/files.upload
+
       - name: save the built
         uses: actions/upload-artifact@v2
         if: "!failure()"
