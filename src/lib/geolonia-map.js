@@ -167,7 +167,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
 
       if (atts.lat && atts.lng && 'on' === atts.marker) {
         if (content) {
-          const popup = new window.geolonia.Popup().setHTML(content)
+          const popup = new window.geolonia.Popup({ offset: [0, -25] }).setHTML(content)
           let marker
           if (atts.customMarker) {
             const offset = atts.customMarkerOffset.split(/,/).map(n => {
