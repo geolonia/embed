@@ -64,20 +64,18 @@ describe('Tests for Maps.', () => {
   })
 
   it('should match the snapshot at >99.00%', async () => {
-    const snapshotBasePath = path.resolve('__dirname', '..', 'snapshots')
-    const snapshotPath = path.resolve(snapshotBasePath, 'map.png.snapshot')
-    const tmpSnapshotPath = path.resolve(snapshotBasePath, 'map.png')
-    const diffSnapshotPath = path.resolve(snapshotBasePath, 'diff.png')
+    const PREFIX = process.env.SNAPSHOT_PREFIX || '.local'
+    const basePath = path.resolve('__dirname', '..', 'snapshots')
+    const snapshotPath = path.resolve(basePath, 'map.png.snapshot', PREFIX)
+    const tmpSnapshotPath = path.resolve(basePath, 'map.png')
+    const diffSnapshotPath = path.resolve(basePath, 'diff.png')
     const [nextImage, prevImage] = await Promise.all([
       page.screenshot(),
       fs.readFile(snapshotPath).catch(() => null),
     ])
     await fs.writeFile(tmpSnapshotPath, nextImage)
 
-    if (
-      process.env.SNAPSHOT_UPDATABLE === 'true' &&
-      (process.env.UPDATE_SNAPSHOT === 'true' || !prevImage)
-    ) {
+    if (process.env.UPDATE_SNAPSHOT === 'true' || !prevImage) {
       // Store snapshot
       reports.push('A snapshot has been updated.')
       await fs.writeFile(snapshotPath, nextImage)

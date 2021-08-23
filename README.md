@@ -111,10 +111,26 @@ $ docker build . -t geolonia/embed
 ### run snapshot test with Docker
 
 ```shell
+$ npm run build
 # Run snapshot test
-$ docker run -v $(pwd)/snapshots:/app/snapshots --rm geolonia/embed
+$ docker run --rm \
+  -v $(pwd)/snapshots:/app/snapshots \
+  -v $(pwd)/dist:/app/dist \
+  geolonia/embed
 # Update snapshot manually
-$ docker run -v $(pwd)/snapshots:/app/snapshots -e UPDATE_SNAPSHOT=true --rm geolonia/embed
+$ docker run --rm \
+  -v $(pwd)/snapshots:/app/snapshots \
+  -v $(pwd)/dist:/app/dist \
+  -e UPDATE_SNAPSHOT=true \
+  geolonia/embed
 # check diff on your eyes
 $ open snapshots
+```
+
+### run snapshot test locally
+
+```shell
+$ npm run build
+$ npm run test:snapshot
+$ UPDATE_SNAPSHOT=true npm run test:snapshot
 ```

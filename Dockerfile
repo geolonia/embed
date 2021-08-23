@@ -38,11 +38,12 @@ RUN apt-get update && apt-get install -y \
   libnss3 \
   lsb-release \
   xdg-utils \
-  wget
-RUN apt-get install -y fonts-ipafont-mincho fonts-ipafont-gothic
+  wget \
+  fonts-ipafont-mincho \
+  fonts-ipafont-gothic
 COPY . .
 RUN npm install
 ENV GEOLONIA_API_KEY=YOUR-API-KEY
 ENV NO_SANDBOX=true
-ENV SNAPSHOT_UPDATABLE=true
+ENV SNAPSHOT_PREFIX=.linux
 ENTRYPOINT ["npm", "run", "test:snapshot"]
