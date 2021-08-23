@@ -90,7 +90,7 @@ Load the plugins after loading Embed API.
 ```shell
 $ git clone git@github.com:geolonia/embed.git
 $ cd embed
-$ yarn # or npm install
+$ yarn
 $ npm start
 $ npm test
 ```
