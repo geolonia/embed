@@ -35,11 +35,11 @@ describe('Tests for Maps.', () => {
     ).toString()
     const content = template
       .replace(/%ORIGIN%/g, 'http://127.0.0.1:8080')
-      .replace(/%API_KEY%/g, process.env.GEOLONIA_API_KEY)
+      .replace(/%API_KEY%/g, process.env.GEOLONIA_API_KEY || 'YOUR-API-KEY')
     await page.goto('https://geolonia.com')
     page.on('pageerror', error => capturedErrors.push(error))
     await page.setContent(content)
-    await sleep(5000)
+    await sleep(15000)
   })
 
   after(async () => {

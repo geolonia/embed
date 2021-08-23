@@ -63,14 +63,9 @@ export default class GeoloniaMap extends mapboxgl.Map {
 
     const sessionId = util.getSessionId(40)
     let sourcesUrl = new URL(`${atts.apiUrl}/sources`)
-    if (options.baseTilesVersion !== '') {
-      sourcesUrl = new URL(`${atts.apiUrl}/sources_v2`)
-      sourcesUrl.searchParams.set('ver', options.baseTilesVersion)
-    }
     sourcesUrl.searchParams.set('key', atts.key)
     sourcesUrl.searchParams.set('sessionId', sessionId)
 
-    let __insertRefreshedAuthParams
     // Pass API key and requested tile version to `/sources` (tile json).
     const _transformRequest = options.transformRequest
     options.transformRequest = (url, resourceType) => {
@@ -79,8 +74,20 @@ export default class GeoloniaMap extends mapboxgl.Map {
           url: sourcesUrl.toString(),
         }
       }
-      if (resourceType === 'Source' && url.match(/^https:\/\/tileserver(-[^.]+)?\.geolonia\.com/)) {
-        const tileserverSourcesUrl = new URL(url)
+
+      let transformedUrl = url
+      if (url.startsWith('geolonia://')) {
+        const tilesMatch = url.match(/^geolonia:\/\/tiles\/(?<username>.+)\/(?<customtileId>.+)/)
+        if (tilesMatch) {
+          transformedUrl = `https://tileserver.geolonia.com/customtiles/${tilesMatch.groups.customtileId}/tiles.json`
+        }
+      }
+
+      if (resourceType === 'Source' && transformedUrl.startsWith('https://tileserver.geolonia.com')) {
+        const tileserverSourcesUrl = new URL(transformedUrl)
+        if (atts.stage !== 'v1') {
+          tileserverSourcesUrl.hostname = `tileserver-${atts.stage}.geolonia.com`
+        }
         tileserverSourcesUrl.searchParams.set('sessionId', sessionId)
         tileserverSourcesUrl.searchParams.set('key', atts.key)
         return {
@@ -91,11 +98,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
       let request
       // Additional transformation
       if (typeof _transformRequest === 'function') {
-        request = _transformRequest(url, resourceType)
-      }
-
-      if (typeof __insertRefreshedAuthParams !== 'undefined') {
-        request = __insertRefreshedAuthParams(request, url)
+        request = _transformRequest(transformedUrl, resourceType)
       }
 
       return request
@@ -106,22 +109,6 @@ export default class GeoloniaMap extends mapboxgl.Map {
     const map = this
     this.geoloniaSourcesUrl = sourcesUrl
     this.__styleExtensionLoadRequired = true
-
-    // this function requires `this`, which is not set before `super`
-    __insertRefreshedAuthParams = (request, url) => {
-      if (typeof this._currentAuthParams !== 'undefined') {
-        const purl = new URL((request && request.url) || url)
-        const q = purl.searchParams
-        if (q.get('key') && q.get('expires') && q.get('Policy') && q.get('Key-Pair-Id')) {
-          purl.search = this._currentAuthParams
-
-          return {
-            url: purl.toString(),
-          }
-        }
-      }
-      return request
-    }
 
     // Note: GeoloniaControl should be placed before another controls.
     // Because this control should be "very" bottom-left(default) or the attributed position.
@@ -203,11 +190,6 @@ export default class GeoloniaMap extends mapboxgl.Map {
           new window.geolonia.Marker({ color: atts.markerColor }).setLngLat(options.center).addTo(map)
         }
       }
-
-      if (options.baseTilesVersion !== '') {
-        // トークンが60分で失効するので毎20分で更新する
-        map._tileUrlRefreshIntervalId = setInterval(map.refreshTileUrls, 1800000)
-      }
     })
 
     map.on('styledata', event => {
@@ -219,7 +201,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
       this.__styleExtensionLoadRequired = false
 
       if (atts.simpleVector) {
-        const simpleVectorAttributeValue = util.parseSimpleVector(atts.simpleVector, atts.customtileUrl)
+        const simpleVectorAttributeValue = util.parseSimpleVector(atts.simpleVector)
         new SimpleStyleVector(simpleVectorAttributeValue).addTo(map)
       }
 
@@ -262,17 +244,6 @@ export default class GeoloniaMap extends mapboxgl.Map {
     container.geoloniaMap = map
 
     return map
-  }
-
-  async refreshTileUrls() {
-    const resp = await fetch(this.geoloniaSourcesUrl)
-    if (!resp.ok) {
-      // Error
-      return
-    }
-    const sources = await resp.json()
-    const url = new URL(sources.tiles[0])
-    this._currentAuthParams = url.searchParams
   }
 
   /**
