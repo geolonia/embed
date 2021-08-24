@@ -33,6 +33,7 @@ jobs:
           retention-days: 1
           name: the-built
           path: |
+            node_modules/
             dist/
             docs/
 
@@ -46,6 +47,14 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: the-built
+      - uses: docker/setup-buildx-action@v1
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ github.ref }}-${{ github.sha }}
+          restore-keys: |
+            ${{ github.ref }}-${{ github.sha }}
       - run: docker build . -t geolonia/embed
       - run: |
           docker run --rm \

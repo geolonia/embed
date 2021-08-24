@@ -64,9 +64,8 @@ describe('Tests for Maps.', () => {
   })
 
   it('should match the snapshot at >99.00%', async () => {
-    const PREFIX = process.env.SNAPSHOT_PREFIX || '.local'
     const basePath = path.resolve('__dirname', '..', 'snapshots')
-    const snapshotPath = path.resolve(basePath, 'map.png.snapshot', PREFIX)
+    const snapshotPath = path.resolve(basePath, 'map.png.snapshot')
     const tmpSnapshotPath = path.resolve(basePath, 'map.png')
     const diffSnapshotPath = path.resolve(basePath, 'diff.png')
     const [nextImage, prevImage] = await Promise.all([
