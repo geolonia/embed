@@ -1,25 +1,25 @@
-'use strict'
+'use strict';
 
-import parseApiKey from './parse-api-key'
-import * as util from './util'
+import parseApiKey from './parse-api-key';
+import * as util from './util';
 
 export default (container, params = {}) => {
   if (!container.dataset) {
-    container.dataset = {}
+    container.dataset = {};
   }
 
-  let lang = 'auto'
-  if (container.dataset.lang && 'auto' === container.dataset.lang) {
-    lang = util.getLang()
-  } else if (container.dataset.lang && 'ja' === container.dataset.lang) {
-    lang = 'ja'
-  } else if (container.dataset.lang && 'ja' !== container.dataset.lang) {
-    lang = 'en'
+  let lang = 'auto';
+  if (container.dataset.lang && container.dataset.lang === 'auto') {
+    lang = util.getLang();
+  } else if (container.dataset.lang && container.dataset.lang === 'ja') {
+    lang = 'ja';
+  } else if (container.dataset.lang && container.dataset.lang !== 'ja') {
+    lang = 'en';
   } else {
-    lang = util.getLang()
+    lang = util.getLang();
   }
 
-  const { key, stage } = parseApiKey(container)
+  const { key, stage } = parseApiKey(container);
 
   return {
     lat: 0,
@@ -33,8 +33,8 @@ export default (container, params = {}) => {
     openPopup: 'off',
     customMarker: '',
     customMarkerOffset: '0, 0',
-    gestureHandling: false === params.interactive ? 'off' : 'on',
-    navigationControl: false === params.interactive ? 'off' : 'on',
+    gestureHandling: params.interactive === false ? 'off' : 'on',
+    navigationControl: params.interactive === false ? 'off' : 'on',
     geolocateControl: 'off',
     fullscreenControl: 'off',
     scaleControl: 'off',
@@ -54,5 +54,5 @@ export default (container, params = {}) => {
     maxZoom: 20,
     '3d': '',
     ...container.dataset,
-  }
-}
+  };
+};

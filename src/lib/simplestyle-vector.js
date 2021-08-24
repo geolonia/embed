@@ -1,54 +1,54 @@
-'use strict'
+'use strict';
 
-import mapboxgl from 'mapbox-gl'
-import turfCenter from '@turf/center'
-import sanitizeHtml from 'sanitize-html'
+import mapboxgl from 'mapbox-gl';
+import turfCenter from '@turf/center';
+import sanitizeHtml from 'sanitize-html';
 
-const textColor = '#000000'
-const textHaloColor = '#FFFFFF'
-const backgroundColor = 'rgba(255, 0, 0, 0.4)'
-const strokeColor = '#FFFFFF'
+const textColor = '#000000';
+const textHaloColor = '#FFFFFF';
+const backgroundColor = 'rgba(255, 0, 0, 0.4)';
+const strokeColor = '#FFFFFF';
 
 class SimpleStyleVector {
   constructor(url) {
-    this.sourceName = 'vt-geolonia-simple-style'
-    this.url = url
+    this.sourceName = 'vt-geolonia-simple-style';
+    this.url = url;
   }
 
   addTo(map) {
-    const container = map.getContainer()
+    const container = map.getContainer();
 
     if (!container.dataset || (!container.dataset.lng && !container.dataset.lat)) {
-      let initialZoomDone = false
-      map.on('sourcedata', event => {
+      let initialZoomDone = false;
+      map.on('sourcedata', (event) => {
         // skip events for sources that don't concern us
-        if (event.sourceId !== this.sourceName) { return }
+        if (event.sourceId !== this.sourceName) { return; }
 
-        const source = map.getSource(event.sourceId)
+        const source = map.getSource(event.sourceId);
         // query the map to see if the source is actually loaded or not. We can't trust `isSourceLoaded` in the event
         // because it's unreliable and often incorrect.
-        const isLoaded = source && source.loaded()
+        const isLoaded = source && source.loaded();
 
-        if (isLoaded !== true) { return }
+        if (isLoaded !== true) { return; }
 
         // Only zoom once.
-        if (initialZoomDone) { return }
-        initialZoomDone = true
+        if (initialZoomDone) { return; }
+        initialZoomDone = true;
 
         map.fitBounds(source.bounds, {
           duration: 0,
           padding: 30,
-        })
-      })
+        });
+      });
     }
 
     map.addSource(this.sourceName, {
       type: 'vector',
       url: this.url,
-    })
+    });
 
-    this.setPolygonGeometries(map)
-    this.setLineGeometries(map)
+    this.setPolygonGeometries(map);
+    this.setLineGeometries(map);
 
     map.addLayer({
       id: 'vt-geolonia-simple-style-polygon-symbol',
@@ -68,7 +68,7 @@ class SimpleStyleVector {
         'text-max-width': 12,
         'text-allow-overlap': false,
       },
-    })
+    });
 
     map.addLayer({
       id: 'vt-geolonia-simple-style-linestring-symbol',
@@ -89,9 +89,9 @@ class SimpleStyleVector {
         'text-max-width': 12,
         'text-allow-overlap': false,
       },
-    })
+    });
 
-    this.setPointGeometries(map)
+    this.setPointGeometries(map);
   }
 
   /**
@@ -111,9 +111,9 @@ class SimpleStyleVector {
         'fill-opacity': ['number', ['get', 'fill-opacity'], 1.0],
         'fill-outline-color': ['string', ['get', 'stroke'], strokeColor],
       },
-    })
+    });
 
-    this.setPopup(map, 'vt-geolonia-simple-style-polygon')
+    this.setPopup(map, 'vt-geolonia-simple-style-polygon');
   }
 
   /**
@@ -137,9 +137,9 @@ class SimpleStyleVector {
         'line-cap': 'round',
         'line-join': 'round',
       },
-    })
+    });
 
-    this.setPopup(map, 'vt-geolonia-simple-style-linestring')
+    this.setPopup(map, 'vt-geolonia-simple-style-linestring');
   }
 
   /**
@@ -167,7 +167,7 @@ class SimpleStyleVector {
         'circle-stroke-color': ['string', ['get', 'stroke'], strokeColor],
         'circle-stroke-opacity': ['number', ['get', 'stroke-opacity'], 1.0],
       },
-    })
+    });
 
     map.addLayer({
       id: 'vt-geolonia-simple-style-points',
@@ -199,31 +199,31 @@ class SimpleStyleVector {
         ],
         'text-allow-overlap': false,
       },
-    })
+    });
 
-    this.setPopup(map, 'vt-circle-simple-style-points')
+    this.setPopup(map, 'vt-circle-simple-style-points');
   }
 
   setPopup(map, source) {
-    map.on('click', source, e => {
-      const center = turfCenter(e.features[0]).geometry.coordinates
-      const description = e.features[0].properties.description
+    map.on('click', source, (e) => {
+      const center = turfCenter(e.features[0]).geometry.coordinates;
+      const description = e.features[0].properties.description;
 
       if (description) {
-        new mapboxgl.Popup().setLngLat(center).setHTML(sanitizeHtml(description)).addTo(map)
+        new mapboxgl.Popup().setLngLat(center).setHTML(sanitizeHtml(description)).addTo(map);
       }
-    })
+    });
 
-    map.on('mouseenter', source, e => {
+    map.on('mouseenter', source, (e) => {
       if (e.features[0].properties.description) {
-        map.getCanvas().style.cursor = 'pointer'
+        map.getCanvas().style.cursor = 'pointer';
       }
-    })
+    });
 
     map.on('mouseleave', source, () => {
-      map.getCanvas().style.cursor = ''
-    })
+      map.getCanvas().style.cursor = '';
+    });
   }
 }
 
-export default SimpleStyleVector
+export default SimpleStyleVector;

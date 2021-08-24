@@ -1,31 +1,31 @@
-'use strict'
+'use strict';
 
-import mapboxgl from 'mapbox-gl'
-import geojsonExtent from '@mapbox/geojson-extent'
-import turfCenter from '@turf/center'
-import sanitizeHtml from 'sanitize-html'
+import mapboxgl from 'mapbox-gl';
+import geojsonExtent from '@mapbox/geojson-extent';
+import turfCenter from '@turf/center';
+import sanitizeHtml from 'sanitize-html';
 
-const textColor = '#000000'
-const textHaloColor = '#FFFFFF'
-const backgroundColor = 'rgba(255, 0, 0, 0.4)'
-const strokeColor = '#FFFFFF'
+const textColor = '#000000';
+const textHaloColor = '#FFFFFF';
+const backgroundColor = 'rgba(255, 0, 0, 0.4)';
+const strokeColor = '#FFFFFF';
 
 class SimpleStyle {
   constructor(json, options) {
-    this.json = json
+    this.json = json;
 
     this.options = {
       cluster: true,
       heatmap: false,
       clusterColor: '#ff0000',
       ...options,
-    }
+    };
   }
 
   addTo(map) {
-    const features = this.json.features
-    const polygonandlines = features.filter(feature => ('point' !== feature.geometry.type.toLowerCase()))
-    const points = features.filter(feature => ('point' === feature.geometry.type.toLowerCase()))
+    const features = this.json.features;
+    const polygonandlines = features.filter((feature) => (feature.geometry.type.toLowerCase() !== 'point'));
+    const points = features.filter((feature) => (feature.geometry.type.toLowerCase() === 'point'));
 
     map.addSource('geolonia-simple-style', {
       type: 'geojson',
@@ -33,10 +33,10 @@ class SimpleStyle {
         type: 'FeatureCollection',
         features: polygonandlines,
       },
-    })
+    });
 
-    this.setPolygonGeometries(map)
-    this.setLineGeometries(map)
+    this.setPolygonGeometries(map);
+    this.setLineGeometries(map);
 
     map.addSource('geolonia-simple-style-points', {
       type: 'geojson',
@@ -47,7 +47,7 @@ class SimpleStyle {
       cluster: this.options.cluster,
       clusterMaxZoom: 14,
       clusterRadius: 50,
-    })
+    });
 
     map.addLayer({
       id: 'geolonia-simple-style-polygon-symbol',
@@ -66,7 +66,7 @@ class SimpleStyle {
         'text-max-width': 12,
         'text-allow-overlap': false,
       },
-    })
+    });
 
     map.addLayer({
       id: 'geolonia-simple-style-linestring-symbol',
@@ -86,19 +86,19 @@ class SimpleStyle {
         'text-max-width': 12,
         'text-allow-overlap': false,
       },
-    })
+    });
 
-    this.setPointGeometries(map)
-    this.setCluster(map)
+    this.setPointGeometries(map);
+    this.setCluster(map);
 
-    const container = map.getContainer()
+    const container = map.getContainer();
 
     if (!container.dataset || (!container.dataset.lng && !container.dataset.lat)) {
-      const bounds = geojsonExtent(this.json)
+      const bounds = geojsonExtent(this.json);
       map.fitBounds(bounds, {
         duration: 0,
         padding: 30,
-      })
+      });
     }
   }
 
@@ -118,9 +118,9 @@ class SimpleStyle {
         'fill-opacity': ['number', ['get', 'fill-opacity'], 1.0],
         'fill-outline-color': ['string', ['get', 'stroke'], strokeColor],
       },
-    })
+    });
 
-    this.setPopup(map, 'geolonia-simple-style-polygon')
+    this.setPopup(map, 'geolonia-simple-style-polygon');
   }
 
   /**
@@ -143,9 +143,9 @@ class SimpleStyle {
         'line-cap': 'round',
         'line-join': 'round',
       },
-    })
+    });
 
-    this.setPopup(map, 'geolonia-simple-style-linestring')
+    this.setPopup(map, 'geolonia-simple-style-linestring');
   }
 
   /**
@@ -172,7 +172,7 @@ class SimpleStyle {
         'circle-stroke-color': ['string', ['get', 'stroke'], strokeColor],
         'circle-stroke-opacity': ['number', ['get', 'stroke-opacity'], 1.0],
       },
-    })
+    });
 
     map.addLayer({
       id: 'symbol-simple-style-points',
@@ -203,30 +203,30 @@ class SimpleStyle {
         ],
         'text-allow-overlap': false,
       },
-    })
+    });
 
-    this.setPopup(map, 'circle-simple-style-points')
+    this.setPopup(map, 'circle-simple-style-points');
   }
 
   setPopup(map, source) {
-    map.on('click', source, e => {
-      const center = turfCenter(e.features[0]).geometry.coordinates
-      const description = e.features[0].properties.description
+    map.on('click', source, (e) => {
+      const center = turfCenter(e.features[0]).geometry.coordinates;
+      const description = e.features[0].properties.description;
 
       if (description) {
-        new mapboxgl.Popup().setLngLat(center).setHTML(sanitizeHtml(description)).addTo(map)
+        new mapboxgl.Popup().setLngLat(center).setHTML(sanitizeHtml(description)).addTo(map);
       }
-    })
+    });
 
-    map.on('mouseenter', source, e => {
+    map.on('mouseenter', source, (e) => {
       if (e.features[0].properties.description) {
-        map.getCanvas().style.cursor = 'pointer'
+        map.getCanvas().style.cursor = 'pointer';
       }
-    })
+    });
 
     map.on('mouseleave', source, () => {
-      map.getCanvas().style.cursor = ''
-    })
+      map.getCanvas().style.cursor = '';
+    });
   }
 
   /**
@@ -245,7 +245,7 @@ class SimpleStyle {
         'circle-color': this.options.clusterColor,
         'circle-opacity': 1.0,
       },
-    })
+    });
 
     map.addLayer({
       id: 'cluster-count',
@@ -257,30 +257,30 @@ class SimpleStyle {
         'text-size': 14,
         'text-font': ['Noto Sans Regular'],
       },
-    })
+    });
 
-    map.on('click', 'clusters', function (e) {
-      const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] })
-      const clusterId = features[0].properties.cluster_id
-      map.getSource('geolonia-simple-style-points').getClusterExpansionZoom(clusterId, function (err, zoom) {
+    map.on('click', 'clusters', (e) => {
+      const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
+      const clusterId = features[0].properties.cluster_id;
+      map.getSource('geolonia-simple-style-points').getClusterExpansionZoom(clusterId, (err, zoom) => {
         if (err)
-          return
+          return;
 
         map.easeTo({
           center: features[0].geometry.coordinates,
           zoom: zoom,
-        })
-      })
-    })
+        });
+      });
+    });
 
-    map.on('mouseenter', 'clusters', function () {
-      map.getCanvas().style.cursor = 'pointer'
-    })
+    map.on('mouseenter', 'clusters', () => {
+      map.getCanvas().style.cursor = 'pointer';
+    });
 
-    map.on('mouseleave', 'clusters', function () {
-      map.getCanvas().style.cursor = ''
-    })
+    map.on('mouseleave', 'clusters', () => {
+      map.getCanvas().style.cursor = '';
+    });
   }
 }
 
-export default SimpleStyle
+export default SimpleStyle;
