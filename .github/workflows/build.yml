@@ -33,7 +33,6 @@ jobs:
           retention-days: 1
           name: the-built
           path: |
-            node_modules/
             dist/
             docs/
 
@@ -47,6 +46,8 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: the-built
+      - run: npm install
+      - run: npm run build
       - uses: docker/setup-buildx-action@v1
       - name: Cache Docker layers
         uses: actions/cache@v2
