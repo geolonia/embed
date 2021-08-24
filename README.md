@@ -91,16 +91,47 @@ Load the plugins after loading Embed API.
 $ git clone git@github.com:geolonia/embed.git
 $ cd embed
 $ yarn
-$ npm start
-$ npm test
+$ npm start # run dev server
+$ npm test # run tests
+$ npm run build # build production bundle
 ```
 
-Then you can see `http://localhost:1234/`.
+Then you can see `http://localhost:3000/`.
 
-## Integration test
+## Snapshot testing
+
+### preparation
 
 ```shell
 $ cp .envrc.sample .envrc
 $ vi .envrc
-$ npm run test:integration
+$ npm run build
+$ docker build . -t geolonia/embed
+```
+
+### run snapshot test with Docker
+
+```shell
+$ npm run build
+# Run snapshot test
+$ docker run --rm \
+  -v $(pwd)/snapshots:/app/snapshots \
+  -v $(pwd)/dist:/app/dist \
+  geolonia/embed
+# Update snapshot manually
+$ docker run --rm \
+  -v $(pwd)/snapshots:/app/snapshots \
+  -v $(pwd)/dist:/app/dist \
+  -e UPDATE_SNAPSHOT=true \
+  geolonia/embed
+# check diff on your eyes
+$ open snapshots
+```
+
+### run snapshot test locally
+
+```shell
+$ npm run build
+$ npm run test:snapshot
+$ UPDATE_SNAPSHOT=true npm run test:snapshot
 ```
