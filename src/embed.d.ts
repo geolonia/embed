@@ -31,7 +31,6 @@ export type EmbedAttributes = {
   loader: string;
   minZoom: string;
   maxZoom: string;
-  baseTilesVersion: string;
   '3d': string;
   [otherKey: string]: string;
 }

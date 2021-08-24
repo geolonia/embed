@@ -22,6 +22,7 @@
         data-lat="35.675888"
         data-marker="off"
         data-navigation-control="off"
+        data-stage="v1"
         data-lang="ja"
     ></div>
     <script src="%ORIGIN%/v1/embed?geolonia-api-key=%API_KEY%"></script>

@@ -48,11 +48,10 @@ export default (container, params = {}) => {
     plugin: 'off',
     key: key,
     apiUrl: `https://api.geolonia.com/${stage}`,
-    customtileUrl: stage === 'v1' ? 'https://tileserver.geolonia.com' : `https://tileserver-${stage}.geolonia.com`,
+    stage,
     loader: 'on',
     minZoom: '',
     maxZoom: 20,
-    baseTilesVersion: '',
     '3d': '',
     ...container.dataset,
   }

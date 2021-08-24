@@ -198,7 +198,6 @@ export function getOptions(container, params, atts) {
     hash: ('on' === atts.hash),
     localIdeographFontFamily: 'sans-serif',
     attributionControl: true,
-    baseTilesVersion: params.baseTilesVersion || atts.baseTilesVersion,
   }
 
   if ('' !== atts.minZoom && (0 === Number(atts.minZoom) || Number(atts.minZoom))) {
@@ -254,16 +253,10 @@ export const getSessionId = digit => {
   }
 }
 
-export const parseSimpleVector = (attributeValue, customtileUrl) => {
-  if (/^https?:\/\//.test(attributeValue)) {
+export const parseSimpleVector = attributeValue => {
+  if (/^(https?|geolonia):\/\//.test(attributeValue)) {
     return attributeValue
   } else {
-    const match = attributeValue.match(/^geolonia:\/\/tiles\/(?<username>.+)\/(?<customtileId>.+)/)
-    if (match) {
-      return `${customtileUrl}/customtiles/${match.groups.customtileId}/tiles.json`
-    } else {
-      // TODO: inject dev
-      return `${customtileUrl}/customtiles/${attributeValue}/tiles.json`
-    }
+    return `geolonia://tiles/custom/${attributeValue}`
   }
 }
