@@ -22,6 +22,13 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ github.ref }}-${{ github.sha }}
+          restore-keys: |
+            ${{ github.ref }}-${{ github.sha }}
       - run: npm install
       - run: npm run lint
       - run: npm test
@@ -47,16 +54,18 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: the-built
-      - run: npm install
-      - run: npm run build
       - uses: docker/setup-buildx-action@v1
-      - name: Cache Docker layers
+      - name: Cache node_modules and Docker layers
         uses: actions/cache@v2
         with:
-          path: /tmp/.buildx-cache
+          path: |
+            /tmp/.buildx-cache
+            node_modules
           key: ${{ github.ref }}-${{ github.sha }}
           restore-keys: |
             ${{ github.ref }}-${{ github.sha }}
+      - run: npm install
+      - run: npm run build
       - run: docker build . -t geolonia/embed
       - run: |
           docker run --rm \
