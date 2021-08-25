@@ -63,6 +63,8 @@ jobs:
           key: snapshot-test-docker-layers-cache-v1-${{ hashFiles('Dockerfile') }}-${{ hashFiles('dist/embed.js') }}-${{ hashFiles('test/**') }}
       - run: npm install
       - run: docker build . -t geolonia/embed
+        env:
+          DOCKER_BUILDKIT: 1 # Enable caching
       - run: |
           docker run --rm \
             -v $(pwd)/snapshots:/app/snapshots \
