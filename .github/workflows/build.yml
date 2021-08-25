@@ -62,20 +62,10 @@ jobs:
           path: /tmp/.buildx-cache
           key: snapshot-test-docker-layers-cache-v1-${{ hashFiles('Dockerfile') }}-${{ hashFiles('dist/embed.js') }}-${{ hashFiles('test/**') }}
       - run: npm install
-      - name: Build Docker image
-        uses: docker/build-push-action@v2
-        with:
-          context: ./
-          file: ./Dockerfile
-          builder: ${{ steps.buildx.outputs.name }}
-          load: true
-          tags: geolonia/embed
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
-      # - run: |
-      #     docker build . -t geolonia/embed
-      #   env:
-      #     DOCKER_BUILDKIT: 1 # Enable caching
+      - run: |
+          docker buildx build . -t geolonia/embed
+        env:
+          DOCKER_BUILDKIT: 1 # Enable caching
       - run: |
           docker run --rm \
             -v $(pwd)/snapshots:/app/snapshots \
