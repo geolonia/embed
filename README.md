@@ -117,7 +117,7 @@ $ docker run --rm \
   -v $(pwd)/snapshots:/app/snapshots \
   -v $(pwd)/dist:/app/dist \
   geolonia/embed
-# Update snapshot manually
+# Update the snapshot
 $ docker run --rm \
   -v $(pwd)/snapshots:/app/snapshots \
   -v $(pwd)/dist:/app/dist \
