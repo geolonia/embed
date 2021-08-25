@@ -1,6 +1,6 @@
 # @geolonia/embed
 
-[![Build Status](https://travis-ci.org/geolonia/embed.svg?branch=master)](https://travis-ci.org/geolonia/embed)
+[![build](https://github.com/geolonia/embed/actions/workflows/build.yml/badge.svg)](https://github.com/geolonia/embed/actions/workflows/build.yml)
 
 JS embed API for Geolonia service.
 
@@ -104,7 +104,7 @@ Then you can see `http://localhost:3000/`.
 ```shell
 $ cp .envrc.sample .envrc
 $ vi .envrc
-$ npm run build
+$ npm run build:embed
 $ docker build . -t geolonia/embed
 ```
 
@@ -132,5 +132,4 @@ $ open snapshots
 ```shell
 $ npm run build
 $ npm run test:snapshot
-$ UPDATE_SNAPSHOT=true npm run test:snapshot
 ```
