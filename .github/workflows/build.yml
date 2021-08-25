@@ -55,13 +55,13 @@ jobs:
         with:
           path: node_modules
           key: snapshot-test-node_modules-cache-v1-${{ hashFiles('package-lock.json') }}
+      - run: "npm run build:embed"
       - name: Cache Docker layers
         uses: actions/cache@v2
         with:
           path: /tmp/.buildx-cache
-          key: snapshot-test-docker-layers-cache-v1-${{ github.sha }}
+          key: snapshot-test-docker-layers-cache-v1-${{ hashFiles('Dockerfile') }}-${{ hashFiles('dist/embed.js') }}-${{ hashFiles('test/**') }}
       - run: npm install
-      - run: "npm run build:embed"
       - run: docker build . -t geolonia/embed
       - run: |
           docker run --rm \
