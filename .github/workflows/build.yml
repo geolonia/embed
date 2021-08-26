@@ -65,8 +65,7 @@ jobs:
       - run: |
           docker build . \
             -t geolonia/embed \
-            --cache-from="type:local,src=/tmp/.buildx-cache" \
-            --cache-to="type:local,src=/tmp/.buildx-cache"
+            --cache-from="type:local,src=/tmp/.buildx-cache"
         env:
           DOCKER_BUILDKIT: 1 # Enable caching
       - run: |
