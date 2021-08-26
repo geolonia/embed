@@ -68,6 +68,7 @@ jobs:
             --cache-from="type:local,src=/tmp/.buildx-cache"
         env:
           DOCKER_BUILDKIT: 1 # Enable caching
+      - run: docker image inspect geolonia/embed
       - run: |
           docker run --rm \
             -v $(pwd)/snapshots:/app/snapshots \
