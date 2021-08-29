@@ -54,8 +54,8 @@ jobs:
           with:
             path: node_modules
             key: modules-cache-v1-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-        - run: "npm run build:embed"
         - run: npm install
+        - run: "npm run build:embed"
         - run: docker build . -t geolonia/embed
         - run: docker push ghcr.io/geolonia/embed:${{ hashFiles('Dockerfile', 'dist/embed.js', 'test/**') }}
 
