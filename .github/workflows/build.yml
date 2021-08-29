@@ -56,8 +56,13 @@ jobs:
             key: modules-cache-v1-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
         - run: npm install
         - run: "npm run build:embed"
-        - run: docker build . -t geolonia/embed
-        - run: docker push ghcr.io/geolonia/embed:${{ hashFiles('Dockerfile', 'dist/embed.js', 'test/**') }}
+        - name: Build and push to local registry
+          uses: docker/build-push-action@v2
+          with:
+            context: .
+            push: true
+            tags: ghcr.io/geolonia/embed:latest
+        - run: docker build . -t geolonia/embed:${{ hashFiles('Dockerfile', 'dist/embed.js', 'test/**') }}
 
   snapshot-test:
    runs-on: ubuntu-latest
