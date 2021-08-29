@@ -15,7 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x, 14.x]
+        node-version:
+          - 12.x
+          - &default_node_version 14.x
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
@@ -26,7 +28,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: node_modules
-          key: build-cache-v1-${{ hashFiles('package-lock.json') }}
+          key: modules-cache-v1-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
       - run: npm install
       - run: npm run lint
       - run: npm test
@@ -41,36 +43,37 @@ jobs:
             dist/
             docs/
 
+  pre-snapshot-test:
+    runs-on: ubuntu-latest
+    name: 'Build and push snapshot testing Docker image'
+    steps:
+        - uses: actions/checkout@v2
+        - uses: actions/setup-node@v1
+          with:
+            node-version: *default_node_version
+        - name: Cache node_modules
+          uses: actions/cache@v2
+          with:
+            path: node_modules
+            key: modules-cache-v1-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+        - run: "npm run build:embed"
+        - run: npm install
+        - run: docker build . -t geolonia/embed
+        - run: docker push ghcr.io/geolonia/embed:${{ hashFiles('Dockerfile', 'dist/embed.js', 'test/**') }}
+
   snapshot-test:
    runs-on: ubuntu-latest
-   strategy:
-      matrix:
-        node-version: [14.x]
+   needs:
+     - pre-snapshot-test
    timeout-minutes: 5
    steps:
       - uses: actions/checkout@v2
-      - name: Cache node_modules
-        uses: actions/cache@v2
-        with:
-          path: node_modules
-          key: snapshot-test-node_modules-cache-v1-${{ hashFiles('package-lock.json') }}
-      - run: "npm run build:embed"
-      - name: Cache Docker layers
-        uses: actions/cache@v2
-        with:
-          path: /var/lib/docker/overlay2
-          key: snapshot-test-docker-images-cache-v1-${{ hashFiles('Dockerfile') }}-${{ hashFiles('dist/embed.js') }}-${{ hashFiles('test/**') }}
-      - run: npm install
-      - run: |
-          docker build . -t geolonia/embed
-        env:
-          DOCKER_BUILDKIT: 1 # Enable caching
-      - run: docker image inspect geolonia/embed
+      # TODO Login to GitHub Container registry and ref target image
       - run: |
           docker run --rm \
             -v $(pwd)/snapshots:/app/snapshots \
             -v $(pwd)/dist:/app/dist \
-            geolonia/embed
+            geolonia/embed:${{ hashFiles('Dockerfile', 'dist/embed.js', 'test/**') }}
 
   gh-pages:
     name: 'Host with GitHub Pages'
@@ -83,10 +86,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          tag_name: 'v%s'
-          node-version: '12.x'
-          registry-url: 'https://registry.npmjs.org'
-          scope: '@geolonia'
+          node-version: *default_node_version
       - name: Clean repo
         run: |
           git checkout --orphan gh-pages
@@ -117,7 +117,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           tag_name: 'v%s'
-          node-version: '12.x'
+          node-version: *default_node_version
           registry-url: 'https://registry.npmjs.org'
           scope: '@geolonia'
       - name: load the built
