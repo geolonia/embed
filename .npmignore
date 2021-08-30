@@ -1,5 +1,6 @@
 .git
-docs
 .DS_Store
-sample
 assets
+docs
+sample
+snapshots

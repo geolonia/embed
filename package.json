@@ -13,9 +13,9 @@
     "format": "prettier-eslint \"./src/**/*.js\" --write",
     "lint": "eslint \"src/**/*.js\"",
     "test": "npm run lint && mocha ./src/**/*.test.js --recursive -r jsdom-global/register -r @babel/register",
-    "test:integration": "mkdir -p snapshots && mocha test/integration.test.js --timeout 20000"
+    "test:snapshot": "mkdir -p snapshots && mocha test/snapshot.test.js --timeout 30000"
   },
-  "author": "Geolonia inc.",
+  "author": "Geolonia (https://geolonia.com)",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/geolonia/embed.git"
@@ -48,6 +48,7 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
+    "@geolonia/eslint-config": "https://github.com/geolonia/eslint-config",
     "@geolonia/mbgl-geolonia-control": "^0.4.0",
     "@geolonia/mbgl-gesture-handling": "^1.0.15",
     "@mapbox/geojson-extent": "^0.3.2",

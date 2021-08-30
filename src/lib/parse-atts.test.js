@@ -1,24 +1,24 @@
-import parseAtts from './parse-atts'
-import assert from 'assert'
-import { JSDOM } from 'jsdom'
+import parseAtts from './parse-atts';
+import assert from 'assert';
+import { JSDOM } from 'jsdom';
 
 describe('tests for parse Attributes', () => {
 
-  let prevWindow = global.window
+  const prevWindow = global.window;
 
   beforeEach(() => {
     global.window = {
       geolonia: { config: {} },
       navigator: { languages: ['ja'] },
-    }
-  })
+    };
+  });
 
   it('should parse attribute', () => {
     const { document: mocDocument } = new JSDOM(`<html><body>
           <script type="text/javascript" src="https://cdn.geolonia.com/v1/embed?geolonia-api-key=YOUR-API-KEY"></script>
-          </body></html>`).window
+          </body></html>`).window;
 
-    const atts = parseAtts(mocDocument)
+    const atts = parseAtts(mocDocument);
     assert.deepStrictEqual(atts, {
       lat: 0,
       lng: 0,
@@ -51,10 +51,10 @@ describe('tests for parse Attributes', () => {
       minZoom: '',
       maxZoom: 20,
       '3d': '',
-    })
-  })
+    });
+  });
 
   afterEach(() => {
-    global.window = prevWindow
-  })
-})
+    global.window = prevWindow;
+  });
+});
