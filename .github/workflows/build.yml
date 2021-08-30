@@ -44,7 +44,6 @@ jobs:
   snapshot-test:
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    name: 'Build and push snapshot testing Docker image'
     steps:
         - uses: actions/checkout@v2
         - uses: actions/setup-node@v1
