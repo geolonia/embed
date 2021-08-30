@@ -1,6 +1,6 @@
-'use strict'
+'use strict';
 
-import parseApiKey from './parse-api-key'
+import parseApiKey from './parse-api-key';
 
 /**
  *
@@ -9,30 +9,30 @@ import parseApiKey from './parse-api-key'
  */
 export function isURL(str) {
   if (str.match(/^https?:\/\//)) {
-    return str
+    return str;
   } else if (str.match(/^\//) || str.match(/^\.\.?/)) {
     try {
-      return new URL(str, location.href).href
+      return new URL(str, location.href).href;
     } catch (error) {
       console.error(error) // eslint-disable-line
-      return false
+      return false;
     }
   }
 
-  return false
+  return false;
 }
 
 export function checkPermission() {
   // It looks that isn't iFrame, so returs true.
   if (window.self === window.parent) {
-    return true
+    return true;
   }
 
-  const query = parseApiKey(window.document)
+  const query = parseApiKey(window.document);
 
   // Always returs true if API key isn't 'YOUR-API-KEY'.
-  if ('YOUR-API-KEY' !== query.key) {
-    return true
+  if (query.key !== 'YOUR-API-KEY') {
+    return true;
   }
 
   /**
@@ -40,20 +40,20 @@ export function checkPermission() {
    * iFrame による Codepen の地図の認可外のサイトへの埋め込みを許可しない
    */
   if (
-    'https://cdpn.io' === window.self.location.origin ||
-    'https://codepen.io' === window.self.location.origin
+    window.self.location.origin === 'https://cdpn.io' ||
+    window.self.location.origin === 'https://codepen.io'
   ) {
-    if (window.self !== window.parent && 0 === window.document.referrer.indexOf('https://codepen.io')) {
-      return true
+    if (window.self !== window.parent && window.document.referrer.indexOf('https://codepen.io') === 0) {
+      return true;
     }
   }
 
   /**
    * For the https://jsfiddle.net/
    */
-  if ('https://fiddle.jshell.net' === window.self.location.origin) {
-    if (window.self !== window.parent && 0 === window.document.referrer.indexOf('https://jsfiddle.net')) {
-      return true
+  if (window.self.location.origin === 'https://fiddle.jshell.net') {
+    if (window.self !== window.parent && window.document.referrer.indexOf('https://jsfiddle.net') === 0) {
+      return true;
     }
   }
 
@@ -65,8 +65,8 @@ export function checkPermission() {
    * another one is in new window.
    */
   if (window.self.location.origin.match(/csb\.app$/)) {
-    if (window.self !== window.parent && 0 === window.document.referrer.indexOf('https://codesandbox.io')) {
-      return true
+    if (window.self !== window.parent && window.document.referrer.indexOf('https://codesandbox.io') === 0) {
+      return true;
     }
   }
 
@@ -76,13 +76,13 @@ export function checkPermission() {
    */
   try {
     if (window.self.location.origin === window.top.location.origin) {
-      return true
+      return true;
     }
   } catch (e) {
-    return false
+    return false;
   }
 
-  return false
+  return false;
 }
 
 export function getLang() {
@@ -90,12 +90,12 @@ export function getLang() {
     window.navigator.languages &&
     window.navigator.languages[0] &&
     window.navigator.languages[0].toLowerCase()
-  ) || window.navigator.language.toLowerCase()
+  ) || window.navigator.language.toLowerCase();
 
-  if ('ja' === lang || 'ja-jp' === lang) {
-    return 'ja'
+  if (lang === 'ja' || lang === 'ja-jp') {
+    return 'ja';
   } else {
-    return 'en'
+    return 'en';
   }
 }
 
@@ -103,13 +103,13 @@ export function getLang() {
  * Detects the window is scrollable.
  */
 export function isScrollable() {
-  const { height: bodyHeight } = document.body.getBoundingClientRect()
-  const windowHeight = window.innerHeight
+  const { height: bodyHeight } = document.body.getBoundingClientRect();
+  const windowHeight = window.innerHeight;
 
   if (bodyHeight > windowHeight) {
-    return true
+    return true;
   } else {
-    return false
+    return false;
   }
 }
 
@@ -122,7 +122,7 @@ export function isDomElement(o) {
   return (
     typeof HTMLElement === 'object' ? o instanceof HTMLElement : // DOM2
       o && typeof o === 'object' && o !== null && o.nodeType === 1 && typeof o.nodeName === 'string'
-  )
+  );
 }
 
 /**
@@ -133,18 +133,18 @@ export function isDomElement(o) {
  */
 export function getContainer(arg) {
   if (isDomElement(arg)) {
-    return arg
-  } else if ('string' === typeof arg && document.querySelector(arg)) {
-    return document.querySelector(arg)
+    return arg;
+  } else if (typeof arg === 'string' && document.querySelector(arg)) {
+    return document.querySelector(arg);
   } else if (arg.container) {
     if (isDomElement(arg.container)) {
-      return arg.container
+      return arg.container;
     } else if (document.querySelector(arg.container)) {
-      return document.querySelector(arg.container)
+      return document.querySelector(arg.container);
     }
   }
 
-  return false
+  return false;
 }
 
 /**
@@ -158,34 +158,34 @@ export function handleMarkerOptions(options, legacyOptions) {
     options = {
       element: options,
       ...legacyOptions,
-    }
+    };
   } else if (!options) {
-    options = legacyOptions
+    options = legacyOptions;
   }
 
-  return options
+  return options;
 }
 
 export function getStyle(style, atts) {
-  const styleUrl = isURL(style)
+  const styleUrl = isURL(style);
   if (styleUrl) {
-    return styleUrl
+    return styleUrl;
   } else {
-    if ('ja' === atts.lang) {
-      return `https://cdn.geolonia.com/style/${style}/ja.json`
+    if (atts.lang === 'ja') {
+      return `https://cdn.geolonia.com/style/${style}/ja.json`;
     } else {
-      return `https://cdn.geolonia.com/style/${style}/en.json`
+      return `https://cdn.geolonia.com/style/${style}/en.json`;
     }
   }
 }
 
 export function getOptions(container, params, atts) {
   if (params.container) {
-    delete params.container // Don't overwrite container.
+    delete params.container; // Don't overwrite container.
   }
 
   if (params === container) {
-    params = {} // `params` is HTMLElement, so we shouldn't merge it into options.
+    params = {}; // `params` is HTMLElement, so we shouldn't merge it into options.
   }
 
   const options = {
@@ -195,22 +195,22 @@ export function getOptions(container, params, atts) {
     bearing: parseFloat(atts.bearing),
     pitch: parseFloat(atts.pitch),
     zoom: parseFloat(atts.zoom),
-    hash: ('on' === atts.hash),
+    hash: (atts.hash === 'on'),
     localIdeographFontFamily: 'sans-serif',
     attributionControl: true,
+  };
+
+  if (atts.minZoom !== '' && (Number(atts.minZoom) === 0 || Number(atts.minZoom))) {
+    options.minZoom = Number(atts.minZoom);
   }
 
-  if ('' !== atts.minZoom && (0 === Number(atts.minZoom) || Number(atts.minZoom))) {
-    options.minZoom = Number(atts.minZoom)
+  if (atts.maxZoom !== '' && Number(atts.maxZoom)) {
+    options.maxZoom = Number(atts.maxZoom);
   }
 
-  if ('' !== atts.maxZoom && Number(atts.maxZoom)) {
-    options.maxZoom = Number(atts.maxZoom)
-  }
+  Object.assign(options, params);
 
-  Object.assign(options, params)
-
-  return options
+  return options;
 }
 
 /**
@@ -219,44 +219,44 @@ export function getOptions(container, params, atts) {
  * @returns { enabled: bolean, position: 'top-right' | 'bottom-right' | 'bottom-left' | 'top-left' | void }
  */
 export function parseControlOption(att) {
-  const normalizedAtt = att.toLowerCase()
+  const normalizedAtt = att.toLowerCase();
   if (['top-right', 'bottom-right', 'bottom-left', 'top-left'].includes(normalizedAtt)) {
-    return { enabled: true, position: normalizedAtt }
+    return { enabled: true, position: normalizedAtt };
   } else if (['on', 'off'].includes(normalizedAtt)) {
-    return { enabled: normalizedAtt === 'on', position: void 0 }
+    return { enabled: normalizedAtt === 'on', position: void 0 };
   } else {
-    return { enabled: false, position: void 0 }
+    return { enabled: false, position: void 0 };
   }
 }
 
 /**
  * keep session
  */
-let sessionId = ''
+let sessionId = '';
 
 /**
  *
  * @param {number} digits for session
  * @returns sessionId
  */
-export const getSessionId = digit => {
+export const getSessionId = (digit) => {
   if (sessionId) {
-    return sessionId
+    return sessionId;
   } else {
     const array = new Uint8Array(digit / 2);
-    (window.crypto || window.msCrypto).getRandomValues(array)
+    (window.crypto || window.msCrypto).getRandomValues(array);
     const value = Array
-      .from(array, dec => dec.toString(16).padStart(2, '0'))
-      .join('')
-    sessionId = value
-    return value
+      .from(array, (dec) => dec.toString(16).padStart(2, '0'))
+      .join('');
+    sessionId = value;
+    return value;
   }
-}
+};
 
-export const parseSimpleVector = attributeValue => {
+export const parseSimpleVector = (attributeValue) => {
   if (/^(https?|geolonia):\/\//.test(attributeValue)) {
-    return attributeValue
+    return attributeValue;
   } else {
-    return `geolonia://tiles/custom/${attributeValue}`
+    return `geolonia://tiles/custom/${attributeValue}`;
   }
-}
+};

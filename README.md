@@ -49,9 +49,10 @@ You can see more examples at [https://geolonia.github.io/embed/](https://geoloni
 ```shell
 $ git clone git@github.com:geolonia/embed.git
 $ cd embed
-$ yarn # or npm install
-$ npm start
-$ npm test
+$ yarn
+$ npm start # run dev server
+$ npm test # run tests
+$ npm run build # build production bundle
 ```
 
 Then you can see `http://localhost:3000/`.

@@ -48,6 +48,7 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
+    "@geolonia/eslint-config": "https://github.com/geolonia/eslint-config",
     "@geolonia/mbgl-geolonia-control": "^0.4.0",
     "@geolonia/mbgl-gesture-handling": "^1.0.15",
     "@mapbox/geojson-extent": "^0.3.2",

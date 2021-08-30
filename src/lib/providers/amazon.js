@@ -1,71 +1,71 @@
-import 'whatwg-fetch'
-import { getContainer } from '../util'
-import GeoloniaControl from '@geolonia/mbgl-geolonia-control'
+import 'whatwg-fetch';
+import { getContainer } from '../util';
+import GeoloniaControl from '@geolonia/mbgl-geolonia-control';
 
-const AWS_SDK_URL = 'https://sdk.amazonaws.com/js/aws-sdk-2.775.0.min.js'
-const AMPLIFY_URL = 'https://unpkg.com/@aws-amplify/core@3.7.0/dist/aws-amplify-core.min.js'
-const STYLE_URL = 'https://geolonia.github.io/embed/docs/amzn-loc-style.json'
+const AWS_SDK_URL = 'https://sdk.amazonaws.com/js/aws-sdk-2.775.0.min.js';
+const AMPLIFY_URL = 'https://unpkg.com/@aws-amplify/core@3.7.0/dist/aws-amplify-core.min.js';
+const STYLE_URL = 'https://geolonia.github.io/embed/docs/amzn-loc-style.json';
 export class AmazonLocationServiceMapProvider {
 
   constructor(awsconfig = {}) {
-    const { cognitoIdentityPoolId, mapName = 'explore.map' } = awsconfig
+    const { cognitoIdentityPoolId, mapName = 'explore.map' } = awsconfig;
     if (!cognitoIdentityPoolId) {
-      throw new Error('Invalid options. awsconfig.cognitoIdentityPoolId is required.')
+      throw new Error('Invalid options. awsconfig.cognitoIdentityPoolId is required.');
     }
-    this.cognitoIdentityPoolId = cognitoIdentityPoolId
-    this.mapName = mapName
+    this.cognitoIdentityPoolId = cognitoIdentityPoolId;
+    this.mapName = mapName;
   }
 
   /**
    * Load AWS SDK et al. if not exists.
-   * @param {{timeout}} 
+   * @param {{timeout}}
    * @returns Promise<{aws_amplify_core, AWS, geolonia}>
    */
   _loadAwsSdk({ timeout }) {
-    const { aws_amplify_core, AWS, geolonia } = window
+    const { aws_amplify_core, AWS, geolonia } = window;
     if (aws_amplify_core && AWS && geolonia) {
-      return Promise.resolve({ aws_amplify_core, AWS, geolonia })
+      return Promise.resolve({ aws_amplify_core, AWS, geolonia });
     } else {
       // Dynamic loading
-      const AwsSdk = document.createElement('script')
-      const Amplify = document.createElement('script')
-      AwsSdk.setAttribute('src', AWS_SDK_URL)
-      Amplify.setAttribute('src', AMPLIFY_URL)
-      document.body.appendChild(AwsSdk)
-      document.body.appendChild(Amplify)
+      const AwsSdk = document.createElement('script');
+      const Amplify = document.createElement('script');
+      AwsSdk.setAttribute('src', AWS_SDK_URL);
+      Amplify.setAttribute('src', AMPLIFY_URL);
+      document.body.appendChild(AwsSdk);
+      document.body.appendChild(Amplify);
 
       // Wait until ready
       return new Promise((resolve, reject) => {
-        let isTimeout = false
-        setTimeout(() => { isTimeout = true }, timeout)
+        let isTimeout = false;
+        setTimeout(() => { isTimeout = true; }, timeout);
         const timerId = setInterval(() => {
-          const { aws_amplify_core, AWS, geolonia } = window
+          const { aws_amplify_core, AWS, geolonia } = window;
           if (aws_amplify_core && AWS && geolonia) {
-            clearInterval(timerId)
-            return resolve({ aws_amplify_core, AWS, geolonia })
+            clearInterval(timerId);
+            return resolve({ aws_amplify_core, AWS, geolonia });
           } else if (isTimeout) {
-            clearInterval(timerId)
-            return reject(new Error('Failed to load the AWS SDK.'))
+            clearInterval(timerId);
+            return reject(new Error('Failed to load the AWS SDK.'));
           }
-        }, 50)
-      })
+        }, 50);
+      });
     }
   }
 
   _fetchStyle(url) {
-    return fetch(url).then(res => res.json())
+    return fetch(url).then((res) => res.json());
   }
 
   async initMap(options) {
-    const { aws_amplify_core, AWS, geolonia } = await this._loadAwsSdk({ timeout: 10000 })
-    
+    const { aws_amplify_core, AWS, geolonia } = await this._loadAwsSdk({ timeout: 10000 });
+
     // Sign with AWS SDK
-    const { Signer } = aws_amplify_core
-    const region = this.cognitoIdentityPoolId.split(':')[0]
+    const { Signer } = aws_amplify_core;
+    const region = this.cognitoIdentityPoolId.split(':')[0];
     const credentials = new AWS.CognitoIdentityCredentials({
       IdentityPoolId: this.cognitoIdentityPoolId,
-    }, { region })
-    await credentials.getPromise()
+    }, { region });
+    await credentials.getPromise();
     const transformRequest = (url, resourceType) => {
       if (url.includes('amazonaws.com')) {
         // only sign AWS requests (with the signature as part of the query string)
@@ -75,42 +75,42 @@ export class AmazonLocationServiceMapProvider {
             secret_key: credentials.secretAccessKey,
             session_token: credentials.sessionToken,
           }),
-        }
+        };
       }
 
       // Additional transformation
       if (typeof options.transformRequest === 'function') {
-        return options.transformRequest(url, resourceType)
+        return options.transformRequest(url, resourceType);
       } else {
-        return { url }
+        return { url };
       }
-    }
+    };
 
     const mapOptions = {
       minZoom: 1, // no 0/0/0 tile
       ...options,
       transformRequest,
-    }
+    };
 
     // override style if not specified
-    const container = getContainer(options.container)
+    const container = getContainer(options.container);
     if (container && !container.dataset.style) {
-      const style = await this._fetchStyle(STYLE_URL)
-      style.sources.omv.tiles = style.sources.omv.tiles.map(url => url.replace('explore.map', this.mapName))
-      mapOptions.style = style
+      const style = await this._fetchStyle(STYLE_URL);
+      style.sources.omv.tiles = style.sources.omv.tiles.map((url) => url.replace('explore.map', this.mapName));
+      mapOptions.style = style;
     }
 
-    const map = new geolonia.Map(mapOptions)
+    const map = new geolonia.Map(mapOptions);
     try {
-      map._controls.forEach(control => {
+      map._controls.forEach((control) => {
         if (control instanceof GeoloniaControl) {
-          map.removeControl(control)
+          map.removeControl(control);
         }
-      })    
+      });
     } catch (error) {
       // nothing to do
     }
 
-    return map
+    return map;
   }
 }

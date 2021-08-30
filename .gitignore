@@ -72,3 +72,6 @@ typings/
 /snapshots/*.png
 .cache
 .DS_Store
+
+# Use yarn
+package-lock.json
