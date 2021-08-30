@@ -41,8 +41,9 @@ jobs:
             dist/
             docs/
 
-  pre-snapshot-test:
+  snapshot-test:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     name: 'Build and push snapshot testing Docker image'
     steps:
         - uses: actions/checkout@v2
@@ -56,33 +57,17 @@ jobs:
             key: modules-cache-v1-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
         - run: npm install
         - run: "npm run build:embed"
-        - name: Login to GitHub Container Registry
-          uses: docker/login-action@v1
-          with:
-            registry: ghcr.io
-            username: ${{ github.actor }}
-            password: ${{ secrets.GITHUB_TOKEN }}
         - name: Build and push to local registry
           uses: docker/build-push-action@v2
           with:
             context: .
-            push: true
-            tags: ghcr.io/geolonia/embed:latest
-        - run: docker build . -t geolonia/embed:${{ hashFiles('Dockerfile', 'dist/embed.js', 'test/**') }}
-
-  snapshot-test:
-   runs-on: ubuntu-latest
-   needs:
-     - pre-snapshot-test
-   timeout-minutes: 5
-   steps:
-      - uses: actions/checkout@v2
-      # TODO Login to GitHub Container registry and ref target image
-      - run: |
-          docker run --rm \
-            -v $(pwd)/snapshots:/app/snapshots \
-            -v $(pwd)/dist:/app/dist \
-            geolonia/embed:${{ hashFiles('Dockerfile', 'dist/embed.js', 'test/**') }}
+            push: false
+            tags: geolonia/embed
+        - run: |
+            docker run --rm \
+              -v $(pwd)/snapshots:/app/snapshots \
+              -v $(pwd)/dist:/app/dist \
+              geolonia/embed
 
   gh-pages:
     name: 'Host with GitHub Pages'
