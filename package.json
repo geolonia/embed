@@ -15,7 +15,7 @@
     "test": "npm run lint && mocha ./src/**/*.test.js --recursive -r jsdom-global/register -r @babel/register",
     "test:snapshot": "mkdir -p snapshots && mocha test/snapshot.test.js --timeout 30000"
   },
-  "author": "Geolonia inc.",
+  "author": "Geolonia (https://geolonia.com)",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/geolonia/embed.git"

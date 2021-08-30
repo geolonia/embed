@@ -63,7 +63,7 @@ describe('Tests for Maps.', () => {
     assert.strictEqual('mapboxgl-canary', className)
   })
 
-  it('should match the snapshot at >99.00%', async () => {
+  it('should match the snapshot at >95.00%', async () => {
     const basePath = path.resolve('__dirname', '..', 'snapshots')
     const snapshotPath = path.resolve(basePath, 'map.png.snapshot')
     const tmpSnapshotPath = path.resolve(basePath, 'map.png')
@@ -89,7 +89,7 @@ describe('Tests for Maps.', () => {
         ((Math.round(10000 * matchRate) + 0.1) / 100).toString().slice(0, 5) +
         '%'
       reports.push(`Snapshot matching rate: ${matchRateLabel}`)
-      assert.strictEqual(matchRate > 0.99, true)
+      assert.strictEqual(matchRate > 0.95, true)
     }
   })
 })
