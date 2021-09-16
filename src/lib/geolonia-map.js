@@ -168,7 +168,8 @@ export default class GeoloniaMap extends mapboxgl.Map {
 
       if (atts.lat && atts.lng && atts.marker === 'on') {
         if (content) {
-          const popup = new window.geolonia.Popup({ offset: [0, -25] }).setHTML(content);
+          // TODO: MapLibre GL JS に変更 & https://github.com/maplibre/maplibre-gl-js/issues/338 が解決されたら、{focusAfterOpen: false} を削除
+          const popup = new window.geolonia.Popup({ offset: [0, -25], focusAfterOpen: false }).setHTML(content);
           let marker;
           if (atts.customMarker) {
             const offset = atts.customMarkerOffset.split(/,/).map((n) => {
