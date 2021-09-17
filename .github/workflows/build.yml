@@ -55,7 +55,18 @@ jobs:
             path: node_modules
             key: modules-cache-v1-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
         - run: npm install
-        - run: "npm run build:embed"
+        - id: build-embed
+          run: "npm run build:embed"
+        - name: report-build-result
+          uses: actions/github-script@v4
+          with:
+            script: |
+              github.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: ${{ join(steps.build-embed.outputs.*, '\n') }}
+              })
         - name: Build and push to local registry
           uses: docker/build-push-action@v2
           with:
