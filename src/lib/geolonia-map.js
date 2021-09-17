@@ -106,7 +106,6 @@ export default class GeoloniaMap extends mapboxgl.Map {
 
     // Generate Map
     super(options);
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const map = this;
     this.geoloniaSourcesUrl = sourcesUrl;
     this.__styleExtensionLoadRequired = true;
