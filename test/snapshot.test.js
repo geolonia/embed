@@ -60,7 +60,8 @@ describe('Tests for Maps.', () => {
   it('should build DOM as expected', async () => {
     const map = await page.$('#map div:first-child')
     const className = await (await map.getProperty('className')).jsonValue()
-    assert.strictEqual('mapboxgl-canary', className)
+    console.log(className)
+    assert.strictEqual(className.includes('maplibregl-canvas-container'), true)
   })
 
   it('should match the snapshot at >95.00%', async () => {

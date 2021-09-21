@@ -1,6 +1,6 @@
 'use strict';
 
-import mapboxgl from 'mapbox-gl';
+import maplibregl from 'maplibre-gl';
 import turfCenter from '@turf/center';
 import sanitizeHtml from 'sanitize-html';
 
@@ -210,7 +210,7 @@ class SimpleStyleVector {
       const description = e.features[0].properties.description;
 
       if (description) {
-        new mapboxgl.Popup().setLngLat(center).setHTML(sanitizeHtml(description)).addTo(map);
+        new maplibregl.Popup().setLngLat(center).setHTML(sanitizeHtml(description)).addTo(map);
       }
     });
 

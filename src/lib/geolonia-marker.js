@@ -1,6 +1,6 @@
 'use strict';
 
-import mapboxgl from 'mapbox-gl';
+import maplibregl from 'maplibre-gl';
 import tinycolor from 'tinycolor2';
 import markerSVG from './marker.svg';
 import * as util from './util';
@@ -10,7 +10,7 @@ import * as util from './util';
  *
  * @param container
  */
-export default class GeoloniaMarker extends mapboxgl.Marker {
+export default class GeoloniaMarker extends maplibregl.Marker {
   constructor(options = {}, legacyOptions = {}) {
     options = util.handleMarkerOptions(options, legacyOptions);
 

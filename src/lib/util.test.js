@@ -127,7 +127,7 @@ describe('Tests for util.js', () => {
     assert.deepEqual('https://base.example.com/style.json', util.getStyle('/style.json', atts));
   });
 
-  it('should handle mapboxgl options `minZoom` and `maxZoom` well', () => {
+  it('should handle maplibregl options `minZoom` and `maxZoom` well', () => {
     {
       const atts = { minZoom: '', maxZoom: '10' };
       const options = util.getOptions({}, {}, atts);
