@@ -1,6 +1,25 @@
 import * as maplibregl from 'maplibre-gl';
 
-export type Map = maplibregl.Map
+export interface MapOptions extends maplibregl.MapboxOptions {
+  interactive?: boolean;
+
+  /**
+   * The container to mount this map in. Can be a DOM element, or a string
+   * containing a CSS selector.
+   * If you use a CSS selector, the map will be mounted in the first element
+   * matching.
+   */
+  container?: HTMLElement | string;
+
+  style?: string;
+  transformRequest?: maplibregl.TransformRequestFunction;
+}
+
+export class Map extends maplibregl.Map {
+  /** Use this to create a new Map instance. */
+  constructor(options?: MapOptions | HTMLElement);
+}
+
 export type Marker = maplibregl.Marker
 export type EmbedAttributes = {
   lat: string;
