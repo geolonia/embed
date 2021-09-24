@@ -31,6 +31,7 @@
     "@babel/plugin-transform-classes": "^7.10.1",
     "@babel/preset-env": "^7.10.2",
     "@babel/register": "^7.10.1",
+    "@geolonia/eslint-config": "^0.0.1",
     "babel-loader": "^8.1.0",
     "css-loader": "^2.1.0",
     "eslint": "^7.16.0",
@@ -48,7 +49,6 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
-    "@geolonia/eslint-config": "https://github.com/geolonia/eslint-config",
     "@geolonia/mbgl-geolonia-control": "^0.4.0",
     "@geolonia/mbgl-gesture-handling": "^1.0.15",
     "@mapbox/geojson-extent": "^0.3.2",
