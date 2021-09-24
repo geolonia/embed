@@ -117,6 +117,13 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: the-built
-      - run: npm publish --access=public
+      - name: 'Publish to NPM (latest)'
+        if: "!contains(github.ref, '-pre.')"
+        run: npm publish --access=public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: 'Publish to NPM (next)'
+        if: "contains(github.ref, '-pre.')"
+        run: npm publish --access=public --tag=next
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
