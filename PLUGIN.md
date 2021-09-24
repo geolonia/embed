@@ -12,7 +12,7 @@ More detailed features are described below as the TypeScript section.
 import * as Geolonia from "@geolonia/embed";
 
 const myPlugin: Geolonia.EmbedPlugin = (
-  map: Geolonia.Map, // mapboxgl.Map instance.
+  map: Geolonia.Map, // maplibregl.Map instance.
   target: HTMLElement, // HTML Element. The Map will be rendered here.
   atts: Geolonia.EmbedAttributes // data-x attributes specified at target element.
 ) => {

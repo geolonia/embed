@@ -1,7 +1,7 @@
-import * as mapboxgl from 'mapbox-gl'
+import * as maplibregl from 'maplibre-gl';
 
-export type Map = mapboxgl.Map
-export type Marker = mapboxgl.Marker
+export type Map = maplibregl.Map
+export type Marker = maplibregl.Marker
 export type EmbedAttributes = {
   lat: string;
   lng: string;
@@ -19,7 +19,7 @@ export type EmbedAttributes = {
   geolocateControl: string;
   fullscreenControl: string;
   scaleControl: string;
-  geoloniaControl: string:
+  geoloniaControl: string;
   geojson: string;
   cluster: string;
   clusterColor: string;

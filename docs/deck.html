@@ -22,17 +22,26 @@
   <script type="text/javascript" src="./embed.js?geolonia-api-key=YOUR-API-KEY"></script>
 
   <script>
-    const { DeckGL, GeoJsonLayer, ArcLayer } = deck;
+    const { MapboxLayer, GeoJsonLayer, ArcLayer } = deck;
 
-    const air_ports = 'https://assets.codepen.io/4210065/airports.geojson'
+    const map = new geolonia.Map({
+      container: document.body,
+      style: 'geolonia/midnight',
+      center: [138.219, 37.092],
+      zoom: 6,
+      pitch: 60
+    });
 
-    // 空港の GeoJSON を取得して Deck.GL のレイヤーを設置
-    fetch(air_ports).then(res => {
-      return res.json()
-    }).then(data => {
-      const layers = [
-        new GeoJsonLayer({
-          id: 'airports',
+    map.on('load', () => {
+      const air_ports = 'https://assets.codepen.io/4210065/airports.geojson'
+
+      // 空港の GeoJSON を取得して Deck.GL のレイヤーを設置
+      fetch(air_ports).then(res => {
+        return res.json()
+      }).then(data => {
+        map.addLayer(new MapboxLayer({
+          id: 'deckgl-airports',
+          type: GeoJsonLayer,
           data: data,
           filled: true,
           pointRadiusMinPixels: 2,
@@ -41,45 +50,31 @@
           getFillColor: [255, 255, 100, 90],
           pickable: true,
           autoHighlight: true,
-        }),
-      ]
+        }))
 
-      for (let i = 0; i < data.features.length; i++) {
-        const airport = data.features[i]
-        if ('cf04_00030' !== airport.properties.C28_000) {
-          continue // 羽田以外は除外
+        for (const airport of data.features) {
+          if ('cf04_00030' !== airport.properties.C28_000) {
+            continue // 羽田以外は除外
+          }
+
+          map.addLayer(new MapboxLayer({
+            id: `deckgl-airport-${airport.properties.C28_000}`,
+            type: ArcLayer,
+            data: air_ports,
+            greatCircle: true,
+            wrapLongitude: true,
+            dataTransform: d => {
+              return d.features
+            },
+            getSourcePosition: () => airport.geometry.coordinates,
+            getTargetPosition: f => f.geometry.coordinates,
+            getSourceColor: [200, 0, 80],
+            getTargetColor: [150, 200, 255],
+            getWidth: 1,
+          }))
         }
-        const arc = new ArcLayer({
-          id: `arcs-${i}`,
-          data: air_ports,
-          greatCircle: true,
-          wrapLongitude: true,
-          dataTransform: d => {
-            return d.features
-          },
-          getSourcePosition: () => airport.geometry.coordinates,
-          getTargetPosition: f => f.geometry.coordinates,
-          getSourceColor: [200, 0, 80],
-          getTargetColor: [150, 200, 255],
-          getWidth: 1,
-        })
-
-        layers.push(arc)
-      }
-
-      new DeckGL({
-        mapStyle: 'geolonia/midnight',
-        initialViewState: {
-          latitude: 37.092,
-          longitude: 138.219,
-          zoom: 6,
-          bearing: 0,
-          pitch: 60,
-        },
-        controller: true,
-        layers: layers
-      });
-    })
+      })
+    });
 
     // コンテキストメニューを無効化
     document.body.addEventListener('contextmenu', e => {

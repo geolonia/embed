@@ -1,6 +1,6 @@
 {
   "name": "@geolonia/embed",
-  "version": "1.18.1",
+  "version": "2.0.0-pre.0",
   "description": "Geolonia embed JS API",
   "main": "dist/embed.js",
   "types": "src/embed.d.ts",
@@ -55,7 +55,7 @@
     "@turf/center": "^6.0.1",
     "core-js": "^3.6.5",
     "intersection-observer": "^0.5.1",
-    "mapbox-gl": "^1.13.0",
+    "maplibre-gl": ">=1.14.0",
     "promise-polyfill": "^8.1.0",
     "sanitize-html": "^2.3.2",
     "tinycolor2": "^1.4.1",

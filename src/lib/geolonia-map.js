@@ -1,6 +1,6 @@
 import 'whatwg-fetch';
 import 'promise-polyfill/src/polyfill';
-import mapboxgl from 'mapbox-gl';
+import maplibregl from 'maplibre-gl';
 import GeoloniaControl from '@geolonia/mbgl-geolonia-control';
 import GestureHandling from '@geolonia/mbgl-gesture-handling';
 import SimpleStyle from './simplestyle';
@@ -32,7 +32,7 @@ const isCssSelector = (string) => {
  *
  * @param container
  */
-export default class GeoloniaMap extends mapboxgl.Map {
+export default class GeoloniaMap extends maplibregl.Map {
   constructor(params) {
     const container = util.getContainer(params);
     if (container.geoloniaMap) {
@@ -266,7 +266,7 @@ export default class GeoloniaMap extends mapboxgl.Map {
 
     // Tell the `styledata` event handler to load style extensions again
     this.__styleExtensionLoadRequired = true;
-    // Calls `mapboxgl.Map.setStyle()`.
+    // Calls `maplibregl.Map.setStyle()`.
     super.setStyle.call(this, style, options);
   }
 }
