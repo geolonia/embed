@@ -1,7 +1,8 @@
 import * as maplibregl from 'maplibre-gl';
 
-export type Map = maplibregl.Map
-export type Marker = maplibregl.Marker
+export class Map extends maplibregl.Map {}
+export class Marker extends maplibregl.Marker {}
+
 export type EmbedAttributes = {
   lat: string;
   lng: string;
@@ -40,11 +41,11 @@ export type EmbedPlugin<PluginAttributes extends { [otherKey: string]: string } 
 declare global {
   interface Window {
     geolonia: {
-      accessToken: string
-      baseApiUrl: string
-      Map: Map
-      Marker: Marker
-      registerPlugin: (embedPlugin: EmbedPlugin) => void
+      accessToken: string;
+      baseApiUrl: string;
+      Map: typeof Map;
+      Marker: typeof Marker;
+      registerPlugin: (embedPlugin: EmbedPlugin) => void;
     }
   }
 }
