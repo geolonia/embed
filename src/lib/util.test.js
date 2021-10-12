@@ -57,6 +57,7 @@ describe('Tests for util.js', () => {
   it('should be able to get dom', () => {
     const dom = new JSDOM(`<html><body>
       <div id="test-element"></div>
+      <div id="div"></div>
     </body></html>`);
 
     global.window = dom.window;
@@ -74,6 +75,12 @@ describe('Tests for util.js', () => {
     // specify as an id attribute value
     assert.deepEqual(el, util.getContainer('test-element'));
     assert.deepEqual(el, util.getContainer({ container: 'test-element' }));
+
+    // interpret as a css selector
+    assert.deepEqual(el, util.getContainer('#div', { preferSelector: true }));
+    assert.deepEqual(el, util.getContainer({ container: '#div' }, { preferSelector: true }));
+    assert.deepEqual(false, util.getContainer('test-element', { preferSelector: true }));
+    assert.deepEqual(false, util.getContainer({ container: 'test-element' }, { preferSelector: true }));
 
     assert.deepEqual(false, util.getContainer('#fail-element'));
     assert.deepEqual(false, util.getContainer({ container: '#fail-element' }));

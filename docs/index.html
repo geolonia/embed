@@ -131,7 +131,7 @@
       data-lng="139.767125"
       data-zoom="9"
     ></div>
-    <pre>var map = new geolonia.Map(document.querySelector('#my-map'));
+    <pre>var map = new geolonia.Map('my-map');
 setInterval(function() { myMap.rotateTo( myMap.getBearing() + 90 ) }, 5000);</pre>
   </div>
 
@@ -412,8 +412,8 @@ setInterval(function() { myMap.rotateTo( myMap.getBearing() + 90 ) }, 5000);</pr
   <a class="forkme" href="https://github.com/geolonia/embed"><img width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
 
   <script src="./embed.js?geolonia-api-key=YOUR-API-KEY"></script>
-  <script>
-    var myMap = new geolonia.Map(document.querySelector('#my-map'));
+  <script id="control-with-js">
+    var myMap = new geolonia.Map('my-map');
     setInterval(function() { myMap.rotateTo( myMap.getBearing() + 90 ) }, 5000);
   </script>
 </body>
