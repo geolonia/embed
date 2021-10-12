@@ -79,8 +79,7 @@ describe('Tests for util.js', () => {
     // interpret as a css selector
     assert.deepEqual(el, util.getContainer('#div', { preferSelector: true }));
     assert.deepEqual(el, util.getContainer({ container: '#div' }, { preferSelector: true }));
-    assert.deepEqual(false, util.getContainer('test-element', { preferSelector: true }));
-    assert.deepEqual(false, util.getContainer({ container: 'test-element' }, { preferSelector: true }));
+    assert.deepEqual(false, util.getContainer({ container: 'test-element', preferSelector: true }));
 
     assert.deepEqual(false, util.getContainer('#fail-element'));
     assert.deepEqual(false, util.getContainer({ container: '#fail-element' }));
