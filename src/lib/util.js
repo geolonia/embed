@@ -134,13 +134,16 @@ export function isDomElement(o) {
 export function getContainer(arg) {
   if (isDomElement(arg)) {
     return arg;
-  } else if (typeof arg === 'string' && document.querySelector(arg)) {
-    return document.querySelector(arg);
+  } else if (typeof arg === 'string') {
+    const el = document.getElementById(arg) || document.querySelector(arg) || false;
+    return el;
+
   } else if (arg.container) {
     if (isDomElement(arg.container)) {
       return arg.container;
-    } else if (document.querySelector(arg.container)) {
-      return document.querySelector(arg.container);
+    } else if (typeof arg.container === 'string') {
+      const el = document.getElementById(arg.container) || document.querySelector(arg.container) || false;
+      return el;
     }
   }
 

@@ -67,8 +67,13 @@ describe('Tests for util.js', () => {
     const params = { container: el };
     assert.deepEqual(el, util.getContainer(params));
 
+    // specify as a selector
     assert.deepEqual(el, util.getContainer('#test-element'));
     assert.deepEqual(el, util.getContainer({ container: '#test-element' }));
+
+    // specify as an id attribute value
+    assert.deepEqual(el, util.getContainer('test-element'));
+    assert.deepEqual(el, util.getContainer({ container: 'test-element' }));
 
     assert.deepEqual(false, util.getContainer('#fail-element'));
     assert.deepEqual(false, util.getContainer({ container: '#fail-element' }));
