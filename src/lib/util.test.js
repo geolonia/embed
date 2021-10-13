@@ -67,12 +67,19 @@ describe('Tests for util.js', () => {
     const params = { container: el };
     assert.deepEqual(el, util.getContainer(params));
 
+    // specify as a selector
     assert.deepEqual(el, util.getContainer('#test-element'));
     assert.deepEqual(el, util.getContainer({ container: '#test-element' }));
 
+    // specify as an id attribute value
+    assert.deepEqual(el, util.getContainer('test-element'));
+    assert.deepEqual(el, util.getContainer({ container: 'test-element' }));
+
+    // negative cases
     assert.deepEqual(false, util.getContainer('#fail-element'));
     assert.deepEqual(false, util.getContainer({ container: '#fail-element' }));
-  });
+    assert.deepEqual(false, util.getContainer('fail-element'));
+    assert.deepEqual(false, util.getContainer({ container: 'fail-element' }));  });
 
   it('should merge legacyoptions into options as expected.', () => {
     const dom = new JSDOM(`<html><body>
