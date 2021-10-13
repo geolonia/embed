@@ -126,20 +126,6 @@ export function isDomElement(o) {
 }
 
 /**
- *
- * @param {string} value A string in selector format or id attrinute value format
- * @param {boolean} preferSelector If true, value will force to be interpreted as a selector
- * @returns {HTMLElement | null}
- */
-const getElementByIdOrSelector = (value, preferSelector = false) => {
-  if (preferSelector) {
-    return document.querySelector(value);
-  } else {
-    return document.getElementById(value) || document.querySelector(value);
-  }
-};
-
-/**
  * Gets the HTMLElement for the map.
  * Possibility args are HTMLElement or CSS selector or object that has container property.
  *
@@ -150,15 +136,15 @@ export function getContainer(arg) {
   if (isDomElement(arg)) {
     return arg;
   } else if (typeof arg === 'string') {
-    const el = getElementByIdOrSelector(arg) || false;
-    return el;
+    const el = document.querySelector(arg) || document.getElementById(arg);
+    return el || false;
 
   } else if (arg.container) {
     if (isDomElement(arg.container)) {
       return arg.container;
     } else if (typeof arg.container === 'string') {
-      const el = getElementByIdOrSelector(arg.container, arg.preferSelector) || false;
-      return el;
+      const el = document.querySelector(arg.container) || document.getElementById(arg.container);
+      return el || false;
     }
   }
 
