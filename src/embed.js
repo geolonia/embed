@@ -57,7 +57,10 @@ if ( util.checkPermission() ) {
   const containers = document.querySelectorAll('.geolonia[data-lazy-loading="off"]');
   const lazyContainers = document.querySelectorAll('.geolonia:not([data-lazy-loading="off"])');
 
-  window.geolonia = window.maplibregl = maplibregl;
+  window.geolonia =
+    window.maplibregl =
+    window.mapboxgl = // Embed API backward compatibility
+    maplibregl;
 
   // This is required for correct initialization! Don't delete!
   const { key } = parseApiKey(document);
