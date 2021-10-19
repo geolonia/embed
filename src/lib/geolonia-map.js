@@ -3,8 +3,6 @@ import 'promise-polyfill/src/polyfill';
 import maplibregl from 'maplibre-gl';
 import GeoloniaControl from '@geolonia/mbgl-geolonia-control';
 import GestureHandling from '@geolonia/mbgl-gesture-handling';
-import SimpleStyle from './simplestyle';
-import SimpleStyleVector from './simplestyle-vector';
 import parseAtts from './parse-atts';
 
 import * as util from './util';
@@ -192,7 +190,7 @@ export default class GeoloniaMap extends maplibregl.Map {
       }
     });
 
-    map.on('styledata', (event) => {
+    map.on('styledata', async (event) => {
       const map = event.target;
 
       if (!this.__styleExtensionLoadRequired) {
@@ -202,11 +200,13 @@ export default class GeoloniaMap extends maplibregl.Map {
 
       if (atts.simpleVector) {
         const simpleVectorAttributeValue = util.parseSimpleVector(atts.simpleVector);
+        const { default: SimpleStyleVector } = await import('./simplestyle-vector');
         new SimpleStyleVector(simpleVectorAttributeValue).addTo(map);
       }
 
       if (atts.geojson) {
         const el = isCssSelector(atts.geojson);
+        const { default: SimpleStyle } = await import('./simplestyle');
         if (el) {
           const json = JSON.parse(el.textContent);
           new SimpleStyle(json, {
