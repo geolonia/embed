@@ -1,7 +1,6 @@
 const path = require('path');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
-const config = {
+module.exports = {
   entry: './src/embed.js',
   output: {
     path: path.join(__dirname, 'dist'),
@@ -29,14 +28,3 @@ const config = {
     ],
   },
 };
-
-module.exports = (env, options) => {
-  if (env === 'development' || options.mode === 'development') {
-    config.plugins = [
-      ...config.plugins || [],
-      new BundleAnalyzerPlugin(),
-    ];
-  }
-  return config;
-};
-
