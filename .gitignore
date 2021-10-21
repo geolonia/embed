@@ -69,10 +69,10 @@ typings/
 /dist
 /docs/embed.js
 /docs/v1/embed.js
-/docs/*.embed.js
-/docs/*.embed.js.LICENSE.txt
-/docs/v1/*.embed.js
-/docs/v1/*.embed.js.LICENSE.txt
+/docs/*.embed.*.js
+/docs/*.embed.*.js.LICENSE.txt
+/docs/v1/*.embed.*.js
+/docs/v1/*.embed.*.js.LICENSE.txt
 /snapshots/*.png
 .cache
 .DS_Store
