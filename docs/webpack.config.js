@@ -5,6 +5,7 @@ module.exports = {
   ...config,
   output: {
     ...config.output,
+    filename: 'embed', // cdn.geolonia.com distributes the entry point without .js.
     path: __dirname,
   },
   devtool: 'inline-source-map',
