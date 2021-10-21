@@ -4,7 +4,6 @@ module.exports = {
   ...config,
   devServer: {
     ...config.devServer,
-    openPage: 'deck.html',
+    open: 'deck.html',
   },
 }
-
