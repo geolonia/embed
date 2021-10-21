@@ -4,7 +4,7 @@ module.exports = {
   ...config,
   output: {
     path: __dirname,
-    filename: 'embed',
+    filename: 'embed.js',
   },
   devtool: 'inline-source-map',
   devServer: {
