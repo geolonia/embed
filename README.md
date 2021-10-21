@@ -57,6 +57,12 @@ $ npm run build # build production bundle
 
 Then you can see `http://localhost:3000/`.
 
+## Run Bundle analyzer
+
+```shell
+$ npm run analyze
+```
+
 ## Snapshot testing
 
 ### preparation
