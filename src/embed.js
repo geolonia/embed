@@ -12,7 +12,7 @@ import { AmazonLocationServiceMapProvider } from './lib/providers/amazon';
 import * as util from './lib/util';
 import parseAtts from './lib/parse-atts';
 import parseApiKey from './lib/parse-api-key';
-import { version } from '../package.json';
+import pkg from '../package.json';
 
 if ( util.checkPermission() ) {
   let isDOMContentLoaded = false;
@@ -71,7 +71,7 @@ if ( util.checkPermission() ) {
   window.geolonia.Map = GeoloniaMap;
   window.geolonia.Marker = GeoloniaMarker;
   window.geolonia.AmazonLocationServiceMapProvider = AmazonLocationServiceMapProvider;
-  window.geolonia.embedVersion = version;
+  window.geolonia.embedVersion = pkg.version;
   window.geolonia.registerPlugin = (plugin) => {
     plugins.push(plugin);
     return void 0;

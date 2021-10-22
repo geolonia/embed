@@ -1,12 +1,12 @@
-const path = require('path')
+const path = require('path');
 
 module.exports = {
   entry: './src/embed.js',
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'embed.js',
+    chunkFilename: path.join('embed-chunks', '[chunkhash].js'),
   },
-
   module: {
     rules: [
       {
@@ -28,4 +28,4 @@ module.exports = {
       },
     ],
   },
-}
+};
