@@ -109,16 +109,20 @@
   left: 0;
   top: 0;
   z-index: 9999;
-  color: red;
+  font-weight: bold;
+  font-size: 1.2em;
+  padding: 5px 12px;
+  margin: 0;
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 .geolonia__map-view-restricted-message {
   position: relative;
-  margin: 25px auto;
+  margin: 35px auto;
   padding: 20px;
   width: 70%;
   max-width: 400px;
-  background-color:rgba(255, 255, 255, 0.8);
+  background-color:rgba(255, 255, 255, 0.9);
   border-radius: 5px;
   z-index: 9999;
 }

@@ -2,8 +2,8 @@ import parseAtts from './parse-atts';
 
 const messages = {
   mode: {
-    ja: '制限モード',
-    en: 'Restricted Mode',
+    ja: '制限モードで表示中',
+    en: 'Displayed in Restricted Mode',
   },
   description: {
     ja: '地図表示回数の上限に達したため、制限モードで地図を表示しています。ウェブページの管理者に連絡してください。',
@@ -29,7 +29,7 @@ export const renderLimitedView = (container) => {
   const lang = ( atts.lang === 'ja' || atts.lang === 'ja-JP') ? 'ja' : 'en';
 
   const mode = document.createElement('div');
-  mode.setAttribute('class', 'geolonia__map-view-restricted-mode maplibregl-ctrl maplibregl-ctrl-attrib mapboxgl-ctrl mapboxgl-ctrl-attrib');
+  mode.setAttribute('class', 'geolonia__map-view-restricted-mode');
   mode.innerText = messages.mode[lang];
   container.prepend(mode);
 
