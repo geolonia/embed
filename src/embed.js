@@ -43,11 +43,14 @@ if ( util.checkPermission() ) {
         if (!map.geolonia_limit_exceeded) {
           map.geolonia_limit_exceeded = true;
           const container = map.getContainer();
-          // set to low limit zoom
-          map.setMaxZoom(7.99);
-          if (map.getZoom() > 7.99) {
-            map.setZoom(7.99);
+          const style = (map.getStyle());
+          for (let index = 0; index < style.layers.length; index++) {
+            const layer = style.layers[index];
+            if (layer.source === 'oceanus') {
+              layer.maxzoom = 20;
+            }
           }
+          map.setStyle(style);
           renderLimitedView(container);
         }
       }
