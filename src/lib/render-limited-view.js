@@ -6,8 +6,8 @@ const messages = {
     en: 'Displayed in Restricted Mode',
   },
   description: {
-    ja: '地図表示回数の上限に達したため、制限モードで地図を表示しています。ウェブページの管理者に連絡してください。',
-    en: 'The map is displayed in restricted mode because the map load count has reached the limit. Please contact the administrator of the web page.',
+    ja: ' 地図表示回数の上限に達したため、地図のズームを制限しています。ウェブページの管理者に連絡してください。',
+    en: 'The map zooming is restricted because the map load has reached the limit. Please contact the administrator of the web page.',
   },
   contact: {
     ja: 'ウェブページの管理者ですか？',
