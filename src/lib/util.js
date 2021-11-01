@@ -264,3 +264,22 @@ export const parseSimpleVector = (attributeValue) => {
     return `geolonia://tiles/custom/${attributeValue}`;
   }
 };
+
+const defaultGeoloniaMapConfig = {
+  restrictedMode: {
+    labels: {},
+    showLink: true,
+  },
+};
+
+export const parseGeoloniaMapConfig = (map) => {
+  const config = map.geoloniaConfig || {};
+  return {
+    ...defaultGeoloniaMapConfig,
+    ...config,
+    restrictedMode: {
+      ...defaultGeoloniaMapConfig.restrictedMode,
+      ...(config.restrictedMode || {}),
+    },
+  };
+};

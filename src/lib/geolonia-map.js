@@ -4,6 +4,7 @@ import maplibregl from 'maplibre-gl';
 import GeoloniaControl from '@geolonia/mbgl-geolonia-control';
 import GestureHandling from '@geolonia/mbgl-gesture-handling';
 import parseAtts from './parse-atts';
+import { openDialog } from './dialog';
 
 import * as util from './util';
 
@@ -238,6 +239,35 @@ export default class GeoloniaMap extends maplibregl.Map {
             map.setLayoutProperty(layer.id, 'visibility', 'visible');
           }
         });
+      }
+    });
+
+    // handle Geolonia Server errors
+    map.on('error', (error) => {
+      const map = error.target;
+      const config = util.parseGeoloniaMapConfig(map);
+      if (
+        error.error &&
+        error.error.status === 403 &&
+        error.source &&
+        (
+          error.source.url.startsWith('https://tileserver-dev.geolonia.com') ||
+          error.source.url.startsWith('https://tileserver.geolonia.com')
+        )
+      ) {
+        if (!map._geolonia_limit_exceeded) {
+          map._geolonia_limit_exceeded = true;
+          const container = map.getContainer();
+          const style = (map.getStyle());
+          for (let index = 0; index < style.layers.length; index++) {
+            const layer = style.layers[index];
+            if (layer.source === 'oceanus') {
+              layer.maxzoom = 20;
+            }
+          }
+          map.setStyle(style);
+          openDialog(container, config.restrictedMode);
+        }
       }
     });
 

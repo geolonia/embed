@@ -12,7 +12,6 @@ import { AmazonLocationServiceMapProvider } from './lib/providers/amazon';
 import * as util from './lib/util';
 import parseAtts from './lib/parse-atts';
 import parseApiKey from './lib/parse-api-key';
-import { renderLimitedView } from './lib/render-limited-view';
 import pkg from '../package.json';
 
 if ( util.checkPermission() ) {
@@ -26,35 +25,6 @@ if ( util.checkPermission() ) {
    */
   const renderGeoloniaMap = (target) => {
     const map = new GeoloniaMap(target);
-
-    // handle API Quota limit exceeded errors
-    map.on('error', (error) => {
-      if (
-        error.error &&
-        error.error.status === 403 &&
-        error.source &&
-        (
-        // TODO: fix me with stage
-          error.source.url.startsWith('https://tileserver-dev.geolonia.com') ||
-          error.source.url.startsWith('https://tileserver.geolonia.com')
-        )
-      ) {
-
-        if (!map.geolonia_limit_exceeded) {
-          map.geolonia_limit_exceeded = true;
-          const container = map.getContainer();
-          const style = (map.getStyle());
-          for (let index = 0; index < style.layers.length; index++) {
-            const layer = style.layers[index];
-            if (layer.source === 'oceanus') {
-              layer.maxzoom = 20;
-            }
-          }
-          map.setStyle(style);
-          renderLimitedView(container);
-        }
-      }
-    });
 
     // plugin
     const atts = parseAtts(target);
