@@ -28,6 +28,7 @@ export const openDialog = (container, config) => {
   const atts = parseAtts(container);
   const lang = ( atts.lang === 'ja' || atts.lang === 'ja-JP') ? 'ja' : 'en';
 
+  // mode label on left top
   if (config.labels.mode !== '') {
     const mode = document.createElement('div');
     mode.setAttribute('class', 'geolonia__map-view-restricted-mode');
@@ -35,28 +36,29 @@ export const openDialog = (container, config) => {
     container.prepend(mode);
   }
 
+  // closable dialog container
   const dialog = document.createElement('div');
   dialog.setAttribute('class', 'geolonia__map-view-restricted-message');
 
+  // heading text
   const description = document.createElement('p');
   description.innerText = config.labels.description || messages.description[lang];
   dialog.append(description);
 
+  // link to geolonia official
   if (config.showLink) {
     const link = document.createElement('p');
     link.innerHTML = `<a href="https://app.geolonia.com" target="_blank" rel="noopener">${messages.contact[lang]}</a>`;
     dialog.append(link);
   }
 
+  // close button
   const closeButtonContainer = document.createElement('p');
-  dialog.append(closeButtonContainer);
-
   const closeButton = document.createElement('button');
   closeButton.innerText = messages.closeMe[lang];
-  container.append(dialog);
-
+  closeButton.addEventListener('click', () => dialog.remove());
   closeButtonContainer.append(closeButton);
+  dialog.append(closeButtonContainer);
 
-  const closeMessage = () => dialog.remove();
-  closeButton.addEventListener('click', closeMessage);
+  container.append(dialog);
 };
