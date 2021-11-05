@@ -248,7 +248,7 @@ export default class GeoloniaMap extends maplibregl.Map {
       const config = util.parseGeoloniaMapConfig(map);
       if (
         error.error &&
-        error.error.status === 403 &&
+        error.error.status === 402 &&
         error.source &&
         (
           error.source.url.startsWith('https://tileserver-dev.geolonia.com') ||
