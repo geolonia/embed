@@ -1,6 +1,7 @@
 'use strict';
 
 import parseApiKey from './parse-api-key';
+import { openDialog } from './dialog';
 
 /**
  *
@@ -273,13 +274,34 @@ const defaultGeoloniaMapConfig = {
 };
 
 export const parseGeoloniaConfig = (map) => {
-  const config = map.geoloniaConfig || {};
-  return {
-    ...defaultGeoloniaMapConfig,
-    ...config,
-    restrictedMode: {
-      ...defaultGeoloniaMapConfig.restrictedMode,
-      ...(config.restrictedMode || {}),
-    },
-  };
+  // nextTick
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const config = map.geoloniaConfig || {};
+      resolve({
+        ...defaultGeoloniaMapConfig,
+        ...config,
+        restrictedMode: {
+          ...defaultGeoloniaMapConfig.restrictedMode,
+          ...(config.restrictedMode || {}),
+        },
+      });
+    }, 0);
+  });
+};
+
+export const handleRestrictedMode = (map, restrictedMode) => {
+  if (!map._geolonia_limit_exceeded) {
+    map._geolonia_limit_exceeded = true;
+    const container = map.getContainer();
+    const style = map.getStyle();
+    for (const layer of style.layers) {
+      if (layer.source === 'oceanus') {
+        layer.maxzoom = 20;
+      }
+    }
+    style.layers = style.layers.filter((layer) => layer.source !== 'geolonia');
+    map.setStyle(style);
+    openDialog(container, restrictedMode);
+  }
 };

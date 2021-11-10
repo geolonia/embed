@@ -4,7 +4,6 @@ import maplibregl from 'maplibre-gl';
 import GeoloniaControl from '@geolonia/mbgl-geolonia-control';
 import GestureHandling from '@geolonia/mbgl-gesture-handling';
 import parseAtts from './parse-atts';
-import { openDialog } from './dialog';
 
 import * as util from './util';
 
@@ -242,29 +241,9 @@ export default class GeoloniaMap extends maplibregl.Map {
       }
     });
 
-    // debug mode for restricted mode
-    map.on('load', () => {
-      const geoloniaConfig = util.parseGeoloniaConfig(map);
-      if (geoloniaConfig.restrictedMode.debug) {
-        if (!map._geolonia_limit_exceeded) {
-          map._geolonia_limit_exceeded = true;
-          const container = map.getContainer();
-          const style = map.getStyle();
-          for (const layer of style.layers) {
-            if (layer.source === 'oceanus') {
-              layer.maxzoom = 20;
-            }
-          }
-          style.layers = style.layers.filter((layer) => layer.source !== 'geolonia');
-          map.setStyle(style);
-          openDialog(container, geoloniaConfig.restrictedMode);
-        }
-      }
-    });
-
     // handle Geolonia Server errors
-    map.on('error', (error) => {
-      const geoloniaConfig = util.parseGeoloniaConfig(map);
+    map.on('error', async (error) => {
+      const { restrictedMode } = await util.parseGeoloniaConfig(map);
       if (
         error.error &&
         error.error.status === 402 &&
@@ -274,19 +253,14 @@ export default class GeoloniaMap extends maplibregl.Map {
           error.source.url.startsWith('https://tileserver.geolonia.com')
         )
       ) {
-        if (!map._geolonia_limit_exceeded) {
-          map._geolonia_limit_exceeded = true;
-          const container = map.getContainer();
-          const style = map.getStyle();
-          for (const layer of style.layers) {
-            if (layer.source === 'oceanus') {
-              layer.maxzoom = 20;
-            }
-          }
-          map.setStyle(style);
-          openDialog(container, geoloniaConfig.restrictedMode);
-        }
+        util.handleRestrictedMode(map, restrictedMode);
       }
+    });
+
+    // restricted mode debugging
+    map.on('load', async () => {
+      const { restrictedMode } = await util.parseGeoloniaConfig(map);
+      util.handleRestrictedMode(map, restrictedMode);
     });
 
     container.geoloniaMap = map;
