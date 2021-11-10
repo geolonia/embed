@@ -242,10 +242,29 @@ export default class GeoloniaMap extends maplibregl.Map {
       }
     });
 
+    // debug mode for restricted mode
+    map.on('load', () => {
+      const geoloniaConfig = util.parseGeoloniaConfig(map);
+      if (geoloniaConfig.restrictedMode.debug) {
+        if (!map._geolonia_limit_exceeded) {
+          map._geolonia_limit_exceeded = true;
+          const container = map.getContainer();
+          const style = map.getStyle();
+          for (const layer of style.layers) {
+            if (layer.source === 'oceanus') {
+              layer.maxzoom = 20;
+            }
+          }
+          style.layers = style.layers.filter((layer) => layer.source !== 'geolonia');
+          map.setStyle(style);
+          openDialog(container, geoloniaConfig.restrictedMode);
+        }
+      }
+    });
+
     // handle Geolonia Server errors
     map.on('error', (error) => {
-      const map = error.target;
-      const config = util.parseGeoloniaMapConfig(map);
+      const geoloniaConfig = util.parseGeoloniaConfig(map);
       if (
         error.error &&
         error.error.status === 402 &&
@@ -258,15 +277,14 @@ export default class GeoloniaMap extends maplibregl.Map {
         if (!map._geolonia_limit_exceeded) {
           map._geolonia_limit_exceeded = true;
           const container = map.getContainer();
-          const style = (map.getStyle());
-          for (let index = 0; index < style.layers.length; index++) {
-            const layer = style.layers[index];
+          const style = map.getStyle();
+          for (const layer of style.layers) {
             if (layer.source === 'oceanus') {
               layer.maxzoom = 20;
             }
           }
           map.setStyle(style);
-          openDialog(container, config.restrictedMode);
+          openDialog(container, geoloniaConfig.restrictedMode);
         }
       }
     });

@@ -20,10 +20,15 @@
   <h1>制限モード表示 | デモンストレーション</h1>
 	<div id="map1" data-hash="on"></div>
 	<div id="map2" data-hash="on"></div>
-	<script src="./embed.js?geolonia-api-key=a270c1b68f8e44089224f8e9ba85c14b"></script>
+	<script src="./embed.js?geolonia-api-key=YOUR-API-KEY"></script>
   <script>
     const map1 = new window.geolonia.Map('map1');
     const map2 = new window.geolonia.Map('map2');
+    map1.geoloniaConfig = {
+      restrictedMode: {
+        debug: true,
+      }
+    }
     map2.geoloniaConfig = {
       restrictedMode: {
         labels: {
@@ -31,6 +36,7 @@
           description: ' 地図表示は現在ご利用いただけません。',
         },
         showLink: false,
+        debug: true,
       }
     }
   </script>

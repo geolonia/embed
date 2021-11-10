@@ -272,7 +272,7 @@ const defaultGeoloniaMapConfig = {
   },
 };
 
-export const parseGeoloniaMapConfig = (map) => {
+export const parseGeoloniaConfig = (map) => {
   const config = map.geoloniaConfig || {};
   return {
     ...defaultGeoloniaMapConfig,
