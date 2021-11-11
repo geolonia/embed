@@ -243,7 +243,6 @@ export default class GeoloniaMap extends maplibregl.Map {
 
     // handle Geolonia Server errors
     map.on('error', async (error) => {
-      const { restrictedMode } = await util.parseGeoloniaConfig(map);
       if (
         error.error &&
         error.error.status === 402 &&
@@ -253,14 +252,16 @@ export default class GeoloniaMap extends maplibregl.Map {
           error.source.url.startsWith('https://tileserver.geolonia.com')
         )
       ) {
-        util.handleRestrictedMode(map, restrictedMode);
+        util.handleRestrictedMode(map);
       }
     });
 
     // restricted mode debugging
     map.on('load', async () => {
-      const { restrictedMode } = await util.parseGeoloniaConfig(map);
-      util.handleRestrictedMode(map, restrictedMode);
+      const { restrictedMode: { debug } } = await util.parseGeoloniaConfig(map);
+      if (debug) {
+        util.handleRestrictedMode(map);
+      }
     });
 
     container.geoloniaMap = map;

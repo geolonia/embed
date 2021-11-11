@@ -274,7 +274,8 @@ const defaultGeoloniaMapConfig = {
 };
 
 export const parseGeoloniaConfig = (map) => {
-  // nextTick
+  // make async to be sure to parse config on next tick because the config is provided synchronously.
+  // e.g. map.geoloniaConfig = { ... }
   return new Promise((resolve) => {
     setTimeout(() => {
       const config = map.geoloniaConfig || {};
@@ -290,7 +291,8 @@ export const parseGeoloniaConfig = (map) => {
   });
 };
 
-export const handleRestrictedMode = (map, restrictedMode) => {
+export const handleRestrictedMode = async (map) => {
+  const { restrictedMode } = await parseGeoloniaConfig(map);
   if (!map._geolonia_limit_exceeded) {
     map._geolonia_limit_exceeded = true;
     const container = map.getContainer();
