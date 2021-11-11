@@ -48,7 +48,7 @@ export const openDialog = (container, config) => {
   // link to geolonia official
   if (config.showLink) {
     const link = document.createElement('p');
-    link.innerHTML = `<a href="hhttps://docs.geolonia.com/embed-api/#制限モードについて" target="_blank" rel="noopener">${messages.contact[lang]}</a>`;
+    link.innerHTML = `<a href="https://docs.geolonia.com/embed-api/#制限モードについて" target="_blank" rel="noopener">${messages.contact[lang]}</a>`;
     dialog.append(link);
   }
 
