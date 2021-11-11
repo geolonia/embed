@@ -22,7 +22,6 @@ const messages = {
 /**
  *
  * @param {HTMLElement} container Map container
- * @param {GeoloniaMapConfig['RestrictedMode']} labels and whether show links
  */
 export const openDialog = (container) => {
   const atts = parseAtts(container);
