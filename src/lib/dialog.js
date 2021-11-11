@@ -24,17 +24,15 @@ const messages = {
  * @param {HTMLElement} container Map container
  * @param {GeoloniaMapConfig['RestrictedMode']} labels and whether show links
  */
-export const openDialog = (container, config) => {
+export const openDialog = (container) => {
   const atts = parseAtts(container);
   const lang = ( atts.lang === 'ja' || atts.lang === 'ja-JP') ? 'ja' : 'en';
 
   // mode label on left top
-  if (config.labels.mode !== '') {
-    const mode = document.createElement('div');
-    mode.setAttribute('class', 'geolonia__map-view-restricted-mode');
-    mode.innerText = config.labels.mode || messages.mode[lang];
-    container.prepend(mode);
-  }
+  const mode = document.createElement('div');
+  mode.setAttribute('class', 'geolonia__map-view-restricted-mode');
+  mode.innerText = messages.mode[lang];
+  container.prepend(mode);
 
   // closable dialog container
   const dialog = document.createElement('div');
@@ -42,15 +40,13 @@ export const openDialog = (container, config) => {
 
   // heading text
   const description = document.createElement('p');
-  description.innerText = config.labels.description || messages.description[lang];
+  description.innerText = messages.description[lang];
   dialog.append(description);
 
   // link to geolonia official
-  if (config.showLink) {
-    const link = document.createElement('p');
-    link.innerHTML = `<a href="https://docs.geolonia.com/embed-api/#制限モードについて" target="_blank" rel="noopener">${messages.contact[lang]}</a>`;
-    dialog.append(link);
-  }
+  const link = document.createElement('p');
+  link.innerHTML = `<a href="https://docs.geolonia.com/embed-api/#制限モードについて" target="_blank" rel="noopener">${messages.contact[lang]}</a>`;
+  dialog.append(link);
 
   // close button
   const closeButtonContainer = document.createElement('p');
