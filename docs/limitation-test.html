@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>制限モード | デモンストレーション</title>
+<style>
+  .container {
+    max-width: 700px;
+    margin: auto;
+  }
+		#map1, #map2 {
+		width: 100%;
+		height: 500px;
+	}
+</style>
+</head>
+<body class="container">
+  <h1>制限モード表示 | デモンストレーション</h1>
+	<div id="map1" data-hash="on"></div>
+	<div id="map2" data-hash="on"></div>
+	<script src="./embed.js?geolonia-api-key=YOUR-API-KEY"></script>
+  <script>
+    const map1 = new window.geolonia.Map('map1');
+    const map2 = new window.geolonia.Map('map2');
+    map1.geoloniaConfig = {
+      restrictedMode: {
+        debug: true,
+      }
+    }
+    map2.geoloniaConfig = {
+      restrictedMode: {
+        labels: {
+          mode: '',
+          description: ' 地図表示は現在ご利用いただけません。',
+        },
+        showLink: false,
+        debug: true,
+      }
+    }
+  </script>
+</body>
+</html>

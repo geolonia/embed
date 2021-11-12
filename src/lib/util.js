@@ -266,7 +266,33 @@ export const parseSimpleVector = (attributeValue) => {
   }
 };
 
+const defaultGeoloniaMapConfig = {
+  restrictedMode: {
+    labels: {},
+    showLink: true,
+  },
+};
+
+export const parseGeoloniaConfig = (map) => {
+  // make async to be sure to parse config on next tick because the config is provided synchronously.
+  // e.g. map.geoloniaConfig = { ... }
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const config = map.geoloniaConfig || {};
+      resolve({
+        ...defaultGeoloniaMapConfig,
+        ...config,
+        restrictedMode: {
+          ...defaultGeoloniaMapConfig.restrictedMode,
+          ...(config.restrictedMode || {}),
+        },
+      });
+    }, 0);
+  });
+};
+
 export const handleRestrictedMode = async (map) => {
+  const { restrictedMode } = await parseGeoloniaConfig(map);
   if (!map._geolonia_limit_exceeded) {
     map._geolonia_limit_exceeded = true;
     const container = map.getContainer();
@@ -278,6 +304,6 @@ export const handleRestrictedMode = async (map) => {
     }
     style.layers = style.layers.filter((layer) => layer.source !== 'geolonia');
     map.setStyle(style);
-    openDialog(container);
+    openDialog(container, restrictedMode);
   }
 };

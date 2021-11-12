@@ -256,6 +256,14 @@ export default class GeoloniaMap extends maplibregl.Map {
       }
     });
 
+    // restricted mode debugging
+    map.on('load', async () => {
+      const { restrictedMode: { debug } } = await util.parseGeoloniaConfig(map);
+      if (debug) {
+        util.handleRestrictedMode(map);
+      }
+    });
+
     container.geoloniaMap = map;
 
     return map;

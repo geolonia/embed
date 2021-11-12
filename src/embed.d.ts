@@ -38,6 +38,16 @@ export type EmbedAttributes = {
 
 export type EmbedPlugin<PluginAttributes extends { [otherKey: string]: string } = {}> = (map: Map, target: HTMLElement, atts: EmbedAttributes & PluginAttributes) => void
 
+export type GeoloniaMapConfig = {
+  restrictedMode?: {
+    showLink?: boolean;
+    labels?: {
+      mode?: string;
+      description?: string;
+    }
+  }
+}
+
 declare global {
   interface Window {
     geolonia: {
