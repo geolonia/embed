@@ -265,7 +265,7 @@ export const parseSimpleVector = (attributeValue) => {
   }
 };
 
-export const handleRestrictedMode = async (map) => {
+export const handleRestrictedMode = (map) => {
   if (!map._geolonia_restricted_mode_handled) {
     map._geolonia_restricted_mode_handled = true;
     const container = map.getContainer();
