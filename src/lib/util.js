@@ -1,7 +1,6 @@
 'use strict';
 
 import parseApiKey from './parse-api-key';
-import { openDialog } from './dialog';
 
 /**
  *
@@ -267,17 +266,11 @@ export const parseSimpleVector = (attributeValue) => {
 };
 
 export const handleRestrictedMode = async (map) => {
-  if (!map._geolonia_limit_exceeded) {
-    map._geolonia_limit_exceeded = true;
+  if (!map._geolonia_restricted_mode_handled) {
+    map._geolonia_restricted_mode_handled = true;
     const container = map.getContainer();
-    const style = map.getStyle();
-    for (const layer of style.layers) {
-      if (layer.source === 'oceanus') {
-        layer.maxzoom = 20;
-      }
-    }
-    style.layers = style.layers.filter((layer) => layer.source !== 'geolonia');
-    map.setStyle(style);
-    openDialog(container);
+    map.remove();
+    container.innerHTML = '';
+    container.classList.add('geolonia__restricted-mode-image-container');
   }
 };
