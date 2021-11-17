@@ -250,6 +250,7 @@ export default class GeoloniaMap extends maplibregl.Map {
         util.handleRestrictedMode(map);
       }
     });
+
     // TODO: debugging: force restricted mode
     map.on('load', () => {
       util.handleRestrictedMode(map);
