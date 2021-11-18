@@ -251,11 +251,6 @@ export default class GeoloniaMap extends maplibregl.Map {
       }
     });
 
-    // TODO: debugging: force restricted mode
-    map.on('load', () => {
-      util.handleRestrictedMode(map);
-    });
-
     container.geoloniaMap = map;
 
     return map;
