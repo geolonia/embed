@@ -105,7 +105,7 @@
 
 /* Style for restricted mode */
 .geolonia__restricted-mode-image-container {
-  background-image: url("https://geolonia.github.io/embed/restricted.svg");
+  background-image: url("https://geolonia.github.io/embed/restricted.jpg");
   background-position: center center;
   background-size: cover;
 }
