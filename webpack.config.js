@@ -4,7 +4,7 @@ module.exports = {
   entry: './src/embed.js',
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'embed.js',
+    filename: 'embed',
     chunkFilename: path.join('embed-chunks', '[chunkhash].js'),
   },
   module: {
