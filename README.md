@@ -70,7 +70,7 @@ $ npm run analyze
 ```shell
 $ cp .envrc.sample .envrc
 $ vi .envrc
-$ npm run build:embed
+$ npm run build
 $ docker build . -t geolonia/embed
 ```
 
