@@ -242,16 +242,16 @@ export default class GeoloniaMap extends mapboxgl.Map {
     })
 
     // handle Geolonia Server errors
-    map.on('error', async (error) => {
+    map.on('error', async error => {
       if (
         error.error &&
         error.error.status === 402
       ) {
-        util.handleRestrictedMode(map);
+        util.handleRestrictedMode(map)
       }
-    });
+    })
 
-    container.geoloniaMap = map;
+    container.geoloniaMap = map
 
     return map
   }
