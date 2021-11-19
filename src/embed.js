@@ -18,7 +18,6 @@ if ( util.checkPermission() ) {
   let isDOMContentLoaded = false;
   const alreadyRenderedMaps = [];
   const plugins = [];
-  // key to check if map removed
   const isRemoved = Symbol('map-is-removed');
 
   /**
@@ -28,17 +27,15 @@ if ( util.checkPermission() ) {
   const renderGeoloniaMap = (target) => {
     const map = new GeoloniaMap(target);
 
-    // Detect if map is removed not call plugins
+    // detect if the map removed manually
     map.on('remove', () => {
       map[isRemoved] = true;
     });
 
     // plugin
     const atts = parseAtts(target);
-    if (isDOMContentLoaded) {
-      if (!map[isRemoved]) {
-        plugins.forEach((plugin) => plugin(map, target, atts));
-      }
+    if (isDOMContentLoaded && !map[isRemoved]) {
+      plugins.forEach((plugin) => plugin(map, target, atts));
     } else {
       alreadyRenderedMaps.push({ map, target: target, atts });
     }
