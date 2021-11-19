@@ -241,7 +241,17 @@ export default class GeoloniaMap extends mapboxgl.Map {
       }
     })
 
-    container.geoloniaMap = map
+    // handle Geolonia Server errors
+    map.on('error', async (error) => {
+      if (
+        error.error &&
+        error.error.status === 402
+      ) {
+        util.handleRestrictedMode(map);
+      }
+    });
+
+    container.geoloniaMap = map;
 
     return map
   }
