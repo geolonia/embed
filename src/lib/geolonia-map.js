@@ -241,6 +241,16 @@ export default class GeoloniaMap extends maplibregl.Map {
       }
     });
 
+    // handle Geolonia Server errors
+    map.on('error', async (error) => {
+      if (
+        error.error &&
+        error.error.status === 402
+      ) {
+        util.handleRestrictedMode(map);
+      }
+    });
+
     container.geoloniaMap = map;
 
     return map;

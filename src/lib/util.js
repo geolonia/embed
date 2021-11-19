@@ -264,3 +264,13 @@ export const parseSimpleVector = (attributeValue) => {
     return `geolonia://tiles/custom/${attributeValue}`;
   }
 };
+
+export const handleRestrictedMode = (map) => {
+  if (!map._geolonia_restricted_mode_handled) {
+    map._geolonia_restricted_mode_handled = true;
+    const container = map.getContainer();
+    map.remove();
+    container.innerHTML = '';
+    container.classList.add('geolonia__restricted-mode-image-container');
+  }
+};
