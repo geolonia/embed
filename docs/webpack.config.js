@@ -1,4 +1,3 @@
-const path = require('path')
 const config = require('../webpack.config')
 
 module.exports = {
@@ -6,7 +5,9 @@ module.exports = {
   output: {
     ...config.output,
     path: __dirname,
+    filename: 'embed'
   },
+  mode: 'development',
   devtool: 'inline-source-map',
   devServer: {
     static: {
