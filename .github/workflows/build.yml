@@ -55,7 +55,7 @@ jobs:
             path: node_modules
             key: modules-cache-v1-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
         - run: npm install
-        - run: "npm run build:embed"
+        - run: "npm run build"
         - name: Build and push to local registry
           uses: docker/build-push-action@v2
           with:

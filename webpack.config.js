@@ -1,12 +1,15 @@
 const path = require('path');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 module.exports = {
   entry: './src/embed.js',
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'embed',
+    filename: 'embed.js',
     chunkFilename: path.join('embed-chunks', '[chunkhash].js'),
+    clean: true,
   },
+  plugins: process.env.ANALYZE === 'true' ? [new BundleAnalyzerPlugin()] : [],
   module: {
     rules: [
       {
