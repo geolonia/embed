@@ -24,7 +24,7 @@ class SimpleStyle {
   }
 
   getLayerId() {
-    return this.options.id
+    return this.options.id;
   }
 
   addTo(map) {
