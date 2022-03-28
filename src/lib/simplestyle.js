@@ -15,6 +15,7 @@ class SimpleStyle {
     this.json = json;
 
     this.options = {
+      id: 'geolonia-simple-style',
       cluster: true,
       heatmap: false,
       clusterColor: '#ff0000',
@@ -22,12 +23,16 @@ class SimpleStyle {
     };
   }
 
+  getLayerId() {
+    return this.options.id;
+  }
+
   addTo(map) {
     const features = this.json.features;
     const polygonandlines = features.filter((feature) => (feature.geometry.type.toLowerCase() !== 'point'));
     const points = features.filter((feature) => (feature.geometry.type.toLowerCase() === 'point'));
 
-    map.addSource('geolonia-simple-style', {
+    map.addSource(this.options.id, {
       type: 'geojson',
       data: {
         type: 'FeatureCollection',
@@ -38,7 +43,7 @@ class SimpleStyle {
     this.setPolygonGeometries(map);
     this.setLineGeometries(map);
 
-    map.addSource('geolonia-simple-style-points', {
+    map.addSource(`${this.options.id}-points`, {
       type: 'geojson',
       data: {
         type: 'FeatureCollection',
@@ -50,9 +55,9 @@ class SimpleStyle {
     });
 
     map.addLayer({
-      id: 'geolonia-simple-style-polygon-symbol',
+      id: `${this.options.id}-polygon-symbol`,
       type: 'symbol',
-      source: 'geolonia-simple-style',
+      source: this.options.id,
       filter: ['==', '$type', 'Polygon'],
       paint: {
         'text-color': ['string', ['get', 'text-color'], textColor],
@@ -69,9 +74,9 @@ class SimpleStyle {
     });
 
     map.addLayer({
-      id: 'geolonia-simple-style-linestring-symbol',
+      id: `${this.options.id}-linestring-symbol`,
       type: 'symbol',
-      source: 'geolonia-simple-style',
+      source: this.options.id,
       filter: ['==', '$type', 'LineString'],
       paint: {
         'text-color': ['string', ['get', 'text-color'], textColor],
@@ -109,9 +114,9 @@ class SimpleStyle {
    */
   setPolygonGeometries(map) {
     map.addLayer({
-      id: 'geolonia-simple-style-polygon',
+      id: `${this.options.id}-polygon`,
       type: 'fill',
-      source: 'geolonia-simple-style',
+      source: this.options.id,
       filter: ['==', '$type', 'Polygon'],
       paint: {
         'fill-color': ['string', ['get', 'fill'], backgroundColor],
@@ -120,7 +125,7 @@ class SimpleStyle {
       },
     });
 
-    this.setPopup(map, 'geolonia-simple-style-polygon');
+    this.setPopup(map, `${this.options.id}-polygon`);
   }
 
   /**
@@ -130,9 +135,9 @@ class SimpleStyle {
    */
   setLineGeometries(map) {
     map.addLayer({
-      id: 'geolonia-simple-style-linestring',
+      id: `${this.options.id}-linestring`,
       type: 'line',
-      source: 'geolonia-simple-style',
+      source: this.options.id,
       filter: ['==', '$type', 'LineString'],
       paint: {
         'line-width': ['number', ['get', 'stroke-width'], 2],
@@ -145,7 +150,7 @@ class SimpleStyle {
       },
     });
 
-    this.setPopup(map, 'geolonia-simple-style-linestring');
+    this.setPopup(map, `${this.options.id}-linestring`);
   }
 
   /**
@@ -157,7 +162,7 @@ class SimpleStyle {
     map.addLayer({
       id: 'circle-simple-style-points',
       type: 'circle',
-      source: 'geolonia-simple-style-points',
+      source: `${this.options.id}-points`,
       filter: ['!', ['has', 'point_count']],
       paint: {
         'circle-radius': [
@@ -175,9 +180,9 @@ class SimpleStyle {
     });
 
     map.addLayer({
-      id: 'symbol-simple-style-points',
+      id: `${this.options.id}-symbol-points`,
       type: 'symbol',
-      source: 'geolonia-simple-style-points',
+      source: `${this.options.id}-points`,
       filter: ['!', ['has', 'point_count']],
       paint: {
         'text-color': ['string', ['get', 'text-color'], textColor],
@@ -236,9 +241,9 @@ class SimpleStyle {
    */
   setCluster(map) {
     map.addLayer({
-      id: 'clusters',
+      id: `${this.options.id}-clusters`,
       type: 'circle',
-      source: 'geolonia-simple-style-points',
+      source: `${this.options.id}-points`,
       filter: ['has', 'point_count'],
       paint: {
         'circle-radius': 20,
@@ -248,9 +253,9 @@ class SimpleStyle {
     });
 
     map.addLayer({
-      id: 'cluster-count',
+      id: `${this.options.id}-cluster-count`,
       type: 'symbol',
-      source: 'geolonia-simple-style-points',
+      source: `${this.options.id}-points`,
       filter: ['has', 'point_count'],
       layout: {
         'text-field': '{point_count_abbreviated}',
@@ -259,8 +264,8 @@ class SimpleStyle {
       },
     });
 
-    map.on('click', 'clusters', (e) => {
-      const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
+    map.on('click', `${this.options.id}-clusters`, (e) => {
+      const features = map.queryRenderedFeatures(e.point, { layers: [`${this.options.id}-clusters`] });
       const clusterId = features[0].properties.cluster_id;
       map.getSource('geolonia-simple-style-points').getClusterExpansionZoom(clusterId, (err, zoom) => {
         if (err)
@@ -273,11 +278,11 @@ class SimpleStyle {
       });
     });
 
-    map.on('mouseenter', 'clusters', () => {
+    map.on('mouseenter', `${this.options.id}-clusters`, () => {
       map.getCanvas().style.cursor = 'pointer';
     });
 
-    map.on('mouseleave', 'clusters', () => {
+    map.on('mouseleave', `${this.options.id}-clusters`, () => {
       map.getCanvas().style.cursor = '';
     });
   }

@@ -27,7 +27,7 @@
     ></div>
     <script src="%ORIGIN%/v1/embed?geolonia-api-key=%API_KEY%"></script>
     <script>
-        const map = new window.geolonia.Map('#map')
+        const _map = new window.geolonia.Map('#map')
     </script>
 </body>
 </html>

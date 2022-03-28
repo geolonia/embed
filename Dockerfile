@@ -42,7 +42,7 @@ RUN apt-get update && apt-get install -y \
   fonts-ipafont-mincho \
   fonts-ipafont-gothic
 COPY . .
-RUN npm install
+RUN yarn install
 ENV GEOLONIA_API_KEY=YOUR-API-KEY
 ENV NO_SANDBOX=true
-ENTRYPOINT ["npm", "run", "test:snapshot"]
+ENTRYPOINT ["yarn", "test:snapshot"]

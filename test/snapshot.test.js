@@ -27,6 +27,7 @@ describe('Tests for Maps.', () => {
 
     // prepare pupeteer
     browser = await puppeteer.launch({
+      headless: true,
       args:
         process.env.NO_SANDBOX === 'true'
           ? ['--no-sandbox', '--disable-setuid-sandbox'] // for Docker env
@@ -41,7 +42,7 @@ describe('Tests for Maps.', () => {
     const content = template
       .replace(/%ORIGIN%/g, 'http://127.0.0.1:8080')
       .replace(/%API_KEY%/g, process.env.GEOLONIA_API_KEY || 'YOUR-API-KEY')
-    await page.goto('https://geolonia.com')
+    await page.goto('https://geoloniamaps.github.io/basic/')
     page.on('pageerror', error => capturedErrors.push(error))
     await page.setContent(content)
     await sleep(15000)
