@@ -75,7 +75,7 @@ describe('Tests for simpleStyle()', () => {
     assert.deepEqual(true, map.bounds);
   });
 
-  it('should has sources and layers as expected with with empty GeoJSON', async () => {
+  it('should has sources and layers as expected with empty GeoJSON', async () => {
     window.URL.createObjectURL = () => {}; // To prevent `TypeError: window.URL.createObjectURL is not a function`
     const { default: simpleStyle } = await import('./simplestyle');
 
