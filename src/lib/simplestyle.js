@@ -100,10 +100,12 @@ class SimpleStyle {
 
     if (!container.dataset || (!container.dataset.lng && !container.dataset.lat)) {
       const bounds = geojsonExtent(this.json);
-      map.fitBounds(bounds, {
-        duration: 0,
-        padding: 30,
-      });
+      if (bounds) {
+        map.fitBounds(bounds, {
+          duration: 0,
+          padding: 30,
+        });
+      }
     }
   }
 
@@ -160,7 +162,7 @@ class SimpleStyle {
    */
   setPointGeometries(map) {
     map.addLayer({
-      id: 'circle-simple-style-points',
+      id: `${this.options.id}-circle-points`,
       type: 'circle',
       source: `${this.options.id}-points`,
       filter: ['!', ['has', 'point_count']],
@@ -210,7 +212,7 @@ class SimpleStyle {
       },
     });
 
-    this.setPopup(map, 'circle-simple-style-points');
+    this.setPopup(map, `${this.options.id}-circle-points`);
   }
 
   setPopup(map, source) {
@@ -267,7 +269,7 @@ class SimpleStyle {
     map.on('click', `${this.options.id}-clusters`, (e) => {
       const features = map.queryRenderedFeatures(e.point, { layers: [`${this.options.id}-clusters`] });
       const clusterId = features[0].properties.cluster_id;
-      map.getSource('geolonia-simple-style-points').getClusterExpansionZoom(clusterId, (err, zoom) => {
+      map.getSource(`${this.options.id}-points`).getClusterExpansionZoom(clusterId, (err, zoom) => {
         if (err)
           return;
 
