@@ -17,13 +17,13 @@ class SimpleStyle {
     this.options = {
       id: 'geolonia-simple-style',
       cluster: true,
-      heatmap: false,
+      heatmap: false, // TODO: It should support heatmap.
       clusterColor: '#ff0000',
       ...options,
     };
   }
 
-  getLayerId() {
+  getSourceId() {
     return this.options.id;
   }
 
