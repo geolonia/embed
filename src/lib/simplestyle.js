@@ -20,6 +20,7 @@ class SimpleStyle {
       heatmap: false, // TODO: It should support heatmap.
       clusterColor: '#ff0000',
       duration: 3000,
+      padding: 30,
       ...options,
     };
   }
@@ -122,7 +123,7 @@ class SimpleStyle {
       if (bounds) {
         this.map.fitBounds(bounds, {
           duration: this.options.duration,
-          padding: 30,
+          padding: this.options.padding,
         });
       }
     }
