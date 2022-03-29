@@ -11,28 +11,25 @@ const backgroundColor = 'rgba(255, 0, 0, 0.4)';
 const strokeColor = '#FFFFFF';
 
 class SimpleStyle {
-  constructor(json, options) {
-    this.json = json;
+  constructor(geojson, options) {
+    this.geojson = geojson;
 
     this.options = {
       id: 'geolonia-simple-style',
       cluster: true,
-      heatmap: false, // TODO: It should support heatmap.
+      heatmap: false, // TODO: It should support heatthis.map.
       clusterColor: '#ff0000',
       ...options,
     };
   }
 
-  getSourceId() {
-    return this.options.id;
-  }
-
-  addTo(map) {
-    const features = this.json.features;
+  updateData(geojson) {
+    this.geojson = geojson;
+    const features = this.geojson.features;
     const polygonandlines = features.filter((feature) => (feature.geometry.type.toLowerCase() !== 'point'));
     const points = features.filter((feature) => (feature.geometry.type.toLowerCase() === 'point'));
 
-    map.addSource(this.options.id, {
+    this.map.getSource(this.id).setData({
       type: 'geojson',
       data: {
         type: 'FeatureCollection',
@@ -40,10 +37,34 @@ class SimpleStyle {
       },
     });
 
-    this.setPolygonGeometries(map);
-    this.setLineGeometries(map);
+    this.map.getSource(`${this.options.id}-points`).setData({
+      type: 'geojson',
+      data: {
+        type: 'FeatureCollection',
+        features: points,
+      },
+    });
+  }
 
-    map.addSource(`${this.options.id}-points`, {
+  addTo(map) {
+    this.map = map;
+
+    const features = this.geojson.features;
+    const polygonandlines = features.filter((feature) => (feature.geometry.type.toLowerCase() !== 'point'));
+    const points = features.filter((feature) => (feature.geometry.type.toLowerCase() === 'point'));
+
+    this.map.addSource(this.options.id, {
+      type: 'geojson',
+      data: {
+        type: 'FeatureCollection',
+        features: polygonandlines,
+      },
+    });
+
+    this.setPolygonGeometries();
+    this.setLineGeometries();
+
+    this.map.addSource(`${this.options.id}-points`, {
       type: 'geojson',
       data: {
         type: 'FeatureCollection',
@@ -54,7 +75,7 @@ class SimpleStyle {
       clusterRadius: 50,
     });
 
-    map.addLayer({
+    this.map.addLayer({
       id: `${this.options.id}-polygon-symbol`,
       type: 'symbol',
       source: this.options.id,
@@ -73,7 +94,7 @@ class SimpleStyle {
       },
     });
 
-    map.addLayer({
+    this.map.addLayer({
       id: `${this.options.id}-linestring-symbol`,
       type: 'symbol',
       source: this.options.id,
@@ -93,15 +114,15 @@ class SimpleStyle {
       },
     });
 
-    this.setPointGeometries(map);
-    this.setCluster(map);
+    this.setPointGeometries();
+    this.setCluster();
 
-    const container = map.getContainer();
+    const container = this.map.getContainer();
 
     if (!container.dataset || (!container.dataset.lng && !container.dataset.lat)) {
-      const bounds = geojsonExtent(this.json);
+      const bounds = geojsonExtent(this.geojson);
       if (bounds) {
-        map.fitBounds(bounds, {
+        this.map.fitBounds(bounds, {
           duration: 0,
           padding: 30,
         });
@@ -111,11 +132,9 @@ class SimpleStyle {
 
   /**
    * Set polygon geometries.
-   *
-   * @param map
    */
-  setPolygonGeometries(map) {
-    map.addLayer({
+  setPolygonGeometries() {
+    this.map.addLayer({
       id: `${this.options.id}-polygon`,
       type: 'fill',
       source: this.options.id,
@@ -127,16 +146,14 @@ class SimpleStyle {
       },
     });
 
-    this.setPopup(map, `${this.options.id}-polygon`);
+    this.setPopup(this.map, `${this.options.id}-polygon`);
   }
 
   /**
    * Set line geometries.
-   *
-   * @param map
    */
-  setLineGeometries(map) {
-    map.addLayer({
+  setLineGeometries() {
+    this.map.addLayer({
       id: `${this.options.id}-linestring`,
       type: 'line',
       source: this.options.id,
@@ -152,16 +169,14 @@ class SimpleStyle {
       },
     });
 
-    this.setPopup(map, `${this.options.id}-linestring`);
+    this.setPopup(this.map, `${this.options.id}-linestring`);
   }
 
   /**
    * Setup point geometries.
-   *
-   * @param map
    */
-  setPointGeometries(map) {
-    map.addLayer({
+  setPointGeometries() {
+    this.map.addLayer({
       id: `${this.options.id}-circle-points`,
       type: 'circle',
       source: `${this.options.id}-points`,
@@ -181,7 +196,7 @@ class SimpleStyle {
       },
     });
 
-    map.addLayer({
+    this.map.addLayer({
       id: `${this.options.id}-symbol-points`,
       type: 'symbol',
       source: `${this.options.id}-points`,
@@ -212,37 +227,35 @@ class SimpleStyle {
       },
     });
 
-    this.setPopup(map, `${this.options.id}-circle-points`);
+    this.setPopup(this.map, `${this.options.id}-circle-points`);
   }
 
   setPopup(map, source) {
-    map.on('click', source, (e) => {
+    this.map.on('click', source, (e) => {
       const center = turfCenter(e.features[0]).geometry.coordinates;
       const description = e.features[0].properties.description;
 
       if (description) {
-        new maplibregl.Popup().setLngLat(center).setHTML(sanitizeHtml(description)).addTo(map);
+        new maplibregl.Popup().setLngLat(center).setHTML(sanitizeHtml(description)).addTo();
       }
     });
 
-    map.on('mouseenter', source, (e) => {
+    this.map.on('mouseenter', source, (e) => {
       if (e.features[0].properties.description) {
-        map.getCanvas().style.cursor = 'pointer';
+        this.map.getCanvas().style.cursor = 'pointer';
       }
     });
 
-    map.on('mouseleave', source, () => {
-      map.getCanvas().style.cursor = '';
+    this.map.on('mouseleave', source, () => {
+      this.map.getCanvas().style.cursor = '';
     });
   }
 
   /**
    * Setup cluster markers
-   *
-   * @param map
    */
-  setCluster(map) {
-    map.addLayer({
+  setCluster() {
+    this.map.addLayer({
       id: `${this.options.id}-clusters`,
       type: 'circle',
       source: `${this.options.id}-points`,
@@ -254,7 +267,7 @@ class SimpleStyle {
       },
     });
 
-    map.addLayer({
+    this.map.addLayer({
       id: `${this.options.id}-cluster-count`,
       type: 'symbol',
       source: `${this.options.id}-points`,
@@ -266,26 +279,26 @@ class SimpleStyle {
       },
     });
 
-    map.on('click', `${this.options.id}-clusters`, (e) => {
-      const features = map.queryRenderedFeatures(e.point, { layers: [`${this.options.id}-clusters`] });
+    this.map.on('click', `${this.options.id}-clusters`, (e) => {
+      const features = this.map.queryRenderedFeatures(e.point, { layers: [`${this.options.id}-clusters`] });
       const clusterId = features[0].properties.cluster_id;
-      map.getSource(`${this.options.id}-points`).getClusterExpansionZoom(clusterId, (err, zoom) => {
+      this.map.getSource(`${this.options.id}-points`).getClusterExpansionZoom(clusterId, (err, zoom) => {
         if (err)
           return;
 
-        map.easeTo({
+        this.map.easeTo({
           center: features[0].geometry.coordinates,
           zoom: zoom,
         });
       });
     });
 
-    map.on('mouseenter', `${this.options.id}-clusters`, () => {
-      map.getCanvas().style.cursor = 'pointer';
+    this.map.on('mouseenter', `${this.options.id}-clusters`, () => {
+      this.map.getCanvas().style.cursor = 'pointer';
     });
 
-    map.on('mouseleave', `${this.options.id}-clusters`, () => {
-      map.getCanvas().style.cursor = '';
+    this.map.on('mouseleave', `${this.options.id}-clusters`, () => {
+      this.map.getCanvas().style.cursor = '';
     });
   }
 }
