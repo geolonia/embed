@@ -32,7 +32,7 @@ class SimpleStyle {
     this.map.getSource(this.options.id).setData({
       'type': 'FeatureCollection',
       'features': polygonandlines,
-    })
+    });
 
     this.map.getSource(`${this.options.id}-points`).setData({
       'type': 'FeatureCollection',
