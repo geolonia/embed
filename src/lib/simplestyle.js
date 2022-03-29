@@ -17,7 +17,7 @@ class SimpleStyle {
     this.options = {
       id: 'geolonia-simple-style',
       cluster: true,
-      heatmap: false, // TODO: It should support heatthis.map.
+      heatmap: false, // TODO: It should support heatmap.
       clusterColor: '#ff0000',
       duration: 3000,
       ...options,
