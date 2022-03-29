@@ -24,31 +24,21 @@ class SimpleStyle {
   }
 
   updateData(geojson) {
-    this.geojson = geojson;
-    const features = this.geojson.features;
+    const features = geojson.features;
     const polygonandlines = features.filter((feature) => (feature.geometry.type.toLowerCase() !== 'point'));
     const points = features.filter((feature) => (feature.geometry.type.toLowerCase() === 'point'));
 
-    console.log(this.id)
-    console.log(this.map)
-    console.log(this.map.getSource(this.id))
-    console.log(this.map.getSource(`${this.options.id}-points`))
-
-    this.map.getSource(this.id).setData({
-      type: 'geojson',
-      data: {
-        type: 'FeatureCollection',
-        features: polygonandlines,
-      },
-    });
+    this.map.getSource(this.options.id).setData({
+      'type': 'FeatureCollection',
+      'features': polygonandlines,
+    })
 
     this.map.getSource(`${this.options.id}-points`).setData({
-      type: 'geojson',
-      data: {
-        type: 'FeatureCollection',
-        features: points,
-      },
+      'type': 'FeatureCollection',
+      'features': points,
     });
+
+    this.geojson = geojson;
   }
 
   addTo(map) {
