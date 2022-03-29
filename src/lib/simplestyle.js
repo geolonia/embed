@@ -19,6 +19,7 @@ class SimpleStyle {
       cluster: true,
       heatmap: false, // TODO: It should support heatthis.map.
       clusterColor: '#ff0000',
+      duration: 3000,
       ...options,
     };
   }
@@ -118,7 +119,7 @@ class SimpleStyle {
       const bounds = geojsonExtent(this.geojson);
       if (bounds) {
         this.map.fitBounds(bounds, {
-          duration: 0,
+          duration: this.options.duration,
           padding: 30,
         });
       }
