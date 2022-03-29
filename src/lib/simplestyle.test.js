@@ -6,13 +6,13 @@ class Map {
   constructor(json, options) {
     this.json = json;
     this.options = options;
-    this.ids = [];
+    this.sources = {};
     this.layers = [];
     this.bounds = false;
   }
 
-  addSource(id) {
-    this.ids.push(id);
+  addSource(id, source) {
+    this.sources[id] = source;
   }
 
   addLayer(layer) {
@@ -21,6 +21,23 @@ class Map {
 
   on() {
 
+  }
+
+  getSource(id) {
+    class getSource {
+      constructor(id, sources) {
+        this.id = id;
+        this.sources = sources;
+      }
+      setData(geojson) {
+        this.sources[this.id] = {
+          type: 'geojson',
+          data: geojson,
+        };
+      }
+    }
+
+    return new getSource(id, this.sources);
   }
 
   getContainer() {
@@ -58,7 +75,7 @@ describe('Tests for simpleStyle()', () => {
     const map = new Map();
     new simpleStyle(geojson).addTo(map);
 
-    assert.deepEqual([ 'geolonia-simple-style', 'geolonia-simple-style-points' ], map.ids);
+    assert.deepEqual([ 'geolonia-simple-style', 'geolonia-simple-style-points' ], Object.keys(map.sources));
     assert.deepEqual(8, map.layers.length);
     assert.deepEqual(true, map.bounds);
   });
@@ -70,7 +87,7 @@ describe('Tests for simpleStyle()', () => {
     const map = new Map();
     new simpleStyle(geojson, {id: 'hello-world'}).addTo(map);
 
-    assert.deepEqual([ 'hello-world', 'hello-world-points' ], map.ids);
+    assert.deepEqual([ 'hello-world', 'hello-world-points' ], Object.keys(map.sources));
     assert.deepEqual(8, map.layers.length);
     assert.deepEqual(true, map.bounds);
   });
@@ -88,8 +105,31 @@ describe('Tests for simpleStyle()', () => {
 
     new simpleStyle(empty, {id: 'hello-world'}).addTo(map);
 
-    assert.deepEqual([ 'hello-world', 'hello-world-points' ], map.ids);
+    assert.deepEqual([ 'hello-world', 'hello-world-points' ], Object.keys(map.sources));
     assert.deepEqual(8, map.layers.length);
     assert.deepEqual(false, map.bounds);
+  });
+
+  it('should update GeoJSON', async () => {
+    window.URL.createObjectURL = () => {}; // To prevent `TypeError: window.URL.createObjectURL is not a function`
+    const { default: simpleStyle } = await import('./simplestyle');
+
+    const map = new Map();
+
+    const empty = {
+      'type': 'FeatureCollection',
+      'features': [],
+    };
+
+    const ss = new simpleStyle(empty).addTo(map); // The GeoJSON is empty.
+
+    assert.deepEqual([ 'geolonia-simple-style', 'geolonia-simple-style-points' ], Object.keys(map.sources));
+    assert.deepEqual(8, map.layers.length);
+    assert.deepEqual(false, map.bounds);
+    assert.deepEqual(0, map.sources['geolonia-simple-style-points'].data.features.length);
+
+    ss.updateData(geojson); // The GeoJSON is not empty.
+    assert.deepEqual(false, map.bounds); // `fitBounds()` doesn't fire.
+    assert.deepEqual(1, map.sources['geolonia-simple-style-points'].data.features.length);
   });
 });

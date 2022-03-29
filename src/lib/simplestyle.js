@@ -40,6 +40,8 @@ class SimpleStyle {
     });
 
     this.geojson = geojson;
+
+    return this;
   }
 
   addTo(map) {
@@ -124,6 +126,8 @@ class SimpleStyle {
         });
       }
     }
+
+    return this;
   }
 
   /**
