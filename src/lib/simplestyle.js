@@ -232,7 +232,7 @@ class SimpleStyle {
   }
 
   setPopup(map, source) {
-    this.map.on('click', source, (e) => {
+    map.on('click', source, (e) => {
       const center = turfCenter(e.features[0]).geometry.coordinates;
       const description = e.features[0].properties.description;
 
@@ -241,14 +241,14 @@ class SimpleStyle {
       }
     });
 
-    this.map.on('mouseenter', source, (e) => {
+    map.on('mouseenter', source, (e) => {
       if (e.features[0].properties.description) {
-        this.map.getCanvas().style.cursor = 'pointer';
+        map.getCanvas().style.cursor = 'pointer';
       }
     });
 
-    this.map.on('mouseleave', source, () => {
-      this.map.getCanvas().style.cursor = '';
+    map.on('mouseleave', source, () => {
+      map.getCanvas().style.cursor = '';
     });
   }
 
