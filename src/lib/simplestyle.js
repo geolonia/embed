@@ -29,6 +29,11 @@ class SimpleStyle {
     const polygonandlines = features.filter((feature) => (feature.geometry.type.toLowerCase() !== 'point'));
     const points = features.filter((feature) => (feature.geometry.type.toLowerCase() === 'point'));
 
+    console.log(this.id)
+    console.log(this.map)
+    console.log(this.map.getSource(this.id))
+    console.log(this.map.getSource(`${this.options.id}-points`))
+
     this.map.getSource(this.id).setData({
       type: 'geojson',
       data: {
