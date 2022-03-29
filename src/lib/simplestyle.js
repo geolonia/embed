@@ -237,7 +237,7 @@ class SimpleStyle {
       const description = e.features[0].properties.description;
 
       if (description) {
-        new maplibregl.Popup().setLngLat(center).setHTML(sanitizeHtml(description)).addTo();
+        new maplibregl.Popup().setLngLat(center).setHTML(sanitizeHtml(description)).addTo(map);
       }
     });
 
