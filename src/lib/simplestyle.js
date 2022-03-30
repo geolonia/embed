@@ -11,28 +11,48 @@ const backgroundColor = 'rgba(255, 0, 0, 0.4)';
 const strokeColor = '#FFFFFF';
 
 class SimpleStyle {
-  constructor(json, options) {
-    this.json = json;
+  constructor(geojson, options) {
+    this.geojson = geojson;
 
     this.options = {
       id: 'geolonia-simple-style',
       cluster: true,
-      heatmap: false,
+      heatmap: false, // TODO: It should support heatmap.
       clusterColor: '#ff0000',
+      duration: 3000,
+      padding: 30,
       ...options,
     };
   }
 
-  getLayerId() {
-    return this.options.id;
-  }
-
-  addTo(map) {
-    const features = this.json.features;
+  updateData(geojson) {
+    const features = geojson.features;
     const polygonandlines = features.filter((feature) => (feature.geometry.type.toLowerCase() !== 'point'));
     const points = features.filter((feature) => (feature.geometry.type.toLowerCase() === 'point'));
 
-    map.addSource(this.options.id, {
+    this.map.getSource(this.options.id).setData({
+      'type': 'FeatureCollection',
+      'features': polygonandlines,
+    });
+
+    this.map.getSource(`${this.options.id}-points`).setData({
+      'type': 'FeatureCollection',
+      'features': points,
+    });
+
+    this.geojson = geojson;
+
+    return this;
+  }
+
+  addTo(map) {
+    this.map = map;
+
+    const features = this.geojson.features;
+    const polygonandlines = features.filter((feature) => (feature.geometry.type.toLowerCase() !== 'point'));
+    const points = features.filter((feature) => (feature.geometry.type.toLowerCase() === 'point'));
+
+    this.map.addSource(this.options.id, {
       type: 'geojson',
       data: {
         type: 'FeatureCollection',
@@ -40,10 +60,10 @@ class SimpleStyle {
       },
     });
 
-    this.setPolygonGeometries(map);
-    this.setLineGeometries(map);
+    this.setPolygonGeometries();
+    this.setLineGeometries();
 
-    map.addSource(`${this.options.id}-points`, {
+    this.map.addSource(`${this.options.id}-points`, {
       type: 'geojson',
       data: {
         type: 'FeatureCollection',
@@ -54,7 +74,7 @@ class SimpleStyle {
       clusterRadius: 50,
     });
 
-    map.addLayer({
+    this.map.addLayer({
       id: `${this.options.id}-polygon-symbol`,
       type: 'symbol',
       source: this.options.id,
@@ -73,7 +93,7 @@ class SimpleStyle {
       },
     });
 
-    map.addLayer({
+    this.map.addLayer({
       id: `${this.options.id}-linestring-symbol`,
       type: 'symbol',
       source: this.options.id,
@@ -93,27 +113,29 @@ class SimpleStyle {
       },
     });
 
-    this.setPointGeometries(map);
-    this.setCluster(map);
+    this.setPointGeometries();
+    this.setCluster();
 
-    const container = map.getContainer();
+    const container = this.map.getContainer();
 
     if (!container.dataset || (!container.dataset.lng && !container.dataset.lat)) {
-      const bounds = geojsonExtent(this.json);
-      map.fitBounds(bounds, {
-        duration: 0,
-        padding: 30,
-      });
+      const bounds = geojsonExtent(this.geojson);
+      if (bounds) {
+        this.map.fitBounds(bounds, {
+          duration: this.options.duration,
+          padding: this.options.padding,
+        });
+      }
     }
+
+    return this;
   }
 
   /**
    * Set polygon geometries.
-   *
-   * @param map
    */
-  setPolygonGeometries(map) {
-    map.addLayer({
+  setPolygonGeometries() {
+    this.map.addLayer({
       id: `${this.options.id}-polygon`,
       type: 'fill',
       source: this.options.id,
@@ -125,16 +147,14 @@ class SimpleStyle {
       },
     });
 
-    this.setPopup(map, `${this.options.id}-polygon`);
+    this.setPopup(this.map, `${this.options.id}-polygon`);
   }
 
   /**
    * Set line geometries.
-   *
-   * @param map
    */
-  setLineGeometries(map) {
-    map.addLayer({
+  setLineGeometries() {
+    this.map.addLayer({
       id: `${this.options.id}-linestring`,
       type: 'line',
       source: this.options.id,
@@ -150,17 +170,15 @@ class SimpleStyle {
       },
     });
 
-    this.setPopup(map, `${this.options.id}-linestring`);
+    this.setPopup(this.map, `${this.options.id}-linestring`);
   }
 
   /**
    * Setup point geometries.
-   *
-   * @param map
    */
-  setPointGeometries(map) {
-    map.addLayer({
-      id: 'circle-simple-style-points',
+  setPointGeometries() {
+    this.map.addLayer({
+      id: `${this.options.id}-circle-points`,
       type: 'circle',
       source: `${this.options.id}-points`,
       filter: ['!', ['has', 'point_count']],
@@ -179,7 +197,7 @@ class SimpleStyle {
       },
     });
 
-    map.addLayer({
+    this.map.addLayer({
       id: `${this.options.id}-symbol-points`,
       type: 'symbol',
       source: `${this.options.id}-points`,
@@ -210,7 +228,7 @@ class SimpleStyle {
       },
     });
 
-    this.setPopup(map, 'circle-simple-style-points');
+    this.setPopup(this.map, `${this.options.id}-circle-points`);
   }
 
   setPopup(map, source) {
@@ -236,11 +254,9 @@ class SimpleStyle {
 
   /**
    * Setup cluster markers
-   *
-   * @param map
    */
-  setCluster(map) {
-    map.addLayer({
+  setCluster() {
+    this.map.addLayer({
       id: `${this.options.id}-clusters`,
       type: 'circle',
       source: `${this.options.id}-points`,
@@ -252,7 +268,7 @@ class SimpleStyle {
       },
     });
 
-    map.addLayer({
+    this.map.addLayer({
       id: `${this.options.id}-cluster-count`,
       type: 'symbol',
       source: `${this.options.id}-points`,
@@ -264,26 +280,26 @@ class SimpleStyle {
       },
     });
 
-    map.on('click', `${this.options.id}-clusters`, (e) => {
-      const features = map.queryRenderedFeatures(e.point, { layers: [`${this.options.id}-clusters`] });
+    this.map.on('click', `${this.options.id}-clusters`, (e) => {
+      const features = this.map.queryRenderedFeatures(e.point, { layers: [`${this.options.id}-clusters`] });
       const clusterId = features[0].properties.cluster_id;
-      map.getSource('geolonia-simple-style-points').getClusterExpansionZoom(clusterId, (err, zoom) => {
+      this.map.getSource(`${this.options.id}-points`).getClusterExpansionZoom(clusterId, (err, zoom) => {
         if (err)
           return;
 
-        map.easeTo({
+        this.map.easeTo({
           center: features[0].geometry.coordinates,
           zoom: zoom,
         });
       });
     });
 
-    map.on('mouseenter', `${this.options.id}-clusters`, () => {
-      map.getCanvas().style.cursor = 'pointer';
+    this.map.on('mouseenter', `${this.options.id}-clusters`, () => {
+      this.map.getCanvas().style.cursor = 'pointer';
     });
 
-    map.on('mouseleave', `${this.options.id}-clusters`, () => {
-      map.getCanvas().style.cursor = '';
+    this.map.on('mouseleave', `${this.options.id}-clusters`, () => {
+      this.map.getCanvas().style.cursor = '';
     });
   }
 }
