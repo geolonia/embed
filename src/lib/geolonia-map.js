@@ -207,21 +207,28 @@ export default class GeoloniaMap extends maplibregl.Map {
       if (atts.geojson) {
         const el = isCssSelector(atts.geojson);
         const { default: SimpleStyle } = await import('./simplestyle');
+        let ss;
         if (el) {
           const json = JSON.parse(el.textContent);
-          new SimpleStyle(json, {
+          ss = new SimpleStyle(json, {
             cluster: (atts.cluster === 'on'),
             clusterColor: atts.clusterColor,
-          }).addTo(map);
+          });
         } else {
           fetch(atts.geojson).then((response) => {
             return response.json();
           }).then((json) => {
-            new SimpleStyle(json, {
+            ss = new SimpleStyle(json, {
               cluster: (atts.cluster === 'on'),
               clusterColor: atts.clusterColor,
-            }).addTo(map);
+            });
           });
+        }
+
+        ss.addTo(map);
+
+        if (!container.dataset || (!container.dataset.lng && !container.dataset.lat)) {
+          ss.fitBounds();
         }
       }
 

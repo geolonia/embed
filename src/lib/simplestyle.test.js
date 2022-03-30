@@ -73,7 +73,7 @@ describe('Tests for simpleStyle()', () => {
     const { default: simpleStyle } = await import('./simplestyle');
 
     const map = new Map();
-    new simpleStyle(geojson).addTo(map);
+    new simpleStyle(geojson).addTo(map).fitBounds();
 
     assert.deepEqual([ 'geolonia-simple-style', 'geolonia-simple-style-points' ], Object.keys(map.sources));
     assert.deepEqual(8, map.layers.length);
@@ -85,7 +85,7 @@ describe('Tests for simpleStyle()', () => {
     const { default: simpleStyle } = await import('./simplestyle');
 
     const map = new Map();
-    new simpleStyle(geojson, {id: 'hello-world'}).addTo(map);
+    new simpleStyle(geojson, {id: 'hello-world'}).addTo(map).fitBounds();
 
     assert.deepEqual([ 'hello-world', 'hello-world-points' ], Object.keys(map.sources));
     assert.deepEqual(8, map.layers.length);
@@ -103,7 +103,7 @@ describe('Tests for simpleStyle()', () => {
       'features': [],
     };
 
-    new simpleStyle(empty, {id: 'hello-world'}).addTo(map);
+    new simpleStyle(empty, {id: 'hello-world'}).addTo(map).fitBounds();
 
     assert.deepEqual([ 'hello-world', 'hello-world-points' ], Object.keys(map.sources));
     assert.deepEqual(8, map.layers.length);
@@ -121,7 +121,7 @@ describe('Tests for simpleStyle()', () => {
       'features': [],
     };
 
-    const ss = new simpleStyle(empty).addTo(map); // The GeoJSON is empty.
+    const ss = new simpleStyle(empty).addTo(map).fitBounds();
 
     assert.deepEqual([ 'geolonia-simple-style', 'geolonia-simple-style-points' ], Object.keys(map.sources));
     assert.deepEqual(8, map.layers.length);
