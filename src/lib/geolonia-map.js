@@ -222,11 +222,7 @@ export default class GeoloniaMap extends maplibregl.Map {
         });
         ss.addTo(map);
 
-        // eslint-disable-next-line no-console
-        console.log('before fitBounds check', container.dataset);
         if (!container.dataset || (!container.dataset.lng && !container.dataset.lat)) {
-          // eslint-disable-next-line no-console
-          console.log('in fitBounds');
           ss.fitBounds();
         }
       }
