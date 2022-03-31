@@ -19,8 +19,6 @@ class SimpleStyle {
       cluster: true,
       heatmap: false, // TODO: It should support heatmap.
       clusterColor: '#ff0000',
-      duration: 3000,
-      padding: 30,
       ...options,
     };
   }
@@ -116,16 +114,19 @@ class SimpleStyle {
     this.setPointGeometries();
     this.setCluster();
 
-    const container = this.map.getContainer();
+    return this;
+  }
 
-    if (!container.dataset || (!container.dataset.lng && !container.dataset.lat)) {
-      const bounds = geojsonExtent(this.geojson);
-      if (bounds) {
-        this.map.fitBounds(bounds, {
-          duration: this.options.duration,
-          padding: this.options.padding,
-        });
-      }
+  fitBounds(options = {}) {
+    const _options = {
+      duration: 3000,
+      padding: 30,
+      ...options,
+    };
+
+    const bounds = geojsonExtent(this.geojson);
+    if (bounds) {
+      this.map.fitBounds(bounds, _options);
     }
 
     return this;
