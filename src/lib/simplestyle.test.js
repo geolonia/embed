@@ -2,6 +2,9 @@
 
 import assert from 'assert';
 
+window.URL.createObjectURL = () => {}; // To prevent `TypeError: window.URL.createObjectURL is not a function`
+window.requestAnimationFrame = (cb) => cb();
+
 class Map {
   constructor(json, options) {
     this.json = json;
@@ -69,7 +72,6 @@ const geojson = {
 
 describe('Tests for simpleStyle()', () => {
   it('should has sources and layers as expected', async () => {
-    window.URL.createObjectURL = () => {}; // To prevent `TypeError: window.URL.createObjectURL is not a function`
     const { default: simpleStyle } = await import('./simplestyle');
 
     const map = new Map();
@@ -81,7 +83,6 @@ describe('Tests for simpleStyle()', () => {
   });
 
   it('should has sources and layers as expected with custom IDs', async () => {
-    window.URL.createObjectURL = () => {}; // To prevent `TypeError: window.URL.createObjectURL is not a function`
     const { default: simpleStyle } = await import('./simplestyle');
 
     const map = new Map();
@@ -93,7 +94,6 @@ describe('Tests for simpleStyle()', () => {
   });
 
   it('should has sources and layers as expected with empty GeoJSON', async () => {
-    window.URL.createObjectURL = () => {}; // To prevent `TypeError: window.URL.createObjectURL is not a function`
     const { default: simpleStyle } = await import('./simplestyle');
 
     const map = new Map();
@@ -111,7 +111,6 @@ describe('Tests for simpleStyle()', () => {
   });
 
   it('should update GeoJSON', async () => {
-    window.URL.createObjectURL = () => {}; // To prevent `TypeError: window.URL.createObjectURL is not a function`
     const { default: simpleStyle } = await import('./simplestyle');
 
     const map = new Map();

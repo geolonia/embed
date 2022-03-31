@@ -3,7 +3,6 @@
 import maplibregl from 'maplibre-gl';
 import geojsonExtent from '@mapbox/geojson-extent';
 import turfCenter from '@turf/center';
-import sanitizeHtml from 'sanitize-html';
 
 const textColor = '#000000';
 const textHaloColor = '#FFFFFF';
@@ -126,7 +125,9 @@ class SimpleStyle {
 
     const bounds = geojsonExtent(this.geojson);
     if (bounds) {
-      this.map.fitBounds(bounds, _options);
+      window.requestAnimationFrame(() => {
+        this.map.fitBounds(bounds, _options);
+      });
     }
 
     return this;
@@ -232,7 +233,8 @@ class SimpleStyle {
     this.setPopup(this.map, `${this.options.id}-circle-points`);
   }
 
-  setPopup(map, source) {
+  async setPopup(map, source) {
+    const { default: sanitizeHtml } = await import('sanitize-html');
     map.on('click', source, (e) => {
       const center = turfCenter(e.features[0]).geometry.coordinates;
       const description = e.features[0].properties.description;
