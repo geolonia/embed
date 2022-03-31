@@ -1,6 +1,6 @@
 {
   "name": "@geolonia/embed",
-  "version": "2.0.2-pre.0",
+  "version": "2.0.2",
   "description": "Geolonia embed JS API",
   "main": "dist/embed.js",
   "types": "src/embed.d.ts",
