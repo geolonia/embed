@@ -5,6 +5,9 @@ import GeoloniaControl from '@geolonia/mbgl-geolonia-control';
 import GestureHandling from '@geolonia/mbgl-gesture-handling';
 import parseAtts from './parse-atts';
 
+import SimpleStyle from './simplestyle';
+import SimpleStyleVector from './simplestyle-vector';
+
 import * as util from './util';
 
 const isCssSelector = (string) => {
@@ -200,34 +203,30 @@ export default class GeoloniaMap extends maplibregl.Map {
 
       if (atts.simpleVector) {
         const simpleVectorAttributeValue = util.parseSimpleVector(atts.simpleVector);
-        const { default: SimpleStyleVector } = await import('./simplestyle-vector');
         new SimpleStyleVector(simpleVectorAttributeValue).addTo(map);
       }
 
       if (atts.geojson) {
         const el = isCssSelector(atts.geojson);
-        const { default: SimpleStyle } = await import('./simplestyle');
-        let ss;
+        let json;
         if (el) {
-          const json = JSON.parse(el.textContent);
-          ss = new SimpleStyle(json, {
-            cluster: (atts.cluster === 'on'),
-            clusterColor: atts.clusterColor,
-          });
+          json = JSON.parse(el.textContent);
         } else {
-          fetch(atts.geojson).then((response) => {
-            return response.json();
-          }).then((json) => {
-            ss = new SimpleStyle(json, {
-              cluster: (atts.cluster === 'on'),
-              clusterColor: atts.clusterColor,
-            });
-          });
+          const response = await fetch(atts.geojson);
+          json = await response.json();
         }
 
+        const ss = new SimpleStyle(json, {
+          cluster: (atts.cluster === 'on'),
+          clusterColor: atts.clusterColor,
+        });
         ss.addTo(map);
 
+        // eslint-disable-next-line no-console
+        console.log('before fitBounds check', container.dataset);
         if (!container.dataset || (!container.dataset.lng && !container.dataset.lat)) {
+          // eslint-disable-next-line no-console
+          console.log('in fitBounds');
           ss.fitBounds();
         }
       }

@@ -2,7 +2,6 @@
 
 import maplibregl from 'maplibre-gl';
 import turfCenter from '@turf/center';
-import sanitizeHtml from 'sanitize-html';
 
 const textColor = '#000000';
 const textHaloColor = '#FFFFFF';
@@ -204,7 +203,8 @@ class SimpleStyleVector {
     this.setPopup(map, 'vt-circle-simple-style-points');
   }
 
-  setPopup(map, source) {
+  async setPopup(map, source) {
+    const { default: sanitizeHtml } = await import('sanitize-html');
     map.on('click', source, (e) => {
       const center = turfCenter(e.features[0]).geometry.coordinates;
       const description = e.features[0].properties.description;
