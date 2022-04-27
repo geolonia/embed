@@ -334,6 +334,7 @@ class SimpleStyle {
           const response = await window.fetch(geojson);
           const data = await response.json();
           this.geojson = data;
+          this.updateData(data);
 
           if (this.callFitBounds) {
             this.fitBounds();

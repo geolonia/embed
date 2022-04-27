@@ -144,8 +144,31 @@ describe('Tests for simpleStyle()', () => {
 
     await ss._loadingPromise;
 
-    assert.deepEqual([ 'geolonia-simple-style', 'geolonia-simple-style-points' ], Object.keys(map.sources));
-    assert.deepEqual(8, map.layers.length);
+    const geometry = map.sources['geolonia-simple-style'].data.features[0].geometry;
+    const coordinates = geometry.coordinates;
+    const type = geometry.type;
+
+    const expectCoordinates = [
+      [
+        139.6870422363281,
+        35.73425097869431,
+      ],
+      [
+        139.76943969726562,
+        35.73425097869431,
+      ],
+      [
+        139.73922729492188,
+        35.66399091134812,
+      ],
+      [
+        139.70352172851562,
+        35.698571062054015,
+      ],
+    ];
+
+    assert.deepEqual(expectCoordinates, coordinates);
+    assert.deepEqual('LineString', type);
     assert.deepEqual(true, map.bounds);
   });
 
@@ -184,8 +207,31 @@ describe('Tests for simpleStyle()', () => {
 
     await ss._loadingPromise;
 
-    assert.deepEqual([ 'geolonia-simple-style', 'geolonia-simple-style-points' ], Object.keys(map.sources));
-    assert.deepEqual(8, map.layers.length);
+    const geometry = map.sources['geolonia-simple-style'].data.features[0].geometry;
+    const coordinates = geometry.coordinates;
+    const type = geometry.type;
+
+    const expectCoordinates = [
+      [
+        139.6870422363281,
+        35.73425097869431,
+      ],
+      [
+        139.76943969726562,
+        35.73425097869431,
+      ],
+      [
+        139.73922729492188,
+        35.66399091134812,
+      ],
+      [
+        139.70352172851562,
+        35.698571062054015,
+      ],
+    ];
+
+    assert.deepEqual(expectCoordinates, coordinates);
+    assert.deepEqual('LineString', type);
     assert.deepEqual(true, map.bounds);
   });
 
