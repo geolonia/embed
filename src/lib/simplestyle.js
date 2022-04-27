@@ -3,15 +3,51 @@
 import maplibregl from 'maplibre-gl';
 import geojsonExtent from '@mapbox/geojson-extent';
 import turfCenter from '@turf/center';
+import { isURL } from './util';
 
 const textColor = '#000000';
 const textHaloColor = '#FFFFFF';
 const backgroundColor = 'rgba(255, 0, 0, 0.4)';
 const strokeColor = '#FFFFFF';
 
+const template = {
+  'type': 'FeatureCollection',
+  'features': [],
+};
+
 class SimpleStyle {
   constructor(geojson, options) {
-    this.geojson = geojson;
+
+    this.callFitBounds = false;
+
+    if (typeof geojson === 'string' && isURL(geojson)) {
+
+      this.geojson = template;
+
+      const fetchGeoJSON = async () => {
+
+        try {
+
+          const response = await window.fetch(geojson);
+          const data = await response.json();
+          this.geojson = data;
+
+          if (this.callFitBounds) {
+            this.fitBounds();
+          }
+
+        } catch (error) {
+
+          console.error(error);
+        }
+
+      };
+
+      fetchGeoJSON();
+
+    } else {
+      this.geojson = geojson;
+    }
 
     this.options = {
       id: 'geolonia-simple-style',
@@ -117,6 +153,9 @@ class SimpleStyle {
   }
 
   fitBounds(options = {}) {
+
+    this.callFitBounds = true;
+
     const _options = {
       duration: 3000,
       padding: 30,
