@@ -7,10 +7,10 @@
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
   <title>SimpleStyle + @geolonia/embed</title>
   <style>
-    body, #map {
+    body, .map {
       margin: 0;
       width: 100vw;
-      height: 100vh;
+      height: 50vh;
       overflow: hidden;
     }
   </style>
@@ -18,12 +18,13 @@
 
 <body>
 
-  <div id="map"></div>
+  <div id="map1" class="map"></div>
+  <div id="map2" class="map"></div>
 
   <script type="text/javascript" src="./embed?geolonia-api-key=YOUR-API-KEY"></script>
 
   <script>
-  const map = new geolonia.Map('#map')
+  const map1 = new geolonia.Map('#map1')
 
   const geojson = {
     "type": "FeatureCollection",
@@ -67,7 +68,8 @@
     "features": []
   }
 
-  map.on('load', () => {
+  const updateGeoJsonByInterval = (map, geojson) => {
+
     const ss = new geolonia.simpleStyle(geojson, {
       id: 'test'
     })
@@ -84,6 +86,22 @@
         ss.updateData(empty)
       }
     }, 2000)
+
+  }
+
+  map1.on('load', () => {
+
+    updateGeoJsonByInterval(map1, geojson);
+
+  })
+
+  const map2 = new geolonia.Map('#map2')
+  const geojsonUrl = 'https://gist.githubusercontent.com/miya0001/56c3dc174f5cdf1d9565cbca0fbd3c48/raw/c13330036d28ef547a8a87cb6df3fa12de19ddb6/test.geojson';
+
+  map2.on('load', () => {
+
+    updateGeoJsonByInterval(map2, geojsonUrl);
+
   })
   </script>
 
