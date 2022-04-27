@@ -43,7 +43,7 @@ class SimpleStyle {
 
       };
 
-      fetchGeoJSON();
+      this._loadingPromise = fetchGeoJSON();
 
     } else {
       this.geojson = geojson;

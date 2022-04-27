@@ -139,11 +139,14 @@ describe('Tests for simpleStyle()', () => {
 
     const map = new Map();
     const geojson = 'https://gist.githubusercontent.com/miya0001/56c3dc174f5cdf1d9565cbca0fbd3c48/raw/c13330036d28ef547a8a87cb6df3fa12de19ddb6/test.geojson';
-    new simpleStyle(geojson).addTo(map).fitBounds();
+    const ss = new simpleStyle(geojson);
+    ss.addTo(map).fitBounds();
+
+    await ss._loadingPromise;
 
     assert.deepEqual([ 'geolonia-simple-style', 'geolonia-simple-style-points' ], Object.keys(map.sources));
-    // assert.deepEqual(8, map.layers.length);
-    // assert.deepEqual(true, map.bounds);
+    assert.deepEqual(8, map.layers.length);
+    assert.deepEqual(true, map.bounds);
   });
 
 });
