@@ -20,34 +20,7 @@ class SimpleStyle {
 
     this.callFitBounds = false;
 
-    if (typeof geojson === 'string' && isURL(geojson)) {
-
-      this.geojson = template;
-
-      const fetchGeoJSON = async () => {
-
-        try {
-
-          const response = await window.fetch(geojson);
-          const data = await response.json();
-          this.geojson = data;
-
-          if (this.callFitBounds) {
-            this.fitBounds();
-          }
-
-        } catch (error) {
-
-          console.error(error);
-        }
-
-      };
-
-      this._loadingPromise = fetchGeoJSON();
-
-    } else {
-      this.geojson = geojson;
-    }
+    this.setGeoJSON(geojson);
 
     this.options = {
       id: 'geolonia-simple-style',
@@ -59,7 +32,10 @@ class SimpleStyle {
   }
 
   updateData(geojson) {
-    const features = geojson.features;
+
+    this.setGeoJSON(geojson);
+
+    const features = this.geojson.features;
     const polygonandlines = features.filter((feature) => (feature.geometry.type.toLowerCase() !== 'point'));
     const points = features.filter((feature) => (feature.geometry.type.toLowerCase() === 'point'));
 
@@ -343,6 +319,39 @@ class SimpleStyle {
     this.map.on('mouseleave', `${this.options.id}-clusters`, () => {
       this.map.getCanvas().style.cursor = '';
     });
+  }
+
+  setGeoJSON(geojson) {
+
+    if (typeof geojson === 'string' && isURL(geojson)) {
+
+      this.geojson = template;
+
+      const fetchGeoJSON = async () => {
+
+        try {
+
+          const response = await window.fetch(geojson);
+          const data = await response.json();
+          this.geojson = data;
+
+          if (this.callFitBounds) {
+            this.fitBounds();
+          }
+
+        } catch (error) {
+
+          console.error(error); // eslint-disable-line no-console
+        }
+
+      };
+
+      this._loadingPromise = fetchGeoJSON();
+
+    } else {
+      this.geojson = geojson;
+    }
+
   }
 }
 
