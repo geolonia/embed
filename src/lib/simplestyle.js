@@ -49,8 +49,6 @@ class SimpleStyle {
       'features': points,
     });
 
-    this.geojson = geojson;
-
     return this;
   }
 
@@ -337,12 +335,15 @@ class SimpleStyle {
           this.updateData(data);
 
           if (this.callFitBounds) {
+
             this.fitBounds();
+            this.callFitBounds = false;
+
           }
 
         } catch (error) {
 
-          console.error(error); // eslint-disable-line no-console
+          console.error('Failed to load GeoJSON:', error); // eslint-disable-line no-console
         }
 
       };
