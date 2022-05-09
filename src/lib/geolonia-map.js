@@ -211,6 +211,8 @@ export default class GeoloniaMap extends maplibregl.Map {
         let json;
         if (el) {
           json = JSON.parse(el.textContent);
+        } else {
+          json = atts.geojson;
         }
 
         const ss = new SimpleStyle(json, {
