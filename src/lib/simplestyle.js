@@ -3,15 +3,24 @@
 import maplibregl from 'maplibre-gl';
 import geojsonExtent from '@mapbox/geojson-extent';
 import turfCenter from '@turf/center';
+import { isURL } from './util';
 
 const textColor = '#000000';
 const textHaloColor = '#FFFFFF';
 const backgroundColor = 'rgba(255, 0, 0, 0.4)';
 const strokeColor = '#FFFFFF';
 
+const template = {
+  'type': 'FeatureCollection',
+  'features': [],
+};
+
 class SimpleStyle {
   constructor(geojson, options) {
-    this.geojson = geojson;
+
+    this.callFitBounds = false;
+
+    this.setGeoJSON(geojson);
 
     this.options = {
       id: 'geolonia-simple-style',
@@ -23,7 +32,10 @@ class SimpleStyle {
   }
 
   updateData(geojson) {
-    const features = geojson.features;
+
+    this.setGeoJSON(geojson);
+
+    const features = this.geojson.features;
     const polygonandlines = features.filter((feature) => (feature.geometry.type.toLowerCase() !== 'point'));
     const points = features.filter((feature) => (feature.geometry.type.toLowerCase() === 'point'));
 
@@ -36,8 +48,6 @@ class SimpleStyle {
       'type': 'FeatureCollection',
       'features': points,
     });
-
-    this.geojson = geojson;
 
     return this;
   }
@@ -117,6 +127,9 @@ class SimpleStyle {
   }
 
   fitBounds(options = {}) {
+
+    this.callFitBounds = true;
+
     const _options = {
       duration: 3000,
       padding: 30,
@@ -304,6 +317,43 @@ class SimpleStyle {
     this.map.on('mouseleave', `${this.options.id}-clusters`, () => {
       this.map.getCanvas().style.cursor = '';
     });
+  }
+
+  setGeoJSON(geojson) {
+
+    if (typeof geojson === 'string' && isURL(geojson)) {
+
+      this.geojson = template;
+
+      const fetchGeoJSON = async () => {
+
+        try {
+
+          const response = await window.fetch(geojson);
+          const data = await response.json();
+          this.geojson = data;
+          this.updateData(data);
+
+          if (this.callFitBounds) {
+
+            this.fitBounds();
+            this.callFitBounds = false;
+
+          }
+
+        } catch (error) {
+
+          console.error('Failed to load GeoJSON:', error); // eslint-disable-line no-console
+        }
+
+      };
+
+      this._loadingPromise = fetchGeoJSON();
+
+    } else {
+      this.geojson = geojson;
+    }
+
   }
 }
 
