@@ -106,6 +106,26 @@ if ( util.checkPermission() ) {
   for (let i = 0; i < lazyContainers.length; i++) {
     observer.observe(lazyContainers[i]);
   }
+
+  // dynamic rendering
+  const mutationObserver = new MutationObserver((mutationRecords) => {
+    for (const record of mutationRecords) {
+      for (const addedNode of record.addedNodes) {
+        if (addedNode instanceof HTMLElement) {
+          const className = addedNode.getAttribute('class');
+          const { lazyLoading } = addedNode.dataset;
+          if (className === 'geolonia') {
+            if (lazyLoading === 'off') {
+              renderGeoloniaMap(addedNode);
+            } else {
+              observer.observe(addedNode);
+            }
+          }
+        }
+      }
+    }
+  });
+  mutationObserver.observe(document.body, { childList: true });
 } else {
   console.error( '[Geolonia] We are very sorry, but we can\'t display our map in iframe.' ) // eslint-disable-line
 }
