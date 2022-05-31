@@ -33,6 +33,16 @@ if ( util.checkPermission() ) {
       map[isRemoved] = true;
     });
 
+    // remove map instance automatically if the container removed.
+    // prevent memory leak
+    const observer = new MutationObserver((mutationRecords) => {
+      const removed = mutationRecords.some((record) => [...record.removedNodes].some((node) => node === target));
+      if (removed && !map[isRemoved]) {
+        map.remove();
+      }
+    });
+    observer.observe(target.parentNode, { childList: true });
+
     // plugin
     const atts = parseAtts(target);
     if (isDOMContentLoaded && !map[isRemoved]) {
