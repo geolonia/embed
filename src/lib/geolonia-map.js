@@ -10,6 +10,9 @@ import SimpleStyleVector from './simplestyle-vector';
 
 import * as util from './util';
 
+import maplibreglCss from '!!css-loader!maplibre-gl/dist/maplibre-gl.css';
+import mainCss from '!!css-loader!../style.css';
+
 const isCssSelector = (string) => {
   if (/^https?:\/\//.test(string)) {
     return false;
@@ -35,17 +38,29 @@ const isCssSelector = (string) => {
  */
 export default class GeoloniaMap extends maplibregl.Map {
   constructor(params) {
-    const container = util.getContainer(params);
-    if (container.geoloniaMap) {
-      return container.geoloniaMap;
+    const rawContainer = util.getContainer(params);
+    if (rawContainer.geoloniaMap) {
+      return rawContainer.geoloniaMap;
     }
 
-    const atts = parseAtts(container, params);
-    const options = util.getOptions(container, params, atts);
+    const atts = parseAtts(rawContainer, params);
+    const options = util.getOptions(rawContainer, params, atts);
 
     // Getting content should be fire just before initialize the map.
-    const content = container.innerHTML.trim();
-    container.innerHTML = '';
+    const content = rawContainer.innerHTML.trim();
+    rawContainer.innerHTML = '';
+
+    const useShadow = atts.shadowDom === 'on';
+    let container = rawContainer;
+
+    if (useShadow) {
+      const shadowRoot = rawContainer.attachShadow({mode: 'open'});
+      shadowRoot.innerHTML = `<style>${maplibreglCss}</style><style>${mainCss}</style>`;
+      container = document.createElement('div');
+      options.container = container;
+      container.className = 'geolonia-shadow-map';
+      shadowRoot.appendChild(container);
+    }
 
     let loading;
     if (atts.loader !== 'off') {
