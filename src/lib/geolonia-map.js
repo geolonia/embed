@@ -65,6 +65,14 @@ export default class GeoloniaMap extends maplibregl.Map {
       options.container = container;
       container.className = 'geolonia-shadow-map';
       shadowRoot.appendChild(container);
+    } else {
+      const existingStyleEl = document.getElementById('_geolonia_map_style');
+      if (!existingStyleEl) {
+        const styleEl = document.createElement('style');
+        styleEl.id = '_geolonia_map_style';
+        styleEl.innerHTML = `${maplibreglCss}\n${mainCss}`;
+        document.head.appendChild(styleEl);
+      }
     }
 
     let loading;

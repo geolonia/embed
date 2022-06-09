@@ -4,8 +4,6 @@
 
 import 'intersection-observer';
 import maplibregl from 'maplibre-gl';
-import 'maplibre-gl/dist/maplibre-gl.css';
-import './style.css';
 import GeoloniaMap from './lib/geolonia-map';
 import GeoloniaMarker from './lib/geolonia-marker';
 import { AmazonLocationServiceMapProvider } from './lib/providers/amazon';
