@@ -50,6 +50,8 @@ describe('tests for parse Attributes', () => {
       loader: 'on',
       minZoom: '',
       maxZoom: 20,
+      shadowDom: 'off',
+      innerShadowStyle: '',
       '3d': '',
     });
   });
