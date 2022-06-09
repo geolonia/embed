@@ -53,7 +53,8 @@ export default (container, params = {}) => {
     minZoom: '',
     maxZoom: 20,
     '3d': '',
-    shadowDom: 'on',
+    shadowDom: 'off',
+    innerShadowStyle: '',
     ...container.dataset,
   };
 };

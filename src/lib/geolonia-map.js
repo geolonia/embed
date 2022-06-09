@@ -50,12 +50,17 @@ export default class GeoloniaMap extends maplibregl.Map {
     const content = rawContainer.innerHTML.trim();
     rawContainer.innerHTML = '';
 
-    const useShadow = atts.shadowDom === 'on';
+    // Check if Shadow DOM is available
+    const useShadow = !!HTMLElement.prototype.attachShadow && atts.shadowDom === 'on';
     let container = rawContainer;
 
     if (useShadow) {
       const shadowRoot = rawContainer.attachShadow({mode: 'open'});
-      shadowRoot.innerHTML = `<style>${maplibreglCss}</style><style>${mainCss}</style>`;
+
+      const innerCssEl = document.createElement('style');
+      innerCssEl.innerHTML = `:host {display: block; contain: content;} ${maplibreglCss}\n${mainCss}\n${atts.innerShadowStyle}`;
+      shadowRoot.appendChild(innerCssEl);
+
       container = document.createElement('div');
       options.container = container;
       container.className = 'geolonia-shadow-map';

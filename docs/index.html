@@ -26,14 +26,14 @@
 
 
   <div class="example">
-    <h2>Basic map (disable Shadow DOM)</h2>
+    <h2>Basic map (enable Shadow DOM)</h2>
     <div
       class="geolonia"
       data-lat="35.681236"
       data-lng="139.767125"
       data-zoom="16"
       data-geolonia-fork-me-disabled="on"
-      data-shadow-dom="off"
+      data-shadow-dom="on"
     ></div>
   </div>
 
@@ -106,20 +106,6 @@
     <h2>Custom HTML Marker</h2>
     <h3>HTML for the Custom Marker</h3>
     <pre><code>&lt;div id=&quot;custom-marker&quot;&gt;&lt;img src=&quot;./icon.png&quot; alt=&quot;&quot;&gt;&lt;/div&gt;</code></pre>
-    <h3>CSS for the Custom Marker</h3>
-    <pre>#custom-marker
-{
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-  display: none;
-}
-
-#custom-marker img
-{
-  max-width: 100%;
-  height: auto;
-}</pre>
 
     <h3>HTML for the Map</h3>
     <div
@@ -129,7 +115,25 @@
       data-zoom="12"
       data-custom-marker="#custom-marker"
       data-custom-marker-offset="0, -25"
-    ><h3>Hello World!</h3></div>
+      data-shadow-dom="on"
+      data-inner-shadow-style="
+    #custom-marker
+    {
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      display: none;
+    }
+
+    #custom-marker img
+    {
+      max-width: 100%;
+      height: auto;
+    }
+  "
+  >
+    <h3>Hello World!</h3>
+</div>
   </div>
 
 
