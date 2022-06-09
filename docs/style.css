@@ -48,3 +48,8 @@ footer
   max-width: 100%;
   height: auto;
 }
+
+#mock_user_css div
+{
+  display: flex;
+}
