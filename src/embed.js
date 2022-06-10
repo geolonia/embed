@@ -22,9 +22,9 @@ if ( util.checkPermission() ) {
   const isRemoved = Symbol('map-is-removed');
 
   /**
-   *
-   * @param {HTMLElement} target
-   */
+    *
+    * @param {HTMLElement} target
+    */
   const renderGeoloniaMap = (target) => {
     const map = new GeoloniaMap(target);
 
@@ -32,6 +32,16 @@ if ( util.checkPermission() ) {
     map.on('remove', () => {
       map[isRemoved] = true;
     });
+
+    // remove map instance automatically if the container removed.
+    // prevent memory leak
+    const observer = new MutationObserver((mutationRecords) => {
+      const removed = mutationRecords.some((record) => [...record.removedNodes].some((node) => node === target));
+      if (removed && !map[isRemoved]) {
+        map.remove();
+      }
+    });
+    observer.observe(target.parentNode, { childList: true });
 
     // plugin
     const atts = parseAtts(target);
@@ -67,14 +77,14 @@ if ( util.checkPermission() ) {
   const lazyContainers = document.querySelectorAll('.geolonia:not([data-lazy-loading="off"])');
 
   window.geolonia =
-    window.maplibregl =
-    window.mapboxgl = // Embed API backward compatibility
-    maplibregl;
+     window.maplibregl =
+     window.mapboxgl = // Embed API backward compatibility
+     maplibregl;
 
   // This is required for correct initialization! Don't delete!
   const { key } = parseApiKey(document);
   if (key === 'no-api-key') {
-    console.error('Missing API key.') // eslint-disable-line
+     console.error('Missing API key.') // eslint-disable-line
   }
 
   window.geolonia.Map = GeoloniaMap;
@@ -97,5 +107,5 @@ if ( util.checkPermission() ) {
     observer.observe(lazyContainers[i]);
   }
 } else {
-  console.error( '[Geolonia] We are very sorry, but we can\'t display our map in iframe.' ) // eslint-disable-line
+   console.error( '[Geolonia] We are very sorry, but we can\'t display our map in iframe.' ) // eslint-disable-line
 }
