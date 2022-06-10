@@ -48,3 +48,18 @@ footer
   max-width: 100%;
   height: auto;
 }
+
+.with-user-css .geolonia
+{
+  height: 250px;
+}
+
+.mobile-width
+{
+  width: 600px;
+}
+
+#mock_user_css div
+{
+  display: flex;
+}
