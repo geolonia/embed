@@ -8,7 +8,7 @@
   <title>@geolonia/embed</title>
 </head>
 
-<body>
+<body class="with-user-css">
   <h1>@geolonia/embed | Demo with user css</h1>
 
   Examples for Embed API for Geolonia with user css.
@@ -27,7 +27,20 @@
     </div>
   </div>
 
-  幅が狭いバージョン
+  <div class="example mobile-width">
+    <h2>All of controls for with mobile width</h2>
+    <div class="geolonia" data-lat="34.704395" data-lng="135.494771" data-zoom="14" data-navigation-control="on"
+    data-geolocate-control="on" data-fullscreen-control="on" data-scale-control="on">グランフロント1</div>
+  </div>
+
+  <div class="example mobile-width">
+    <h2>All of controls with User CSS  for mobile width</h2>
+    <div id="mock_user_css">
+      <div class="geolonia" data-lat="34.704395" data-lng="135.494771" data-zoom="14" data-navigation-control="on"
+        data-geolocate-control="on" data-fullscreen-control="on" data-scale-control="on">グランフロント2</div>
+    </div>
+  </div>
+
 
   コントロールの位置を指定したバージョン
 
