@@ -2,10 +2,12 @@
 
 import assert from 'assert';
 import nodeFetch from 'node-fetch';
+import sinon from 'sinon';
 
 window.URL.createObjectURL = () => {}; // To prevent `TypeError: window.URL.createObjectURL is not a function`
 window.requestAnimationFrame = (cb) => cb();
 window.fetch = nodeFetch;
+let spy;
 
 class Map {
   constructor(json, options) {
@@ -73,6 +75,15 @@ const geojson = {
 };
 
 describe('Tests for simpleStyle()', () => {
+
+  beforeEach(() => {
+    spy = sinon.spy(console, 'warn');
+  });
+
+  afterEach(() => {
+    sinon.restore();
+  });
+
   it('should has sources and layers as expected', async () => {
     const { default: simpleStyle } = await import('./simplestyle');
 
@@ -258,8 +269,7 @@ describe('Tests for simpleStyle()', () => {
     const map = new Map();
     new simpleStyle(geojson).addTo(map).fitBounds();
 
-    assert.deepEqual(true, true);
-    // assert.equal(console.log.calledWith('Good night!'), true);
+    assert.deepEqual(true, spy.calledWith('GeoJSON coordinates must be number'));
   });
 
   it('should show console.warn when coordinates is string type with Polygon', async () => {
@@ -309,8 +319,8 @@ describe('Tests for simpleStyle()', () => {
     const map = new Map();
     new simpleStyle(geojson).addTo(map).fitBounds();
 
-    assert.deepEqual(true, true);
-    // assert.equal(console.log.calledWith('Good night!'), true);
+    assert.deepEqual(true, spy.calledWith('GeoJSON coordinates must be number'));
+
   });
 
 });
