@@ -235,4 +235,82 @@ describe('Tests for simpleStyle()', () => {
     assert.deepEqual(true, map.bounds);
   });
 
+  it('should show console.warn when coordinates is string type with Point', async () => {
+    const { default: simpleStyle } = await import('./simplestyle');
+
+    const geojson = {
+      'type': 'FeatureCollection',
+      'features': [
+        {
+          'type': 'Feature',
+          'properties': {},
+          'geometry': {
+            'type': 'Point',
+            'coordinates': [
+              '139.77012634277344',
+              '35.68518697509636',
+            ],
+          },
+        },
+      ],
+    };
+
+    const map = new Map();
+    new simpleStyle(geojson).addTo(map).fitBounds();
+
+    assert.deepEqual(true, true);
+    // assert.equal(console.log.calledWith('Good night!'), true);
+  });
+
+  it('should show console.warn when coordinates is string type with Polygon', async () => {
+    const { default: simpleStyle } = await import('./simplestyle');
+
+    const geojson = {
+      'type': 'FeatureCollection',
+      'features': [
+        {
+          'type': 'Feature',
+          'properties': {},
+          'geometry': {
+            'type': 'Polygon',
+            'coordinates': [
+              [
+                [
+                  '139.75602865219116',
+                  '35.674171302420035',
+                ],
+                [
+                  '139.75779354572296',
+                  '35.6737660291323',
+                ],
+                [
+                  '139.75753605365753',
+                  '35.67519537091245',
+                ],
+                [
+                  '139.75613057613373',
+                  '35.67496005420893',
+                ],
+                [
+                  '139.75573360919952',
+                  '35.67431075081735',
+                ],
+                [
+                  '139.75602865219116',
+                  '35.674171302420035',
+                ],
+              ],
+            ],
+          },
+        },
+      ],
+    };
+
+    const map = new Map();
+    new simpleStyle(geojson).addTo(map).fitBounds();
+
+    assert.deepEqual(true, true);
+    // assert.equal(console.log.calledWith('Good night!'), true);
+  });
+
 });

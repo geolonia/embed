@@ -360,27 +360,51 @@ class SimpleStyle {
 
   }
 
+  // validate geojson's coordinate type is number
   validateGeoJSON(geojson) {
-    const features = geojson.features;
 
-    for (let i = 0; i < features.length; i++) {
+    if (geojson.features) {
 
-      const feature = features[i];
-      const coordinates = feature.geometry.coordinates;
+      geojson.features.forEach((feature) => {
 
-      if (coordinates.length != 2) {
-        console.error('Invalid GeoJSON Coordinates:', coordinates); // eslint-disable-line no-console
-        break;
-      }
+        if (feature.geometry.coordinates) {
 
-      if (typeof coordinates[0] !== 'number' || typeof coordinates[1] !== 'number') {
+          feature.geometry.coordinates.forEach((coordinate) => {
 
-        console.warn('GeoJSON coordinates must be a numeric type ', coordinates); // eslint-disable-line no-console
-        break;
-      }
+            const geometryType = feature.geometry.type.toLowerCase();
+
+            if (geometryType === 'point') {
+
+              if (typeof coordinate !== 'number') {
+
+                console.warn('GeoJSON coordinates must be number: ', feature.geometry.coordinates); // eslint-disable-line no-console
+              }
+
+            } else if (geometryType === 'linestring') {
+
+              if (typeof coordinate[0] !== 'number' || typeof coordinate[1] !== 'number') {
+
+                console.warn('GeoJSON coordinates must be number: ', coordinate); // eslint-disable-line no-console
+              }
+
+            } else if (geometryType === 'polygon') {
+
+              coordinate.forEach((coordinate) => {
+
+                if (typeof coordinate[0] !== 'number' || typeof coordinate[1] !== 'number') {
+
+                  console.warn('GeoJSON coordinates must be number: ', coordinate); // eslint-disable-line no-console
+                }
+
+              });
+            }
+
+          });
+        }
+      });
     }
-
   }
+
 }
 
 export default SimpleStyle;
