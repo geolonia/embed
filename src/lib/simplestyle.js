@@ -360,7 +360,9 @@ class SimpleStyle {
 
   }
 
-  // validate geojson's coordinate type is number
+  /**
+   * Validate GeoJSON coordinate is number.
+   */
   validateGeoJSON(geojson) {
 
     if (geojson.features) {
@@ -369,38 +371,21 @@ class SimpleStyle {
 
         if (feature.geometry.coordinates) {
 
-          feature.geometry.coordinates.forEach((coordinate) => {
+          const coordinates = feature.geometry.coordinates.flat(3); // flatten array for each geometry
 
-            const geometryType = feature.geometry.type.toLowerCase();
+          for (let i = 0; i < coordinates.length; i++) {
 
-            if (geometryType === 'point') {
+            const coordinate = coordinates[i];
 
-              if (typeof coordinate !== 'number') {
-
-                console.warn('GeoJSON coordinates must be number: ', feature.geometry.coordinates); // eslint-disable-line no-console
-              }
-
-            } else if (geometryType === 'linestring') {
-
-              if (typeof coordinate[0] !== 'number' || typeof coordinate[1] !== 'number') {
-
-                console.warn('GeoJSON coordinates must be number: ', coordinate); // eslint-disable-line no-console
-              }
-
-            } else if (geometryType === 'polygon') {
-
-              coordinate.forEach((coordinate) => {
-
-                if (typeof coordinate[0] !== 'number' || typeof coordinate[1] !== 'number') {
-
-                  console.warn('GeoJSON coordinates must be number: ', coordinate); // eslint-disable-line no-console
-                }
-
-              });
+            if (typeof coordinate !== 'number') {
+              console.warn('GeoJSON coordinates must be number'); // eslint-disable-line no-console
+              break;
             }
 
-          });
+          }
+
         }
+
       });
     }
   }
