@@ -272,6 +272,46 @@ describe('Tests for simpleStyle()', () => {
     assert.deepEqual(true, spy.calledWith('GeoJSON coordinates must be number'));
   });
 
+  it('should show console.warn when coordinates is string type with LineString', async () => {
+    const { default: simpleStyle } = await import('./simplestyle');
+
+    const geojson = {
+      'type': 'FeatureCollection',
+      'features': [
+        {
+          'type': 'Feature',
+          'properties': {},
+          'geometry': {
+            'type': 'LineString',
+            'coordinates': [
+              [
+                '139.75503623485565',
+                '35.67479010282487',
+              ],
+              [
+                '139.755819439888',
+                '35.67316029425285',
+              ],
+              [
+                '139.75565314292908',
+                '35.6741974490131',
+              ],
+              [
+                '139.75497722625732',
+                '35.67337818502668',
+              ],
+            ],
+          },
+        },
+      ],
+    };
+
+    const map = new Map();
+    new simpleStyle(geojson).addTo(map).fitBounds();
+
+    assert.deepEqual(true, spy.calledWith('GeoJSON coordinates must be number'));
+  });
+
   it('should show console.warn when coordinates is string type with Polygon', async () => {
     const { default: simpleStyle } = await import('./simplestyle');
 
