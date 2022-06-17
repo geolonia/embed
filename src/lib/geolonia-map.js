@@ -280,4 +280,10 @@ export default class GeoloniaMap extends maplibregl.Map {
     // Calls `maplibregl.Map.setStyle()`.
     super.setStyle.call(this, style, options);
   }
+
+  remove() {
+    const container = this.getContainer();
+    super.remove.call(this);
+    delete container.geoloniaMap;
+  }
 }
