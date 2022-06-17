@@ -378,7 +378,7 @@ class SimpleStyle {
             const coordinate = coordinates[i];
 
             if (typeof coordinate !== 'number') {
-              console.warn('GeoJSON coordinates must be number'); // eslint-disable-line no-console
+              console.warn('GeoJSON coordinate value must be number'); // eslint-disable-line no-console
               break;
             }
 

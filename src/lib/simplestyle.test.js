@@ -269,7 +269,7 @@ describe('Tests for simpleStyle()', () => {
     const map = new Map();
     new simpleStyle(geojson).addTo(map).fitBounds();
 
-    assert.deepEqual(true, spy.calledWith('GeoJSON coordinates must be number'));
+    assert.deepEqual(true, spy.calledWith('GeoJSON coordinate value must be number'));
   });
 
   it('should show console.warn when coordinates is string type with LineString', async () => {
@@ -309,7 +309,7 @@ describe('Tests for simpleStyle()', () => {
     const map = new Map();
     new simpleStyle(geojson).addTo(map).fitBounds();
 
-    assert.deepEqual(true, spy.calledWith('GeoJSON coordinates must be number'));
+    assert.deepEqual(true, spy.calledWith('GeoJSON coordinate value must be number'));
   });
 
   it('should show console.warn when coordinates is string type with Polygon', async () => {
@@ -359,7 +359,7 @@ describe('Tests for simpleStyle()', () => {
     const map = new Map();
     new simpleStyle(geojson).addTo(map).fitBounds();
 
-    assert.deepEqual(true, spy.calledWith('GeoJSON coordinates must be number'));
+    assert.deepEqual(true, spy.calledWith('GeoJSON coordinate value must be number'));
 
   });
 
