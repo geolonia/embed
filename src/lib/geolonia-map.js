@@ -84,15 +84,27 @@ export default class GeoloniaMap extends maplibregl.Map {
         }
       }
 
+      const transformedUrlObj = new URL(transformedUrl);
+
       if (resourceType === 'Source' && transformedUrl.startsWith('https://tileserver.geolonia.com')) {
-        const tileserverSourcesUrl = new URL(transformedUrl);
         if (atts.stage !== 'v1') {
-          tileserverSourcesUrl.hostname = `tileserver-${atts.stage}.geolonia.com`;
+          transformedUrlObj.hostname = `tileserver-${atts.stage}.geolonia.com`;
         }
-        tileserverSourcesUrl.searchParams.set('sessionId', sessionId);
-        tileserverSourcesUrl.searchParams.set('key', atts.key);
+        transformedUrlObj.searchParams.set('sessionId', sessionId);
+        transformedUrlObj.searchParams.set('key', atts.key);
         return {
-          url: tileserverSourcesUrl.toString(),
+          url: transformedUrlObj.toString(),
+        };
+      } else if (
+        (resourceType === 'SpriteJSON' || resourceType === 'SpriteImage') &&
+        transformedUrl.match(/^https:\/\/api\.geolonia\.com\/(dev|v1)\/sprites\//)
+      ) {
+        const pathParts = transformedUrlObj.pathname.split('/');
+        pathParts[1] = atts.stage;
+        transformedUrlObj.pathname = pathParts.join('/');
+        transformedUrlObj.searchParams.set('key', atts.key);
+        return {
+          url: transformedUrlObj.toString(),
         };
       }
 
