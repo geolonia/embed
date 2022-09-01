@@ -73,29 +73,3 @@ $ vi .envrc
 $ npm run build
 $ docker build . -t geolonia/embed
 ```
-
-### run snapshot test with Docker
-
-```shell
-$ npm run build
-# Run snapshot test
-$ docker run --rm \
-  -v $(pwd)/snapshots:/app/snapshots \
-  -v $(pwd)/dist:/app/dist \
-  geolonia/embed
-# Update the snapshot
-$ docker run --rm \
-  -v $(pwd)/snapshots:/app/snapshots \
-  -v $(pwd)/dist:/app/dist \
-  -e UPDATE_SNAPSHOT=true \
-  geolonia/embed
-# check diff on your eyes
-$ open snapshots
-```
-
-### run snapshot test locally
-
-```shell
-$ npm run build
-$ npm run test:snapshot
-```
