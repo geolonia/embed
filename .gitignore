@@ -73,6 +73,5 @@ typings/
 /docs/v1/embed.js
 /docs/embed-chunks
 /docs/v1/embed-chunks
-/snapshots/*.png
 .cache
 .DS_Store
