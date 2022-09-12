@@ -53,7 +53,7 @@
     "@turf/center": "^6.0.1",
     "core-js": "^3.6.5",
     "intersection-observer": "^0.5.1",
-    "maplibre-gl": "1.15.2",
+    "maplibre-gl": "2.4.0",
     "promise-polyfill": "^8.1.0",
     "sanitize-html": "^2.3.2",
     "tinycolor2": "^1.4.1",
