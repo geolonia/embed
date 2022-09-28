@@ -119,6 +119,7 @@
 
 .maplibregl-ctrl-attrib-inner.mapboxgl-ctrl-attrib-inner {
   display: block!important;
+  font-size: 12px;
 }
 
 .mapboxgl-ctrl-attrib.mapboxgl-compact .mapboxgl-ctrl-attrib-inner,
@@ -131,5 +132,9 @@
 .maplibregl-ctrl-attrib.maplibregl-compact-show .maplibregl-ctrl-attrib-inner,
 .maplibregl-ctrl-attrib.maplibregl-compact .maplibregl-ctrl-attrib-button {
   display: block!important;
+}
+
+.mapboxgl-ctrl-attrib a, .maplibregl-ctrl-attrib a {
+  font-size: 12px;
 }
 /* End: CSS for Attribution */
