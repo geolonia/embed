@@ -163,6 +163,17 @@ export default class GeoloniaMap extends maplibregl.Map {
       map.addControl(new window.geolonia.ScaleControl(),  scaleControlPosition);
     }
 
+    // Add attribution by shadowDOM
+    const bottomRightControls = container.getElementsByClassName('maplibregl-ctrl-bottom-right mapboxgl-ctrl-bottom-right')[0];
+    const shadowRoot = bottomRightControls.attachShadow({mode: 'open'});
+
+    const attributionControl = container.getElementsByClassName('maplibregl-ctrl-attrib mapboxgl-ctrl-attrib')[0];
+    if (attributionControl) {
+      attributionControl.remove();
+    }
+
+    shadowRoot.appendChild(attributionControl);
+
     map.on('load', (event) => {
       const map = event.target;
 
