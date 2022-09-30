@@ -363,7 +363,7 @@ export class DOM {
     const rect = el.getBoundingClientRect();
     return new Point(
       e.clientX - rect.left - el.clientLeft,
-      e.clientY - rect.top - el.clientTop
+      e.clientY - rect.top - el.clientTop,
     );
   }
 
@@ -373,7 +373,7 @@ export class DOM {
     for (let i = 0; i < touches.length; i++) {
       points.push(new Point(
         touches[i].clientX - rect.left - el.clientLeft,
-        touches[i].clientY - rect.top - el.clientTop
+        touches[i].clientY - rect.top - el.clientTop,
       ));
     }
     return points;
