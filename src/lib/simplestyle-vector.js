@@ -8,7 +8,7 @@ const textHaloColor = '#FFFFFF';
 const backgroundColor = 'rgba(255, 0, 0, 0.4)';
 const strokeColor = '#FFFFFF';
 
-class SimplestyleVector {
+class SimpleStyleVector {
   constructor(url) {
     this.sourceName = 'vt-geolonia-simple-style';
     this.url = url;
@@ -226,4 +226,4 @@ class SimplestyleVector {
   }
 }
 
-export default SimplestyleVector;
+export default SimpleStyleVector;
