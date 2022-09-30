@@ -5,8 +5,8 @@ import GeoloniaControl from '@geolonia/mbgl-geolonia-control';
 import GestureHandling from '@geolonia/mbgl-gesture-handling';
 import parseAtts from './parse-atts';
 
-import SimpleStyle from './simplestyle';
-import SimpleStyleVector from './simplestyle-vector';
+import Simplestyle from './simplestyle';
+import SimplestyleVector from './simplestyle-vector';
 
 import * as util from './util';
 
@@ -215,7 +215,7 @@ export default class GeoloniaMap extends maplibregl.Map {
 
       if (atts.simpleVector) {
         const simpleVectorAttributeValue = util.parseSimpleVector(atts.simpleVector);
-        new SimpleStyleVector(simpleVectorAttributeValue).addTo(map);
+        new SimplestyleVector(simpleVectorAttributeValue).addTo(map);
       }
 
       if (atts.geojson) {
@@ -227,7 +227,7 @@ export default class GeoloniaMap extends maplibregl.Map {
           json = atts.geojson;
         }
 
-        const ss = new SimpleStyle(json, {
+        const ss = new Simplestyle(json, {
           cluster: (atts.cluster === 'on'),
           clusterColor: atts.clusterColor,
         });

@@ -15,7 +15,7 @@ const template = {
   'features': [],
 };
 
-class SimpleStyle {
+class Simplestyle {
   constructor(geojson, options) {
 
     this.callFitBounds = false;
@@ -357,4 +357,4 @@ class SimpleStyle {
   }
 }
 
-export default SimpleStyle;
+export default Simplestyle;
