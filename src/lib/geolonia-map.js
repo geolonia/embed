@@ -2,6 +2,7 @@ import 'whatwg-fetch';
 import 'promise-polyfill/src/polyfill';
 import maplibregl from 'maplibre-gl';
 import GeoloniaControl from '@geolonia/mbgl-geolonia-control';
+import CustomAttributionControl from './CustomAttributionControl';
 import GestureHandling from '@geolonia/mbgl-gesture-handling';
 import parseAtts from './parse-atts';
 
@@ -128,61 +129,7 @@ export default class GeoloniaMap extends maplibregl.Map {
     const { position: geoloniaControlPosition } = util.parseControlOption(atts.geoloniaControl);
     map.addControl(new GeoloniaControl(),  geoloniaControlPosition);
 
-    // Add attribution by shadowDOM
-    const bottomRightControls = container.getElementsByClassName('maplibregl-ctrl-bottom-right mapboxgl-ctrl-bottom-right')[0];
-    const shadowRoot = bottomRightControls.attachShadow({mode: 'open'});
-
-    const attributionControl = container.getElementsByClassName('maplibregl-ctrl-attrib mapboxgl-ctrl-attrib')[0];
-    if (attributionControl) {
-      attributionControl.remove();
-    }
-
-    const attributionStyle = document.createElement('style');
-    attributionStyle.textContent = `
-    .mapboxgl-ctrl.mapboxgl-ctrl-attrib, .maplibregl-ctrl.maplibregl-ctrl-attrib {
-      padding: 0 5px;
-      background-color: hsla(0,0%,100%,.5);
-      margin: 0;
-    }
-    .mapboxgl-ctrl-attrib-button, .maplibregl-ctrl-attrib-button {
-      display: none;
-      cursor: pointer;
-      position: absolute;
-      background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='24' height='24' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg' fill-rule='evenodd'%3E%3Cpath d='M4 10a6 6 0 1012 0 6 6 0 10-12 0m5-3a1 1 0 102 0 1 1 0 10-2 0m0 3a1 1 0 112 0v3a1 1 0 11-2 0'/%3E%3C/svg%3E");
-      background-color: hsla(0,0%,100%,.5);
-      width: 24px;
-      height: 24px;
-      box-sizing: border-box;
-      border-radius: 12px;
-      outline: none;
-      top: 0;
-      right: 0;
-      border: 0;
-    }
-    .maplibregl-ctrl-attrib-inner.mapboxgl-ctrl-attrib-inner {
-      display: block;
-    }
-    .mapboxgl-ctrl-attrib a, .maplibregl-ctrl-attrib a {
-      color: rgba(0,0,0,.75);
-      text-decoration: none;
-    }
-    .mapboxgl-ctrl-attrib.mapboxgl-compact, .maplibregl-ctrl-attrib.maplibregl-compact {
-      min-height: 20px;
-      padding: 2px 24px 2px 0;
-      margin: 10px;
-      position: relative;
-      background-color: #fff;
-      border-radius: 12px;
-    }
-    .mapboxgl-ctrl-attrib.mapboxgl-compact-show .mapboxgl-ctrl-attrib-inner, .mapboxgl-ctrl-attrib.mapboxgl-compact .mapboxgl-ctrl-attrib-button, .maplibregl-ctrl-attrib.maplibregl-compact-show .maplibregl-ctrl-attrib-inner, .maplibregl-ctrl-attrib.maplibregl-compact .maplibregl-ctrl-attrib-button {
-      display: block;
-    }
-    .mapboxgl-ctrl-attrib.mapboxgl-compact .mapboxgl-ctrl-attrib-inner, .maplibregl-ctrl-attrib.maplibregl-compact .maplibregl-ctrl-attrib-inner {
-      display: none;
-    }
-    `;
-    shadowRoot.appendChild(attributionControl);
-    shadowRoot.appendChild(attributionStyle);
+    map.addControl(new CustomAttributionControl(), 'bottom-right');
 
     const { enabled: fullscreenControlEnabled, position: fullscreenControlPosition } = util.parseControlOption(atts.fullscreenControl);
     if (fullscreenControlEnabled) {
