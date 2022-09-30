@@ -47,34 +47,52 @@ class CustomAttributionControl {
 
     const style = document.createElement('style');
     style.textContent = `
-    .mapboxgl-ctrl, .maplibregl-ctrl {
-        clear: both;
-        pointer-events: auto;
-        transform: translate(0);
-    }
     .mapboxgl-ctrl.mapboxgl-ctrl-attrib, .maplibregl-ctrl.maplibregl-ctrl-attrib {
-      padding: 0 5px;
       background-color: hsla(0,0%,100%,.5);
       margin: 0;
+      padding: 0 5px;
+    }
+    .maplibregl-ctrl-attrib summary.maplibregl-ctrl-attrib-button {
+      appearance: none;
+      list-style: none;
     }
     .mapboxgl-ctrl-attrib-button, .maplibregl-ctrl-attrib-button {
-      display: none;
-      cursor: pointer;
-      position: absolute;
-      background-image: url(data:image/svg+xml;charset=utf-8,%3Csvg width='24' height='24' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg' fill-rule='evenodd'%3E%3Cpath d='M4 10a6 6 0 1012 0 6 6 0 10-12 0m5-3a1 1 0 102 0 1 1 0 10-2 0m0 3a1 1 0 112 0v3a1 1 0 11-2 0'/%3E%3C/svg%3E);
       background-color: hsla(0,0%,100%,.5);
-      width: 24px;
-      height: 24px;
-      box-sizing: border-box;
-      border-radius: 12px;
-      outline: none;
-      top: 0;
-      right: 0;
+      background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='24' height='24' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg' fill-rule='evenodd'%3E%3Cpath d='M4 10a6 6 0 1 0 12 0 6 6 0 1 0-12 0m5-3a1 1 0 1 0 2 0 1 1 0 1 0-2 0m0 3a1 1 0 1 1 2 0v3a1 1 0 1 1-2 0'/%3E%3C/svg%3E");
       border: 0;
+      border-radius: 12px;
+      box-sizing: border-box;
+      cursor: pointer;
+      display: none;
+      height: 24px;
+      outline: none;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 24px;
     }
     .mapboxgl-ctrl-attrib a, .maplibregl-ctrl-attrib a {
       color: rgba(0,0,0,.75);
       text-decoration: none;
+    }
+    .mapboxgl-ctrl-attrib.mapboxgl-compact, .maplibregl-ctrl-attrib.maplibregl-compact {
+      background-color: #fff;
+      border-radius: 12px;
+      box-sizing: content-box;
+      margin: 10px;
+      min-height: 20px;
+      padding: 2px 24px 2px 0;
+      position: relative;
+    }
+    .mapboxgl-ctrl-attrib.mapboxgl-compact-show, .maplibregl-ctrl-attrib.maplibregl-compact-show {
+      padding: 2px 28px 2px 8px;
+      visibility: visible;
+    }
+    .mapboxgl-ctrl-attrib.mapboxgl-compact-show .mapboxgl-ctrl-attrib-button, .maplibregl-ctrl-attrib.maplibregl-compact-show .maplibregl-ctrl-attrib-button {
+      background-color: rgb(0 0 0/5%);
+    }
+    .mapboxgl-ctrl-attrib.mapboxgl-compact .mapboxgl-ctrl-attrib-button, .mapboxgl-ctrl-attrib.mapboxgl-compact-show .mapboxgl-ctrl-attrib-inner, .maplibregl-ctrl-attrib.maplibregl-compact .maplibregl-ctrl-attrib-button, .maplibregl-ctrl-attrib.maplibregl-compact-show .maplibregl-ctrl-attrib-inner {
+      display: block;
     }
     `;
 
