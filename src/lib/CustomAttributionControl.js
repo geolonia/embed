@@ -47,6 +47,11 @@ class CustomAttributionControl {
 
     const style = document.createElement('style');
     style.textContent = `
+    .mapboxgl-ctrl, .maplibregl-ctrl {
+      clear: both;
+      pointer-events: auto;
+      transform: translate(0);
+    }
     .mapboxgl-ctrl.mapboxgl-ctrl-attrib, .maplibregl-ctrl.maplibregl-ctrl-attrib {
       background-color: hsla(0,0%,100%,.5);
       margin: 0;
@@ -71,9 +76,16 @@ class CustomAttributionControl {
       top: 0;
       width: 24px;
     }
+    .mapboxgl-ctrl-attrib-button:focus, .mapboxgl-ctrl-group button:focus, .maplibregl-ctrl-attrib-button:focus, .maplibregl-ctrl-group button:focus {
+      box-shadow: 0 0 2px 2px #0096ff;
+    }
     .mapboxgl-ctrl-attrib a, .maplibregl-ctrl-attrib a {
       color: rgba(0,0,0,.75);
       text-decoration: none;
+    }
+    .mapboxgl-ctrl-attrib a:hover, .maplibregl-ctrl-attrib a:hover {
+      color: inherit;
+      text-decoration: underline;
     }
     .mapboxgl-ctrl-attrib.mapboxgl-compact, .maplibregl-ctrl-attrib.maplibregl-compact {
       background-color: #fff;
