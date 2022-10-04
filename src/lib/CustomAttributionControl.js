@@ -1,4 +1,4 @@
-import { DOM, bindAll } from './util';
+import { DOM, bindAll } from './maplibre-util';
 
 /**
  *  This class is a copy of maplibre-gl-js's AttributionControl class and rewrite by shadow DOM.
@@ -47,22 +47,22 @@ class CustomAttributionControl {
 
     const style = document.createElement('style');
     style.textContent = `
-    .mapboxgl-ctrl, .maplibregl-ctrl {
+    .maplibregl-ctrl {
       clear: both;
       pointer-events: auto;
       transform: translate(0);
     }
-    .mapboxgl-ctrl-attrib-button:focus,.mapboxgl-ctrl-group button:focus,.maplibregl-ctrl-attrib-button:focus,.maplibregl-ctrl-group button:focus {
+    .maplibregl-ctrl-attrib-button:focus,.maplibregl-ctrl-group button:focus {
       box-shadow: 0 0 2px 2px #0096ff
     }
-    .mapboxgl-ctrl.mapboxgl-ctrl-attrib,.maplibregl-ctrl.maplibregl-ctrl-attrib {
+    .maplibregl-ctrl.maplibregl-ctrl-attrib {
       background-color: hsla(0,0%,100%,.5);
       margin: 0;
       padding: 0 5px
     }
 
     @media screen {
-        .mapboxgl-ctrl-attrib.mapboxgl-compact,.maplibregl-ctrl-attrib.maplibregl-compact {
+       .maplibregl-ctrl-attrib.maplibregl-compact {
             background-color: #fff;
             border-radius: 12px;
             box-sizing: content-box;
@@ -72,21 +72,21 @@ class CustomAttributionControl {
             position: relative
         }
 
-        .mapboxgl-ctrl-attrib.mapboxgl-compact-show,.maplibregl-ctrl-attrib.maplibregl-compact-show {
+       .maplibregl-ctrl-attrib.maplibregl-compact-show {
             padding: 2px 28px 2px 8px;
             visibility: visible
         }
 
-        .mapboxgl-ctrl-bottom-left>.mapboxgl-ctrl-attrib.mapboxgl-compact-show,.mapboxgl-ctrl-top-left>.mapboxgl-ctrl-attrib.mapboxgl-compact-show,.maplibregl-ctrl-bottom-left>.maplibregl-ctrl-attrib.maplibregl-compact-show,.maplibregl-ctrl-top-left>.maplibregl-ctrl-attrib.maplibregl-compact-show {
+        .maplibregl-ctrl-bottom-left>.maplibregl-ctrl-attrib.maplibregl-compact-show,.maplibregl-ctrl-top-left>.maplibregl-ctrl-attrib.maplibregl-compact-show {
             border-radius: 12px;
             padding: 2px 8px 2px 28px
         }
 
-        .mapboxgl-ctrl-attrib.mapboxgl-compact .mapboxgl-ctrl-attrib-inner,.maplibregl-ctrl-attrib.maplibregl-compact .maplibregl-ctrl-attrib-inner {
+       .maplibregl-ctrl-attrib.maplibregl-compact .maplibregl-ctrl-attrib-inner {
             display: none
         }
 
-        .mapboxgl-ctrl-attrib-button,.maplibregl-ctrl-attrib-button {
+       .maplibregl-ctrl-attrib-button {
             background-color: hsla(0,0%,100%,.5);
             background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='24' height='24' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg' fill-rule='evenodd'%3E%3Cpath d='M4 10a6 6 0 1 0 12 0 6 6 0 1 0-12 0m5-3a1 1 0 1 0 2 0 1 1 0 1 0-2 0m0 3a1 1 0 1 1 2 0v3a1 1 0 1 1-2 0'/%3E%3C/svg%3E");
             border: 0;
@@ -111,47 +111,47 @@ class CustomAttributionControl {
             display: none
         }
 
-        .mapboxgl-ctrl-bottom-left .mapboxgl-ctrl-attrib-button,.mapboxgl-ctrl-top-left .mapboxgl-ctrl-attrib-button,.maplibregl-ctrl-bottom-left .maplibregl-ctrl-attrib-button,.maplibregl-ctrl-top-left .maplibregl-ctrl-attrib-button {
+        .maplibregl-ctrl-bottom-left .maplibregl-ctrl-attrib-button,.maplibregl-ctrl-top-left .maplibregl-ctrl-attrib-button {
             left: 0
         }
 
-        .mapboxgl-ctrl-attrib.mapboxgl-compact .mapboxgl-ctrl-attrib-button,.mapboxgl-ctrl-attrib.mapboxgl-compact-show .mapboxgl-ctrl-attrib-inner,.maplibregl-ctrl-attrib.maplibregl-compact .maplibregl-ctrl-attrib-button,.maplibregl-ctrl-attrib.maplibregl-compact-show .maplibregl-ctrl-attrib-inner {
+        .maplibregl-ctrl-attrib.maplibregl-compact .maplibregl-ctrl-attrib-button,.maplibregl-ctrl-attrib.maplibregl-compact-show .maplibregl-ctrl-attrib-inner {
             display: block
         }
 
-        .mapboxgl-ctrl-attrib.mapboxgl-compact-show .mapboxgl-ctrl-attrib-button,.maplibregl-ctrl-attrib.maplibregl-compact-show .maplibregl-ctrl-attrib-button {
+        .maplibregl-ctrl-attrib.maplibregl-compact-show .maplibregl-ctrl-attrib-button {
             background-color: rgb(0 0 0/5%)
         }
 
-        .mapboxgl-ctrl-bottom-right>.mapboxgl-ctrl-attrib.mapboxgl-compact:after,.maplibregl-ctrl-bottom-right>.maplibregl-ctrl-attrib.maplibregl-compact:after {
+        .maplibregl-ctrl-bottom-right>.maplibregl-ctrl-attrib.maplibregl-compact:after {
             bottom: 0;
             right: 0
         }
 
-        .mapboxgl-ctrl-top-right>.mapboxgl-ctrl-attrib.mapboxgl-compact:after,.maplibregl-ctrl-top-right>.maplibregl-ctrl-attrib.maplibregl-compact:after {
+        .maplibregl-ctrl-top-right>.maplibregl-ctrl-attrib.maplibregl-compact:after {
             right: 0;
             top: 0
         }
 
-        .mapboxgl-ctrl-top-left>.mapboxgl-ctrl-attrib.mapboxgl-compact:after,.maplibregl-ctrl-top-left>.maplibregl-ctrl-attrib.maplibregl-compact:after {
+        .maplibregl-ctrl-top-left>.maplibregl-ctrl-attrib.maplibregl-compact:after {
             left: 0;
             top: 0
         }
 
-        .mapboxgl-ctrl-bottom-left>.mapboxgl-ctrl-attrib.mapboxgl-compact:after,.maplibregl-ctrl-bottom-left>.maplibregl-ctrl-attrib.maplibregl-compact:after {
+        .maplibregl-ctrl-bottom-left>.maplibregl-ctrl-attrib.maplibregl-compact:after {
             bottom: 0;
             left: 0
         }
     }
 
     @media screen and (-ms-high-contrast:active) {
-        .mapboxgl-ctrl-attrib.mapboxgl-compact:after,.maplibregl-ctrl-attrib.maplibregl-compact:after {
+        .maplibregl-ctrl-attrib.maplibregl-compact:after {
             background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='24' height='24' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg' fill-rule='evenodd' fill='%23fff'%3E%3Cpath d='M4 10a6 6 0 1 0 12 0 6 6 0 1 0-12 0m5-3a1 1 0 1 0 2 0 1 1 0 1 0-2 0m0 3a1 1 0 1 1 2 0v3a1 1 0 1 1-2 0'/%3E%3C/svg%3E")
         }
     }
 
     @media screen and (-ms-high-contrast:black-on-white) {
-        .mapboxgl-ctrl-attrib.mapboxgl-compact:after,.maplibregl-ctrl-attrib.maplibregl-compact:after {
+        .maplibregl-ctrl-attrib.maplibregl-compact:after {
             background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='24' height='24' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg' fill-rule='evenodd'%3E%3Cpath d='M4 10a6 6 0 1 0 12 0 6 6 0 1 0-12 0m5-3a1 1 0 1 0 2 0 1 1 0 1 0-2 0m0 3a1 1 0 1 1 2 0v3a1 1 0 1 1-2 0'/%3E%3C/svg%3E")
         }
     }
@@ -168,6 +168,10 @@ class CustomAttributionControl {
 
     .mapboxgl-attrib-empty,.maplibregl-attrib-empty {
         display: none
+    }
+
+    .maplibregl-ctrl-attrib-inner {
+      word-break: break-all;
     }
     `;
 

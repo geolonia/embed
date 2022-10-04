@@ -5,7 +5,7 @@
     "geolonia": {
       "type": "vector",
       "url": "https://tileserver.geolonia.com/v2_combined2/tiles.json?key=YOUR-API-KEY",
-      "attribution": "© Example.Inc xxxxxxxx"
+      "attribution": "<a href=\"https://example.com\" target=\"_blank\">© Example.Inc</a>"
     },
     "dem": {
       "type": "raster-dem",
@@ -20,12 +20,17 @@
     "geolonia1": {
       "type": "vector",
       "url": "https://tileserver.geolonia.com/v2_combined2/tiles.json?key=YOUR-API-KEY",
-      "attribution": "© テストテストテスト"
+      "attribution": "<a href=\"https://example.com\" target=\"_blank\">Example.Inc1</a>"
     },
     "geolonia2": {
       "type": "vector",
       "url": "https://tileserver.geolonia.com/v2_combined2/tiles.json?key=YOUR-API-KEY",
-      "attribution": "© サンプル院サンプル課より加工して作成"
+      "attribution": "<a href=\"https://example.com\" target=\"_blank\">© Example.Inc2</a>"
+    },
+    "geolonia3": {
+      "type": "vector",
+      "url": "https://tileserver.geolonia.com/v2_combined2/tiles.json?key=YOUR-API-KEY",
+      "attribution": "<a href=\"https://example.com\" target=\"_blank\">© Example.Inc3</a>"
     }
   },
   "sprite": "https://geoloniamaps.github.io/basic/basic",
@@ -133,7 +138,7 @@
     {
       "id": "landcover-wood",
       "type": "fill",
-      "source": "geolonia",
+      "source": "geolonia3",
       "source-layer": "landcover",
       "filter": [
         "==",
