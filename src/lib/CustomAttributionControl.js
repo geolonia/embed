@@ -158,7 +158,8 @@ class CustomAttributionControl {
 
     .maplibregl-ctrl-attrib a {
         color: rgba(0,0,0,.75);
-        text-decoration: none
+        text-decoration: none;
+        white-space: nowrap;
     }
 
     .maplibregl-ctrl-attrib a:hover {
@@ -168,10 +169,6 @@ class CustomAttributionControl {
 
     .maplibregl-attrib-empty {
         display: none
-    }
-
-    .maplibregl-ctrl-attrib-inner {
-      word-break: break-all;
     }
     `;
 
