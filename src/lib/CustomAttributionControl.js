@@ -156,17 +156,17 @@ class CustomAttributionControl {
         }
     }
 
-    .mapboxgl-ctrl-attrib a,.maplibregl-ctrl-attrib a {
+    .maplibregl-ctrl-attrib a {
         color: rgba(0,0,0,.75);
         text-decoration: none
     }
 
-    .mapboxgl-ctrl-attrib a:hover,.maplibregl-ctrl-attrib a:hover {
+    .maplibregl-ctrl-attrib a:hover {
         color: inherit;
         text-decoration: underline
     }
 
-    .mapboxgl-attrib-empty,.maplibregl-attrib-empty {
+    .maplibregl-attrib-empty {
         display: none
     }
 
