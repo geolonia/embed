@@ -201,7 +201,7 @@ export function getOptions(container, params, atts) {
     zoom: parseFloat(atts.zoom),
     hash: (atts.hash === 'on'),
     localIdeographFontFamily: 'sans-serif',
-    attributionControl: true,
+    attributionControl: false,
   };
 
   if (atts.minZoom !== '' && (Number(atts.minZoom) === 0 || Number(atts.minZoom))) {

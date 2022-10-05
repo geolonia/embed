@@ -2,6 +2,7 @@ import 'whatwg-fetch';
 import 'promise-polyfill/src/polyfill';
 import maplibregl from 'maplibre-gl';
 import GeoloniaControl from '@geolonia/mbgl-geolonia-control';
+import CustomAttributionControl from './CustomAttributionControl';
 import GestureHandling from '@geolonia/mbgl-gesture-handling';
 import parseAtts from './parse-atts';
 
@@ -127,6 +128,8 @@ export default class GeoloniaMap extends maplibregl.Map {
     // Because this control should be "very" bottom-left(default) or the attributed position.
     const { position: geoloniaControlPosition } = util.parseControlOption(atts.geoloniaControl);
     map.addControl(new GeoloniaControl(),  geoloniaControlPosition);
+
+    map.addControl(new CustomAttributionControl(), 'bottom-right');
 
     const { enabled: fullscreenControlEnabled, position: fullscreenControlPosition } = util.parseControlOption(atts.fullscreenControl);
     if (fullscreenControlEnabled) {
