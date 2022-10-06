@@ -48,13 +48,16 @@ class CustomAttributionControl {
     const style = document.createElement('style');
     style.textContent = `
     .maplibregl-ctrl {
+      font: 12px/20px Helvetica Neue,Arial,Helvetica,sans-serif;
       clear: both;
       pointer-events: auto;
       transform: translate(0);
     }
+
     .maplibregl-ctrl-attrib-button:focus,.maplibregl-ctrl-group button:focus {
       box-shadow: 0 0 2px 2px #0096ff
     }
+
     .maplibregl-ctrl.maplibregl-ctrl-attrib {
       background-color: hsla(0,0%,100%,.5);
       margin: 0;
