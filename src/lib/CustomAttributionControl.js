@@ -52,13 +52,19 @@ class CustomAttributionControl {
       pointer-events: auto;
       transform: translate(0);
     }
+
     .maplibregl-ctrl-attrib-button:focus,.maplibregl-ctrl-group button:focus {
       box-shadow: 0 0 2px 2px #0096ff
     }
+
     .maplibregl-ctrl.maplibregl-ctrl-attrib {
       background-color: hsla(0,0%,100%,.5);
       margin: 0;
       padding: 0 5px
+    }
+
+    .maplibregl-ctrl-attrib-inner {
+      font-size: 12px;
     }
 
     @media screen {
