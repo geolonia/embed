@@ -48,6 +48,7 @@ class CustomAttributionControl {
     const style = document.createElement('style');
     style.textContent = `
     .maplibregl-ctrl {
+      font: 12px/20px Helvetica Neue,Arial,Helvetica,sans-serif;
       clear: both;
       pointer-events: auto;
       transform: translate(0);
@@ -61,10 +62,6 @@ class CustomAttributionControl {
       background-color: hsla(0,0%,100%,.5);
       margin: 0;
       padding: 0 5px
-    }
-
-    .maplibregl-ctrl-attrib-inner {
-      font-size: 12px;
     }
 
     @media screen {
