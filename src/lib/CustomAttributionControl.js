@@ -66,15 +66,17 @@ class CustomAttributionControl {
             background-color: #fff;
             border-radius: 12px;
             box-sizing: content-box;
-            margin: 10px;
             min-height: 20px;
             padding: 2px 24px 2px 0;
-            position: relative
+            position: relative;
+            margin: 10px 10px 10px auto;
+            width: 0;
         }
 
        .maplibregl-ctrl-attrib.maplibregl-compact-show {
             padding: 2px 28px 2px 8px;
-            visibility: visible
+            visibility: visible;
+            width: auto;
         }
 
         .maplibregl-ctrl-bottom-left>.maplibregl-ctrl-attrib.maplibregl-compact-show,.maplibregl-ctrl-top-left>.maplibregl-ctrl-attrib.maplibregl-compact-show {
