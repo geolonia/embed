@@ -226,7 +226,11 @@ class SimpleStyle {
         'icon-image': [
           'case',
           ['==', 'large', ['get', 'marker-size']], ['image', ['concat', ['get', 'marker-symbol'], '-15']],
-          ['image', ['concat', ['get', 'marker-symbol'], '-11']],
+          [
+            'coalesce',
+            ['image', ['concat', ['get', 'marker-symbol'], '-11']],
+            ['image', ['get', 'marker-symbol']],
+          ],
         ],
         'text-field': ['get', 'title'],
         'text-font': ['Noto Sans Regular'],
