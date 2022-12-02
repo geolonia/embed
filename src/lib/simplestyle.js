@@ -225,7 +225,13 @@ class SimpleStyle {
       layout: {
         'icon-image': [
           'case',
-          ['==', 'large', ['get', 'marker-size']], ['image', ['concat', ['get', 'marker-symbol'], '-15']],
+          ['==', 'large', ['get', 'marker-size']],
+          [
+            'coalesce',
+            ['image', ['concat', ['get', 'marker-symbol'], '-15']],
+            ['image', ['concat', ['get', 'marker-symbol'], '-11']],
+            ['image', ['get', 'marker-symbol']],
+          ],
           [
             'coalesce',
             ['image', ['concat', ['get', 'marker-symbol'], '-11']],
