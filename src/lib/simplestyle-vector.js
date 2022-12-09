@@ -197,6 +197,7 @@ class SimpleStyleVector {
     });
 
     this.setPopup(map, 'vt-circle-simple-style-points');
+    this.setPopup(map, 'vt-geolonia-simple-style-points');
   }
 
   async setPopup(map, source) {

@@ -240,6 +240,7 @@ class SimpleStyle {
     });
 
     this.setPopup(this.map, `${this.options.id}-circle-points`);
+    this.setPopup(this.map, `${this.options.id}-symbol-points`);
   }
 
   async setPopup(map, source) {
