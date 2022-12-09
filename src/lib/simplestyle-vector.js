@@ -152,7 +152,7 @@ class SimpleStyleVector {
       type: 'circle',
       source: this.sourceName,
       'source-layer': 'g-simplestyle-v1',
-      filter: ['all', ['==', '$type', 'Point'], ['!', ['has', 'marker-symbol']]],
+      filter: ['all', ['==', '$type', 'Point'], ['!has', 'marker-symbol']],
       paint: {
         'circle-radius': [
           'case',
