@@ -196,7 +196,7 @@ class SimpleStyle {
       id: `${this.options.id}-circle-points`,
       type: 'circle',
       source: `${this.options.id}-points`,
-      filter: ['all', ['!', ['has', 'point_count']], ['!', ['has', 'marker-symbol']]],
+      filter: ['all', ['!has', 'point_count'], ['!has', 'marker-symbol']],
       paint: {
         'circle-radius': [
           'case',
