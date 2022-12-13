@@ -152,7 +152,7 @@ class SimpleStyleVector {
       type: 'circle',
       source: this.sourceName,
       'source-layer': 'g-simplestyle-v1',
-      filter: ['==', '$type', 'Point'],
+      filter: ['all', ['==', '$type', 'Point'], ['!has', 'marker-symbol']],
       paint: {
         'circle-radius': [
           'case',
@@ -180,11 +180,7 @@ class SimpleStyleVector {
         'text-halo-width': 1,
       },
       layout: {
-        'icon-image': [
-          'case',
-          ['==', 'large', ['get', 'marker-size']], ['image', ['concat', ['get', 'marker-symbol'], '-15']],
-          ['image', ['concat', ['get', 'marker-symbol'], '-11']],
-        ],
+        'icon-image': ['get', 'marker-symbol'],
         'text-field': ['get', 'title'],
         'text-font': ['Noto Sans Regular'],
         'text-size': 12,
@@ -201,6 +197,7 @@ class SimpleStyleVector {
     });
 
     this.setPopup(map, 'vt-circle-simple-style-points');
+    this.setPopup(map, 'vt-geolonia-simple-style-points');
   }
 
   async setPopup(map, source) {
