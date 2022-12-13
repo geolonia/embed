@@ -5,6 +5,23 @@ import { DOM, bindAll } from './maplibre-util';
  * https://github.com/maplibre/maplibre-gl-js/blob/main/src/ui/control/attribution_control.ts
  */
 
+/**
+ * When the map is too small to display the full attribution, it will be
+ * collapsed in to a "i" icon. It is open by default, and will hide itself
+ * when user interaction is detected.
+ * For more information on why this is open by default, see the following links:
+ *
+ * The OSM Foundation attribution guidelines.
+ * https://wiki.osmfoundation.org/wiki/Licence/Attribution_Guidelines#Interactive_maps
+ * > You may use a mechanism to fade/collapse the attribution under certain conditions:
+ * >  * immediately with a dismiss interaction, for example clicking an ‘x’ in the corner of a dialog
+ * >  * automatically on map interaction such as panning, clicking, or zooming
+ * >  * automatically after five seconds. This also applies to splash screens or pop-ups.
+ *
+ * This is the issue where attribution is open by default in the MapLibre GL JS library:
+ * https://github.com/maplibre/maplibre-gl-js/issues/205
+ */
+
 class CustomAttributionControl {
 
   constructor(options = {}) {
@@ -48,13 +65,16 @@ class CustomAttributionControl {
     const style = document.createElement('style');
     style.textContent = `
     .maplibregl-ctrl {
+      font: 12px/20px Helvetica Neue,Arial,Helvetica,sans-serif;
       clear: both;
       pointer-events: auto;
       transform: translate(0);
     }
+
     .maplibregl-ctrl-attrib-button:focus,.maplibregl-ctrl-group button:focus {
       box-shadow: 0 0 2px 2px #0096ff
     }
+
     .maplibregl-ctrl.maplibregl-ctrl-attrib {
       background-color: hsla(0,0%,100%,.5);
       margin: 0;
@@ -66,15 +86,17 @@ class CustomAttributionControl {
             background-color: #fff;
             border-radius: 12px;
             box-sizing: content-box;
-            margin: 10px;
             min-height: 20px;
             padding: 2px 24px 2px 0;
-            position: relative
+            position: relative;
+            margin: 10px 10px 10px auto;
+            width: 0;
         }
 
        .maplibregl-ctrl-attrib.maplibregl-compact-show {
             padding: 2px 28px 2px 8px;
-            visibility: visible
+            visibility: visible;
+            width: auto;
         }
 
         .maplibregl-ctrl-bottom-left>.maplibregl-ctrl-attrib.maplibregl-compact-show,.maplibregl-ctrl-top-left>.maplibregl-ctrl-attrib.maplibregl-compact-show {
