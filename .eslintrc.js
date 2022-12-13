@@ -7,7 +7,7 @@ module.exports = {
     mocha: true,
   },
   extends: ['@geolonia'],
-  parser: 'babel-eslint',
+  parser: '@babel/eslint-parser',
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: 'module',
