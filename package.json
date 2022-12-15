@@ -53,12 +53,14 @@
     "@mapbox/point-geometry": "^0.1.0",
     "@turf/center": "^6.0.1",
     "core-js": "^3.26.1",
-    "intersection-observer": "^0.12.2",
     "maplibre-gl": "2.4.0",
     "promise-polyfill": "^8.2.3",
     "sanitize-html": "^2.8.0",
     "tinycolor2": "^1.4.1",
     "url-parse": "^1.5.10",
     "whatwg-fetch": "^3.0.0"
-  }
+  },
+  "browserslist": [
+    "defaults or >= 1% in JP"
+  ]
 }

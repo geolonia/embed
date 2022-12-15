@@ -2,7 +2,6 @@
  * @file Entry for embed.js
  */
 
-import 'intersection-observer';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './style.css';
