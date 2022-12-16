@@ -1,6 +1,7 @@
 'use strict';
 
 import parseApiKey from './parse-api-key';
+import sanitizeHtml from  'sanitize-html';
 
 /**
  *
@@ -273,4 +274,10 @@ export const handleRestrictedMode = (map) => {
     container.innerHTML = '';
     container.classList.add('geolonia__restricted-mode-image-container');
   }
+};
+
+export const sanitizeDescription = (description) => {
+  return sanitizeHtml(description, {
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
+  });
 };
