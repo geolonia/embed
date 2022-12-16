@@ -203,12 +203,14 @@ describe('Tests for util.js', () => {
     );
   });
 
-  describe('Tests for sanitizeDescription', () => {
-    it('should sanitize description', () => {
+  describe('Tests for sanitizeDescription', async () => {
+    const { default: sanitizeHtml } = await import('sanitize-html');
+
+    it('should sanitize description', async () => {
       const description = '<script>alert("hello");</script>ここが集合場所です。13時までに集合してください。';
       assert.strictEqual(
         'ここが集合場所です。13時までに集合してください。',
-        util.sanitizeDescription(description),
+        util.sanitizeDescription(description, sanitizeHtml),
       );
     });
 
@@ -217,7 +219,7 @@ describe('Tests for util.js', () => {
       const description = '<img decoding="auto" src="hibiya-park.jpeg" /><br />ここが集合場所です。13時までに集合してください。';
       assert.strictEqual(
         '<img src="hibiya-park.jpeg" /><br />ここが集合場所です。13時までに集合してください。',
-        util.sanitizeDescription(description),
+        util.sanitizeDescription(description, sanitizeHtml),
       );
     });
   });

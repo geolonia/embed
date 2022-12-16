@@ -1,7 +1,6 @@
 'use strict';
 
 import parseApiKey from './parse-api-key';
-import sanitizeHtml from  'sanitize-html';
 
 /**
  *
@@ -276,7 +275,7 @@ export const handleRestrictedMode = (map) => {
   }
 };
 
-export const sanitizeDescription = (description) => {
+export const sanitizeDescription = (description, sanitizeHtml) => {
   return sanitizeHtml(description, {
     allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
   });
