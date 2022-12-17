@@ -275,7 +275,8 @@ export const handleRestrictedMode = (map) => {
   }
 };
 
-export const sanitizeDescription = (description, sanitizeHtml) => {
+export const sanitizeDescription = async (description) => {
+  const { default: sanitizeHtml } = await import('sanitize-html');
   return sanitizeHtml(description, {
     allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
   });

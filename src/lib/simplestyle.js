@@ -244,13 +244,13 @@ class SimpleStyle {
   }
 
   async setPopup(map, source) {
-    const { default: sanitizeHtml } = await import('sanitize-html');
-    map.on('click', source, (e) => {
+    map.on('click', source, async (e) => {
       const center = turfCenter(e.features[0]).geometry.coordinates;
       const description = e.features[0].properties.description;
 
       if (description) {
-        new maplibregl.Popup().setLngLat(center).setHTML(sanitizeDescription(description, sanitizeHtml)).addTo(map);
+        const sanitizedDescription = await sanitizeDescription(description);
+        new maplibregl.Popup().setLngLat(center).setHTML(sanitizedDescription).addTo(map);
       }
     });
 
