@@ -3,7 +3,7 @@
 import maplibregl from 'maplibre-gl';
 import geojsonExtent from '@mapbox/geojson-extent';
 import turfCenter from '@turf/center';
-import { isURL } from './util';
+import { isURL, sanitizeDescription } from './util';
 
 const textColor = '#000000';
 const textHaloColor = '#FFFFFF';
@@ -244,13 +244,13 @@ class SimpleStyle {
   }
 
   async setPopup(map, source) {
-    const { default: sanitizeHtml } = await import('sanitize-html');
-    map.on('click', source, (e) => {
+    map.on('click', source, async (e) => {
       const center = turfCenter(e.features[0]).geometry.coordinates;
       const description = e.features[0].properties.description;
 
       if (description) {
-        new maplibregl.Popup().setLngLat(center).setHTML(sanitizeHtml(description)).addTo(map);
+        const sanitizedDescription = await sanitizeDescription(description);
+        new maplibregl.Popup().setLngLat(center).setHTML(sanitizedDescription).addTo(map);
       }
     });
 
