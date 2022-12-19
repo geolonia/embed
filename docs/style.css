@@ -63,3 +63,9 @@ footer
 {
   display: flex;
 }
+
+.red
+{
+  color: red;
+  font-weight: bold;
+}
