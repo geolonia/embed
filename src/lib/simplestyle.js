@@ -236,6 +236,7 @@ class SimpleStyle {
           ['literal', [0, 0.8]],
         ],
         'text-allow-overlap': false,
+        'icon-allow-overlap': true,
       },
     });
 
