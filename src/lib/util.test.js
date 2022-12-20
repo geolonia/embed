@@ -220,5 +220,13 @@ describe('Tests for util.js', () => {
         await util.sanitizeDescription(description),
       );
     });
+
+    it('should not sanitize "class" attribute', async () => {
+      const description = '<span class="red">ここが集合場所です。13時までに集合してください。</span>';
+      assert.strictEqual(
+        '<span class="red">ここが集合場所です。13時までに集合してください。</span>',
+        await util.sanitizeDescription(description),
+      );
+    });
   });
 });
