@@ -17,13 +17,13 @@ jobs:
       matrix:
         node-version: ['14.x', '16.x', '18.x']
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
       - name: Cache node_modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: node_modules
           key: modules-cache-v1-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
@@ -32,7 +32,7 @@ jobs:
       - run: yarn test
       - run: yarn build
       - name: save the built
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: "!failure()"
         with:
           retention-days: 1
@@ -48,8 +48,8 @@ jobs:
       - build
     if: ${{ github.ref == 'refs/heads/master' }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: '14.x'
       - name: Clean repo
@@ -57,7 +57,7 @@ jobs:
           git checkout --orphan gh-pages
           git rm -rf . > /dev/null 2>&1
       - name: load the built
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: the-built
       - name: Setup and deploy Github Pages
@@ -77,8 +77,8 @@ jobs:
       - build
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           tag_name: 'v%s'
           node-version: '14.x'
