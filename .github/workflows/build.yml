@@ -98,3 +98,17 @@ jobs:
         run: npm publish --access=public --tag=next
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: 'Checkout geolonia/cdn.geolonia.com'
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PAT_FOR_CDN_GEOLONIA_COM }}
+          repository: geolonia/cdn.geolonia.com
+          path: ./cdn.geolonia.com
+      - name: 'Build Embed API'
+        run: npm run build:embed
+        working-directory: ./cdn.geolonia.com
+      - name: 'Create PR in geolonia/cdn.geolonia.com'
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.PAT_FOR_CDN_GEOLONIA_COM }}
+          path: ./cdn.geolonia.com
