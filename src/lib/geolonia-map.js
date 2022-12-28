@@ -41,6 +41,11 @@ export default class GeoloniaMap extends maplibregl.Map {
       return container.geoloniaMap;
     }
 
+    if (container.clientHeight === 0) {
+      // eslint-disable-next-line no-console
+      console.warn('Geolonia Embed API failed to render the map because the container has no height. Please set the CSS property `height` to the container.');
+    }
+
     const atts = parseAtts(container, params);
     const options = util.getOptions(container, params, atts);
 
