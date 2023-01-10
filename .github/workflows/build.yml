@@ -4,11 +4,14 @@
 name: build
 
 on:
-  push:
-    branches: ['*']
-    tags: ['*']
+  # push:
+  #   branches: ['*']
+  #   tags: ['*']
   pull_request:
-    branches: [master]
+    types:
+      - labeled
+    branches:
+      - 'test-github-action'
 
 jobs:
   build:
