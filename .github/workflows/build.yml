@@ -112,3 +112,10 @@ jobs:
         with:
           token: ${{ secrets.PAT_FOR_CDN_GEOLONIA_COM }}
           path: ./cdn.geolonia.com
+          title: "Release @geolonia/embed"
+          body: |
+            Release @geolonia/embed
+            https://github.com/geolonia/embed の GitHub Actions によって自動作成
+          labels: 🚀♻️リリース定期タスク
+          reviewers: keichan34
+
