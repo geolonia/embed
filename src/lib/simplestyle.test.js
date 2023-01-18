@@ -1,3 +1,4 @@
+/* eslint-disable no-loss-of-precision */
 'use strict';
 
 import assert from 'assert';
@@ -93,6 +94,7 @@ describe('Tests for simpleStyle()', () => {
     assert.deepEqual([ 'geolonia-simple-style', 'geolonia-simple-style-points' ], Object.keys(map.sources));
     assert.deepEqual(8, map.layers.length);
     assert.deepEqual(true, map.bounds);
+    assert.deepEqual(true, map.layers.find((layer) => layer.id === 'geolonia-simple-style-symbol-points').layout['icon-allow-overlap']);
   });
 
   it('should has sources and layers as expected with custom IDs', async () => {

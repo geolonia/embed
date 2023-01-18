@@ -2,6 +2,7 @@ import 'whatwg-fetch';
 import 'promise-polyfill/src/polyfill';
 import maplibregl from 'maplibre-gl';
 import GeoloniaControl from '@geolonia/mbgl-geolonia-control';
+import CustomAttributionControl from './CustomAttributionControl';
 import GestureHandling from '@geolonia/mbgl-gesture-handling';
 import parseAtts from './parse-atts';
 
@@ -38,6 +39,11 @@ export default class GeoloniaMap extends maplibregl.Map {
     const container = util.getContainer(params);
     if (container.geoloniaMap) {
       return container.geoloniaMap;
+    }
+
+    if (container.clientHeight === 0) {
+      // eslint-disable-next-line no-console
+      console.warn('Geolonia Embed API failed to render the map because the container has no height. Please set the CSS property `height` to the container.');
     }
 
     const atts = parseAtts(container, params);
@@ -84,15 +90,27 @@ export default class GeoloniaMap extends maplibregl.Map {
         }
       }
 
+      const transformedUrlObj = new URL(transformedUrl);
+
       if (resourceType === 'Source' && transformedUrl.startsWith('https://tileserver.geolonia.com')) {
-        const tileserverSourcesUrl = new URL(transformedUrl);
         if (atts.stage !== 'v1') {
-          tileserverSourcesUrl.hostname = `tileserver-${atts.stage}.geolonia.com`;
+          transformedUrlObj.hostname = `tileserver-${atts.stage}.geolonia.com`;
         }
-        tileserverSourcesUrl.searchParams.set('sessionId', sessionId);
-        tileserverSourcesUrl.searchParams.set('key', atts.key);
+        transformedUrlObj.searchParams.set('sessionId', sessionId);
+        transformedUrlObj.searchParams.set('key', atts.key);
         return {
-          url: tileserverSourcesUrl.toString(),
+          url: transformedUrlObj.toString(),
+        };
+      } else if (
+        (resourceType === 'SpriteJSON' || resourceType === 'SpriteImage') &&
+        transformedUrl.match(/^https:\/\/api\.geolonia\.com\/(dev|v1)\/sprites\//)
+      ) {
+        const pathParts = transformedUrlObj.pathname.split('/');
+        pathParts[1] = atts.stage;
+        transformedUrlObj.pathname = pathParts.join('/');
+        transformedUrlObj.searchParams.set('key', atts.key);
+        return {
+          url: transformedUrlObj.toString(),
         };
       }
 
@@ -115,6 +133,8 @@ export default class GeoloniaMap extends maplibregl.Map {
     // Because this control should be "very" bottom-left(default) or the attributed position.
     const { position: geoloniaControlPosition } = util.parseControlOption(atts.geoloniaControl);
     map.addControl(new GeoloniaControl(),  geoloniaControlPosition);
+
+    map.addControl(new CustomAttributionControl(), 'bottom-right');
 
     const { enabled: fullscreenControlEnabled, position: fullscreenControlPosition } = util.parseControlOption(atts.fullscreenControl);
     if (fullscreenControlEnabled) {

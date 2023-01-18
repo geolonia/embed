@@ -2,6 +2,7 @@
 
 import maplibregl from 'maplibre-gl';
 import turfCenter from '@turf/center';
+import { sanitizeDescription } from './util';
 
 const textColor = '#000000';
 const textHaloColor = '#FFFFFF';
@@ -152,7 +153,7 @@ class SimpleStyleVector {
       type: 'circle',
       source: this.sourceName,
       'source-layer': 'g-simplestyle-v1',
-      filter: ['==', '$type', 'Point'],
+      filter: ['all', ['==', '$type', 'Point'], ['!has', 'marker-symbol']],
       paint: {
         'circle-radius': [
           'case',
@@ -180,11 +181,7 @@ class SimpleStyleVector {
         'text-halo-width': 1,
       },
       layout: {
-        'icon-image': [
-          'case',
-          ['==', 'large', ['get', 'marker-size']], ['image', ['concat', ['get', 'marker-symbol'], '-15']],
-          ['image', ['concat', ['get', 'marker-symbol'], '-11']],
-        ],
+        'icon-image': ['get', 'marker-symbol'],
         'text-field': ['get', 'title'],
         'text-font': ['Noto Sans Regular'],
         'text-size': 12,
@@ -201,16 +198,17 @@ class SimpleStyleVector {
     });
 
     this.setPopup(map, 'vt-circle-simple-style-points');
+    this.setPopup(map, 'vt-geolonia-simple-style-points');
   }
 
   async setPopup(map, source) {
-    const { default: sanitizeHtml } = await import('sanitize-html');
-    map.on('click', source, (e) => {
+    map.on('click', source, async (e) => {
       const center = turfCenter(e.features[0]).geometry.coordinates;
       const description = e.features[0].properties.description;
 
       if (description) {
-        new maplibregl.Popup().setLngLat(center).setHTML(sanitizeHtml(description)).addTo(map);
+        const sanitizedDescription = await sanitizeDescription(description);
+        new maplibregl.Popup().setLngLat(center).setHTML(sanitizedDescription).addTo(map);
       }
     });
 

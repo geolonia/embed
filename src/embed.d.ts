@@ -1,7 +1,9 @@
 import * as maplibregl from 'maplibre-gl';
+import SimpleStyle from './lib/simplestyle'
 
 export class Map extends maplibregl.Map {}
 export class Marker extends maplibregl.Marker {}
+export class Popup extends maplibregl.Popup {}
 
 export type EmbedAttributes = {
   lat: string;
@@ -45,6 +47,8 @@ declare global {
       baseApiUrl: string;
       Map: typeof Map;
       Marker: typeof Marker;
+      Popup: typeof Popup;
+      SimpleStyle: typeof SimpleStyle;
       registerPlugin: (embedPlugin: EmbedPlugin) => void;
     }
   }

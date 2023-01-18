@@ -6,7 +6,7 @@ import markerSVG from './marker.svg';
 import * as util from './util';
 
 /**
- * Render the map
+ * Geolonia default marker
  *
  * @param container
  */

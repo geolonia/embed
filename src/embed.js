@@ -2,7 +2,6 @@
  * @file Entry for embed.js
  */
 
-import 'intersection-observer';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './style.css';
@@ -13,7 +12,7 @@ import * as util from './lib/util';
 import parseAtts from './lib/parse-atts';
 import parseApiKey from './lib/parse-api-key';
 import pkg from '../package.json';
-import simpleStyle from './lib/simplestyle';
+import SimpleStyle from './lib/simplestyle';
 
 if ( util.checkPermission() ) {
   let isDOMContentLoaded = false;
@@ -88,7 +87,9 @@ if ( util.checkPermission() ) {
   }
 
   window.geolonia.Map = GeoloniaMap;
-  window.geolonia.simpleStyle = simpleStyle;
+  window.geolonia.simpleStyle = // backward compatibility
+    window.geolonia.SimpleStyle =
+    SimpleStyle;
   window.geolonia.Marker = GeoloniaMarker;
   window.geolonia.AmazonLocationServiceMapProvider = AmazonLocationServiceMapProvider;
   window.geolonia.embedVersion = pkg.version;

@@ -201,7 +201,7 @@ export function getOptions(container, params, atts) {
     zoom: parseFloat(atts.zoom),
     hash: (atts.hash === 'on'),
     localIdeographFontFamily: 'sans-serif',
-    attributionControl: true,
+    attributionControl: false,
   };
 
   if (atts.minZoom !== '' && (Number(atts.minZoom) === 0 || Number(atts.minZoom))) {
@@ -273,4 +273,12 @@ export const handleRestrictedMode = (map) => {
     container.innerHTML = '';
     container.classList.add('geolonia__restricted-mode-image-container');
   }
+};
+
+export const sanitizeDescription = async (description) => {
+  const { default: sanitizeHtml } = await import('sanitize-html');
+  return sanitizeHtml(description, {
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
+    allowedAttributes: {...sanitizeHtml.defaults.allowedAttributes, '*': ['class']},
+  });
 };
