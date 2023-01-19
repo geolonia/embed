@@ -1,6 +1,6 @@
 'use strict';
 
-import parseApiKey from './parse-api-key';
+import { parseApiKey } from './parse-api-key';
 
 /**
  *
@@ -14,7 +14,7 @@ export function isURL(str) {
     try {
       return new URL(str, location.href).href;
     } catch (error) {
-      console.error(error) // eslint-disable-line
+      console.error('[Geolonia]', error) // eslint-disable-line
       return false;
     }
   }
@@ -183,6 +183,8 @@ export function getStyle(style, atts) {
   }
 }
 
+// params are the parameters that have been passed to new geolonia.Map(params)
+// atts are the data-XYZ attributes that are on the container
 export function getOptions(container, params, atts) {
   if (params.container) {
     delete params.container; // Don't overwrite container.
