@@ -1,10 +1,11 @@
 import urlParse from 'url-parse';
 
 function getParsedApiKey() {
-  if (window.geolonia._apiKey && window.geolonia._stage) {
+  const geolonia = window.geolonia || {};
+  if (geolonia._apiKey && geolonia._stage) {
     return {
-      key: window.geolonia._apiKey,
-      stage: window.geolonia._stage,
+      key: geolonia._apiKey,
+      stage: geolonia._stage,
     };
   }
   return null;
