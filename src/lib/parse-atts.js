@@ -1,6 +1,6 @@
 'use strict';
 
-import parseApiKey from './parse-api-key';
+import { parseApiKey } from './parse-api-key';
 import * as util from './util';
 
 export default (container, params = {}) => {

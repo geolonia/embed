@@ -10,7 +10,7 @@ import GeoloniaMarker from './lib/geolonia-marker';
 import { AmazonLocationServiceMapProvider } from './lib/providers/amazon';
 import * as util from './lib/util';
 import parseAtts from './lib/parse-atts';
-import parseApiKey from './lib/parse-api-key';
+import { parseApiKey } from './lib/parse-api-key';
 import pkg from '../package.json';
 import SimpleStyle from './lib/simplestyle';
 
@@ -19,6 +19,9 @@ if ( util.checkPermission() ) {
   const alreadyRenderedMaps = [];
   const plugins = [];
   const isRemoved = Symbol('map-is-removed');
+
+  // Create the initial window.geolonia object if it doesn't exist.
+  parseApiKey(document);
 
   /**
    *
@@ -78,12 +81,12 @@ if ( util.checkPermission() ) {
   window.geolonia =
     window.maplibregl =
     window.mapboxgl = // Embed API backward compatibility
-    maplibregl;
+    Object.assign(window.geolonia, maplibregl);
 
   // This is required for correct initialization! Don't delete!
   const { key } = parseApiKey(document);
   if (key === 'no-api-key') {
-    console.error('Missing API key.') // eslint-disable-line
+    console.error('[Geolonia] Missing API key.') // eslint-disable-line
   }
 
   window.geolonia.Map = GeoloniaMap;

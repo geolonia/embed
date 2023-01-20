@@ -1,8 +1,12 @@
-import parseApiKey from './parse-api-key';
+import { parseApiKey } from './parse-api-key';
 import { JSDOM } from 'jsdom';
 import assert from 'assert';
 
 describe('parse api key from dom', () => {
+  beforeEach(() => {
+    delete window.geolonia;
+  });
+
   it('should parse with geolonia flag', () => {
     const { document: mocDocument } = new JSDOM(`<html><body>
       <script src="https://external.example.com/?geolonia-api-key=abc"></script>
@@ -13,6 +17,35 @@ describe('parse api key from dom', () => {
     const params = parseApiKey(mocDocument);
     assert.deepEqual('abc', params.key);
     assert.deepEqual('dev', params.stage);
+  });
+
+  it('should override API key and stage with pre-initialized window.geolonia', () => {
+    const { document: mocDocument } = new JSDOM(`<html><body>
+      <script src="https://external.example.com/?geolonia-api-key=abc"></script>
+    </body></html>`).window;
+
+    window.geolonia = {
+      _stage: 'testStage',
+      _apiKey: 'testApiKey',
+    };
+
+    const params = parseApiKey(mocDocument);
+    assert.deepEqual('testApiKey', params.key);
+    assert.deepEqual('testStage', params.stage);
+  });
+
+  it('should override only stage with pre-initialized window.geolonia', () => {
+    const { document: mocDocument } = new JSDOM(`<html><body>
+      <script src="https://external.example.com/?geolonia-api-key=abc"></script>
+    </body></html>`).window;
+
+    window.geolonia = {
+      _stage: 'testStage',
+    };
+
+    const params = parseApiKey(mocDocument);
+    assert.deepEqual('abc', params.key);
+    assert.deepEqual('testStage', params.stage);
   });
 
   it('should parse with geolonia flag', () => {

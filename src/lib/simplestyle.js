@@ -341,7 +341,7 @@ class SimpleStyle {
 
         } catch (error) {
 
-          console.error('Failed to load GeoJSON:', error); // eslint-disable-line no-console
+          console.error('[Geolonia] Failed to load GeoJSON:', error); // eslint-disable-line no-console
         }
 
       };
