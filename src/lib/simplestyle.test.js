@@ -84,6 +84,7 @@ describe('Tests for simpleStyle()', () => {
     assert.deepEqual(8, map.layers.length);
     assert.deepEqual(true, map.bounds);
     assert.deepEqual(true, map.layers.find((layer) => layer.id === 'geolonia-simple-style-symbol-points').layout['icon-allow-overlap']);
+    assert.deepEqual(true, map.layers.find((layer) => layer.id === 'geolonia-simple-style-symbol-points').layout['text-allow-overlap']);
   });
 
   it('should has sources and layers as expected with custom IDs', async () => {

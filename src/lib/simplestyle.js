@@ -235,8 +235,15 @@ class SimpleStyle {
           ['==', 'large', ['get', 'marker-size']], ['literal', [0, 1.2]],
           ['literal', [0, 0.8]],
         ],
-        'text-allow-overlap': false,
+        'text-allow-overlap': true,
         'icon-allow-overlap': true,
+        'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+        'text-radial-offset': [
+          'case',
+          ['==', 'small', ['get', 'marker-size']], 0.6,
+          ['==', 'large', ['get', 'marker-size']], 1.3,
+          0.8,
+        ],
       },
     });
 
