@@ -237,6 +237,13 @@ class SimpleStyle {
         ],
         'text-allow-overlap': true,
         'icon-allow-overlap': true,
+        'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+        'text-radial-offset': [
+          'case',
+          ['==', 'small', ['get', 'marker-size']], 0.6,
+          ['==', 'large', ['get', 'marker-size']], 1.3,
+          0.8,
+        ],
       },
     });
 
