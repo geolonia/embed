@@ -235,7 +235,7 @@ class SimpleStyle {
           ['==', 'large', ['get', 'marker-size']], ['literal', [0, 1.2]],
           ['literal', [0, 0.8]],
         ],
-        'text-allow-overlap': false,
+        'text-allow-overlap': true,
         'icon-allow-overlap': true,
       },
     });
