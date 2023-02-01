@@ -235,9 +235,9 @@ class SimpleStyle {
           ['==', 'large', ['get', 'marker-size']], ['literal', [0, 1.2]],
           ['literal', [0, 0.8]],
         ],
-        'text-allow-overlap': true,
+        'text-allow-overlap': false,
         'icon-allow-overlap': true,
-        'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+        'text-variable-anchor': ['top', 'bottom', 'left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right'],
         'text-radial-offset': [
           'case',
           ['==', 'small', ['get', 'marker-size']], 0.6,
