@@ -1,7 +1,9 @@
 import * as maplibregl from 'maplibre-gl';
 import SimpleStyle from './lib/simplestyle'
 
-export class Map extends maplibregl.Map {}
+export class Map extends maplibregl.Map {
+  constructor(geoloniaMapOptions: string | Omit<maplibregl.MapOptions, 'style'>);
+}
 export class Marker extends maplibregl.Marker {}
 export class Popup extends maplibregl.Popup {}
 
