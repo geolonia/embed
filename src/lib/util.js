@@ -103,14 +103,10 @@ export function getLang() {
  * Detects the window is scrollable.
  */
 export function isScrollable() {
-  const { height: bodyHeight } = document.body.getBoundingClientRect();
-  const windowHeight = window.innerHeight;
+  const body = document.body;
+  const html = document.documentElement;
 
-  if (bodyHeight > windowHeight) {
-    return true;
-  } else {
-    return false;
-  }
+  return body.scrollHeight > body.clientHeight || html.scrollHeight > html.clientHeight;
 }
 
 /**
