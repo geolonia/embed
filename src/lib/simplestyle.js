@@ -336,7 +336,9 @@ class SimpleStyle {
 
           const response = await window.fetch(geojson);
           const data = await response.json();
+          this.validateGeoJSON(data);
           this.geojson = data;
+
           this.updateData(data);
 
           if (this.callFitBounds) {
@@ -356,10 +358,43 @@ class SimpleStyle {
       this._loadingPromise = fetchGeoJSON();
 
     } else {
+
+      this.validateGeoJSON(geojson);
       this.geojson = geojson;
     }
 
   }
+
+  /**
+   * Validate GeoJSON coordinate is number.
+   */
+  validateGeoJSON(geojson) {
+
+    if (geojson.features) {
+
+      geojson.features.forEach((feature) => {
+
+        if (feature.geometry.coordinates) {
+
+          const coordinates = feature.geometry.coordinates.flat(3); // flatten array for each geometry
+
+          for (let i = 0; i < coordinates.length; i++) {
+
+            const coordinate = coordinates[i];
+
+            if (typeof coordinate !== 'number') {
+              console.warn('GeoJSON coordinate value must be number'); // eslint-disable-line no-console
+              break;
+            }
+
+          }
+
+        }
+
+      });
+    }
+  }
+
 }
 
 export default SimpleStyle;
