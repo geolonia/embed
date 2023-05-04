@@ -13,6 +13,10 @@ import parseAtts from './lib/parse-atts';
 import { parseApiKey } from './lib/parse-api-key';
 import pkg from '../package.json';
 import SimpleStyle from './lib/simplestyle';
+import * as pmtiles from 'pmtiles';
+
+const protocol = new pmtiles.Protocol();
+maplibregl.addProtocol('pmtiles', protocol.tile);
 
 if ( util.checkPermission() ) {
   let isDOMContentLoaded = false;
