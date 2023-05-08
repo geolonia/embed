@@ -3156,6 +3156,11 @@ faye-websocket@^0.11.3:
   dependencies:
     websocket-driver ">=0.5.1"
 
+fflate@^0.7.3:
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/fflate/-/fflate-0.7.4.tgz#61587e5d958fdabb5a9368a302c25363f4f69f50"
+  integrity sha512-5u2V/CDW15QM1XbbgS+0DfPxVB+jUKhWEKuuFuHncbk3tEEqzmoXL+2KyOFuKGqOnmdIy0/davWF1CkuwtibCw==
+
 file-entry-cache@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/file-entry-cache/-/file-entry-cache-6.0.1.tgz#211b2dd9659cb0394b073e7323ac3c933d522027"
@@ -4771,6 +4776,13 @@ pkg-dir@^4.1.0, pkg-dir@^4.2.0:
   integrity sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==
   dependencies:
     find-up "^4.0.0"
+
+pmtiles@^2.7.2:
+  version "2.7.2"
+  resolved "https://registry.yarnpkg.com/pmtiles/-/pmtiles-2.7.2.tgz#2f420a1110498a834f47829930162f540a959b12"
+  integrity sha512-YRdfLlvN5z94F5/e3cnEFE0TymKx6egi0vDx6NJF83rYGNLV6Lr2PsdpWkSo3oVl4e6LVj8RvaWLfpT874QH+Q==
+  dependencies:
+    fflate "^0.7.3"
 
 postcss-modules-extract-imports@^3.0.0:
   version "3.0.0"

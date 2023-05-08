@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="./style.css">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>@geolonia/embed</title>
+</head>
+
+<body>
+  <h1>@geolonia/embed</h1>
+  <p>PMTiles examples for Embed API for Geolonia.</p>
+
+  <div class="example">
+    <h2>pmtiles protocol</h2>
+    <div
+      id="my-map"
+      data-zoom="6"
+      data-lat="35.977"
+      data-lng="138.374"
+      data-marker="off"
+    ></div>
+  </div>
+  <script src="./embed?geolonia-api-key=YOUR-API-KEY"></script>
+  <script>
+    const map = new geolonia.Map('#my-map');
+    // git@github.com:geolonia/sandbox-s3-pmtiles.git
+    // See the Sandbox AWS Account
+    const pmtiles_url = 'https://d34j6iplycp4rd.cloudfront.net/hello.pmtiles'
+
+    map.on('load', () => {
+      map.addSource('pmtiles', {
+        type: 'vector',
+        url: `pmtiles://${pmtiles_url}`
+      })
+      map.addLayer({
+        id: 'pmtiles-label',
+        source: 'pmtiles',
+        'source-layer': 'hello',
+        type: 'symbol',
+        layout: {
+          'text-field': '{name}',
+          'text-size': 12,
+          'text-font': [
+            'Noto Sans CJK JP Regular'
+          ],
+          'text-offset': [0, 0.7],
+        }
+      })
+      map.addLayer({
+        id: 'pmtiles-circle',
+        source: 'pmtiles',
+        'source-layer': 'hello',
+        type: 'circle',
+        paint: {
+          'circle-radius': 2,
+          'circle-color': 'black',
+        },
+      })
+    })
+  </script>
+</body>
+</html>
