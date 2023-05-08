@@ -25,7 +25,8 @@
   <script src="./embed?geolonia-api-key=YOUR-API-KEY"></script>
   <script>
     const map = new geolonia.Map('#my-map');
-    <!-- git@github.com:geolonia/sandbox-s3-pmtiles.git -->
+    // git@github.com:geolonia/sandbox-s3-pmtiles.git
+    // See the Sandbox AWS Account
     const pmtiles_url = 'https://d34j6iplycp4rd.cloudfront.net/hello.pmtiles'
 
     map.on('load', () => {
@@ -34,13 +35,27 @@
         url: `pmtiles://${pmtiles_url}`
       })
       map.addLayer({
+        id: 'pmtiles-label',
+        source: 'pmtiles',
+        'source-layer': 'hello',
+        type: 'symbol',
+        layout: {
+          'text-field': '{name}',
+          'text-size': 12,
+          'text-font': [
+            'Noto Sans CJK JP Regular'
+          ],
+          'text-offset': [0, 0.7],
+        }
+      })
+      map.addLayer({
         id: 'pmtiles-circle',
         source: 'pmtiles',
         'source-layer': 'hello',
         type: 'circle',
         paint: {
           'circle-radius': 2,
-          'circle-color': 'red',
+          'circle-color': 'black',
         },
       })
     })
