@@ -37,6 +37,15 @@ const isCssSelector = (string) => {
 export default class GeoloniaMap extends maplibregl.Map {
   constructor(params) {
     const container = util.getContainer(params);
+
+    if (!container) {
+      if ( typeof params === 'string') {
+        throw new Error(`[Geolonia] No HTML elements found matching \`${params}\`. Please ensure the map container element exists.`);
+      } else {
+        throw new Error('[Geolonia] No HTML elements found. Please ensure the map container element exists.');
+      }
+    }
+
     if (container.geoloniaMap) {
       return container.geoloniaMap;
     }
