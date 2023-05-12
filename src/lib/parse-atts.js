@@ -43,7 +43,7 @@ export default (container, params = {}) => {
     simpleVector: '',
     cluster: 'on',
     clusterColor: '#ff0000',
-    style: 'geolonia/basic',
+    style: 'geolonia/basic-v1',
     lang: lang,
     plugin: 'off',
     key: key,

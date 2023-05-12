@@ -41,7 +41,7 @@ describe('tests for parse Attributes', () => {
       simpleVector: '',
       cluster: 'on',
       clusterColor: '#ff0000',
-      style: 'geolonia/basic',
+      style: 'geolonia/basic-v1',
       lang: 'ja',
       plugin: 'off',
       key: 'YOUR-API-KEY',
