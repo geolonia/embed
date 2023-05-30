@@ -198,7 +198,7 @@ export function getOptions(container, params, atts) {
     pitch: parseFloat(atts.pitch),
     zoom: parseFloat(atts.zoom),
     hash: (atts.hash === 'on'),
-    localIdeographFontFamily: undefined,
+    localIdeographFontFamily: 'sans-serif',
     attributionControl: false,
   };
 
