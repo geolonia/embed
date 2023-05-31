@@ -1017,10 +1017,10 @@
     eslint-plugin-react "^7.25.1"
     typescript "^4.4.2"
 
-"@geolonia/mbgl-geolonia-control@^0.4.2":
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/@geolonia/mbgl-geolonia-control/-/mbgl-geolonia-control-0.4.2.tgz#b2df9bc58c964142fbe7bfb9e55e17e6ab984460"
-  integrity sha512-Kipf1zSfSmHNr7+Uehf1vPpg5l74UUz49B0+wJeaN8lkH13uhZCd29luXh2J3bxclnvQcqFsyffTVzlyltm6Jg==
+"@geolonia/mbgl-geolonia-control@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@geolonia/mbgl-geolonia-control/-/mbgl-geolonia-control-1.0.0.tgz#ff98f3873336334ea22079a4a72b5040d136c1f4"
+  integrity sha512-vZnZEUgaCsEhPlip/uN5FZL6nOdOA+90ir0wD5BgnbEsVaEkDsz0ktiUFlwCXjvPcHYzs1wMYYN433iZ6bEktQ==
 
 "@geolonia/mbgl-gesture-handling@^1.0.15":
   version "1.0.15"
