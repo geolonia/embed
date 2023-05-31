@@ -47,13 +47,13 @@
     "webpack-dev-server": "^4.11.1"
   },
   "dependencies": {
-    "@geolonia/mbgl-geolonia-control": "^0.4.2",
+    "@geolonia/mbgl-geolonia-control": "^1.0.0",
     "@geolonia/mbgl-gesture-handling": "^1.0.15",
     "@mapbox/geojson-extent": "^1.0.0",
     "@mapbox/point-geometry": "^0.1.0",
     "@turf/center": "^6.0.1",
     "core-js": "^3.26.1",
-    "maplibre-gl": "2.4.0",
+    "maplibre-gl": "3.0.1",
     "pmtiles": "^2.7.2",
     "promise-polyfill": "^8.2.3",
     "sanitize-html": "^2.8.0",
