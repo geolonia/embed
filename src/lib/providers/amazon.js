@@ -1,6 +1,6 @@
 import 'whatwg-fetch';
 import { getContainer } from '../util';
-import GeoloniaControl from '@geolonia/mbgl-geolonia-control';
+import { GeoloniaControl } from '../controls/geolonia-control';
 
 const AWS_SDK_URL = 'https://sdk.amazonaws.com/js/aws-sdk-2.775.0.min.js';
 const AMPLIFY_URL = 'https://unpkg.com/@aws-amplify/core@3.7.0/dist/aws-amplify-core.min.js';
