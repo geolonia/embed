@@ -1,7 +1,7 @@
 import 'whatwg-fetch';
 import 'promise-polyfill/src/polyfill';
 import maplibregl from 'maplibre-gl';
-import GeoloniaControl from '@geolonia/mbgl-geolonia-control';
+import { GeoloniaControl } from './controls/geolonia-control';
 import CustomAttributionControl from './CustomAttributionControl';
 import GestureHandling from '@geolonia/mbgl-gesture-handling';
 import parseAtts from './parse-atts';

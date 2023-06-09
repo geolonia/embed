@@ -47,7 +47,6 @@
     "webpack-dev-server": "^4.11.1"
   },
   "dependencies": {
-    "@geolonia/mbgl-geolonia-control": "^1.0.0",
     "@geolonia/mbgl-gesture-handling": "^1.0.15",
     "@mapbox/geojson-extent": "^1.0.0",
     "@mapbox/point-geometry": "^0.1.0",
