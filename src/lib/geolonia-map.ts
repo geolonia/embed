@@ -147,21 +147,6 @@ export default class GeoloniaMap extends maplibregl.Map {
 
     const { enabled: fullscreenControlEnabled, position: fullscreenControlPosition } = util.parseControlOption(atts.fullscreenControl);
     if (fullscreenControlEnabled) {
-      // IE patch for fullscreen mode
-      if (!container.classList.contains('geolonia')) {
-        document.onmsfullscreenchange = () => {
-          const isFullscreen = document.msFullscreenElement === container;
-          if (isFullscreen) {
-            map._beforeFullscreenWidth = container.style.width;
-            map._beforeFullscreenHeight = container.style.height;
-            container.style.width = '100%';
-            container.style.height = '100%';
-          } else {
-            container.style.width = map._beforeFullscreenWidth;
-            container.style.height = map._beforeFullscreenHeight;
-          }
-        };
-      }
       map.addControl(new window.geolonia.FullscreenControl(), fullscreenControlPosition);
     }
 

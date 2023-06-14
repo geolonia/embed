@@ -246,7 +246,7 @@ export const getSessionId = (digit) => {
     return sessionId;
   } else {
     const array = new Uint8Array(digit / 2);
-    (window.crypto || window.msCrypto).getRandomValues(array);
+    window.crypto.getRandomValues(array);
     const value = Array
       .from(array, (dec) => dec.toString(16).padStart(2, '0'))
       .join('');
