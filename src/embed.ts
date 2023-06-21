@@ -16,6 +16,7 @@ import SimpleStyle from './lib/simplestyle';
 import * as pmtiles from 'pmtiles';
 
 export type * from './types';
+export type { GeoloniaMapOptions } from './lib/geolonia-map';
 
 const protocol = new pmtiles.Protocol();
 maplibregl.addProtocol('pmtiles', protocol.tile);

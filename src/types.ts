@@ -3,7 +3,6 @@ import type * as maplibregl from 'maplibre-gl';
 import type { AmazonLocationServiceMapProvider } from './lib/providers/amazon';
 import type SimpleStyle from './lib/simplestyle';
 
-export type GeoloniaMapOptions = Omit<maplibregl.MapOptions, 'style'> & { interactive?: boolean }
 export class Map extends maplibregl.Map {
   constructor(geoloniaMapOptions: string | GeoloniaMapOptions);
 }

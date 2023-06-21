@@ -11,6 +11,10 @@ import SimpleStyleVector from './simplestyle-vector';
 
 import * as util from './util';
 
+import type { MapOptions } from 'maplibre-gl';
+
+export type GeoloniaMapOptions = Omit<MapOptions, 'style'> & { interactive?: boolean }
+
 const isCssSelector = (string) => {
   if (/^https?:\/\//.test(string)) {
     return false;
@@ -35,7 +39,7 @@ const isCssSelector = (string) => {
  * @param container
  */
 export default class GeoloniaMap extends maplibregl.Map {
-  constructor(params) {
+  constructor(params: string | GeoloniaMapOptions) {
     const container = util.getContainer(params);
 
     if (!container) {
