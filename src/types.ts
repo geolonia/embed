@@ -1,5 +1,7 @@
+import type AWS from 'aws-sdk';
 import * as maplibregl from 'maplibre-gl';
-import SimpleStyle from './lib/simplestyle'
+import type { AmazonLocationServiceMapProvider } from './lib/providers/amazon';
+import SimpleStyle from './lib/simplestyle';
 
 export type GeoloniaMapOptions = Omit<maplibregl.MapOptions, 'style'> & { interactive?: boolean }
 export class Map extends maplibregl.Map {
@@ -43,16 +45,27 @@ export type EmbedAttributes = {
 
 export type EmbedPlugin<PluginAttributes extends { [otherKey: string]: string } = {}> = (map: Map, target: HTMLElement, atts: EmbedAttributes & PluginAttributes) => void
 
+type Geolonia = {
+  _stage?: string;
+  _apiKey?: string;
+  AmazonLocationServiceMapProvider?: typeof AmazonLocationServiceMapProvider;
+  accessToken?: string;
+  baseApiUrl?: string;
+  embedVersion?: string;
+  Map?: typeof Map;
+  Marker?: typeof Marker;
+  Popup?: typeof Popup;
+  SimpleStyle?: typeof SimpleStyle;
+  simpleStyle?: typeof SimpleStyle; // backward compatibility
+  registerPlugin?: (embedPlugin: EmbedPlugin) => void;
+} & typeof maplibregl;
+
 declare global {
   interface Window {
-    geolonia: {
-      accessToken: string;
-      baseApiUrl: string;
-      Map: typeof Map;
-      Marker: typeof Marker;
-      Popup: typeof Popup;
-      SimpleStyle: typeof SimpleStyle;
-      registerPlugin: (embedPlugin: EmbedPlugin) => void;
-    }
+    geolonia: Geolonia,
+    maplibregl?: Geolonia,
+    mapboxgl?: Geolonia,
+    aws_amplify_core?, // TODO add type
+    AWS?: typeof AWS,
   }
 }
