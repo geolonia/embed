@@ -15,6 +15,8 @@ import pkg from '../package.json';
 import SimpleStyle from './lib/simplestyle';
 import * as pmtiles from 'pmtiles';
 
+export type * from './types';
+
 const protocol = new pmtiles.Protocol();
 maplibregl.addProtocol('pmtiles', protocol.tile);
 
