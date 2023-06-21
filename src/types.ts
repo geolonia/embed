@@ -1,12 +1,10 @@
 import type AWS from 'aws-sdk';
 import type * as maplibregl from 'maplibre-gl';
 import type { AmazonLocationServiceMapProvider } from './lib/providers/amazon';
+import type GeoloniaMap from './lib/geolonia-map';
+import type GeoloniaMarker from './lib/geolonia-marker';
 import type SimpleStyle from './lib/simplestyle';
 
-export class Map extends maplibregl.Map {
-  constructor(geoloniaMapOptions: string | GeoloniaMapOptions);
-}
-export class Marker extends maplibregl.Marker {}
 export class Popup extends maplibregl.Popup {}
 
 export type EmbedAttributes = {
@@ -42,7 +40,7 @@ export type EmbedAttributes = {
   [otherKey: string]: string;
 }
 
-export type EmbedPlugin<PluginAttributes extends { [otherKey: string]: string } = {}> = (map: Map, target: HTMLElement, atts: EmbedAttributes & PluginAttributes) => void
+export type EmbedPlugin<PluginAttributes extends { [otherKey: string]: string } = {}> = (map: GeoloniaMap, target: HTMLElement, atts: EmbedAttributes & PluginAttributes) => void
 
 type Geolonia = {
   _stage?: string;
@@ -51,8 +49,8 @@ type Geolonia = {
   accessToken?: string;
   baseApiUrl?: string;
   embedVersion?: string;
-  Map?: typeof Map;
-  Marker?: typeof Marker;
+  Map?: typeof GeoloniaMap;
+  Marker?: typeof GeoloniaMarker;
   Popup?: typeof Popup;
   SimpleStyle?: typeof SimpleStyle;
   simpleStyle?: typeof SimpleStyle; // backward compatibility

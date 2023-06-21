@@ -15,6 +15,7 @@ import pkg from '../package.json';
 import SimpleStyle from './lib/simplestyle';
 import * as pmtiles from 'pmtiles';
 
+export { GeoloniaMap as Map, GeoloniaMarker as Marker };
 export type * from './types';
 export type { GeoloniaMapOptions } from './lib/geolonia-map';
 
