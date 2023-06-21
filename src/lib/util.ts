@@ -1,6 +1,7 @@
 'use strict';
 
 import { parseApiKey } from './parse-api-key';
+import type { MapOptions, MarkerOptions } from 'maplibre-gl';
 
 /**
  *
@@ -132,7 +133,7 @@ export function getContainer(arg) {
   if (isDomElement(arg)) {
     return arg;
   } else if (typeof arg === 'string') {
-    const el = document.querySelector(arg) || document.getElementById(arg);
+    const el = document.querySelector(arg) as HTMLElement || document.getElementById(arg);
     return el || false;
 
   } else if (arg.container) {
@@ -153,10 +154,10 @@ export function getContainer(arg) {
  * @param {*} options
  * @param {*} legacyOptions
  */
-export function handleMarkerOptions(options, legacyOptions) {
+export function handleMarkerOptions(options: MarkerOptions | null | undefined | false, legacyOptions: MarkerOptions) {
   if (options && isDomElement(options)) {
     options = {
-      element: options,
+      element: options as HTMLElement,
       ...legacyOptions,
     };
   } else if (!options) {
@@ -181,7 +182,7 @@ export function getStyle(style, atts) {
 
 // params are the parameters that have been passed to new geolonia.Map(params)
 // atts are the data-XYZ attributes that are on the container
-export function getOptions(container, params, atts) {
+export function getOptions(container, params, atts): MapOptions {
   if (params.container) {
     delete params.container; // Don't overwrite container.
   }
@@ -190,7 +191,7 @@ export function getOptions(container, params, atts) {
     params = {}; // `params` is HTMLElement, so we shouldn't merge it into options.
   }
 
-  const options = {
+  const options: MapOptions = {
     style: atts.style || params.style, // Validation for value of `style` will be processed on `setStyle()`.
     container,
     center: [parseFloat(atts.lng), parseFloat(atts.lat)],

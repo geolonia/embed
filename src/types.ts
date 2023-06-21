@@ -42,7 +42,7 @@ export type EmbedAttributes = {
 
 export type EmbedPlugin<PluginAttributes extends { [otherKey: string]: string } = {}> = (map: GeoloniaMap, target: HTMLElement, atts: EmbedAttributes & PluginAttributes) => void
 
-type Geolonia = {
+export type Geolonia = {
   _stage?: string;
   _apiKey?: string;
   AmazonLocationServiceMapProvider?: typeof AmazonLocationServiceMapProvider;

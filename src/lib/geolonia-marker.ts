@@ -4,6 +4,7 @@ import maplibregl from 'maplibre-gl';
 import tinycolor from 'tinycolor2';
 import markerSVG from './marker.svg';
 import * as util from './util';
+import type { MarkerOptions } from 'maplibre-gl';
 
 /**
  * Geolonia default marker
@@ -11,7 +12,7 @@ import * as util from './util';
  * @param container
  */
 export default class GeoloniaMarker extends maplibregl.Marker {
-  constructor(options = {}, legacyOptions = {}) {
+  constructor(options: MarkerOptions = {}, legacyOptions: MarkerOptions = {}) {
     options = util.handleMarkerOptions(options, legacyOptions);
 
     if (!options || !options.element) {
@@ -32,12 +33,12 @@ export default class GeoloniaMarker extends maplibregl.Marker {
       options.element = markerElement;
 
       if (options.color) {
-        markerElement.querySelector('.left').style.fill = options.color;
-        markerElement.querySelector('.right').style.fill = tinycolor(options.color).darken().toString();
+        (markerElement.querySelector('.left') as HTMLElement).style.fill = options.color;
+        (markerElement.querySelector('.right') as HTMLElement).style.fill = tinycolor(options.color).darken().toString();
       } else {
         const defaultColor = '#E4402F';
-        markerElement.querySelector('.left').style.fill = defaultColor;
-        markerElement.querySelector('.right').style.fill = tinycolor(defaultColor).darken().toString();
+        (markerElement.querySelector('.left') as HTMLElement).style.fill = defaultColor;
+        (markerElement.querySelector('.right') as HTMLElement).style.fill = tinycolor(defaultColor).darken().toString();
       }
 
       options.offset = [0, -15];

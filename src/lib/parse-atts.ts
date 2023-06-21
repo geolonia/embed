@@ -3,7 +3,11 @@
 import { parseApiKey } from './parse-api-key';
 import * as util from './util';
 
-export default (container, params = {}) => {
+type ParseAttsParams = {
+  interactive?: boolean;
+}
+
+export default (container, params: ParseAttsParams = {}) => {
   if (!container.dataset) {
     container.dataset = {};
   }

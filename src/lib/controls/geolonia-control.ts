@@ -1,4 +1,8 @@
-export class GeoloniaControl {
+import type { ControlPosition, IControl } from "maplibre-gl";
+
+export class GeoloniaControl implements IControl {
+  private container: HTMLDivElement;
+
   onAdd() {
     this.container = document.createElement('div');
     this.container.className = 'maplibregl-ctrl';
@@ -28,7 +32,7 @@ export class GeoloniaControl {
     this.container.parentNode.removeChild(this.container);
   }
 
-  getDefaultPosition() {
+  getDefaultPosition(): ControlPosition {
     return 'bottom-left';
   }
 }

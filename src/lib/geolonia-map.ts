@@ -11,7 +11,7 @@ import SimpleStyleVector from './simplestyle-vector';
 
 import * as util from './util';
 
-import type { MapOptions } from 'maplibre-gl';
+import type { MapOptions, StyleOptions, StyleSpecification, StyleSwapOptions } from 'maplibre-gl';
 
 export type GeoloniaMapOptions = Omit<MapOptions, 'style'> & { interactive?: boolean }
 
@@ -39,6 +39,9 @@ const isCssSelector = (string) => {
  * @param container
  */
 export default class GeoloniaMap extends maplibregl.Map {
+  private geoloniaSourcesUrl: URL;
+  private __styleExtensionLoadRequired: boolean;
+
   constructor(params: string | GeoloniaMapOptions) {
     const container = util.getContainer(params);
 
@@ -280,7 +283,7 @@ export default class GeoloniaMap extends maplibregl.Map {
    * @param {string|null} style style identity or `null` when map.remove()
    * @param {*} options
    */
-  setStyle(style, options = {}) {
+  setStyle(style: string | StyleSpecification, options: StyleSwapOptions & StyleOptions = {}): this {
     if (style !== null) {
       // It can't access `this` because `setStyle()` will be called with `super()`.
       // So, we need to run `parseAtts()` again(?)
@@ -297,11 +300,13 @@ export default class GeoloniaMap extends maplibregl.Map {
     this.__styleExtensionLoadRequired = true;
     // Calls `maplibregl.Map.setStyle()`.
     super.setStyle.call(this, style, options);
+
+    return this;
   }
 
-  remove() {
+  remove(): void {
     const container = this.getContainer();
     super.remove.call(this);
-    delete container.geoloniaMap;
+    delete (container as HTMLElement & { geoloniaMap: GeoloniaMap }).geoloniaMap;
   }
 }

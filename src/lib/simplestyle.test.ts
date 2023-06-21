@@ -5,7 +5,7 @@ import assert from 'assert';
 import nodeFetch from 'node-fetch';
 import { random } from './util';
 
-window.URL.createObjectURL = () => {}; // To prevent `TypeError: window.URL.createObjectURL is not a function`
+window.URL.createObjectURL ||= (obj: Blob | MediaSource) => "dummy"; // To prevent `TypeError: window.URL.createObjectURL is not a function`
 window.requestAnimationFrame = (cb) => {
   cb(performance.now());
   return random(999999);
@@ -13,13 +13,11 @@ window.requestAnimationFrame = (cb) => {
 window.fetch = nodeFetch;
 
 class Map {
-  constructor(json, options) {
-    this.json = json;
-    this.options = options;
-    this.sources = {};
-    this.layers = [];
-    this.bounds = false;
-  }
+  public bounds = false;
+  public layers = [];
+  public sources = {};
+
+  constructor(private json?, private options?) {}
 
   addSource(id, source) {
     this.sources[id] = source;
@@ -35,10 +33,7 @@ class Map {
 
   getSource(id) {
     class getSource {
-      constructor(id, sources) {
-        this.id = id;
-        this.sources = sources;
-      }
+      constructor(private id, private sources) {}
       setData(geojson) {
         this.sources[this.id] = {
           type: 'geojson',
