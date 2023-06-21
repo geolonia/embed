@@ -164,11 +164,13 @@ export default class GeoloniaMap extends maplibregl.Map {
 
     const { enabled: geolocateControlEnabled, position: geolocateControlPosition } = util.parseControlOption(atts.geolocateControl);
     if (geolocateControlEnabled) {
+      // @ts-ignore TODO: don't ignore this
       map.addControl(new window.geolonia.GeolocateControl(), geolocateControlPosition);
     }
 
     const { enabled: scaleControlEnabled, position: scaleControlPosition } = util.parseControlOption(atts.scaleControl);
     if (scaleControlEnabled) {
+      // @ts-ignore TODO: don't ignore this
       map.addControl(new window.geolonia.ScaleControl(),  scaleControlPosition);
     }
 

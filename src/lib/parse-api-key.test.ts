@@ -12,6 +12,7 @@ describe('parse api key from dom', () => {
       <script src="https://external.example.com/?geolonia-api-key=abc"></script>
     </body></html>`).window;
 
+    // @ts-ignore TODO don't ignore this
     window.geolonia = {};
 
     const params = parseApiKey(mocDocument);
@@ -24,6 +25,7 @@ describe('parse api key from dom', () => {
       <script src="https://external.example.com/?geolonia-api-key=abc"></script>
     </body></html>`).window;
 
+    // @ts-ignore TODO don't ignore this
     window.geolonia = {
       _stage: 'testStage',
       _apiKey: 'testApiKey',
@@ -39,6 +41,7 @@ describe('parse api key from dom', () => {
       <script src="https://external.example.com/?geolonia-api-key=abc"></script>
     </body></html>`).window;
 
+    // @ts-ignore TODO don't ignore this
     window.geolonia = {
       _stage: 'testStage',
     };
@@ -54,6 +57,7 @@ describe('parse api key from dom', () => {
       <script src="https://external.example.com/?geolonia-api-key=def"></script>
     </body></html>`).window;
 
+    // @ts-ignore TODO don't ignore this
     window.geolonia = {};
 
     const params = parseApiKey(mocDocument);
@@ -67,6 +71,7 @@ describe('parse api key from dom', () => {
       <script type="text/javascript" src="https://api.geolonia.com/dev/embed?geolonia-api-key=YOUR-API-KEY"></script>
     </body></html>`).window;
 
+    // @ts-ignore TODO don't ignore this
     window.geolonia = {};
 
     const params = parseApiKey(mocDocument);
@@ -80,6 +85,7 @@ describe('parse api key from dom', () => {
       <script type="text/javascript" src="https://api.geolonia.com/v1/embed?geolonia-api-key=YOUR-API-KEY"></script>
     </body></html>`).window;
 
+    // @ts-ignore TODO don't ignore this
     window.geolonia = {};
 
     const params = parseApiKey(mocDocument);
@@ -93,6 +99,7 @@ describe('parse api key from dom', () => {
       <script type="text/javascript" src="https://api.geolonia.com/v123.4/embed?geolonia-api-key=YOUR-API-KEY"></script>
     </body></html>`).window;
 
+    // @ts-ignore TODO don't ignore this
     window.geolonia = {};
 
     const params = parseApiKey(mocDocument);
