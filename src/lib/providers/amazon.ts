@@ -21,7 +21,7 @@ export class AmazonLocationServiceMapProvider {
    * @param {{timeout}}
    * @returns Promise<{aws_amplify_core, AWS, geolonia}>
    */
-  _loadAwsSdk({ timeout }) {
+  async _loadAwsSdk({ timeout }) {
     const { aws_amplify_core, AWS, geolonia } = window;
     if (aws_amplify_core && AWS && geolonia) {
       return Promise.resolve({ aws_amplify_core, AWS, geolonia });

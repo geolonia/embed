@@ -280,3 +280,5 @@ export const sanitizeDescription = async (description) => {
     allowedAttributes: {...sanitizeHtml.defaults.allowedAttributes, '*': ['class']},
   });
 };
+
+export const random = (max: number): number => Math.floor(Math.random() * max);

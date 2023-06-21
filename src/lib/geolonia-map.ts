@@ -59,7 +59,7 @@ export default class GeoloniaMap extends maplibregl.Map {
       console.warn('[Geolonia] Embed API failed to render the map because the container has no height. Please set the CSS property `height` to the container.');
     }
 
-    const atts = parseAtts(container, params);
+    const atts = parseAtts(container, { interactive: typeof params === 'object' ? params.interactive : true });
     const options = util.getOptions(container, params, atts);
 
     // Getting content should be fire just before initialize the map.

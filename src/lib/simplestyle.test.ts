@@ -3,9 +3,13 @@
 
 import assert from 'assert';
 import nodeFetch from 'node-fetch';
+import { random } from './util';
 
 window.URL.createObjectURL = () => {}; // To prevent `TypeError: window.URL.createObjectURL is not a function`
-window.requestAnimationFrame = (cb) => cb();
+window.requestAnimationFrame = (cb) => {
+  cb(performance.now());
+  return random(999999);
+}
 window.fetch = nodeFetch;
 
 class Map {
