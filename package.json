@@ -10,7 +10,7 @@
     "analyze": "ANALYZE=true webpack --mode production",
     "format": "prettier-eslint \"./src/**/*.js\" --write",
     "lint": "eslint \"src/**/*.js\"",
-    "test": "mocha ./src/**/*.test.js --recursive -r jsdom-global/register -r @babel/register"
+    "test": "mocha"
   },
   "author": "Geolonia (https://geolonia.com)",
   "repository": {
