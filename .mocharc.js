@@ -1,8 +1,9 @@
 module.exports = {
-  spec: "src/**/*.test.js",
+  extension: [ "ts", "tsx", "js", "jsx" ],
+  spec: "src/**/*.test.ts",
   recursive: true,
   require: [
     "jsdom-global/register",
-    "@babel/register",
+    "ts-node/register",
   ],
 };
