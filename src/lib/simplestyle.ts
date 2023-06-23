@@ -15,7 +15,7 @@ const template = {
   'features': [],
 };
 
-class SimpleStyle {
+export class SimpleStyle {
   public _loadingPromise: Promise<unknown>;
   private callFitBounds: boolean = false;
   private geojson;
@@ -364,5 +364,3 @@ class SimpleStyle {
 
   }
 }
-
-export default SimpleStyle;

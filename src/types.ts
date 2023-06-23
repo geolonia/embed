@@ -3,7 +3,7 @@ import type * as maplibregl from 'maplibre-gl';
 import type { AmazonLocationServiceMapProvider } from './lib/providers/amazon';
 import type GeoloniaMap from './lib/geolonia-map';
 import type GeoloniaMarker from './lib/geolonia-marker';
-import type SimpleStyle from './lib/simplestyle';
+import type { SimpleStyle } from './lib/simplestyle';
 
 export type Popup = maplibregl.Popup;
 

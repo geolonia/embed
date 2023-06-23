@@ -6,7 +6,7 @@ import CustomAttributionControl from './CustomAttributionControl';
 import GestureHandling from '@geolonia/mbgl-gesture-handling';
 import parseAtts from './parse-atts';
 
-import SimpleStyle from './simplestyle';
+import { SimpleStyle } from './simplestyle';
 import SimpleStyleVector from './simplestyle-vector';
 
 import * as util from './util';
