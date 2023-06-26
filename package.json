@@ -8,7 +8,7 @@
     "start": "webpack serve --config ./docs/webpack.config.js",
     "build": "webpack --mode production && cp ./dist/embed.js ./dist/embed && cp -r ./dist/* ./docs/",
     "analyze": "ANALYZE=true webpack --mode production",
-    "format": "prettier-eslint \"./src/**/*.js\" --write",
+    "format": "prettier-eslint \"./src/**/*.ts\" --write",
     "lint": "eslint \"src/**/*.js\"",
     "test": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha"
   },
