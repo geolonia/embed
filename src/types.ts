@@ -5,7 +5,7 @@ import type GeoloniaMap from './lib/geolonia-map';
 import type GeoloniaMarker from './lib/geolonia-marker';
 import type SimpleStyle from './lib/simplestyle';
 
-export class Popup extends maplibregl.Popup {}
+export type Popup = maplibregl.Popup;
 
 export type EmbedAttributes = {
   lat: string;
@@ -51,7 +51,7 @@ type Geolonia = {
   embedVersion?: string;
   Map?: typeof GeoloniaMap;
   Marker?: typeof GeoloniaMarker;
-  Popup?: typeof Popup;
+  Popup?: Popup;
   SimpleStyle?: typeof SimpleStyle;
   simpleStyle?: typeof SimpleStyle; // backward compatibility
   registerPlugin?: (embedPlugin: EmbedPlugin) => void;
