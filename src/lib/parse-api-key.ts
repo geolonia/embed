@@ -1,7 +1,9 @@
 import urlParse from 'url-parse';
+import { Geolonia } from '../types';
 
 function getParsedApiKey() {
-  const geolonia = window.geolonia || {};
+  // @ts-ignore TODO don't ignore this
+  const geolonia: Geolonia = window.geolonia || {};
   if (geolonia._apiKey && geolonia._stage) {
     return {
       key: geolonia._apiKey,
@@ -13,6 +15,7 @@ function getParsedApiKey() {
 
 function initApiKey(document) {
   if (typeof window.geolonia === 'undefined') {
+    // @ts-ignore TODO don't ignore this
     window.geolonia = {};
   }
 

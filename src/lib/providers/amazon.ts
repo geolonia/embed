@@ -2,13 +2,19 @@ import 'whatwg-fetch';
 import { getContainer } from '../util';
 import { GeoloniaControl } from '../controls/geolonia-control';
 
+type AwsConfig = {
+  cognitoIdentityPoolId: string,
+  mapName?: string,
+};
+
 const AWS_SDK_URL = 'https://sdk.amazonaws.com/js/aws-sdk-2.775.0.min.js';
 const AMPLIFY_URL = 'https://unpkg.com/@aws-amplify/core@3.7.0/dist/aws-amplify-core.min.js';
 const STYLE_URL = 'https://geolonia.github.io/embed/docs/amzn-loc-style.json';
 export class AmazonLocationServiceMapProvider {
+  private cognitoIdentityPoolId: string;
+  private mapName: string;
 
-  constructor(awsconfig = {}) {
-    const { cognitoIdentityPoolId, mapName = 'explore.map' } = awsconfig;
+  constructor({ cognitoIdentityPoolId, mapName = 'explore.map' }: AwsConfig) {
     if (!cognitoIdentityPoolId) {
       throw new Error('Invalid options. awsconfig.cognitoIdentityPoolId is required.');
     }
@@ -21,7 +27,7 @@ export class AmazonLocationServiceMapProvider {
    * @param {{timeout}}
    * @returns Promise<{aws_amplify_core, AWS, geolonia}>
    */
-  _loadAwsSdk({ timeout }) {
+  async _loadAwsSdk({ timeout }): Promise<{ aws_amplify_core: any, AWS: any, geolonia: any }> {
     const { aws_amplify_core, AWS, geolonia } = window;
     if (aws_amplify_core && AWS && geolonia) {
       return Promise.resolve({ aws_amplify_core, AWS, geolonia });

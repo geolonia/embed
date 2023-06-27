@@ -10,9 +10,10 @@ const backgroundColor = 'rgba(255, 0, 0, 0.4)';
 const strokeColor = '#FFFFFF';
 
 class SimpleStyleVector {
-  constructor(url) {
+  private sourceName: string;
+
+  constructor(private url) {
     this.sourceName = 'vt-geolonia-simple-style';
-    this.url = url;
   }
 
   addTo(map) {
@@ -203,7 +204,7 @@ class SimpleStyleVector {
 
   async setPopup(map, source) {
     map.on('click', source, async (e) => {
-      const center = turfCenter(e.features[0]).geometry.coordinates;
+      const center: [ number, number ] = turfCenter(e.features[0]).geometry.coordinates as [ number, number ];
       const description = e.features[0].properties.description;
 
       if (description) {

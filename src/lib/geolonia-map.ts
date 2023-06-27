@@ -6,10 +6,14 @@ import CustomAttributionControl from './CustomAttributionControl';
 import GestureHandling from '@geolonia/mbgl-gesture-handling';
 import parseAtts from './parse-atts';
 
-import SimpleStyle from './simplestyle';
+import { SimpleStyle } from './simplestyle';
 import SimpleStyleVector from './simplestyle-vector';
 
 import * as util from './util';
+
+import type { MapOptions, StyleOptions, StyleSpecification, StyleSwapOptions } from 'maplibre-gl';
+
+export type GeoloniaMapOptions = Omit<MapOptions, 'style'> & { interactive?: boolean }
 
 const isCssSelector = (string) => {
   if (/^https?:\/\//.test(string)) {
@@ -35,7 +39,10 @@ const isCssSelector = (string) => {
  * @param container
  */
 export default class GeoloniaMap extends maplibregl.Map {
-  constructor(params) {
+  private geoloniaSourcesUrl: URL;
+  private __styleExtensionLoadRequired: boolean;
+
+  constructor(params: string | GeoloniaMapOptions) {
     const container = util.getContainer(params);
 
     if (!container) {
@@ -55,7 +62,7 @@ export default class GeoloniaMap extends maplibregl.Map {
       console.warn('[Geolonia] Embed API failed to render the map because the container has no height. Please set the CSS property `height` to the container.');
     }
 
-    const atts = parseAtts(container, params);
+    const atts = parseAtts(container, { interactive: typeof params === 'object' ? params.interactive : true });
     const options = util.getOptions(container, params, atts);
 
     // Getting content should be fire just before initialize the map.
@@ -147,21 +154,6 @@ export default class GeoloniaMap extends maplibregl.Map {
 
     const { enabled: fullscreenControlEnabled, position: fullscreenControlPosition } = util.parseControlOption(atts.fullscreenControl);
     if (fullscreenControlEnabled) {
-      // IE patch for fullscreen mode
-      if (!container.classList.contains('geolonia')) {
-        document.onmsfullscreenchange = () => {
-          const isFullscreen = document.msFullscreenElement === container;
-          if (isFullscreen) {
-            map._beforeFullscreenWidth = container.style.width;
-            map._beforeFullscreenHeight = container.style.height;
-            container.style.width = '100%';
-            container.style.height = '100%';
-          } else {
-            container.style.width = map._beforeFullscreenWidth;
-            container.style.height = map._beforeFullscreenHeight;
-          }
-        };
-      }
       map.addControl(new window.geolonia.FullscreenControl(), fullscreenControlPosition);
     }
 
@@ -172,11 +164,13 @@ export default class GeoloniaMap extends maplibregl.Map {
 
     const { enabled: geolocateControlEnabled, position: geolocateControlPosition } = util.parseControlOption(atts.geolocateControl);
     if (geolocateControlEnabled) {
+      // @ts-ignore TODO: don't ignore this
       map.addControl(new window.geolonia.GeolocateControl(), geolocateControlPosition);
     }
 
     const { enabled: scaleControlEnabled, position: scaleControlPosition } = util.parseControlOption(atts.scaleControl);
     if (scaleControlEnabled) {
+      // @ts-ignore TODO: don't ignore this
       map.addControl(new window.geolonia.ScaleControl(),  scaleControlPosition);
     }
 
@@ -291,7 +285,7 @@ export default class GeoloniaMap extends maplibregl.Map {
    * @param {string|null} style style identity or `null` when map.remove()
    * @param {*} options
    */
-  setStyle(style, options = {}) {
+  setStyle(style: string | StyleSpecification, options: StyleSwapOptions & StyleOptions = {}): this {
     if (style !== null) {
       // It can't access `this` because `setStyle()` will be called with `super()`.
       // So, we need to run `parseAtts()` again(?)
@@ -308,11 +302,13 @@ export default class GeoloniaMap extends maplibregl.Map {
     this.__styleExtensionLoadRequired = true;
     // Calls `maplibregl.Map.setStyle()`.
     super.setStyle.call(this, style, options);
+
+    return this;
   }
 
-  remove() {
+  remove(): void {
     const container = this.getContainer();
     super.remove.call(this);
-    delete container.geoloniaMap;
+    delete (container as HTMLElement & { geoloniaMap: GeoloniaMap }).geoloniaMap;
   }
 }

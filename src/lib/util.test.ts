@@ -7,6 +7,7 @@ import * as util from './util';
 const base = 'https://base.example.com/parent/';
 
 before(() => {
+  // @ts-ignore TODO do not ignore this
   global.location = { href: base };
 });
 
@@ -89,20 +90,27 @@ describe('Tests for util.js', () => {
     global.window = dom.window;
     global.document = dom.window.document;
 
+    // @ts-ignore TODO: do not ignore this
     const options1 = util.handleMarkerOptions(document.getElementById('test-element'), { foo: 'bar' });
     assert.deepEqual(document.getElementById('test-element'), options1.element);
+    // @ts-ignore TODO: do not ignore this
     assert.deepEqual('bar', options1.foo);
 
+    // @ts-ignore TODO: do not ignore this
     const options2 = util.handleMarkerOptions(false, { foo: 'bar' });
+    // @ts-ignore TODO: do not ignore this
     assert.deepEqual('bar', options2.foo);
 
+    // @ts-ignore TODO: do not ignore this
     const options3 = util.handleMarkerOptions({ hello: 'world' }, { foo: 'bar' });
+    // @ts-ignore TODO: do not ignore this
     assert.deepEqual('world', options3.hello);
   });
 
   describe('language detection', () => {
     it('should work with Chrome', () => {
       global.window = {
+        // @ts-ignore TODO: do not ignore this
         navigator: {
           language: 'ja',
           languages: ['ja', 'en', 'en-US', 'ar'],
@@ -113,6 +121,7 @@ describe('Tests for util.js', () => {
 
     it('should work with iOS safari', () => {
       global.window = {
+        // @ts-ignore TODO: do not ignore this
         navigator: {
           language: 'ja-JP',
           languages: ['ja-JP'],

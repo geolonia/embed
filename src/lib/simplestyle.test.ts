@@ -3,19 +3,21 @@
 
 import assert from 'assert';
 import nodeFetch from 'node-fetch';
+import { random } from './util';
 
-window.URL.createObjectURL = () => {}; // To prevent `TypeError: window.URL.createObjectURL is not a function`
-window.requestAnimationFrame = (cb) => cb();
+window.URL.createObjectURL ||= (obj: Blob | MediaSource) => "dummy"; // To prevent `TypeError: window.URL.createObjectURL is not a function`
+window.requestAnimationFrame = (cb) => {
+  cb(performance.now());
+  return random(999999);
+}
 window.fetch = nodeFetch;
 
 class Map {
-  constructor(json, options) {
-    this.json = json;
-    this.options = options;
-    this.sources = {};
-    this.layers = [];
-    this.bounds = false;
-  }
+  public bounds = false;
+  public layers = [];
+  public sources = {};
+
+  constructor(private json?, private options?) {}
 
   addSource(id, source) {
     this.sources[id] = source;
@@ -31,10 +33,7 @@ class Map {
 
   getSource(id) {
     class getSource {
-      constructor(id, sources) {
-        this.id = id;
-        this.sources = sources;
-      }
+      constructor(private id, private sources) {}
       setData(geojson) {
         this.sources[this.id] = {
           type: 'geojson',
@@ -75,10 +74,10 @@ const geojson = {
 
 describe('Tests for simpleStyle()', () => {
   it('should has sources and layers as expected', async () => {
-    const { default: simpleStyle } = await import('./simplestyle');
+    const { SimpleStyle } = await import('./simplestyle');
 
     const map = new Map();
-    new simpleStyle(geojson).addTo(map).fitBounds();
+    new SimpleStyle(geojson).addTo(map).fitBounds();
 
     assert.deepEqual([ 'geolonia-simple-style', 'geolonia-simple-style-points' ], Object.keys(map.sources));
     assert.deepEqual(8, map.layers.length);
@@ -88,10 +87,10 @@ describe('Tests for simpleStyle()', () => {
   });
 
   it('should has sources and layers as expected with custom IDs', async () => {
-    const { default: simpleStyle } = await import('./simplestyle');
+    const { SimpleStyle } = await import('./simplestyle');
 
     const map = new Map();
-    new simpleStyle(geojson, {id: 'hello-world'}).addTo(map).fitBounds();
+    new SimpleStyle(geojson, {id: 'hello-world'}).addTo(map).fitBounds();
 
     assert.deepEqual([ 'hello-world', 'hello-world-points' ], Object.keys(map.sources));
     assert.deepEqual(8, map.layers.length);
@@ -99,7 +98,7 @@ describe('Tests for simpleStyle()', () => {
   });
 
   it('should has sources and layers as expected with empty GeoJSON', async () => {
-    const { default: simpleStyle } = await import('./simplestyle');
+    const { SimpleStyle } = await import('./simplestyle');
 
     const map = new Map();
 
@@ -108,7 +107,7 @@ describe('Tests for simpleStyle()', () => {
       'features': [],
     };
 
-    new simpleStyle(empty, {id: 'hello-world'}).addTo(map).fitBounds();
+    new SimpleStyle(empty, {id: 'hello-world'}).addTo(map).fitBounds();
 
     assert.deepEqual([ 'hello-world', 'hello-world-points' ], Object.keys(map.sources));
     assert.deepEqual(8, map.layers.length);
@@ -116,7 +115,7 @@ describe('Tests for simpleStyle()', () => {
   });
 
   it('should update GeoJSON', async () => {
-    const { default: simpleStyle } = await import('./simplestyle');
+    const { SimpleStyle } = await import('./simplestyle');
 
     const map = new Map();
 
@@ -125,7 +124,7 @@ describe('Tests for simpleStyle()', () => {
       'features': [],
     };
 
-    const ss = new simpleStyle(empty).addTo(map).fitBounds();
+    const ss = new SimpleStyle(empty).addTo(map).fitBounds();
 
     assert.deepEqual([ 'geolonia-simple-style', 'geolonia-simple-style-points' ], Object.keys(map.sources));
     assert.deepEqual(8, map.layers.length);
@@ -138,11 +137,11 @@ describe('Tests for simpleStyle()', () => {
   });
 
   it('should load GeoJSON from url', async () => {
-    const { default: simpleStyle } = await import('./simplestyle');
+    const { SimpleStyle } = await import('./simplestyle');
 
     const map = new Map();
     const geojson = 'https://gist.githubusercontent.com/miya0001/56c3dc174f5cdf1d9565cbca0fbd3c48/raw/c13330036d28ef547a8a87cb6df3fa12de19ddb6/test.geojson';
-    const ss = new simpleStyle(geojson);
+    const ss = new SimpleStyle(geojson);
     ss.addTo(map).fitBounds();
 
     await ss._loadingPromise;
@@ -176,11 +175,11 @@ describe('Tests for simpleStyle()', () => {
   });
 
   it('should load empty GeoJSON when failed to fetch GeoJSON', async () => {
-    const { default: simpleStyle } = await import('./simplestyle');
+    const { SimpleStyle } = await import('./simplestyle');
 
     const map = new Map();
     const geojson = 'https://example.com/404.geojson';
-    const ss = new simpleStyle(geojson);
+    const ss = new SimpleStyle(geojson);
     ss.addTo(map).fitBounds();
 
     await ss._loadingPromise;
@@ -191,7 +190,7 @@ describe('Tests for simpleStyle()', () => {
   });
 
   it('should update GeoJSON from url', async () => {
-    const { default: simpleStyle } = await import('./simplestyle');
+    const { SimpleStyle } = await import('./simplestyle');
 
     const map = new Map();
     const empty = {
@@ -199,7 +198,7 @@ describe('Tests for simpleStyle()', () => {
       'features': [],
     };
 
-    const ss = new simpleStyle(empty);
+    const ss = new SimpleStyle(empty);
     ss.addTo(map).fitBounds();
 
     await ss._loadingPromise;

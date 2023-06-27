@@ -23,7 +23,7 @@ export class DOM {
     return props[0];
   }
 
-  static create(tagName, className, container) {
+  static create(tagName, className?, container?) {
     const el = window.document.createElement(tagName);
     if (className !== undefined) el.className = className;
     if (container) container.appendChild(el);

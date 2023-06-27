@@ -1,4 +1,5 @@
 import { DOM, bindAll } from './maplibre-util';
+import type { ControlPosition, IControl } from 'maplibre-gl';
 
 /**
  *  This class is a copy of maplibre-gl-js's AttributionControl class and rewrite by shadow DOM.
@@ -22,7 +23,18 @@ import { DOM, bindAll } from './maplibre-util';
  * https://github.com/maplibre/maplibre-gl-js/issues/205
  */
 
-class CustomAttributionControl {
+class CustomAttributionControl implements IControl {
+  private options;
+  private _map;
+  private _compact;
+  private _container;
+  private _shadowContainer;
+  private _innerContainer;
+  private _compactButton;
+  private _editLink;
+  private _attribHTML;
+  private styleId;
+  private styleOwner;
 
   constructor(options = {}) {
     this.options = options;
@@ -45,7 +57,7 @@ class CustomAttributionControl {
     ], this);
   }
 
-  getDefaultPosition() {
+  getDefaultPosition(): ControlPosition {
     return 'bottom-right';
   }
 

@@ -15,11 +15,14 @@ const template = {
   'features': [],
 };
 
-class SimpleStyle {
-  constructor(geojson, options) {
+export class SimpleStyle {
+  public _loadingPromise: Promise<unknown>;
+  private callFitBounds: boolean = false;
+  private geojson;
+  private map;
+  private options;
 
-    this.callFitBounds = false;
-
+  constructor(geojson, options?) {
     this.setGeoJSON(geojson);
 
     this.options = {
@@ -253,7 +256,7 @@ class SimpleStyle {
 
   async setPopup(map, source) {
     map.on('click', source, async (e) => {
-      const center = turfCenter(e.features[0]).geometry.coordinates;
+      const center = turfCenter(e.features[0]).geometry.coordinates as [ number, number ];
       const description = e.features[0].properties.description;
 
       if (description) {
@@ -361,5 +364,3 @@ class SimpleStyle {
 
   }
 }
-
-export default SimpleStyle;
