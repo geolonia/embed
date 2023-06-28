@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/geolonia/embed#readme",
   "devDependencies": {
-    "@geolonia/eslint-config": "^0.0.1",
+    "@geolonia/eslint-config": "latest",
     "@types/mocha": "^10.0.1",
     "@types/url-parse": "^1.4.8",
     "babel-loader": "^9.1.0",
