@@ -1,4 +1,4 @@
-import type { ControlPosition, IControl } from "maplibre-gl";
+import type { ControlPosition, IControl } from 'maplibre-gl';
 
 export class GeoloniaControl implements IControl {
   private container: HTMLDivElement;

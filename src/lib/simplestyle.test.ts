@@ -5,11 +5,11 @@ import assert from 'assert';
 import nodeFetch from 'node-fetch';
 import { random } from './util';
 
-window.URL.createObjectURL ||= (obj: Blob | MediaSource) => "dummy"; // To prevent `TypeError: window.URL.createObjectURL is not a function`
+window.URL.createObjectURL ||= (_: Blob | MediaSource) => 'dummy'; // To prevent `TypeError: window.URL.createObjectURL is not a function`
 window.requestAnimationFrame = (cb) => {
   cb(performance.now());
   return random(999999);
-}
+};
 window.fetch = nodeFetch;
 
 class Map {

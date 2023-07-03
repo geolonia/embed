@@ -17,7 +17,7 @@ const template = {
 
 export class SimpleStyle {
   public _loadingPromise: Promise<unknown>;
-  private callFitBounds: boolean = false;
+  private callFitBounds = false;
   private geojson;
   private map;
   private options;

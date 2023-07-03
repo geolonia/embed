@@ -13,7 +13,7 @@ import * as util from './util';
 
 import type { MapOptions, StyleOptions, StyleSpecification, StyleSwapOptions } from 'maplibre-gl';
 
-export type GeoloniaMapOptions = Omit<MapOptions, 'style'> & { interactive?: boolean }
+export type GeoloniaMapOptions = Omit<MapOptions, 'style'> & { interactive?: boolean };
 
 const isCssSelector = (string) => {
   if (/^https?:\/\//.test(string)) {
