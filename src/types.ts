@@ -52,7 +52,7 @@ export type Geolonia = {
   SimpleStyle?: typeof SimpleStyle;
   simpleStyle?: typeof SimpleStyle; // backward compatibility
   registerPlugin?: (embedPlugin: EmbedPlugin) => void;
-} & typeof maplibregl;
+} & Partial<typeof maplibregl>;
 
 declare global {
   interface Window {
