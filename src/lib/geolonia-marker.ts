@@ -2,7 +2,6 @@
 
 import maplibregl from 'maplibre-gl';
 import tinycolor from 'tinycolor2';
-// @ts-ignore TODO do not ignore this
 import markerSVG from './marker.svg';
 import * as util from './util';
 import type { MarkerOptions } from 'maplibre-gl';
