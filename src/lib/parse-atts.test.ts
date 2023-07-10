@@ -9,7 +9,7 @@ describe('tests for parse Attributes', () => {
   beforeEach(() => {
     global.window = {
       geolonia: {},
-      // @ts-ignore TODO do not ignore this
+      // @ts-ignore forcefully assigning values to readonly properties
       navigator: { languages: ['ja'] },
     };
   });

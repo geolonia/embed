@@ -106,7 +106,7 @@ describe('Tests for util.js', () => {
   describe('language detection', () => {
     it('should work with Chrome', () => {
       global.window = {
-        // @ts-ignore TODO: do not ignore this
+        // @ts-ignore forcefully assigning values to readonly properties
         navigator: {
           language: 'ja',
           languages: ['ja', 'en', 'en-US', 'ar'],
@@ -117,7 +117,7 @@ describe('Tests for util.js', () => {
 
     it('should work with iOS safari', () => {
       global.window = {
-        // @ts-ignore TODO: do not ignore this
+        // @ts-ignore forcefully assigning values to readonly properties
         navigator: {
           language: 'ja-JP',
           languages: ['ja-JP'],
