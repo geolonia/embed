@@ -5,7 +5,7 @@ import * as util from './util';
 
 type ParseAttsParams = {
   interactive?: boolean;
-}
+};
 
 export default (container, params: ParseAttsParams = {}) => {
   if (!container.dataset) {

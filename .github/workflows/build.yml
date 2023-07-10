@@ -28,7 +28,7 @@ jobs:
           path: node_modules
           key: modules-cache-v1-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
       - run: yarn install
-      # - run: yarn lint
+      - run: yarn lint
       - run: yarn test
       - run: yarn build
       - name: save the built

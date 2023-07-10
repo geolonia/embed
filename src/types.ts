@@ -36,9 +36,9 @@ export type EmbedAttributes = {
   maxZoom: string;
   '3d': string;
   [otherKey: string]: string;
-}
+};
 
-export type EmbedPlugin<PluginAttributes extends { [otherKey: string]: string } = {}> = (map: GeoloniaMap, target: HTMLElement, atts: EmbedAttributes & PluginAttributes) => void
+export type EmbedPlugin<PluginAttributes extends { [otherKey: string]: string } = {}> = (map: GeoloniaMap, target: HTMLElement, atts: EmbedAttributes & PluginAttributes) => void;
 
 export type Geolonia = {
   _stage?: string;
