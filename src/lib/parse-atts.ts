@@ -2,12 +2,13 @@
 
 import { parseApiKey } from './parse-api-key';
 import { getLang } from './util';
+import type { EmbedAttributes } from '../index';
 
 type ParseAttsParams = {
   interactive?: boolean;
 };
 
-export default (container, params: ParseAttsParams = {}) => {
+export default (container, params: ParseAttsParams = {}): EmbedAttributes => {
   if (!container.dataset) {
     container.dataset = {};
   }
