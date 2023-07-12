@@ -1,7 +1,7 @@
 'use strict';
 
 import { parseApiKey } from './parse-api-key';
-import * as util from './util';
+import { getLang } from './util';
 
 type ParseAttsParams = {
   interactive?: boolean;
@@ -14,13 +14,13 @@ export default (container, params: ParseAttsParams = {}) => {
 
   let lang = 'auto';
   if (container.dataset.lang && container.dataset.lang === 'auto') {
-    lang = util.getLang();
+    lang = getLang();
   } else if (container.dataset.lang && container.dataset.lang === 'ja') {
     lang = 'ja';
   } else if (container.dataset.lang && container.dataset.lang !== 'ja') {
     lang = 'en';
   } else {
-    lang = util.getLang();
+    lang = getLang();
   }
 
   const { key, stage } = parseApiKey(container);
