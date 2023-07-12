@@ -2,8 +2,8 @@
   "name": "@geolonia/embed",
   "version": "4.0.0",
   "description": "Geolonia embed JS API",
-  "main": "dist/embed.js",
-  "types": "dist/types/embed.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/types/index.d.ts",
   "scripts": {
     "start": "webpack serve --config ./docs/webpack.config.js",
     "build": "webpack --mode production && cp ./dist/embed.js ./dist/embed && mv ./dist/src ./dist/types && cp -r ./dist/* ./docs/",
