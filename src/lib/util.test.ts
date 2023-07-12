@@ -65,7 +65,7 @@ describe('Tests for util.js', () => {
     global.window = dom.window;
     global.document = dom.window.document;
 
-    const el = document.querySelector('#test-element');
+    const el = document.querySelector('#test-element') as HTMLElement;
     assert.deepEqual(el, getContainer(el));
     const params = { container: el };
     assert.deepEqual(el, getContainer(params));

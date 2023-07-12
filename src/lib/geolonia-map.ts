@@ -11,9 +11,13 @@ import SimpleStyleVector from './simplestyle-vector';
 
 import { getContainer, getOptions, getSessionId, getStyle, handleRestrictedMode, isScrollable, parseControlOption, parseSimpleVector } from './util';
 
-import type { MapOptions, StyleOptions, StyleSpecification, StyleSwapOptions } from 'maplibre-gl';
+import type { MapOptions, PointLike, StyleOptions, StyleSpecification, StyleSwapOptions } from 'maplibre-gl';
 
 export type GeoloniaMapOptions = Omit<MapOptions, 'style'> & { interactive?: boolean };
+
+type Container = HTMLElement & {
+  geoloniaMap: GeoloniaMap;
+};
 
 const isCssSelector = (string) => {
   if (/^https?:\/\//.test(string)) {
@@ -43,7 +47,7 @@ export default class GeoloniaMap extends maplibregl.Map {
   private __styleExtensionLoadRequired: boolean;
 
   constructor(params: string | GeoloniaMapOptions) {
-    const container = getContainer(params);
+    const container = getContainer(params) as Container | false;
 
     if (!container) {
       if ( typeof params === 'string') {
@@ -195,11 +199,11 @@ export default class GeoloniaMap extends maplibregl.Map {
             const offset = atts.customMarkerOffset.split(/,/).map((n) => {
               return Number(n.trim());
             });
-            const container = document.querySelector(atts.customMarker);
+            const container: HTMLElement = document.querySelector(atts.customMarker);
             container.style.display = 'block';
             marker = new window.geolonia.Marker({
               element: container,
-              offset: offset,
+              offset: offset as PointLike,
             }).setLngLat(options.center).addTo(map).setPopup(popup);
           } else {
             marker = new window.geolonia.Marker({ color: atts.markerColor }).setLngLat(options.center).addTo(map).setPopup(popup);
