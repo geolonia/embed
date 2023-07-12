@@ -20,7 +20,7 @@ const myPlugin: Geolonia.EmbedPlugin = (
 };
 
 // be sure to register plugin.
-window.geolonia.registerPligin(myPlugin);
+window.geolonia.registerPlugin(myPlugin);
 ```
 
 ### Plugin Usage
