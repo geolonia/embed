@@ -4,19 +4,19 @@
 
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import './style.css';
-import GeoloniaMap from './lib/geolonia-map';
-import GeoloniaMarker from './lib/geolonia-marker';
-import { checkPermission } from './lib/util';
-import parseAtts from './lib/parse-atts';
-import { parseApiKey } from './lib/parse-api-key';
-import pkg from '../package.json';
-import { SimpleStyle } from './lib/simplestyle';
+import '../style.css';
+import GeoloniaMap from './geolonia-map';
+import GeoloniaMarker from './geolonia-marker';
+import { checkPermission } from './util';
+import parseAtts from './parse-atts';
+import { parseApiKey } from './parse-api-key';
+import pkg from '../../package.json';
+import { SimpleStyle } from './simplestyle';
 import { Protocol } from 'pmtiles';
 
 export { GeoloniaMap as Map, GeoloniaMarker as Marker };
-export type * from './types';
-export type { GeoloniaMapOptions } from './lib/geolonia-map';
+export type * from '../types';
+export type { GeoloniaMapOptions } from './geolonia-map';
 
 const protocol = new Protocol();
 maplibregl.addProtocol('pmtiles', protocol.tile);
