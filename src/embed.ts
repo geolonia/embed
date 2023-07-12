@@ -34,7 +34,7 @@ if ( checkPermission() ) {
    *
    * @param {HTMLElement} target
    */
-  const renderGeoloniaMap = (target) => {
+  const renderSingleMap = (target) => {
     const map = new GeoloniaMap(target);
 
     // detect if the map removed manually
@@ -77,7 +77,7 @@ if ( checkPermission() ) {
       if (!item.isIntersecting) {
         return;
       }
-      renderGeoloniaMap(item.target);
+      renderSingleMap(item.target);
       observer.unobserve(item.target);
     });
   });
@@ -109,7 +109,7 @@ if ( checkPermission() ) {
 
   // render Map immediately
   for (let i = 0; i < containers.length; i++) {
-    renderGeoloniaMap(containers[i]);
+    renderSingleMap(containers[i]);
   }
 
   // set intersection observer
