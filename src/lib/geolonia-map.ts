@@ -9,7 +9,7 @@ import parseAtts from './parse-atts';
 import { SimpleStyle } from './simplestyle';
 import SimpleStyleVector from './simplestyle-vector';
 
-import * as util from './util';
+import { getContainer, getOptions, getSessionId, getStyle, handleRestrictedMode, isScrollable, parseControlOption, parseSimpleVector } from './util';
 
 import type { MapOptions, StyleOptions, StyleSpecification, StyleSwapOptions } from 'maplibre-gl';
 
@@ -43,7 +43,7 @@ export default class GeoloniaMap extends maplibregl.Map {
   private __styleExtensionLoadRequired: boolean;
 
   constructor(params: string | GeoloniaMapOptions) {
-    const container = util.getContainer(params);
+    const container = getContainer(params);
 
     if (!container) {
       if ( typeof params === 'string') {
@@ -63,7 +63,7 @@ export default class GeoloniaMap extends maplibregl.Map {
     }
 
     const atts = parseAtts(container, { interactive: typeof params === 'object' ? params.interactive : true });
-    const options = util.getOptions(container, params, atts);
+    const options = getOptions(container, params, atts);
 
     // Getting content should be fire just before initialize the map.
     const content = container.innerHTML.trim();
@@ -84,7 +84,7 @@ export default class GeoloniaMap extends maplibregl.Map {
       container.appendChild(loading);
     }
 
-    const sessionId = util.getSessionId(40);
+    const sessionId = getSessionId(40);
     const sourcesUrl = new URL(`${atts.apiUrl}/sources`);
     sourcesUrl.searchParams.set('key', atts.key);
     sourcesUrl.searchParams.set('sessionId', sessionId);
@@ -147,27 +147,27 @@ export default class GeoloniaMap extends maplibregl.Map {
 
     // Note: GeoloniaControl should be placed before another controls.
     // Because this control should be "very" bottom-left(default) or the attributed position.
-    const { position: geoloniaControlPosition } = util.parseControlOption(atts.geoloniaControl);
+    const { position: geoloniaControlPosition } = parseControlOption(atts.geoloniaControl);
     map.addControl(new GeoloniaControl(),  geoloniaControlPosition);
 
     map.addControl(new CustomAttributionControl(), 'bottom-right');
 
-    const { enabled: fullscreenControlEnabled, position: fullscreenControlPosition } = util.parseControlOption(atts.fullscreenControl);
+    const { enabled: fullscreenControlEnabled, position: fullscreenControlPosition } = parseControlOption(atts.fullscreenControl);
     if (fullscreenControlEnabled) {
       map.addControl(new window.geolonia.FullscreenControl(), fullscreenControlPosition);
     }
 
-    const { enabled: navigationControlEnabled, position: navigationControlPosition } = util.parseControlOption(atts.navigationControl);
+    const { enabled: navigationControlEnabled, position: navigationControlPosition } = parseControlOption(atts.navigationControl);
     if (navigationControlEnabled) {
       map.addControl(new window.geolonia.NavigationControl(), navigationControlPosition);
     }
 
-    const { enabled: geolocateControlEnabled, position: geolocateControlPosition } = util.parseControlOption(atts.geolocateControl);
+    const { enabled: geolocateControlEnabled, position: geolocateControlPosition } = parseControlOption(atts.geolocateControl);
     if (geolocateControlEnabled) {
       map.addControl(new window.geolonia.GeolocateControl({}), geolocateControlPosition);
     }
 
-    const { enabled: scaleControlEnabled, position: scaleControlPosition } = util.parseControlOption(atts.scaleControl);
+    const { enabled: scaleControlEnabled, position: scaleControlPosition } = parseControlOption(atts.scaleControl);
     if (scaleControlEnabled) {
       map.addControl(new window.geolonia.ScaleControl({}),  scaleControlPosition);
     }
@@ -183,7 +183,7 @@ export default class GeoloniaMap extends maplibregl.Map {
         }
       }
 
-      if (atts.gestureHandling !== 'off' && util.isScrollable()) {
+      if (atts.gestureHandling !== 'off' && isScrollable()) {
         new GestureHandling({ lang: atts.lang }).addTo(map);
       }
 
@@ -223,7 +223,7 @@ export default class GeoloniaMap extends maplibregl.Map {
       this.__styleExtensionLoadRequired = false;
 
       if (atts.simpleVector) {
-        const simpleVectorAttributeValue = util.parseSimpleVector(atts.simpleVector);
+        const simpleVectorAttributeValue = parseSimpleVector(atts.simpleVector);
         new SimpleStyleVector(simpleVectorAttributeValue).addTo(map);
       }
 
@@ -269,7 +269,7 @@ export default class GeoloniaMap extends maplibregl.Map {
         error.error &&
         error.error.status === 402
       ) {
-        util.handleRestrictedMode(map);
+        handleRestrictedMode(map);
       }
     });
 
@@ -292,7 +292,7 @@ export default class GeoloniaMap extends maplibregl.Map {
 
       // If style is object, it must be passed as it.
       if (typeof style === 'string') {
-        style = util.getStyle(style, atts);
+        style = getStyle(style, atts);
       }
     }
 

@@ -7,21 +7,21 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import './style.css';
 import GeoloniaMap from './lib/geolonia-map';
 import GeoloniaMarker from './lib/geolonia-marker';
-import * as util from './lib/util';
+import { checkPermission } from './lib/util';
 import parseAtts from './lib/parse-atts';
 import { parseApiKey } from './lib/parse-api-key';
 import pkg from '../package.json';
 import { SimpleStyle } from './lib/simplestyle';
-import * as pmtiles from 'pmtiles';
+import { Protocol } from 'pmtiles';
 
 export { GeoloniaMap as Map, GeoloniaMarker as Marker };
 export type * from './types';
 export type { GeoloniaMapOptions } from './lib/geolonia-map';
 
-const protocol = new pmtiles.Protocol();
+const protocol = new Protocol();
 maplibregl.addProtocol('pmtiles', protocol.tile);
 
-if ( util.checkPermission() ) {
+if ( checkPermission() ) {
   let isDOMContentLoaded = false;
   const alreadyRenderedMaps = [];
   const plugins = [];
