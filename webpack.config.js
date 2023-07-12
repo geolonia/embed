@@ -2,10 +2,13 @@ const path = require('path');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 module.exports = {
-  entry: './src/embed.ts',
+  entry: {
+    embed: './src/embed.ts',
+    index: './src/index.ts',
+  },
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'embed.js',
+    filename: '[name].js',
     chunkFilename: path.join('embed-chunks', '[chunkhash].js'),
     clean: true,
   },

@@ -1,7 +1,13 @@
-import type * as maplibregl from 'maplibre-gl';
-import type GeoloniaMap from './lib/geolonia-map';
-import type GeoloniaMarker from './lib/geolonia-marker';
-import type { SimpleStyle } from './lib/simplestyle';
+import * as maplibregl from 'maplibre-gl';
+import GeoloniaMap from './lib/geolonia-map';
+import GeoloniaMarker from './lib/geolonia-marker';
+import { registerPlugin, renderGeoloniaMap } from './lib/render';
+import { SimpleStyle } from './lib/simplestyle';
+import pkg from '../package.json';
+
+const embedVersion = pkg.version;
+
+export type { GeoloniaMapOptions } from './lib/geolonia-map';
 
 export type Popup = maplibregl.Popup;
 
@@ -40,6 +46,7 @@ export type EmbedAttributes = {
 
 export type EmbedPlugin<PluginAttributes extends { [otherKey: string]: string } = {}> = (map: GeoloniaMap, target: HTMLElement, atts: EmbedAttributes & PluginAttributes) => void;
 
+// Type for `window.geolonia`
 export type Geolonia = {
   _stage?: string;
   _apiKey?: string;
@@ -61,3 +68,32 @@ declare global {
     mapboxgl?: Geolonia,
   }
 }
+
+const exposeUnderWindow = () => {
+  window.geolonia =
+    window.maplibregl =
+    window.mapboxgl = // Embed API backward compatibility
+    Object.assign(window.geolonia, maplibregl);
+
+  window.geolonia.Map = GeoloniaMap;
+  window.geolonia.simpleStyle = // backward compatibility
+    window.geolonia.SimpleStyle =
+    SimpleStyle;
+  window.geolonia.Marker = GeoloniaMarker;
+  window.geolonia.embedVersion = embedVersion;
+  window.geolonia.registerPlugin = registerPlugin;
+};
+
+export {
+  GeoloniaMap,
+  GeoloniaMarker,
+  SimpleStyle,
+  registerPlugin,
+  renderGeoloniaMap,
+  embedVersion,
+  exposeUnderWindow,
+
+  // backward compatibility
+  GeoloniaMap as Map,
+  GeoloniaMarker as Marker,
+};
