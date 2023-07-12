@@ -11,7 +11,7 @@ import SimpleStyleVector from './simplestyle-vector';
 
 import * as util from './util';
 
-import type { MapOptions, StyleOptions, StyleSpecification, StyleSwapOptions } from 'maplibre-gl';
+import type { MapOptions, PointLike, StyleOptions, StyleSpecification, StyleSwapOptions } from 'maplibre-gl';
 
 export type GeoloniaMapOptions = Omit<MapOptions, 'style'> & { interactive?: boolean };
 
@@ -195,11 +195,11 @@ export default class GeoloniaMap extends maplibregl.Map {
             const offset = atts.customMarkerOffset.split(/,/).map((n) => {
               return Number(n.trim());
             });
-            const container = document.querySelector(atts.customMarker);
+            const container: HTMLElement = document.querySelector(atts.customMarker);
             container.style.display = 'block';
             marker = new window.geolonia.Marker({
               element: container,
-              offset: offset,
+              offset: offset as PointLike,
             }).setLngLat(options.center).addTo(map).setPopup(popup);
           } else {
             marker = new window.geolonia.Marker({ color: atts.markerColor }).setLngLat(options.center).addTo(map).setPopup(popup);
