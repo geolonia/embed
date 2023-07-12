@@ -7,8 +7,10 @@ import * as util from './util';
 const base = 'https://base.example.com/parent/';
 
 before(() => {
-  // @ts-ignore TODO do not ignore this
-  global.location = { href: base };
+  global.location = {
+    ...global.location,
+    href: base,
+  };
 });
 
 describe('Tests for util.js', () => {
@@ -90,27 +92,21 @@ describe('Tests for util.js', () => {
     global.window = dom.window;
     global.document = dom.window.document;
 
-    // @ts-ignore TODO: do not ignore this
-    const options1 = util.handleMarkerOptions(document.getElementById('test-element'), { foo: 'bar' });
+    const options1 = util.handleMarkerOptions(document.getElementById('test-element'), { color: '#FF1122' });
     assert.deepEqual(document.getElementById('test-element'), options1.element);
-    // @ts-ignore TODO: do not ignore this
-    assert.deepEqual('bar', options1.foo);
+    assert.deepEqual(options1.color, '#FF1122');
 
-    // @ts-ignore TODO: do not ignore this
-    const options2 = util.handleMarkerOptions(false, { foo: 'bar' });
-    // @ts-ignore TODO: do not ignore this
-    assert.deepEqual('bar', options2.foo);
+    const options2 = util.handleMarkerOptions(false, { color: '#FF1122' });
+    assert.deepEqual(options2.color, '#FF1122');
 
-    // @ts-ignore TODO: do not ignore this
-    const options3 = util.handleMarkerOptions({ hello: 'world' }, { foo: 'bar' });
-    // @ts-ignore TODO: do not ignore this
-    assert.deepEqual('world', options3.hello);
+    const options3 = util.handleMarkerOptions({ scale: 2 }, { color: '#FF1122' });
+    assert.deepEqual(options3.scale, 2);
   });
 
   describe('language detection', () => {
     it('should work with Chrome', () => {
       global.window = {
-        // @ts-ignore TODO: do not ignore this
+        // @ts-ignore forcefully assigning values to readonly properties
         navigator: {
           language: 'ja',
           languages: ['ja', 'en', 'en-US', 'ar'],
@@ -121,7 +117,7 @@ describe('Tests for util.js', () => {
 
     it('should work with iOS safari', () => {
       global.window = {
-        // @ts-ignore TODO: do not ignore this
+        // @ts-ignore forcefully assigning values to readonly properties
         navigator: {
           language: 'ja-JP',
           languages: ['ja-JP'],

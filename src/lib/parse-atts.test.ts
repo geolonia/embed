@@ -8,9 +8,8 @@ describe('tests for parse Attributes', () => {
 
   beforeEach(() => {
     global.window = {
-      // @ts-ignore TODO do not ignore this
-      geolonia: { config: {} },
-      // @ts-ignore TODO do not ignore this
+      geolonia: {},
+      // @ts-ignore forcefully assigning values to readonly properties
       navigator: { languages: ['ja'] },
     };
   });
