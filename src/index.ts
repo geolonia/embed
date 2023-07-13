@@ -1,9 +1,9 @@
 import * as maplibregl from 'maplibre-gl';
 import GeoloniaMap from './lib/geolonia-map';
 import GeoloniaMarker from './lib/geolonia-marker';
-import { registerPlugin, renderGeoloniaMap } from './lib/render';
 import { SimpleStyle } from './lib/simplestyle';
 import pkg from '../package.json';
+import { registerPlugin } from './lib/render';
 
 const embedVersion = pkg.version;
 
@@ -47,53 +47,25 @@ export type EmbedAttributes = {
 export type EmbedPlugin<PluginAttributes extends { [otherKey: string]: string } = {}> = (map: GeoloniaMap, target: HTMLElement, atts: EmbedAttributes & PluginAttributes) => void;
 
 // Type for `window.geolonia`
-export type Geolonia = {
+export type Geolonia = Partial<typeof maplibregl> & {
   _stage?: string;
   _apiKey?: string;
   accessToken?: string;
-  baseApiUrl?: string;
   embedVersion?: string;
   Map?: typeof GeoloniaMap;
   Marker?: typeof GeoloniaMarker;
-  Popup?: Popup;
   SimpleStyle?: typeof SimpleStyle;
   simpleStyle?: typeof SimpleStyle; // backward compatibility
   registerPlugin?: (embedPlugin: EmbedPlugin) => void;
-} & Partial<typeof maplibregl>;
-
-declare global {
-  interface Window {
-    geolonia: Geolonia,
-    maplibregl?: Geolonia,
-    mapboxgl?: Geolonia,
-  }
-}
-
-const exposeUnderWindow = () => {
-  window.geolonia =
-    window.maplibregl =
-    window.mapboxgl = // Embed API backward compatibility
-    Object.assign(window.geolonia, maplibregl);
-
-  window.geolonia.Map = GeoloniaMap;
-  window.geolonia.simpleStyle = // backward compatibility
-    window.geolonia.SimpleStyle =
-    SimpleStyle;
-  window.geolonia.Marker = GeoloniaMarker;
-  window.geolonia.embedVersion = embedVersion;
-  window.geolonia.registerPlugin = registerPlugin;
 };
 
-export {
-  GeoloniaMap,
-  GeoloniaMarker,
-  SimpleStyle,
-  registerPlugin,
-  renderGeoloniaMap,
+const geolonia: Geolonia = Object.assign({}, maplibregl, {
+  Map: GeoloniaMap,
+  Marker: GeoloniaMarker,
+  SimpleStyle: SimpleStyle,
+  simpleStyle: SimpleStyle,
   embedVersion,
-  exposeUnderWindow,
+  registerPlugin,
+});
 
-  // backward compatibility
-  GeoloniaMap as Map,
-  GeoloniaMarker as Marker,
-};
+export default geolonia;
