@@ -1,6 +1,7 @@
 import parseAtts from './parse-atts';
 import assert from 'assert';
 import { JSDOM } from 'jsdom';
+import { keyring } from './keyring';
 
 describe('tests for parse Attributes', () => {
 
@@ -8,10 +9,11 @@ describe('tests for parse Attributes', () => {
 
   beforeEach(() => {
     global.window = {
-      geolonia: {},
       // @ts-ignore forcefully assigning values to readonly properties
       navigator: { languages: ['ja'] },
     };
+
+    keyring.reset();
   });
 
   it('should parse attribute', () => {
@@ -57,5 +59,6 @@ describe('tests for parse Attributes', () => {
 
   afterEach(() => {
     global.window = prevWindow;
+    keyring.reset();
   });
 });

@@ -91,6 +91,12 @@ class Keyring {
       }
     }
   }
+
+  /** Reset API key and stage for testing purpose */
+  public reset() {
+    this.#apiKey = undefined;
+    this.#stage = undefined;
+  }
 }
 
 const keyring = new Keyring(); // Singleton
