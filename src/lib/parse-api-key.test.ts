@@ -1,4 +1,4 @@
-import { parseApiKey } from './parse-api-key';
+import { keyring } from './parse-api-key';
 import { JSDOM } from 'jsdom';
 import assert from 'assert';
 
@@ -14,9 +14,9 @@ describe('parse api key from dom', () => {
 
     window.geolonia = {};
 
-    const params = parseApiKey(mocDocument);
-    assert.deepEqual('abc', params.key);
-    assert.deepEqual('dev', params.stage);
+    keyring.parse(mocDocument);
+    assert.deepEqual('abc', keyring.apiKey);
+    assert.deepEqual('dev', keyring.stage);
   });
 
   it('should override API key and stage with pre-initialized window.geolonia', () => {
@@ -29,9 +29,9 @@ describe('parse api key from dom', () => {
       _apiKey: 'testApiKey',
     };
 
-    const params = parseApiKey(mocDocument);
-    assert.deepEqual('testApiKey', params.key);
-    assert.deepEqual('testStage', params.stage);
+    keyring.parse(mocDocument);
+    assert.deepEqual('testApiKey', keyring.apiKey);
+    assert.deepEqual('testStage', keyring.stage);
   });
 
   it('should override only stage with pre-initialized window.geolonia', () => {
@@ -43,9 +43,9 @@ describe('parse api key from dom', () => {
       _stage: 'testStage',
     };
 
-    const params = parseApiKey(mocDocument);
-    assert.deepEqual('abc', params.key);
-    assert.deepEqual('testStage', params.stage);
+    keyring.parse(mocDocument);
+    assert.deepEqual('abc', keyring.apiKey);
+    assert.deepEqual('testStage', keyring.stage);
   });
 
   it('should parse with geolonia flag', () => {
@@ -56,9 +56,9 @@ describe('parse api key from dom', () => {
 
     window.geolonia = {};
 
-    const params = parseApiKey(mocDocument);
-    assert.deepEqual('def', params.key);
-    assert.deepEqual('dev', params.stage);
+    keyring.parse(mocDocument);
+    assert.deepEqual('def', keyring.apiKey);
+    assert.deepEqual('dev', keyring.stage);
   });
 
   it('should be "YOUR-API-KEY" and "dev"', () => {
@@ -69,9 +69,9 @@ describe('parse api key from dom', () => {
 
     window.geolonia = {};
 
-    const params = parseApiKey(mocDocument);
-    assert.deepEqual('YOUR-API-KEY', params.key);
-    assert.deepEqual('dev', params.stage);
+    keyring.parse(mocDocument);
+    assert.deepEqual('YOUR-API-KEY', keyring.apiKey);
+    assert.deepEqual('dev', keyring.stage);
   });
 
   it('should be "YOUR-API-KEY" and "v1"', () => {
@@ -82,9 +82,9 @@ describe('parse api key from dom', () => {
 
     window.geolonia = {};
 
-    const params = parseApiKey(mocDocument);
-    assert.deepEqual('YOUR-API-KEY', params.key);
-    assert.deepEqual('v1', params.stage);
+    keyring.parse(mocDocument);
+    assert.deepEqual('YOUR-API-KEY', keyring.apiKey);
+    assert.deepEqual('v1', keyring.stage);
   });
 
   it('should be "YOUR-API-KEY" and "v123.4"', () => {
@@ -95,8 +95,8 @@ describe('parse api key from dom', () => {
 
     window.geolonia = {};
 
-    const params = parseApiKey(mocDocument);
-    assert.deepEqual('YOUR-API-KEY', params.key);
-    assert.deepEqual('v123.4', params.stage);
+    keyring.parse(mocDocument);
+    assert.deepEqual('YOUR-API-KEY', keyring.apiKey);
+    assert.deepEqual('v123.4', keyring.stage);
   });
 });
