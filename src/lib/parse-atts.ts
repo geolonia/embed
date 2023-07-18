@@ -1,6 +1,6 @@
 'use strict';
 
-import { parseApiKey } from './parse-api-key';
+import { keyring } from './parse-api-key';
 import { getLang } from './util';
 import type { EmbedAttributes } from '../embed';
 
@@ -24,7 +24,7 @@ export default (container, params: ParseAttsParams = {}): EmbedAttributes => {
     lang = getLang();
   }
 
-  const { key, stage } = parseApiKey(container);
+  keyring.parse(container);
 
   return {
     lat: 0,
@@ -51,9 +51,9 @@ export default (container, params: ParseAttsParams = {}): EmbedAttributes => {
     style: 'geolonia/basic-v1',
     lang: lang,
     plugin: 'off',
-    key: key,
-    apiUrl: `https://api.geolonia.com/${stage}`,
-    stage,
+    key: keyring.apiKey,
+    apiUrl: `https://api.geolonia.com/${keyring.stage}`,
+    stage: keyring.stage,
     loader: 'on',
     minZoom: '',
     maxZoom: 20,
