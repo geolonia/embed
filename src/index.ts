@@ -3,9 +3,14 @@ import GeoloniaMap from './lib/geolonia-map';
 import GeoloniaMarker from './lib/geolonia-marker';
 import { SimpleStyle } from './lib/simplestyle';
 import pkg from '../package.json';
+import { keyring } from './lib/parse-api-key';
 import { registerPlugin } from './lib/render';
 
 const embedVersion = pkg.version;
+
+const setApiKey = (apiKey: string): void => {
+  keyring.apiKey = apiKey;
+};
 
 export type { GeoloniaMapOptions } from './lib/geolonia-map';
 
@@ -57,6 +62,7 @@ export type Geolonia = Partial<typeof maplibregl> & {
   SimpleStyle?: typeof SimpleStyle;
   simpleStyle?: typeof SimpleStyle; // backward compatibility
   registerPlugin?: (embedPlugin: EmbedPlugin) => void;
+  setApiKey?: (key: string) => void,
 };
 
 const geolonia: Geolonia = Object.assign({}, maplibregl, {
@@ -66,6 +72,7 @@ const geolonia: Geolonia = Object.assign({}, maplibregl, {
   simpleStyle: SimpleStyle,
   embedVersion,
   registerPlugin,
+  setApiKey,
 });
 
 export default geolonia;
