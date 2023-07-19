@@ -5,8 +5,11 @@
   "main": "dist/embed.js",
   "types": "dist/types/embed.d.ts",
   "scripts": {
+    "prestart": "npm run build:version",
     "start": "webpack serve --config ./docs/webpack.config.js",
-    "build": "webpack --mode production && cp ./dist/embed.js ./dist/embed && mv ./dist/src ./dist/types && cp -r ./dist/* ./docs/",
+    "build": "npm run build:version && npm run build:embed",
+    "build:version": "node ./scripts/build-version.mjs",
+    "build:embed": "webpack --mode production && cp ./dist/embed.js ./dist/embed && mv ./dist/src ./dist/types && cp -r ./dist/* ./docs/",
     "analyze": "ANALYZE=true webpack --mode production",
     "format": "prettier-eslint \"./src/**/*.ts\" --write",
     "lint": "eslint --ext .js,.cjs,.mjs,.jsx,.ts,.tsx .",
