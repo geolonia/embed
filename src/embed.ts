@@ -15,7 +15,7 @@ declare global {
 
 window.geolonia =
   window.maplibregl =
-  window.mapboxgl = // Embed API backward compatibility
-  geolonia;
+  window.mapboxgl =
+  Object.assign(window.geolonia || {}, geolonia);
 
 renderGeoloniaMap();

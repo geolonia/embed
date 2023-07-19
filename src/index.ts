@@ -2,11 +2,11 @@ import * as maplibregl from 'maplibre-gl';
 import GeoloniaMap from './lib/geolonia-map';
 import GeoloniaMarker from './lib/geolonia-marker';
 import { SimpleStyle } from './lib/simplestyle';
-import pkg from '../package.json';
+import { VERSION } from './version';
 import { keyring } from './lib/parse-api-key';
 import { registerPlugin } from './lib/render';
 
-const embedVersion = pkg.version;
+const embedVersion = VERSION;
 
 const setApiKey = (apiKey: string): void => {
   keyring.apiKey = apiKey;
@@ -50,6 +50,8 @@ export type EmbedAttributes = {
 };
 
 export type EmbedPlugin<PluginAttributes extends { [otherKey: string]: string } = {}> = (map: GeoloniaMap, target: HTMLElement, atts: EmbedAttributes & PluginAttributes) => void;
+
+export type Map = GeoloniaMap;
 
 // Type for `window.geolonia`
 export type Geolonia = Partial<typeof maplibregl> & {

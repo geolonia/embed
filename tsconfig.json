@@ -7,7 +7,9 @@
       "esnext"
     ],
     "declaration": true,
-    "declarationDir": "dist",
+    "declarationDir": "dist-esm",
+    "outDir": "dist-esm",
+    "rootDir": "src",
     "skipLibCheck": true,
     "sourceMap": true,
     "esModuleInterop": true,

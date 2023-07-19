@@ -4,7 +4,6 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 module.exports = {
   entry: {
     embed: './src/embed.ts',
-    index: './src/index.ts',
   },
   output: {
     path: path.join(__dirname, 'dist'),

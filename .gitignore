@@ -74,5 +74,9 @@ typings/
 /docs/chunks
 /docs/v1/embed-chunks
 /docs/types/
+/dist-esm
 .cache
 .DS_Store
+
+# Automatically generated version.ts
+/src/version.ts
