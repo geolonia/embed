@@ -10,7 +10,7 @@
     "prebuild": "npm run writeVersionFile",
     "build:esm": "tsc && cp ./src/style.css ./dist-esm/style.css && cp ./src/lib/marker.svg ./dist-esm/lib/marker.svg",
     "build": "npm run build:esm && webpack --mode production && cp ./dist/embed.js ./dist/embed && cp -r ./dist/* ./docs/",
-    "writeVersionFile": "node -e 'require(\"fs\").writeFileSync(\"./src/version.ts\", \"export const VERSION = '\"'\"'\" + require('\"'\"'./package.json'\"'\"').version + \"'\"'\"';\\n\");'",
+    "writeVersionFile": "ts-node ./scripts/write-version-file.js",
     "analyze": "ANALYZE=true webpack --mode production",
     "format": "prettier-eslint \"./src/**/*.ts\" --write",
     "lint": "eslint --ext .js,.cjs,.mjs,.jsx,.ts,.tsx .",
