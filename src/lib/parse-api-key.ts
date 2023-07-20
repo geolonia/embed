@@ -4,13 +4,8 @@ class Keyring {
   #apiKey: string;
   #stage: string;
 
-  constructor() {
-    this.#apiKey = window.geolonia._apiKey ?? 'no-api-key';
-    this.#stage = window.geolonia._stage ?? 'dev';
-  }
-
   /**
-   * @returns API key. Default: 'no-api-key'
+   * @returns API key
    */
   get apiKey() {
     if (!this.#apiKey) {
