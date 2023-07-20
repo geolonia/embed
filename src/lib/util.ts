@@ -29,8 +29,8 @@ export function checkPermission() {
     return true;
   }
 
-  // Always returs true if API key isn't 'YOUR-API-KEY'.
-  if (keyring.apiKey !== 'YOUR-API-KEY') {
+  // Always returs true if API key is loaded.
+  if (keyring.apiKey) {
     return true;
   }
 

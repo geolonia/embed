@@ -51,7 +51,7 @@ class Keyring {
       const q = new URLSearchParams(query.replace(/^\?/, ''));
 
       if (q.get('geolonia-api-key')) {
-        this.#apiKey = q.get('geolonia-api-key') || 'YOUR-API-KEY';
+        this.#apiKey = q.get('geolonia-api-key');
 
         const res = pathname.match( /^\/(v[0-9.]+)\/embed/ );
         if (res && res[1]) {
