@@ -1,6 +1,6 @@
 'use strict';
 
-import { keyring } from './parse-api-key';
+import { keyring } from './keyring';
 import type { MapOptions, MarkerOptions } from 'maplibre-gl';
 
 /**

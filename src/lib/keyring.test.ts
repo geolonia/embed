@@ -1,4 +1,4 @@
-import { keyring } from './parse-api-key';
+import { keyring } from './keyring';
 import { JSDOM } from 'jsdom';
 import assert from 'assert';
 
