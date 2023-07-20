@@ -76,7 +76,7 @@ export const renderGeoloniaMap = () => {
     const lazyContainers = document.querySelectorAll('.geolonia:not([data-lazy-loading="off"])');
 
     // This is required for correct initialization! Don't delete!
-    if (keyring.apiKey === 'no-api-key') {
+    if (!keyring.apiKey) {
       console.error('[Geolonia] Missing API key.') // eslint-disable-line
     }
 
