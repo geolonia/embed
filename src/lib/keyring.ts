@@ -63,6 +63,10 @@ class Keyring {
       }
     }
 
+
+    if (!window.geolonia) {
+      window.geolonia = {};
+    }
     if (!window.geolonia._apiKey) {
       window.geolonia._apiKey = this.#apiKey;
     }

@@ -8,7 +8,7 @@
     "prestart": "npm run build:version",
     "start": "webpack serve --config ./docs/webpack.config.js",
     "build": "npm run build:version && npm run build:esm && npm run build:embed",
-    "build:version": "ts-node ./scripts/build-version.mjs",
+    "build:version": "node ./scripts/build-version.mjs",
     "build:esm": "tsc && cp ./src/style.css ./dist-esm/style.css && cp ./src/lib/marker.svg ./dist-esm/lib/marker.svg",
     "build:embed": "webpack --mode production && cp ./dist/embed.js ./dist/embed && cp -r ./dist/* ./docs/",
     "analyze": "ANALYZE=true webpack --mode production",
