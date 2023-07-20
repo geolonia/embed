@@ -4,7 +4,7 @@ import '../style.css';
 import GeoloniaMap from './geolonia-map';
 import { checkPermission } from './util';
 import parseAtts from './parse-atts';
-import { keyring } from './parse-api-key';
+import { keyring } from './keyring';
 import { Protocol } from 'pmtiles';
 
 const plugins = [];
