@@ -3,7 +3,7 @@ import GeoloniaMap from './lib/geolonia-map';
 import GeoloniaMarker from './lib/geolonia-marker';
 import { SimpleStyle } from './lib/simplestyle';
 import { VERSION } from './version';
-import { keyring } from './lib/parse-api-key';
+import { keyring } from './lib/keyring';
 import { registerPlugin } from './lib/render';
 
 const embedVersion = VERSION;
