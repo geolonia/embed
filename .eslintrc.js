@@ -8,7 +8,6 @@ module.exports = {
   },
   extends: ['@geolonia'],
   parserOptions: {
-    ecmaVersion: 2018,
     sourceType: 'module',
     project: './tsconfig.json',
   },

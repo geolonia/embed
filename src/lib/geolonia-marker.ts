@@ -3,7 +3,7 @@
 import maplibregl from 'maplibre-gl';
 import tinycolor from 'tinycolor2';
 import markerSVG from './marker.svg';
-import * as util from './util';
+import { handleMarkerOptions } from './util';
 import type { MarkerOptions } from 'maplibre-gl';
 
 /**
@@ -13,7 +13,7 @@ import type { MarkerOptions } from 'maplibre-gl';
  */
 export default class GeoloniaMarker extends maplibregl.Marker {
   constructor(options: MarkerOptions = {}, legacyOptions: MarkerOptions = {}) {
-    options = util.handleMarkerOptions(options, legacyOptions);
+    options = handleMarkerOptions(options, legacyOptions);
 
     if (!options || !options.element) {
       const markerElement = document.createElement('div');

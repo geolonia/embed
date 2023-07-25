@@ -115,7 +115,7 @@ export function isScrollable() {
  *
  * @param {*} o
  */
-export function isDomElement(o) {
+export function isDomElement(o): o is HTMLElement {
   return (
     typeof HTMLElement === 'object' ? o instanceof HTMLElement : // DOM2
       o && typeof o === 'object' && o !== null && o.nodeType === 1 && typeof o.nodeName === 'string'
@@ -129,7 +129,7 @@ export function isDomElement(o) {
  * @param {*} arg
  * @return {HTMLElement | false}
  */
-export function getContainer(arg) {
+export function getContainer(arg: HTMLElement | string | { container: HTMLElement | string; }): HTMLElement | false {
   if (isDomElement(arg)) {
     return arg;
   } else if (typeof arg === 'string') {
@@ -140,7 +140,7 @@ export function getContainer(arg) {
     if (isDomElement(arg.container)) {
       return arg.container;
     } else if (typeof arg.container === 'string') {
-      const el = document.querySelector(arg.container) || document.getElementById(arg.container);
+      const el = document.querySelector(arg.container) as HTMLElement || document.getElementById(arg.container);
       return el || false;
     }
   }
