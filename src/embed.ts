@@ -52,8 +52,6 @@ export type EmbedPlugin<PluginAttributes extends { [otherKey: string]: string } 
 
 // Type for `window.geolonia`
 export type Geolonia = Partial<typeof maplibregl> & {
-  _stage?: string;
-  _apiKey?: string;
   accessToken?: string;
   embedVersion?: string;
   Map?: typeof GeoloniaMap;

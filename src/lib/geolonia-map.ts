@@ -1,6 +1,7 @@
 import 'whatwg-fetch';
 import 'promise-polyfill/src/polyfill';
-import maplibregl from 'maplibre-gl';
+import maplibregl, { FullscreenControl, GeolocateControl, NavigationControl, Popup, ScaleControl } from 'maplibre-gl';
+import Marker from './geolonia-marker';
 import { GeoloniaControl } from './controls/geolonia-control';
 import CustomAttributionControl from './CustomAttributionControl';
 import GestureHandling from '@geolonia/mbgl-gesture-handling';
@@ -158,22 +159,22 @@ export default class GeoloniaMap extends maplibregl.Map {
 
     const { enabled: fullscreenControlEnabled, position: fullscreenControlPosition } = parseControlOption(atts.fullscreenControl);
     if (fullscreenControlEnabled) {
-      map.addControl(new window.geolonia.FullscreenControl(), fullscreenControlPosition);
+      map.addControl(new FullscreenControl(), fullscreenControlPosition);
     }
 
     const { enabled: navigationControlEnabled, position: navigationControlPosition } = parseControlOption(atts.navigationControl);
     if (navigationControlEnabled) {
-      map.addControl(new window.geolonia.NavigationControl(), navigationControlPosition);
+      map.addControl(new NavigationControl(), navigationControlPosition);
     }
 
     const { enabled: geolocateControlEnabled, position: geolocateControlPosition } = parseControlOption(atts.geolocateControl);
     if (geolocateControlEnabled) {
-      map.addControl(new window.geolonia.GeolocateControl({}), geolocateControlPosition);
+      map.addControl(new GeolocateControl({}), geolocateControlPosition);
     }
 
     const { enabled: scaleControlEnabled, position: scaleControlPosition } = parseControlOption(atts.scaleControl);
     if (scaleControlEnabled) {
-      map.addControl(new window.geolonia.ScaleControl({}),  scaleControlPosition);
+      map.addControl(new ScaleControl({}),  scaleControlPosition);
     }
 
     map.on('load', (event) => {
@@ -193,7 +194,7 @@ export default class GeoloniaMap extends maplibregl.Map {
 
       if (atts.lat && atts.lng && atts.marker === 'on') {
         if (content) {
-          const popup = new window.geolonia.Popup({ offset: [0, -25] }).setHTML(content);
+          const popup = new Popup({ offset: [0, -25] }).setHTML(content);
           let marker;
           if (atts.customMarker) {
             const offset = atts.customMarkerOffset.split(/,/).map((n) => {
@@ -201,19 +202,19 @@ export default class GeoloniaMap extends maplibregl.Map {
             });
             const container: HTMLElement = document.querySelector(atts.customMarker);
             container.style.display = 'block';
-            marker = new window.geolonia.Marker({
+            marker = new Marker({
               element: container,
               offset: offset as PointLike,
             }).setLngLat(options.center).addTo(map).setPopup(popup);
           } else {
-            marker = new window.geolonia.Marker({ color: atts.markerColor }).setLngLat(options.center).addTo(map).setPopup(popup);
+            marker = new Marker({ color: atts.markerColor }).setLngLat(options.center).addTo(map).setPopup(popup);
           }
           if (atts.openPopup === 'on') {
             marker.togglePopup();
           }
           marker.getElement().classList.add('geolonia-clickable-marker');
         } else {
-          new window.geolonia.Marker({ color: atts.markerColor }).setLngLat(options.center).addTo(map);
+          new Marker({ color: atts.markerColor }).setLngLat(options.center).addTo(map);
         }
       }
     });

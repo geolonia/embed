@@ -1,6 +1,6 @@
 'use strict';
 
-import { parseApiKey } from './parse-api-key';
+import { keyring } from './keyring';
 import type { MapOptions, MarkerOptions } from 'maplibre-gl';
 
 /**
@@ -29,10 +29,8 @@ export function checkPermission() {
     return true;
   }
 
-  const query = parseApiKey(window.document);
-
-  // Always returs true if API key isn't 'YOUR-API-KEY'.
-  if (query.key !== 'YOUR-API-KEY') {
+  // Always returs true if API key is loaded.
+  if (keyring.apiKey) {
     return true;
   }
 

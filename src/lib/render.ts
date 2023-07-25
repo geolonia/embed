@@ -4,7 +4,7 @@ import '../style.css';
 import GeoloniaMap from './geolonia-map';
 import { checkPermission } from './util';
 import parseAtts from './parse-atts';
-import { parseApiKey } from './parse-api-key';
+import { keyring } from './keyring';
 import { Protocol } from 'pmtiles';
 
 const plugins = [];
@@ -18,8 +18,7 @@ export const renderGeoloniaMap = () => {
     const alreadyRenderedMaps = [];
     const isRemoved = Symbol('map-is-removed');
 
-    // Create the initial window.geolonia object if it doesn't exist.
-    parseApiKey(document);
+    keyring.parse();
 
     /**
      *
@@ -77,8 +76,7 @@ export const renderGeoloniaMap = () => {
     const lazyContainers = document.querySelectorAll('.geolonia:not([data-lazy-loading="off"])');
 
     // This is required for correct initialization! Don't delete!
-    const { key } = parseApiKey(document);
-    if (key === 'no-api-key') {
+    if (!keyring.apiKey) {
       console.error('[Geolonia] Missing API key.') // eslint-disable-line
     }
 
