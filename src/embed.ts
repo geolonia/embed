@@ -6,10 +6,8 @@ import * as maplibregl from 'maplibre-gl';
 import GeoloniaMap from './lib/geolonia-map';
 import GeoloniaMarker from './lib/geolonia-marker';
 import { SimpleStyle } from './lib/simplestyle';
-import pkg from '../package.json';
+import { VERSION as embedVersion } from './version';
 import { registerPlugin, renderGeoloniaMap } from './lib/render';
-
-const embedVersion = pkg.version;
 
 export type { GeoloniaMapOptions } from './lib/geolonia-map';
 
