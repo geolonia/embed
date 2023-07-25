@@ -2,120 +2,88 @@
  * @file Entry for embed.js
  */
 
-import maplibregl from 'maplibre-gl';
-import 'maplibre-gl/dist/maplibre-gl.css';
-import './style.css';
+import * as maplibregl from 'maplibre-gl';
 import GeoloniaMap from './lib/geolonia-map';
 import GeoloniaMarker from './lib/geolonia-marker';
-import { checkPermission } from './lib/util';
-import parseAtts from './lib/parse-atts';
-import { parseApiKey } from './lib/parse-api-key';
-import pkg from '../package.json';
 import { SimpleStyle } from './lib/simplestyle';
-import { Protocol } from 'pmtiles';
+import pkg from '../package.json';
+import { registerPlugin, renderGeoloniaMap } from './lib/render';
 
-export { GeoloniaMap as Map, GeoloniaMarker as Marker };
-export type * from './types';
+const embedVersion = pkg.version;
+
 export type { GeoloniaMapOptions } from './lib/geolonia-map';
 
-const protocol = new Protocol();
-maplibregl.addProtocol('pmtiles', protocol.tile);
+export type Popup = maplibregl.Popup;
 
-if ( checkPermission() ) {
-  let isDOMContentLoaded = false;
-  const alreadyRenderedMaps = [];
-  const plugins = [];
-  const isRemoved = Symbol('map-is-removed');
+export type EmbedAttributes = {
+  lat: string;
+  lng: string;
+  zoom: string;
+  bearing: string;
+  pitch: string;
+  hash: string;
+  marker: string;
+  markerColor: string;
+  openPopup: string;
+  customMarker: string;
+  customMarkerOffset: string;
+  gestureHandling: string;
+  navigationControl: string;
+  geolocateControl: string;
+  fullscreenControl: string;
+  scaleControl: string;
+  geoloniaControl: string;
+  geojson: string;
+  cluster: string;
+  clusterColor: string;
+  style: string;
+  lang: string;
+  plugin: string;
+  key: string;
+  apiUrl: string;
+  loader: string;
+  minZoom: string;
+  maxZoom: string;
+  '3d': string;
+  [otherKey: string]: string;
+};
 
-  // Create the initial window.geolonia object if it doesn't exist.
-  parseApiKey(document);
+export type EmbedPlugin<PluginAttributes extends { [otherKey: string]: string } = {}> = (map: GeoloniaMap, target: HTMLElement, atts: EmbedAttributes & PluginAttributes) => void;
 
-  /**
-   *
-   * @param {HTMLElement} target
-   */
-  const renderGeoloniaMap = (target) => {
-    const map = new GeoloniaMap(target);
+// Type for `window.geolonia`
+export type Geolonia = Partial<typeof maplibregl> & {
+  _stage?: string;
+  _apiKey?: string;
+  accessToken?: string;
+  embedVersion?: string;
+  Map?: typeof GeoloniaMap;
+  Marker?: typeof GeoloniaMarker;
+  SimpleStyle?: typeof SimpleStyle;
+  simpleStyle?: typeof SimpleStyle; // backward compatibility
+  registerPlugin?: (embedPlugin: EmbedPlugin) => void;
+};
 
-    // detect if the map removed manually
-    map.on('remove', () => {
-      map[isRemoved] = true;
-    });
-
-    // remove map instance automatically if the container removed.
-    // prevent memory leak
-    const observer = new MutationObserver((mutationRecords) => {
-      const removed = mutationRecords.some((record) => [...record.removedNodes].some((node) => node === target));
-      if (removed && !map[isRemoved]) {
-        map.remove();
-      }
-    });
-    observer.observe(target.parentNode, { childList: true });
-
-    // plugin
-    const atts = parseAtts(target);
-    if (isDOMContentLoaded && !map[isRemoved]) {
-      plugins.forEach((plugin) => plugin(map, target, atts));
-    } else {
-      alreadyRenderedMaps.push({ map, target: target, atts });
-    }
-  };
-
-  document.addEventListener('DOMContentLoaded', () => {
-    isDOMContentLoaded = true;
-    alreadyRenderedMaps.forEach(({ map, target, atts }) => {
-      if (!map[isRemoved]) {
-        plugins.forEach((plugin) => plugin(map, target, atts));
-      }
-    });
-    // clear
-    alreadyRenderedMaps.splice(0, alreadyRenderedMaps.length);
-  });
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((item) => {
-      if (!item.isIntersecting) {
-        return;
-      }
-      renderGeoloniaMap(item.target);
-      observer.unobserve(item.target);
-    });
-  });
-
-  const containers = document.querySelectorAll('.geolonia[data-lazy-loading="off"]');
-  const lazyContainers = document.querySelectorAll('.geolonia:not([data-lazy-loading="off"])');
-
-  window.geolonia =
-    window.maplibregl =
-    window.mapboxgl = // Embed API backward compatibility
-    Object.assign(window.geolonia, maplibregl);
-
-  // This is required for correct initialization! Don't delete!
-  const { key } = parseApiKey(document);
-  if (key === 'no-api-key') {
-    console.error('[Geolonia] Missing API key.') // eslint-disable-line
+declare global {
+  interface Window {
+    geolonia: Geolonia,
+    maplibregl?: Geolonia,
+    mapboxgl?: Geolonia,
   }
-
-  window.geolonia.Map = GeoloniaMap;
-  window.geolonia.simpleStyle = // backward compatibility
-    window.geolonia.SimpleStyle =
-    SimpleStyle;
-  window.geolonia.Marker = GeoloniaMarker;
-  window.geolonia.embedVersion = pkg.version;
-  window.geolonia.registerPlugin = (plugin) => {
-    plugins.push(plugin);
-    return void 0;
-  };
-
-  // render Map immediately
-  for (let i = 0; i < containers.length; i++) {
-    renderGeoloniaMap(containers[i]);
-  }
-
-  // set intersection observer
-  for (let i = 0; i < lazyContainers.length; i++) {
-    observer.observe(lazyContainers[i]);
-  }
-} else {
-  console.error( '[Geolonia] We are very sorry, but we can\'t display our map in iframe.' ) // eslint-disable-line
 }
+
+const geolonia: Geolonia = Object.assign(window.geolonia || {}, maplibregl, {
+  Map: GeoloniaMap,
+  Marker: GeoloniaMarker,
+  SimpleStyle: SimpleStyle,
+  simpleStyle: SimpleStyle,
+  embedVersion,
+  registerPlugin,
+});
+
+window.geolonia =
+  window.maplibregl =
+  window.mapboxgl = geolonia;
+
+renderGeoloniaMap();
+
+export { geolonia };

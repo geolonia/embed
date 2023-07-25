@@ -1,6 +1,13 @@
 import { parseApiKey } from './parse-api-key';
 import { JSDOM } from 'jsdom';
 import assert from 'assert';
+import type { Geolonia } from '../embed';
+
+declare global {
+  interface Window {
+    geolonia: Geolonia,
+  }
+}
 
 describe('parse api key from dom', () => {
   beforeEach(() => {
