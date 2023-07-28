@@ -1,5 +1,3 @@
-import urlParse from 'url-parse';
-
 class Keyring {
   #apiKey: string;
   #stage: string;
@@ -47,13 +45,18 @@ class Keyring {
       doc.getElementsByTagName('script');
 
     for (const script of scripts) {
-      const { pathname, query } = urlParse(script.src);
-      const q = new URLSearchParams(query.replace(/^\?/, ''));
+      const url = new URL(
+        (
+          script.src.startsWith('https://') ||
+          script.src.startsWith('http://') ||
+          script.src.startsWith('//')
+        ) ? script.src : `https://${location.host}/${script.src}`);
+      const apiKey = url.searchParams.get('geolonia-api-key');
 
-      if (q.get('geolonia-api-key')) {
-        this.#apiKey = q.get('geolonia-api-key');
+      if (apiKey) {
+        this.#apiKey = apiKey;
 
-        const res = pathname.match( /^\/(v[0-9.]+)\/embed/ );
+        const res = url.pathname.match( /^\/(v[0-9.]+)\/embed/ );
         if (res && res[1]) {
           this.#stage = res[1];
         }
