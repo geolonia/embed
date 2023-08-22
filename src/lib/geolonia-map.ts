@@ -1,5 +1,3 @@
-import 'whatwg-fetch';
-import 'promise-polyfill/src/polyfill';
 import maplibregl, { FullscreenControl, GeolocateControl, NavigationControl, Popup, ScaleControl } from 'maplibre-gl';
 import Marker from './geolonia-marker';
 import { GeoloniaControl } from './controls/geolonia-control';
