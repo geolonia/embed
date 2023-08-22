@@ -28,7 +28,6 @@
   "devDependencies": {
     "@geolonia/eslint-config": "latest",
     "@types/mocha": "^10.0.1",
-    "@types/url-parse": "^1.4.8",
     "babel-loader": "^9.1.0",
     "css-loader": "^6.7.2",
     "eslint": "^8.29.0",
@@ -58,7 +57,6 @@
     "promise-polyfill": "^8.2.3",
     "sanitize-html": "^2.8.0",
     "tinycolor2": "^1.4.1",
-    "url-parse": "^1.5.10",
     "whatwg-fetch": "^3.0.0"
   }
 }
