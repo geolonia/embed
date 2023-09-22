@@ -6,6 +6,7 @@
   "types": "dist/embed.d.ts",
   "scripts": {
     "prestart": "npm run build:version",
+    "prelint": "npm run build:version",
     "start": "webpack serve --config ./docs/webpack.config.js",
     "build": "npm run build:version && npm run build:embed",
     "build:version": "node ./scripts/build-version.mjs",
