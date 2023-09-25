@@ -8,7 +8,7 @@ module.exports = {
     filename: 'embed.js',
     chunkFilename: path.join('embed-chunks', '[chunkhash].js'),
     clean: true,
-    publicPath: '',
+    publicPath: 'auto',
   },
   plugins: process.env.ANALYZE === 'true' ? [new BundleAnalyzerPlugin()] : [],
   module: {
