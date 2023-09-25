@@ -82,4 +82,10 @@ window.geolonia =
 
 renderGeoloniaMap();
 
-export { geolonia };
+export {
+  geolonia,
+  GeoloniaMap as Map,
+  GeoloniaMarker as Marker,
+  SimpleStyle,
+  embedVersion,
+};
