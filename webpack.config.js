@@ -9,6 +9,10 @@ module.exports = {
     chunkFilename: path.join('embed-chunks', '[chunkhash].js'),
     clean: true,
     publicPath: 'auto',
+    library: {
+      name: 'geoloniaEmbed',
+      type: 'umd',
+    },
   },
   plugins: process.env.ANALYZE === 'true' ? [new BundleAnalyzerPlugin()] : [],
   module: {

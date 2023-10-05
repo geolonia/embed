@@ -51,12 +51,12 @@ export type EmbedPlugin<PluginAttributes extends { [otherKey: string]: string } 
 // Type for `window.geolonia`
 export type Geolonia = Partial<typeof maplibregl> & {
   accessToken?: string;
-  embedVersion?: string;
-  Map?: typeof GeoloniaMap;
-  Marker?: typeof GeoloniaMarker;
-  SimpleStyle?: typeof SimpleStyle;
-  simpleStyle?: typeof SimpleStyle; // backward compatibility
-  registerPlugin?: (embedPlugin: EmbedPlugin) => void;
+  embedVersion: string;
+  Map: typeof GeoloniaMap;
+  Marker: typeof GeoloniaMarker;
+  SimpleStyle: typeof SimpleStyle;
+  simpleStyle: typeof SimpleStyle; // backward compatibility
+  registerPlugin: (embedPlugin: EmbedPlugin) => void;
 };
 
 declare global {
@@ -82,4 +82,10 @@ window.geolonia =
 
 renderGeoloniaMap();
 
-export { geolonia };
+export {
+  geolonia,
+  GeoloniaMap as Map,
+  GeoloniaMarker as Marker,
+  SimpleStyle,
+  embedVersion,
+};
