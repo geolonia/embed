@@ -10,7 +10,8 @@ module.exports = {
     clean: true,
     publicPath: 'auto',
     library: {
-      type: 'commonjs',
+      name: 'geoloniaEmbed',
+      type: 'umd',
     },
   },
   plugins: process.env.ANALYZE === 'true' ? [new BundleAnalyzerPlugin()] : [],
