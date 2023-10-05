@@ -3,7 +3,7 @@
 import maplibregl from 'maplibre-gl';
 import geojsonExtent from '@mapbox/geojson-extent';
 import turfCenter from '@turf/center';
-import { isURL, sanitizeDescription } from './util';
+import { eliminateInvalidLngLat, isURL, sanitizeDescription } from './util';
 import type { FeatureCollection } from 'geojson';
 
 const textColor = '#000000';
@@ -330,37 +330,39 @@ export class SimpleStyle {
 
   setGeoJSON(geojson: string | FeatureCollection) {
 
-    if (typeof geojson === 'string' && isURL(geojson)) {
+    if (typeof geojson === 'string') {
+      if (isURL(geojson)) {
+        this.geojson = template;
 
-      this.geojson = template;
+        const fetchGeoJSON = async () => {
 
-      const fetchGeoJSON = async () => {
+          try {
 
-        try {
+            const response = await window.fetch(geojson);
+            const data = eliminateInvalidLngLat(await response.json());
+            this.geojson = data;
+            this.updateData(data);
 
-          const response = await window.fetch(geojson);
-          const data = await response.json();
-          this.geojson = data;
-          this.updateData(data);
+            if (this.callFitBounds) {
 
-          if (this.callFitBounds) {
+              this.fitBounds();
+              this.callFitBounds = false;
 
-            this.fitBounds();
-            this.callFitBounds = false;
+            }
 
+          } catch (error) {
+
+            console.error('[Geolonia] Failed to load GeoJSON:', error); // eslint-disable-line no-console
           }
 
-        } catch (error) {
+        };
 
-          console.error('[Geolonia] Failed to load GeoJSON:', error); // eslint-disable-line no-console
-        }
-
-      };
-
-      this._loadingPromise = fetchGeoJSON();
-
+        this._loadingPromise = fetchGeoJSON();
+      } else {
+        throw new Error(`Invalid GeoJSON URL: ${geojson}`);
+      }
     } else {
-      this.geojson = geojson;
+      this.geojson = eliminateInvalidLngLat(geojson);
     }
 
   }

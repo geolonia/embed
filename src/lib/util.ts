@@ -1,6 +1,7 @@
 'use strict';
 
 import { keyring } from './keyring';
+import type { FeatureCollection } from 'geojson';
 import type { MapOptions, MarkerOptions } from 'maplibre-gl';
 
 /**
@@ -260,6 +261,27 @@ export const parseSimpleVector = (attributeValue) => {
   } else {
     return `geolonia://tiles/custom/${attributeValue}`;
   }
+};
+
+export const eliminateInvalidLngLat = (geojson: FeatureCollection): FeatureCollection => {
+  const _geojson: FeatureCollection = { ...geojson };
+  _geojson.features = _geojson.features.filter((feature) => {
+    if (feature.geometry.type === 'Point') {
+      const lng = feature.geometry.coordinates[0];
+      const lat = feature.geometry.coordinates[1];
+
+      if (lng >= -180 && lng <= 180 && lat >= -90 && lat <= 90) {
+        return true;
+      } else {
+        console.error(`[Geolonia] Invalid coordinates: ${lng}, ${lat}`); // eslint-disable-line no-console
+        return false;
+      }
+    } else {
+      return true; // For now, only validate Point geometry type. TODO: support other geometry types
+    }
+  });
+
+  return _geojson;
 };
 
 export const handleRestrictedMode = (map) => {
