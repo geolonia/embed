@@ -4,6 +4,7 @@ import maplibregl from 'maplibre-gl';
 import geojsonExtent from '@mapbox/geojson-extent';
 import turfCenter from '@turf/center';
 import { isURL, sanitizeDescription } from './util';
+import type { FeatureCollection } from 'geojson';
 
 const textColor = '#000000';
 const textHaloColor = '#FFFFFF';
@@ -22,7 +23,7 @@ export class SimpleStyle {
   private map;
   private options;
 
-  constructor(geojson, options?) {
+  constructor(geojson: string | FeatureCollection, options?) {
     this.setGeoJSON(geojson);
 
     this.options = {
@@ -34,7 +35,7 @@ export class SimpleStyle {
     };
   }
 
-  updateData(geojson) {
+  updateData(geojson: string | FeatureCollection) {
 
     this.setGeoJSON(geojson);
 
@@ -327,7 +328,7 @@ export class SimpleStyle {
     });
   }
 
-  setGeoJSON(geojson) {
+  setGeoJSON(geojson: string | FeatureCollection) {
 
     if (typeof geojson === 'string' && isURL(geojson)) {
 

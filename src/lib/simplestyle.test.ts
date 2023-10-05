@@ -4,6 +4,7 @@
 import assert from 'assert';
 import nodeFetch from 'node-fetch';
 import { random } from './util';
+import type { FeatureCollection } from 'geojson';
 
 window.URL.createObjectURL ||= (_: Blob | MediaSource) => 'dummy'; // To prevent `TypeError: window.URL.createObjectURL is not a function`
 window.requestAnimationFrame = (cb) => {
@@ -55,7 +56,7 @@ class Map {
   }
 }
 
-const geojson = {
+const geojson: FeatureCollection = {
   'type': 'FeatureCollection',
   'features': [
     {
@@ -102,7 +103,7 @@ describe('Tests for simpleStyle()', () => {
 
     const map = new Map();
 
-    const empty = {
+    const empty: FeatureCollection = {
       'type': 'FeatureCollection',
       'features': [],
     };
@@ -119,7 +120,7 @@ describe('Tests for simpleStyle()', () => {
 
     const map = new Map();
 
-    const empty = {
+    const empty: FeatureCollection = {
       'type': 'FeatureCollection',
       'features': [],
     };
@@ -193,7 +194,7 @@ describe('Tests for simpleStyle()', () => {
     const { SimpleStyle } = await import('./simplestyle');
 
     const map = new Map();
-    const empty = {
+    const empty: FeatureCollection = {
       'type': 'FeatureCollection',
       'features': [],
     };
