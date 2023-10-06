@@ -12,7 +12,7 @@ import { getContainer, getOptions, getSessionId, getStyle, handleRestrictedMode,
 
 import type { MapOptions, PointLike, StyleOptions, StyleSpecification, StyleSwapOptions } from 'maplibre-gl';
 
-export type GeoloniaMapOptions = Omit<MapOptions, 'style'> & { interactive?: boolean };
+export type GeoloniaMapOptions = MapOptions & { interactive?: boolean };
 
 type Container = HTMLElement & {
   geoloniaMap: GeoloniaMap;
