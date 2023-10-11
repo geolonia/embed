@@ -190,6 +190,12 @@ class CustomAttributionControl implements IControl {
         }
     }
 
+    @media print {
+      .maplibregl-ctrl-attrib-button {
+        display: none!important;
+      }
+    }
+
     .maplibregl-ctrl-attrib a {
         color: rgba(0,0,0,.75);
         text-decoration: none;
