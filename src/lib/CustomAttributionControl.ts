@@ -35,6 +35,8 @@ class CustomAttributionControl implements IControl {
   private _attribHTML;
   private styleId;
   private styleOwner;
+  private printQuery;
+  private onMediaPrintChange;
 
   constructor(options = {}) {
     this.options = options;
@@ -224,6 +226,16 @@ class CustomAttributionControl implements IControl {
     shadow.appendChild(style);
     shadow.appendChild(this._shadowContainer);
 
+    this.printQuery = window.matchMedia('print');
+    this.onMediaPrintChange = (e) => {
+      if (e.matches) {
+        // force open
+        this._shadowContainer.setAttribute('open', '');
+        this._shadowContainer.classList.remove('maplibregl-compact-show');
+      }
+    };
+    this.printQuery.addEventListener('change', this.onMediaPrintChange);
+
     return this._container;
   }
 
@@ -239,6 +251,8 @@ class CustomAttributionControl implements IControl {
     this._map = undefined;
     this._compact = undefined;
     this._attribHTML = undefined;
+
+    this.printQuery.removeEventListener('change', this.onMediaPrintChange);
   }
 
   _setElementTitle(element, title) {
