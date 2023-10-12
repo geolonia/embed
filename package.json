@@ -53,8 +53,8 @@
     "@mapbox/geojson-extent": "^1.0.0",
     "@mapbox/point-geometry": "^0.1.0",
     "@turf/center": "^6.0.1",
-    "maplibre-gl": "3.0.1",
-    "pmtiles": "^2.7.2",
+    "maplibre-gl": "3.4.1",
+    "pmtiles": "2.11.0",
     "sanitize-html": "^2.8.0",
     "tinycolor2": "^1.4.1"
   }
