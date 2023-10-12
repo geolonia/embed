@@ -210,10 +210,10 @@
   resolved "https://registry.yarnpkg.com/@mapbox/whoots-js/-/whoots-js-3.1.0.tgz#497c67a1cef50d1a2459ba60f315e448d2ad87fe"
   integrity sha512-Es6WcD0nO5l+2BOQS4uLfNPYQaNDfbot3X1XUoloz+x0mPDS3eeORZJl06HXjwBG1fOGwCRnzK88LMdxKRrd6Q==
 
-"@maplibre/maplibre-gl-style-spec@^19.2.1":
-  version "19.3.0"
-  resolved "https://registry.yarnpkg.com/@maplibre/maplibre-gl-style-spec/-/maplibre-gl-style-spec-19.3.0.tgz#00a1dde3d389313b0b9805b57fc0b3d023cfcf19"
-  integrity sha512-ZbhX9CTV+Z7vHwkRIasDOwTSzr76e8Q6a55RMsAibjyX6+P0ZNL1qAKNzOjjBDP3+aEfNMl7hHo5knuY6pTAUQ==
+"@maplibre/maplibre-gl-style-spec@^19.3.2":
+  version "19.3.2"
+  resolved "https://registry.yarnpkg.com/@maplibre/maplibre-gl-style-spec/-/maplibre-gl-style-spec-19.3.2.tgz#9c36f0bf4ec54ae8c307d782672903ec44f9eab2"
+  integrity sha512-C2JAk64XUz9v78+bpyTk1zvgjjnDsB8CCjNumyAYdWK2dvdDtILzh1AGBMdS/llX3KaHjGYxAE5wOwfdwq4Pog==
   dependencies:
     "@mapbox/jsonlint-lines-primitives" "~2.0.2"
     "@mapbox/unitbezier" "^0.0.1"
@@ -433,10 +433,15 @@
     "@types/qs" "*"
     "@types/serve-static" "*"
 
-"@types/geojson@*", "@types/geojson@^7946.0.10":
+"@types/geojson@*":
   version "7946.0.10"
   resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-7946.0.10.tgz#6dfbf5ea17142f7f9a043809f1cd4c448cb68249"
   integrity sha512-Nmh0K3iWQJzniTuPRcJn5hxXkfB1T1pgB89SBig5PlJQU5yocazeu4jATJlaA0GYFKWMqDdvYemoSnF2pXgLVA==
+
+"@types/geojson@^7946.0.11":
+  version "7946.0.11"
+  resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-7946.0.11.tgz#012c17cb2256ad8de78560da851ab914a7b9b40e"
+  integrity sha512-L7A0AINMXQpVwxHJ4jxD6/XjZ4NDufaRlUJHjNIFKYUFBH1SvOW+neaqb0VTRSLW5suSrSu19ObFEFnfNcr+qg==
 
 "@types/http-errors@*":
   version "2.0.1"
@@ -465,10 +470,10 @@
   resolved "https://registry.yarnpkg.com/@types/mapbox__point-geometry/-/mapbox__point-geometry-0.1.2.tgz#488a9b76e8457d6792ea2504cdd4ecdd9860a27e"
   integrity sha512-D0lgCq+3VWV85ey1MZVkE8ZveyuvW5VAfuahVTQRpXFQTxw03SuIf1/K4UQ87MMIXVKzpFjXFiFMZzLj2kU+iA==
 
-"@types/mapbox__vector-tile@^1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@types/mapbox__vector-tile/-/mapbox__vector-tile-1.3.0.tgz#8fa1379dbaead1e1b639b8d96cfd174404c379d6"
-  integrity sha512-kDwVreQO5V4c8yAxzZVQLE5tyWF+IPToAanloQaSnwfXmIcJ7cyOrv8z4Ft4y7PsLYmhWXmON8MBV8RX0Rgr8g==
+"@types/mapbox__vector-tile@^1.3.1":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@types/mapbox__vector-tile/-/mapbox__vector-tile-1.3.1.tgz#938f013caccfc924344fd94f2834744d411d0f07"
+  integrity sha512-RpwGE57xM4a/YCH6XWzfcPVRPAu/jiCll0bEGRn6a4iubN2k4xZizskQoRj8fuXyo9BpI7F3bwz3uxs0pWbGNw==
   dependencies:
     "@types/geojson" "*"
     "@types/mapbox__point-geometry" "*"
@@ -494,10 +499,15 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-20.5.1.tgz#178d58ee7e4834152b0e8b4d30cbfab578b9bb30"
   integrity sha512-4tT2UrL5LBqDwoed9wZ6N3umC4Yhz3W3FloMmiiG4JwmUJWpie0c7lcnUNd4gtMKuDEO4wRVS8B6Xa0uMRsMKg==
 
-"@types/pbf@*", "@types/pbf@^3.0.2":
+"@types/pbf@*":
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/@types/pbf/-/pbf-3.0.2.tgz#8d291ad68b4b8c533e96c174a2e3e6399a59ed61"
   integrity sha512-EDrLIPaPXOZqDjrkzxxbX7UlJSeQVgah3i0aA4pOSzmK9zq3BIh7/MZIQxED7slJByvKM4Gc6Hypyu2lJzh3SQ==
+
+"@types/pbf@^3.0.3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@types/pbf/-/pbf-3.0.3.tgz#7983338f5a3f83f8b3449f2217a167749c3f5089"
+  integrity sha512-hw6bDMjvm+QTvEC+pRLpnTknQXoPu8Fnf+A+zX9HB7j/7RfYajFSbdukabo3adPwvvEHhIMafQl0R0Tpej7clQ==
 
 "@types/prettier@^2.6.0":
   version "2.7.3"
@@ -554,6 +564,13 @@
   integrity sha512-f0KEEe05NvUnat+boPTZ0dgaLZ4SfSouXUgv5noUiefG2ajgKjmETo9ZJyuqsl7dfl2aHlLJUiki6B4ZYldiiw==
   dependencies:
     "@types/node" "*"
+
+"@types/supercluster@^7.1.1":
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/@types/supercluster/-/supercluster-7.1.1.tgz#b7bd11dc793c1e658d0549ead4a93e594a8fb478"
+  integrity sha512-dNK02GO1UApgo+1KpY4jOfm3uWb2eBCMB/VMM2y8cMoF49FiqVVcOawEg19wxYcaX7SvEs370incOuFtFGrVLg==
+  dependencies:
+    "@types/geojson" "*"
 
 "@types/ws@^8.5.5":
   version "8.5.5"
@@ -3251,10 +3268,10 @@ map-obj@^4.1.0:
   resolved "https://registry.yarnpkg.com/map-obj/-/map-obj-4.3.0.tgz#9304f906e93faae70880da102a9f1df0ea8bb05a"
   integrity sha512-hdN1wVrZbb29eBGiGjJbeP8JbKjq1urkHJ/LIP/NY48MZ1QVXUsQBV1G1zvYFHn1XE06cwjBsOI2K3Ulnj1YXQ==
 
-maplibre-gl@3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/maplibre-gl/-/maplibre-gl-3.0.1.tgz#7af75d2c77ab5325ee1c81bd1638c9b4ee920651"
-  integrity sha512-OdFpejEkvaDwwVT9qAn6oA2h7093VlemaenF2/ssfD3TadNPz5oIVPzywn3cgso5i1D7IMKvEpba0A8A5qvXow==
+maplibre-gl@3.4.1:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/maplibre-gl/-/maplibre-gl-3.4.1.tgz#a22487f981e07d5b04bb525a1927ead2ef1bdb69"
+  integrity sha512-RPcdaiZ52G3X+PaHQxqQ1d4I8iTIPRl4OXhPU/3o37kDf+ImLXpUVZj4p0qBCGm71n79daVzaCMG9QxfSSQbnQ==
   dependencies:
     "@mapbox/geojson-rewind" "^0.5.2"
     "@mapbox/jsonlint-lines-primitives" "^2.0.2"
@@ -3263,11 +3280,12 @@ maplibre-gl@3.0.1:
     "@mapbox/unitbezier" "^0.0.1"
     "@mapbox/vector-tile" "^1.3.1"
     "@mapbox/whoots-js" "^3.1.0"
-    "@maplibre/maplibre-gl-style-spec" "^19.2.1"
-    "@types/geojson" "^7946.0.10"
+    "@maplibre/maplibre-gl-style-spec" "^19.3.2"
+    "@types/geojson" "^7946.0.11"
     "@types/mapbox__point-geometry" "^0.1.2"
-    "@types/mapbox__vector-tile" "^1.3.0"
-    "@types/pbf" "^3.0.2"
+    "@types/mapbox__vector-tile" "^1.3.1"
+    "@types/pbf" "^3.0.3"
+    "@types/supercluster" "^7.1.1"
     earcut "^2.2.4"
     geojson-vt "^3.2.1"
     gl-matrix "^3.4.3"
@@ -3788,10 +3806,10 @@ pkg-dir@^7.0.0:
   dependencies:
     find-up "^6.3.0"
 
-pmtiles@^2.7.2:
-  version "2.10.0"
-  resolved "https://registry.yarnpkg.com/pmtiles/-/pmtiles-2.10.0.tgz#894e2954723924add7dd9637c89c0329ffe62501"
-  integrity sha512-X+s6JyperpcAkKwv55MKx72ckOUB0ZjcfK4929iM0SS0MkLydEi2FSW1E8YTE1E2XaZ2TVk/MIUrbsZuXV7K2g==
+pmtiles@2.11.0:
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/pmtiles/-/pmtiles-2.11.0.tgz#53aac29408e001a73b15b1c8cad0b17c944ab7bd"
+  integrity sha512-dU9SzzaqmCGpdEuTnIba6bDHT6j09ZJFIXxwGpvkiEnce3ZnBB1VKt6+EOmJGueriweaZLAMTUmKVElU2CBe0g==
   dependencies:
     fflate "^0.8.0"
 
