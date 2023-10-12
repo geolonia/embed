@@ -129,3 +129,9 @@
   display: block!important;
 }
 /* End: CSS for Attribution */
+
+@media print {
+  .maplibregl-control-container button {
+    display: none;
+  }
+}
