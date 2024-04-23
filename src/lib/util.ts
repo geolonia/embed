@@ -281,3 +281,22 @@ export const sanitizeDescription = async (description) => {
 };
 
 export const random = (max: number): number => Math.floor(Math.random() * max);
+
+export const isWebgl2Supported = () => {
+  if (window.WebGL2RenderingContext) {
+      const canvas = document.createElement('canvas');
+      try {
+          const context = canvas.getContext('webgl2',{
+            failIfMajorPerformanceCaveat: true // if hardware acceleration is disabled, it will return null
+          })
+
+          if (context) {
+              return true;
+          }
+      } catch (e) {
+          return false;
+      }
+      return false;
+  }
+  return false;
+}
