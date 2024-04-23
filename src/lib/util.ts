@@ -282,6 +282,10 @@ export const sanitizeDescription = async (description) => {
 
 export const random = (max: number): number => Math.floor(Math.random() * max);
 
+/**
+ * Check if WebGL2 and Hardware acceleration is supported.
+ * @returns {boolean} isWebgl2Supported
+ */
 export const isWebgl2Supported = () => {
   if (window.WebGL2RenderingContext) {
       const canvas = document.createElement('canvas');
