@@ -49,7 +49,7 @@ export default class GeoloniaMap extends maplibregl.Map {
 
     if (!isWebgl2Supported()) {
       console.warn('[Geolonia] WebGL 2.0 is not supported, or graphics acceleration is disabled.');
-      alert('[Geolonia Maps] お使いのブラウザは WebGL 2.0 に対応していない、もしくはグラフィックアクセラレーションが無効になっています。設定を有効にしてください。');
+      alert('お使いのブラウザは WebGL 2.0 に対応していない、もしくはグラフィックアクセラレーションが無効になっているため地図が表示されません。設定を有効にしてください。');
     }
 
     const container = getContainer(params) as Container | false;
