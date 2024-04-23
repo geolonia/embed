@@ -48,8 +48,8 @@ export default class GeoloniaMap extends maplibregl.Map {
   constructor(params: string | GeoloniaMapOptions) {
 
     if (!isWebgl2Supported()) {
-      alert('お使いのブラウザは WebGL 2.0 に対応していません。WebGL 2.0 に対応したブラウザでご利用ください。');
-      throw new Error('WebGL 2.0 is not supported');
+      console.warn('[Geolonia] WebGL 2.0 is not supported, or graphics acceleration is disabled.');
+      alert('[Geolonia Maps] お使いのブラウザは WebGL 2.0 に対応していない、もしくはグラフィックアクセラレーションが無効になっています。設定を有効にしてください。');
     }
 
     const container = getContainer(params) as Container | false;

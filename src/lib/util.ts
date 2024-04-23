@@ -283,7 +283,7 @@ export const sanitizeDescription = async (description) => {
 export const random = (max: number): number => Math.floor(Math.random() * max);
 
 /**
- * Check if WebGL2 and Hardware acceleration is supported.
+ * Check if WebGL2 is supported.
  * @returns {boolean} isWebgl2Supported
  */
 export const isWebgl2Supported = () => {
@@ -291,7 +291,7 @@ export const isWebgl2Supported = () => {
       const canvas = document.createElement('canvas');
       try {
           const context = canvas.getContext('webgl2',{
-            failIfMajorPerformanceCaveat: true // if hardware acceleration is disabled, it will return null
+            failIfMajorPerformanceCaveat: true // if system performance is low or if no hardware GPU is available, it will return null.
           })
 
           if (context) {
