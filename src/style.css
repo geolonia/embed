@@ -117,6 +117,9 @@
   align-items: center;
   height: 100%;
   width: 100%;
+  background-color: #dedede;
+  z-index: 9999;
+  position: absolute;
 }
 
 .geolonia__error-message {
@@ -128,7 +131,7 @@
   position: absolute;
   z-index: 99999;
   word-wrap: break-word;
-  box-shadow: 0 4px 10px #00000040;
+  box-shadow: 0 4px 10px #0000001a
 }
 
 .geolonia__error-message-description {
