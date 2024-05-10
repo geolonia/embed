@@ -67,7 +67,11 @@ export const renderGeoloniaMap = () => {
         if (!item.isIntersecting) {
           return;
         }
-        renderSingleMap(item.target);
+        try {
+          renderSingleMap(item.target);
+        } catch (e) {
+          console.error('[Geolonia] Failed to initialize map', e); // eslint-disable-line
+        }
         observer.unobserve(item.target);
       });
     });
@@ -82,7 +86,11 @@ export const renderGeoloniaMap = () => {
 
     // render Map immediately
     for (let i = 0; i < containers.length; i++) {
-      renderSingleMap(containers[i]);
+      try {
+        renderSingleMap(containers[i]);
+      } catch (e) {
+        console.error('[Geolonia] Failed to initialize map', e); // eslint-disable-line
+      }
     }
 
     // set intersection observer
