@@ -110,6 +110,31 @@
   background-size: cover;
 }
 
+/* Style for error message */
+.geolonia__error-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.geolonia__error-message {
+  max-width: 300px;
+  background-color: #ffffff;
+  margin: 10px;
+  padding: 0.75rem 1.25rem;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 99999;
+  word-wrap: break-word;
+  box-shadow: 0 4px 10px #00000040;
+}
+
+.geolonia__error-message-description {
+  margin: 15px 0;
+}
+
 /* CSS for Attribution */
 /* Fix: https://github.com/geolonia/embed/issues/291 */
 .maplibregl-map {

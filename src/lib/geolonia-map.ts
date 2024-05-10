@@ -8,7 +8,7 @@ import parseAtts from './parse-atts';
 import { SimpleStyle } from './simplestyle';
 import SimpleStyleVector from './simplestyle-vector';
 
-import { getContainer, getOptions, getSessionId, getStyle, handleRestrictedMode, isScrollable, parseControlOption, parseSimpleVector, isWebgl2Supported } from './util';
+import { getContainer, getOptions, getSessionId, getStyle, handleRestrictedMode, isScrollable, parseControlOption, parseSimpleVector, handleErrorMode } from './util';
 
 import type { MapOptions, PointLike, StyleOptions, StyleSpecification, StyleSwapOptions } from 'maplibre-gl';
 
@@ -47,15 +47,10 @@ export default class GeoloniaMap extends maplibregl.Map {
 
   constructor(params: string | GeoloniaMapOptions) {
 
-    if (!isWebgl2Supported()) {
-      console.warn('[Geolonia] WebGL 2.0 is not supported, or graphics acceleration is disabled.');
-      alert('お使いのブラウザは WebGL 2.0 に対応していない、もしくはグラフィックアクセラレーションが無効になっているため地図が表示されません。設定を有効にしてください。');
-    }
-
     const container = getContainer(params) as Container | false;
 
     if (!container) {
-      if ( typeof params === 'string') {
+      if (typeof params === 'string') {
         throw new Error(`[Geolonia] No HTML elements found matching \`${params}\`. Please ensure the map container element exists.`);
       } else {
         throw new Error('[Geolonia] No HTML elements found. Please ensure the map container element exists.');
@@ -148,143 +143,152 @@ export default class GeoloniaMap extends maplibregl.Map {
       return request;
     };
 
-    // Generate Map
-    super(options);
-    const map = this;
-    this.geoloniaSourcesUrl = sourcesUrl;
-    this.__styleExtensionLoadRequired = true;
+    try {
 
-    // Note: GeoloniaControl should be placed before another controls.
-    // Because this control should be "very" bottom-left(default) or the attributed position.
-    const { position: geoloniaControlPosition } = parseControlOption(atts.geoloniaControl);
-    map.addControl(new GeoloniaControl(),  geoloniaControlPosition);
+      // Generate Map
+      super(options);
+      const map = this;
+      this.geoloniaSourcesUrl = sourcesUrl;
+      this.__styleExtensionLoadRequired = true;
 
-    map.addControl(new CustomAttributionControl(), 'bottom-right');
+      // Note: GeoloniaControl should be placed before another controls.
+      // Because this control should be "very" bottom-left(default) or the attributed position.
+      const { position: geoloniaControlPosition } = parseControlOption(atts.geoloniaControl);
+      map.addControl(new GeoloniaControl(), geoloniaControlPosition);
 
-    const { enabled: fullscreenControlEnabled, position: fullscreenControlPosition } = parseControlOption(atts.fullscreenControl);
-    if (fullscreenControlEnabled) {
-      map.addControl(new FullscreenControl(), fullscreenControlPosition);
-    }
+      map.addControl(new CustomAttributionControl(), 'bottom-right');
 
-    const { enabled: navigationControlEnabled, position: navigationControlPosition } = parseControlOption(atts.navigationControl);
-    if (navigationControlEnabled) {
-      map.addControl(new NavigationControl(), navigationControlPosition);
-    }
+      const { enabled: fullscreenControlEnabled, position: fullscreenControlPosition } = parseControlOption(atts.fullscreenControl);
+      if (fullscreenControlEnabled) {
+        map.addControl(new FullscreenControl(), fullscreenControlPosition);
+      }
 
-    const { enabled: geolocateControlEnabled, position: geolocateControlPosition } = parseControlOption(atts.geolocateControl);
-    if (geolocateControlEnabled) {
-      map.addControl(new GeolocateControl({}), geolocateControlPosition);
-    }
+      const { enabled: navigationControlEnabled, position: navigationControlPosition } = parseControlOption(atts.navigationControl);
+      if (navigationControlEnabled) {
+        map.addControl(new NavigationControl(), navigationControlPosition);
+      }
 
-    const { enabled: scaleControlEnabled, position: scaleControlPosition } = parseControlOption(atts.scaleControl);
-    if (scaleControlEnabled) {
-      map.addControl(new ScaleControl({}),  scaleControlPosition);
-    }
+      const { enabled: geolocateControlEnabled, position: geolocateControlPosition } = parseControlOption(atts.geolocateControl);
+      if (geolocateControlEnabled) {
+        map.addControl(new GeolocateControl({}), geolocateControlPosition);
+      }
 
-    map.on('load', (event) => {
-      const map = event.target;
+      const { enabled: scaleControlEnabled, position: scaleControlPosition } = parseControlOption(atts.scaleControl);
+      if (scaleControlEnabled) {
+        map.addControl(new ScaleControl({}), scaleControlPosition);
+      }
 
-      if (atts.loader !== 'off') {
-        try {
-          container.removeChild(loading);
-        } catch (e) {
-          // Nothing to do.
+      map.on('load', (event) => {
+        const map = event.target;
+
+        if (atts.loader !== 'off') {
+          try {
+            container.removeChild(loading);
+          } catch (e) {
+            // Nothing to do.
+          }
         }
-      }
 
-      if (atts.gestureHandling !== 'off' && isScrollable()) {
-        new GestureHandling({ lang: atts.lang }).addTo(map);
-      }
+        if (atts.gestureHandling !== 'off' && isScrollable()) {
+          new GestureHandling({ lang: atts.lang }).addTo(map);
+        }
 
-      if (atts.lat && atts.lng && atts.marker === 'on') {
-        if (content) {
-          const popup = new Popup({ offset: [0, -25] }).setHTML(content);
-          let marker;
-          if (atts.customMarker) {
-            const offset = atts.customMarkerOffset.split(/,/).map((n) => {
-              return Number(n.trim());
-            });
-            const container: HTMLElement = document.querySelector(atts.customMarker);
-            container.style.display = 'block';
-            marker = new Marker({
-              element: container,
-              offset: offset as PointLike,
-            }).setLngLat(options.center).addTo(map).setPopup(popup);
+        if (atts.lat && atts.lng && atts.marker === 'on') {
+          if (content) {
+            const popup = new Popup({ offset: [0, -25] }).setHTML(content);
+            let marker;
+            if (atts.customMarker) {
+              const offset = atts.customMarkerOffset.split(/,/).map((n) => {
+                return Number(n.trim());
+              });
+              const container: HTMLElement = document.querySelector(atts.customMarker);
+              container.style.display = 'block';
+              marker = new Marker({
+                element: container,
+                offset: offset as PointLike,
+              }).setLngLat(options.center).addTo(map).setPopup(popup);
+            } else {
+              marker = new Marker({ color: atts.markerColor }).setLngLat(options.center).addTo(map).setPopup(popup);
+            }
+            if (atts.openPopup === 'on') {
+              marker.togglePopup();
+            }
+            marker.getElement().classList.add('geolonia-clickable-marker');
           } else {
-            marker = new Marker({ color: atts.markerColor }).setLngLat(options.center).addTo(map).setPopup(popup);
+            new Marker({ color: atts.markerColor }).setLngLat(options.center).addTo(map);
           }
-          if (atts.openPopup === 'on') {
-            marker.togglePopup();
-          }
-          marker.getElement().classList.add('geolonia-clickable-marker');
-        } else {
-          new Marker({ color: atts.markerColor }).setLngLat(options.center).addTo(map);
         }
-      }
-    });
+      });
 
-    map.on('styledata', async (event) => {
-      const map = event.target;
+      map.on('styledata', async (event) => {
+        const map = event.target;
 
-      if (!this.__styleExtensionLoadRequired) {
-        return;
-      }
-      this.__styleExtensionLoadRequired = false;
+        if (!this.__styleExtensionLoadRequired) {
+          return;
+        }
+        this.__styleExtensionLoadRequired = false;
 
-      if (atts.simpleVector) {
-        const simpleVectorAttributeValue = parseSimpleVector(atts.simpleVector);
-        new SimpleStyleVector(simpleVectorAttributeValue).addTo(map);
-      }
-
-      if (atts.geojson) {
-        const el = isCssSelector(atts.geojson);
-        let json;
-        if (el) {
-          json = JSON.parse(el.textContent);
-        } else {
-          json = atts.geojson;
+        if (atts.simpleVector) {
+          const simpleVectorAttributeValue = parseSimpleVector(atts.simpleVector);
+          new SimpleStyleVector(simpleVectorAttributeValue).addTo(map);
         }
 
-        const ss = new SimpleStyle(json, {
-          cluster: (atts.cluster === 'on'),
-          clusterColor: atts.clusterColor,
-        });
-        ss.addTo(map);
-
-        if (!container.dataset || (!container.dataset.lng && !container.dataset.lat)) {
-          ss.fitBounds();
-        }
-      }
-
-      if (atts['3d']) {
-        const style = map.getStyle();
-        style.layers.forEach((layer) => {
-          if (atts['3d'] === 'on' && layer.metadata && layer.metadata['visible-on-3d'] === true) {
-            map.setLayoutProperty(layer.id, 'visibility', 'visible');
-          } else if (atts['3d'] === 'off' && layer.metadata && layer.metadata['visible-on-3d'] === true) {
-            map.setLayoutProperty(layer.id, 'visibility', 'none');
-          } else if (atts['3d'] === 'on' && layer.metadata && layer.metadata['hide-on-3d'] === true) {
-            map.setLayoutProperty(layer.id, 'visibility', 'none');
-          } else if (atts['3d'] === 'off' && layer.metadata && layer.metadata['hide-on-3d'] === true) {
-            map.setLayoutProperty(layer.id, 'visibility', 'visible');
+        if (atts.geojson) {
+          const el = isCssSelector(atts.geojson);
+          let json;
+          if (el) {
+            json = JSON.parse(el.textContent);
+          } else {
+            json = atts.geojson;
           }
-        });
-      }
-    });
 
-    // handle Geolonia Server errors
-    map.on('error', async (error) => {
-      if (
-        error.error &&
-        error.error.status === 402
-      ) {
-        handleRestrictedMode(map);
-      }
-    });
+          const ss = new SimpleStyle(json, {
+            cluster: (atts.cluster === 'on'),
+            clusterColor: atts.clusterColor,
+          });
+          ss.addTo(map);
 
-    container.geoloniaMap = map;
+          if (!container.dataset || (!container.dataset.lng && !container.dataset.lat)) {
+            ss.fitBounds();
+          }
+        }
 
-    return map;
+        if (atts['3d']) {
+          const style = map.getStyle();
+          style.layers.forEach((layer) => {
+            if (atts['3d'] === 'on' && layer.metadata && layer.metadata['visible-on-3d'] === true) {
+              map.setLayoutProperty(layer.id, 'visibility', 'visible');
+            } else if (atts['3d'] === 'off' && layer.metadata && layer.metadata['visible-on-3d'] === true) {
+              map.setLayoutProperty(layer.id, 'visibility', 'none');
+            } else if (atts['3d'] === 'on' && layer.metadata && layer.metadata['hide-on-3d'] === true) {
+              map.setLayoutProperty(layer.id, 'visibility', 'none');
+            } else if (atts['3d'] === 'off' && layer.metadata && layer.metadata['hide-on-3d'] === true) {
+              map.setLayoutProperty(layer.id, 'visibility', 'visible');
+            }
+          });
+        }
+      });
+
+      // handle Geolonia Server errors
+      map.on('error', async (error) => {
+        if (
+          error.error &&
+          error.error.status === 402
+        ) {
+          handleRestrictedMode(map);
+        }
+      });
+
+      container.geoloniaMap = map;
+
+      return map;
+
+    } catch (error) {
+
+      handleErrorMode(container);
+      // eslint-disable-next-line no-console
+      console.error(error);
+    }
   }
 
   /**
