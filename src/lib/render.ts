@@ -70,6 +70,7 @@ export const renderGeoloniaMap = () => {
         try {
           renderSingleMap(item.target);
         } catch (e) {
+          // Not throw error because, following maps will not be rendered.
           console.error('[Geolonia] Failed to initialize map', e); // eslint-disable-line
         }
         observer.unobserve(item.target);
@@ -89,6 +90,7 @@ export const renderGeoloniaMap = () => {
       try {
         renderSingleMap(containers[i]);
       } catch (e) {
+        // Not throw error because, following maps will not be rendered.
         console.error('[Geolonia] Failed to initialize map', e); // eslint-disable-line
       }
     }
