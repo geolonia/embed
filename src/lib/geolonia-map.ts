@@ -8,7 +8,7 @@ import parseAtts from './parse-atts';
 import { SimpleStyle } from './simplestyle';
 import SimpleStyleVector from './simplestyle-vector';
 
-import { getContainer, getOptions, getSessionId, getStyle, handleRestrictedMode, isScrollable, parseControlOption, parseSimpleVector } from './util';
+import { getContainer, getOptions, getSessionId, getStyle, handleRestrictedMode, isScrollable, parseControlOption, parseSimpleVector, handleErrorMode } from './util';
 
 import type { MapOptions, PointLike, StyleOptions, StyleSpecification, StyleSwapOptions } from 'maplibre-gl';
 
@@ -46,10 +46,11 @@ export default class GeoloniaMap extends maplibregl.Map {
   private __styleExtensionLoadRequired: boolean;
 
   constructor(params: string | GeoloniaMapOptions) {
+
     const container = getContainer(params) as Container | false;
 
     if (!container) {
-      if ( typeof params === 'string') {
+      if (typeof params === 'string') {
         throw new Error(`[Geolonia] No HTML elements found matching \`${params}\`. Please ensure the map container element exists.`);
       } else {
         throw new Error('[Geolonia] No HTML elements found. Please ensure the map container element exists.');
@@ -142,8 +143,14 @@ export default class GeoloniaMap extends maplibregl.Map {
       return request;
     };
 
-    // Generate Map
-    super(options);
+    try {
+      // Generate Map
+      super(options);
+    } catch (error) {
+      handleErrorMode(container);
+      throw error;
+    }
+
     const map = this;
     this.geoloniaSourcesUrl = sourcesUrl;
     this.__styleExtensionLoadRequired = true;
@@ -151,7 +158,7 @@ export default class GeoloniaMap extends maplibregl.Map {
     // Note: GeoloniaControl should be placed before another controls.
     // Because this control should be "very" bottom-left(default) or the attributed position.
     const { position: geoloniaControlPosition } = parseControlOption(atts.geoloniaControl);
-    map.addControl(new GeoloniaControl(),  geoloniaControlPosition);
+    map.addControl(new GeoloniaControl(), geoloniaControlPosition);
 
     map.addControl(new CustomAttributionControl(), 'bottom-right');
 
@@ -172,7 +179,7 @@ export default class GeoloniaMap extends maplibregl.Map {
 
     const { enabled: scaleControlEnabled, position: scaleControlPosition } = parseControlOption(atts.scaleControl);
     if (scaleControlEnabled) {
-      map.addControl(new ScaleControl({}),  scaleControlPosition);
+      map.addControl(new ScaleControl({}), scaleControlPosition);
     }
 
     map.on('load', (event) => {

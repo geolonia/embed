@@ -272,6 +272,24 @@ export const handleRestrictedMode = (map) => {
   }
 };
 
+export const handleErrorMode = (container) => {
+
+  const errorContainer = document.createElement('div');
+  errorContainer.classList.add('geolonia__error-container');
+
+  const div = document.createElement('div');
+
+  const h1 = document.createElement('h2');
+  h1.textContent = 'Geolonia Maps';
+  div.appendChild(h1);
+
+  div.classList.add('geolonia__error-message');
+  div.innerHTML += '<div class="geolonia__error-message-description">地図の初期化に失敗しました。管理者にお問い合わせ下さい。開発者の方は開発者ツールでエラー詳細をご確認下さい。</div>';
+
+  errorContainer.appendChild(div);
+  container.appendChild(errorContainer);
+};
+
 export const sanitizeDescription = async (description) => {
   const { default: sanitizeHtml } = await import('sanitize-html');
   return sanitizeHtml(description, {
@@ -281,3 +299,4 @@ export const sanitizeDescription = async (description) => {
 };
 
 export const random = (max: number): number => Math.floor(Math.random() * max);
+
