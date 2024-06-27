@@ -190,9 +190,9 @@ class SimpleStyleVector {
         'text-max-width': 12,
         'text-offset': [
           'case',
-          ['==', 'small', ['get', 'marker-size']], ['literal', [0, 0.6]],
-          ['==', 'large', ['get', 'marker-size']], ['literal', [0, 1.2]],
-          ['literal', [0, 0.8]],
+          ['==', 'small', ['get', 'marker-size']], ['literal', [0, 1]],
+          ['==', 'large', ['get', 'marker-size']], ['literal', [0, 1.6]],
+          ['literal', [0, 1.2]],
         ],
         'text-allow-overlap': false,
       },
