@@ -23,6 +23,7 @@
     "newLine": "lf"
   },
   "include": [
-    "src"
+    "src",
+    "test"
   ]
 }

@@ -29,10 +29,16 @@ jobs:
           key: modules-cache-v1-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
       - run: yarn install
       - run: yarn lint
-      - run: yarn test
       - run: yarn build
+      - name: Run tests
+        run: |
+          cp ./dist/embed.js ./test/embed.js
+          yarn playwright install
+          npx serve -s test -l 3000 &
+          npx wait-on http://localhost:3000
+          yarn test
       - name: save the built
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: "!failure()"
         with:
           retention-days: 1
@@ -57,7 +63,7 @@ jobs:
           git checkout --orphan gh-pages
           git rm -rf . > /dev/null 2>&1
       - name: load the built
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: the-built
       - name: Setup and deploy Github Pages
@@ -85,7 +91,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
           scope: '@geolonia'
       - name: load the built
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: the-built
       - name: 'Publish to NPM (latest)'
