@@ -323,16 +323,15 @@ export default class GeoloniaMap extends maplibregl.Map {
   }
 
   /**
-   *  Fix for MapLibre GL JS v4.4.1 breaking changes.
+   *  Backward compatibility for breaking change of loadImage() in MapLibre GL JS v4.4.1.
    *  Related to https://github.com/maplibre/maplibre-gl-js/pull/3422/
    * @param url
    * @param callback
    */
   loadImage(url: string, callback?: GetImageCallback): Promise<GetResourceResponse<HTMLImageElement | ImageBitmap>> {
 
-    const promise = this.loadImage(url);
+    const promise = super.loadImage(url);
 
-    // callback が提供されている場合
     if (callback) {
       promise
         // eslint-disable-next-line promise/always-return, promise/prefer-await-to-then
