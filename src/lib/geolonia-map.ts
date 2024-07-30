@@ -10,13 +10,15 @@ import SimpleStyleVector from './simplestyle-vector';
 
 import { getContainer, getOptions, getSessionId, getStyle, handleRestrictedMode, isScrollable, parseControlOption, parseSimpleVector, handleErrorMode } from './util';
 
-import type { MapOptions, PointLike, StyleOptions, StyleSpecification, StyleSwapOptions } from 'maplibre-gl';
+import type { MapOptions, PointLike, StyleOptions, StyleSpecification, StyleSwapOptions, ExpiryData, GetResourceResponse } from 'maplibre-gl';
 
 export type GeoloniaMapOptions = MapOptions & { interactive?: boolean };
 
 type Container = HTMLElement & {
   geoloniaMap: GeoloniaMap;
 };
+
+export type GetImageCallback = (error?: Error | null, image?: HTMLImageElement | ImageBitmap | null, expiry?: ExpiryData | null) => void;
 
 const isCssSelector = (string) => {
   if (/^https?:\/\//.test(string)) {
@@ -319,4 +321,33 @@ export default class GeoloniaMap extends maplibregl.Map {
     super.remove.call(this);
     delete (container as HTMLElement & { geoloniaMap: GeoloniaMap }).geoloniaMap;
   }
+
+  /**
+   *  Fix for MapLibre GL JS v4.4.1 breaking changes.
+   *  Related to https://github.com/maplibre/maplibre-gl-js/pull/3422/
+   * @param url
+   * @param callback
+   */
+  loadImage(url: string, callback?: GetImageCallback): Promise<GetResourceResponse<HTMLImageElement | ImageBitmap>> {
+
+    const promise = this.loadImage(url);
+
+    // callback が提供されている場合
+    if (callback) {
+      promise
+        // eslint-disable-next-line promise/always-return, promise/prefer-await-to-then
+        .then((response) => {
+          callback(null, response.data, {
+            cacheControl: response.cacheControl,
+            expires: response.expires,
+          });
+        })
+        // eslint-disable-next-line promise/prefer-await-to-then
+        .catch(callback);
+    } else {
+      return promise;
+    }
+  }
+
+
 }
