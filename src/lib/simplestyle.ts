@@ -304,17 +304,14 @@ export class SimpleStyle {
       },
     });
 
-    this.map.on('click', `${this.options.id}-clusters`, (e) => {
+    this.map.on('click', `${this.options.id}-clusters`, async (e) => {
       const features = this.map.queryRenderedFeatures(e.point, { layers: [`${this.options.id}-clusters`] });
       const clusterId = features[0].properties.cluster_id;
-      this.map.getSource(`${this.options.id}-points`).getClusterExpansionZoom(clusterId, (err, zoom) => {
-        if (err)
-          return;
+      const zoom = await this.map.getSource(`${this.options.id}-points`).getClusterExpansionZoom(clusterId);
 
-        this.map.easeTo({
-          center: features[0].geometry.coordinates,
-          zoom: zoom,
-        });
+      this.map.easeTo({
+        center: features[0].geometry.coordinates,
+        zoom: zoom,
       });
     });
 
