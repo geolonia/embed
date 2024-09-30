@@ -321,7 +321,7 @@ export default class GeoloniaMap extends maplibregl.Map {
   }
 
   /**
-   *  Backward compatibility for breaking change of loadImage() in MapLibre GL JS v4.4.1.
+   *  Backward compatibility for breaking change of loadImage() in MapLibre GL JS v4.0.0.
    *  Related to https://github.com/maplibre/maplibre-gl-js/pull/3422/
    * @param url
    * @param callback
