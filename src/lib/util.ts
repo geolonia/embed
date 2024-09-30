@@ -1,7 +1,9 @@
 'use strict';
 
 import { keyring } from './keyring';
-import type { MapOptions, MarkerOptions } from 'maplibre-gl';
+import type { GetResourceResponse, MapOptions, MarkerOptions, ExpiryData } from 'maplibre-gl';
+
+export type GetImageCallback = (error?: Error | null, image?: HTMLImageElement | ImageBitmap | null, expiry?: ExpiryData | null) => void;
 
 /**
  *
@@ -299,4 +301,19 @@ export const sanitizeDescription = async (description) => {
 };
 
 export const random = (max: number): number => Math.floor(Math.random() * max);
+
+export const loadImageCompatibility = async (
+  promise: Promise<GetResourceResponse<HTMLImageElement | ImageBitmap>>,
+  callback: GetImageCallback,
+): Promise<void> => {
+  try {
+    const response = await promise;
+    callback(null, response.data, {
+      cacheControl: response.cacheControl,
+      expires: response.expires,
+    });
+  } catch (error) {
+    callback(error);
+  }
+};
 
