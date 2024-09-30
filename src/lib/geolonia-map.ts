@@ -8,17 +8,15 @@ import parseAtts from './parse-atts';
 import { SimpleStyle } from './simplestyle';
 import SimpleStyleVector from './simplestyle-vector';
 
-import { getContainer, getOptions, getSessionId, getStyle, handleRestrictedMode, isScrollable, parseControlOption, parseSimpleVector, handleErrorMode } from './util';
+import { getContainer, getOptions, getSessionId, getStyle, handleRestrictedMode, isScrollable, parseControlOption, parseSimpleVector, handleErrorMode, loadImageCompatibility, GetImageCallback } from './util';
 
-import type { MapOptions, PointLike, StyleOptions, StyleSpecification, StyleSwapOptions, ExpiryData, GetResourceResponse } from 'maplibre-gl';
+import type { MapOptions, PointLike, StyleOptions, StyleSpecification, StyleSwapOptions, GetResourceResponse } from 'maplibre-gl';
 
 export type GeoloniaMapOptions = MapOptions & { interactive?: boolean };
 
 type Container = HTMLElement & {
   geoloniaMap: GeoloniaMap;
 };
-
-export type GetImageCallback = (error?: Error | null, image?: HTMLImageElement | ImageBitmap | null, expiry?: ExpiryData | null) => void;
 
 const isCssSelector = (string) => {
   if (/^https?:\/\//.test(string)) {
@@ -333,20 +331,10 @@ export default class GeoloniaMap extends maplibregl.Map {
     const promise = super.loadImage(url);
 
     if (callback) {
-      promise
-        // eslint-disable-next-line promise/always-return, promise/prefer-await-to-then
-        .then((response) => {
-          callback(null, response.data, {
-            cacheControl: response.cacheControl,
-            expires: response.expires,
-          });
-        })
-        // eslint-disable-next-line promise/prefer-await-to-then
-        .catch(callback);
+      loadImageCompatibility(promise, callback);
     } else {
       return promise;
     }
   }
-
 
 }
