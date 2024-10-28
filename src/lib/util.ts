@@ -293,14 +293,6 @@ export const handleErrorMode = (container) => {
   container.appendChild(errorContainer);
 };
 
-export const sanitizeDescription = async (description) => {
-  const { default: sanitizeHtml } = await import('sanitize-html');
-  return sanitizeHtml(description, {
-    allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
-    allowedAttributes: {...sanitizeHtml.defaults.allowedAttributes, '*': ['class']},
-  });
-};
-
 export const random = (max: number): number => Math.floor(Math.random() * max);
 
 // This function is used to provide backward compatibility with callback invocations,

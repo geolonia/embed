@@ -2,7 +2,7 @@
 
 import maplibregl from 'maplibre-gl';
 import turfCenter from '@turf/center';
-import { sanitizeDescription } from './util';
+import { sanitizeDescription } from './sanitizer';
 
 const textColor = '#000000';
 const textHaloColor = '#FFFFFF';

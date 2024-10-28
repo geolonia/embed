@@ -3,7 +3,8 @@
 import maplibregl from 'maplibre-gl';
 import geojsonExtent from '@mapbox/geojson-extent';
 import turfCenter from '@turf/center';
-import { isURL, sanitizeDescription } from './util';
+import { sanitizeDescription } from './sanitizer';
+import { isURL } from './util';
 
 const textColor = '#000000';
 const textHaloColor = '#FFFFFF';
