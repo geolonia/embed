@@ -3,6 +3,7 @@
 import { keyring } from './keyring';
 import type { GetResourceResponse, MapOptions, MarkerOptions, ExpiryData } from 'maplibre-gl';
 
+// GetImageCallback extracted from maplibre-gl v3.6.2 ( https://github.com/maplibre/maplibre-gl-js/releases/tag/v3.6.2 )
 export type GetImageCallback = (error?: Error | null, image?: HTMLImageElement | ImageBitmap | null, expiry?: ExpiryData | null) => void;
 
 /**
@@ -10,7 +11,7 @@ export type GetImageCallback = (error?: Error | null, image?: HTMLImageElement |
  * @param {string} str target URL string
  * @return {string|false} Resolved URL or false if not resolved
  */
-export function isURL(str) {
+export function isURL(str: string): string | false {
   if (str.match(/^https?:\/\//)) {
     return str;
   } else if (str.match(/^\//) || str.match(/^\.\.?/)) {
@@ -302,18 +303,27 @@ export const sanitizeDescription = async (description) => {
 
 export const random = (max: number): number => Math.floor(Math.random() * max);
 
-export const loadImageCompatibility = async (
+// This function is used to provide backward compatibility with callback invocations,
+// so we ignore ESLint rules for this function.
+// Note: this cannot be a generic promiseToCallback function because the callback is not
+// the traditional (error, result) style callback.
+export function loadImageCompatibility(
   promise: Promise<GetResourceResponse<HTMLImageElement | ImageBitmap>>,
   callback: GetImageCallback,
-): Promise<void> => {
-  try {
-    const response = await promise;
-    callback(null, response.data, {
-      cacheControl: response.cacheControl,
-      expires: response.expires,
+): void {
+  promise
+    // eslint-disable-next-line promise/prefer-await-to-then
+    .then((response) => {
+      // eslint-disable-next-line promise/no-callback-in-promise
+      callback(null, response.data, {
+        cacheControl: response.cacheControl,
+        expires: response.expires,
+      });
+      return;
+    })
+    // eslint-disable-next-line promise/prefer-await-to-then
+    .catch((error) => {
+      // eslint-disable-next-line promise/no-callback-in-promise
+      callback(error);
     });
-  } catch (error) {
-    callback(error);
-  }
-};
-
+}

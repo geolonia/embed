@@ -1,8 +1,7 @@
-'use strict';
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 
 import assert from 'assert';
 import { JSDOM } from 'jsdom';
-import sinon from 'sinon';
 import { getContainer, getLang, getOptions, getStyle, handleMarkerOptions, isDomElement, isURL, parseControlOption, parseSimpleVector, sanitizeDescription, loadImageCompatibility } from './util';
 
 const base = 'https://base.example.com/parent/';
@@ -63,6 +62,7 @@ describe('Tests for util.js', () => {
       <div id="test-element"></div>
     </body></html>`);
 
+    // @ts-ignore
     global.window = dom.window;
     global.document = dom.window.document;
 
@@ -90,6 +90,7 @@ describe('Tests for util.js', () => {
       <div id="test-element"></div>
     </body></html>`);
 
+    // @ts-ignore
     global.window = dom.window;
     global.document = dom.window.document;
 
@@ -239,8 +240,7 @@ describe('Tests for util.js', () => {
 
 
 describe('loadImageCompatibility', () => {
-
-  it('should call the callback with response data when the promise resolves', async () => {
+  it('should call the callback with response data when the promise resolves', (done) => {
     // モックされた成功した promise
     const mockResponse = {
       data: new Image(),
@@ -249,32 +249,27 @@ describe('loadImageCompatibility', () => {
     };
     const promise = Promise.resolve(mockResponse);
 
-    // コールバックのモック
-    const callback = sinon.spy();
-
-    await loadImageCompatibility(promise, callback);
-
-    // コールバックのデータが期待したものかを確認
-    assert.deepEqual(callback.firstCall.args[1], mockResponse.data);
-    assert.deepEqual(callback.firstCall.args[2], {
-      cacheControl: mockResponse.cacheControl,
-      expires: mockResponse.expires,
+    loadImageCompatibility(promise, (error, data, expiry) => {
+      assert.equal(error, null);
+      assert.deepEqual(data, mockResponse.data);
+      assert.deepEqual(expiry, {
+        cacheControl: mockResponse.cacheControl,
+        expires: mockResponse.expires,
+      });
+      done();
     });
   });
 
-  it('should call the callback with error when the promise rejects', async () => {
+  it('should call the callback with error when the promise rejects', (done) => {
     // モックされた失敗した promise
     const mockError = new Error('Failed to load image');
     const promise = Promise.reject(mockError);
 
-    // コールバックのモック
-    const callback = sinon.spy();
-
-    await loadImageCompatibility(promise, callback);
-
-    // コールバックのエラーが期待したものかを確認
-    assert.deepEqual(callback.firstCall.args[0], mockError);
-    assert.deepEqual(callback.firstCall.args[1], undefined);
+    loadImageCompatibility(promise, (error, data, expiry) => {
+      assert.deepEqual(error, mockError);
+      assert.strictEqual(data, undefined);
+      assert.strictEqual(expiry, undefined);
+      done();
+    });
   });
-
 });

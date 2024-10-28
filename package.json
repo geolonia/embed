@@ -28,6 +28,7 @@
   "homepage": "https://github.com/geolonia/embed#readme",
   "devDependencies": {
     "@geolonia/eslint-config": "latest",
+    "@types/jsdom": "^21.1.7",
     "@types/mocha": "^10.0.1",
     "babel-loader": "^9.1.0",
     "css-loader": "^6.7.2",
@@ -38,7 +39,6 @@
     "node-fetch": "2",
     "prettier-eslint": "^15.0.0",
     "prettier-eslint-cli": "^7.1.0",
-    "sinon": "^19.0.2",
     "style-loader": "^3.3.1",
     "svg-inline-loader": "^0.8.2",
     "ts-loader": "^9.4.3",
