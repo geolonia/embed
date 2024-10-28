@@ -57,6 +57,7 @@ export type Geolonia = Partial<typeof maplibregl> & {
   SimpleStyle: typeof SimpleStyle;
   simpleStyle: typeof SimpleStyle; // backward compatibility
   registerPlugin: (embedPlugin: EmbedPlugin) => void;
+  addProtocol: (typeof maplibregl)['default']['addProtocol'];
 };
 
 declare global {
@@ -74,6 +75,7 @@ const geolonia: Geolonia = Object.assign(window.geolonia || {}, maplibregl, {
   simpleStyle: SimpleStyle,
   embedVersion,
   registerPlugin,
+  addProtocol: maplibregl.default.addProtocol,
 });
 
 window.geolonia =
