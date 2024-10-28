@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore TypeScript doesn't know about manually loaded CSS (this is a Webpack feature)
 import maplibreCSS from '!!css-loader?{"sourceMap":false,"exportType":"string"}!maplibre-gl/dist/maplibre-gl.css';
 import { DOM } from './maplibre-util';
@@ -46,7 +47,7 @@ export type AttributionControlOptions = {
 
 export const defaultAttributionControlOptions: AttributionControlOptions = {
   compact: true,
-  customAttribution: []
+  customAttribution: [],
 };
 
 /**
@@ -159,10 +160,10 @@ export default class CustomAttributionControl implements IControl {
     if (this.options.customAttribution) {
       if (Array.isArray(this.options.customAttribution)) {
         attributions = attributions.concat(
-          this.options.customAttribution.map(attribution => {
+          this.options.customAttribution.map((attribution) => {
             if (typeof attribution !== 'string') return '';
             return attribution;
-          })
+          }),
         );
       } else if (typeof this.options.customAttribution === 'string') {
         attributions.push(this.options.customAttribution);
@@ -187,7 +188,7 @@ export default class CustomAttributionControl implements IControl {
     }
 
     // remove any entries that are whitespace
-    attributions = attributions.filter(e => String(e).trim());
+    attributions = attributions.filter((e) => String(e).trim());
 
     // remove any entries that are substrings of another entry.
     // first sort by length so that substrings come first

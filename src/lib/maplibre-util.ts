@@ -109,7 +109,7 @@ export class DOM {
       // rect.left/top values are in page scale (like clientX/Y),
       // whereas clientLeft/Top (border width) values are the original values (before CSS scale applies).
       ((e.clientX - rect.left) / scale.x) - el.clientLeft,
-      ((e.clientY - rect.top) / scale.y) - el.clientTop
+      ((e.clientY - rect.top) / scale.y) - el.clientTop,
     );
   }
 
