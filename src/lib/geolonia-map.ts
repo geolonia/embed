@@ -8,9 +8,9 @@ import parseAtts from './parse-atts';
 import { SimpleStyle } from './simplestyle';
 import SimpleStyleVector from './simplestyle-vector';
 
-import { getContainer, getOptions, getSessionId, getStyle, handleRestrictedMode, isScrollable, parseControlOption, parseSimpleVector, handleErrorMode } from './util';
+import { getContainer, getOptions, getSessionId, getStyle, handleRestrictedMode, isScrollable, parseControlOption, parseSimpleVector, handleErrorMode, loadImageCompatibility, GetImageCallback } from './util';
 
-import type { MapOptions, PointLike, StyleOptions, StyleSpecification, StyleSwapOptions } from 'maplibre-gl';
+import type { MapOptions, PointLike, StyleOptions, StyleSpecification, StyleSwapOptions, GetResourceResponse } from 'maplibre-gl';
 
 export type GeoloniaMapOptions = MapOptions & { interactive?: boolean };
 
@@ -318,5 +318,24 @@ export default class GeoloniaMap extends maplibregl.Map {
     const container = this.getContainer();
     super.remove.call(this);
     delete (container as HTMLElement & { geoloniaMap: GeoloniaMap }).geoloniaMap;
+  }
+
+  /**
+   *  Backward compatibility for breaking change of loadImage() in MapLibre GL JS v4.0.0.
+   *  Related to https://github.com/maplibre/maplibre-gl-js/pull/3422/
+   * @param url
+   * @param callback
+   */
+  loadImage(url: string, callback: GetImageCallback): void;
+  loadImage(url: string): Promise<GetResourceResponse<HTMLImageElement | ImageBitmap>>;
+  loadImage(url: string, callback?: GetImageCallback): Promise<GetResourceResponse<HTMLImageElement | ImageBitmap>> | void {
+
+    const promise = super.loadImage(url);
+
+    if (callback) {
+      loadImageCompatibility(promise, callback);
+    } else {
+      return promise;
+    }
   }
 }

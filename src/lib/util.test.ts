@@ -1,8 +1,8 @@
-'use strict';
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 
 import assert from 'assert';
 import { JSDOM } from 'jsdom';
-import { getContainer, getLang, getOptions, getStyle, handleMarkerOptions, isDomElement, isURL, parseControlOption, parseSimpleVector, sanitizeDescription } from './util';
+import { getContainer, getLang, getOptions, getStyle, handleMarkerOptions, isDomElement, isURL, parseControlOption, parseSimpleVector, sanitizeDescription, loadImageCompatibility } from './util';
 
 const base = 'https://base.example.com/parent/';
 
@@ -62,6 +62,7 @@ describe('Tests for util.js', () => {
       <div id="test-element"></div>
     </body></html>`);
 
+    // @ts-ignore
     global.window = dom.window;
     global.document = dom.window.document;
 
@@ -89,6 +90,7 @@ describe('Tests for util.js', () => {
       <div id="test-element"></div>
     </body></html>`);
 
+    // @ts-ignore
     global.window = dom.window;
     global.document = dom.window.document;
 
@@ -232,6 +234,42 @@ describe('Tests for util.js', () => {
         '<span class="red">ここが集合場所です。13時までに集合してください。</span>',
         await sanitizeDescription(description),
       );
+    });
+  });
+});
+
+
+describe('loadImageCompatibility', () => {
+  it('should call the callback with response data when the promise resolves', (done) => {
+    // モックされた成功した promise
+    const mockResponse = {
+      data: new Image(),
+      cacheControl: 'public, max-age=3600',
+      expires: '1609459200',
+    };
+    const promise = Promise.resolve(mockResponse);
+
+    loadImageCompatibility(promise, (error, data, expiry) => {
+      assert.equal(error, null);
+      assert.deepEqual(data, mockResponse.data);
+      assert.deepEqual(expiry, {
+        cacheControl: mockResponse.cacheControl,
+        expires: mockResponse.expires,
+      });
+      done();
+    });
+  });
+
+  it('should call the callback with error when the promise rejects', (done) => {
+    // モックされた失敗した promise
+    const mockError = new Error('Failed to load image');
+    const promise = Promise.reject(mockError);
+
+    loadImageCompatibility(promise, (error, data, expiry) => {
+      assert.deepEqual(error, mockError);
+      assert.strictEqual(data, undefined);
+      assert.strictEqual(expiry, undefined);
+      done();
     });
   });
 });

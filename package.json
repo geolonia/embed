@@ -28,6 +28,7 @@
   "homepage": "https://github.com/geolonia/embed#readme",
   "devDependencies": {
     "@geolonia/eslint-config": "latest",
+    "@types/jsdom": "^21.1.7",
     "@types/mocha": "^10.0.1",
     "babel-loader": "^9.1.0",
     "css-loader": "^6.7.2",
