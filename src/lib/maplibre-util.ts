@@ -1,58 +1,67 @@
 import Point from '@mapbox/point-geometry';
 
 /**
- * This class is a copy of maplibre-gl-js's util DOM class and rewrite it to JavaScript.
+ * This class is a copy of maplibre-gl-js's util DOM class.
  * https://github.com/maplibre/maplibre-gl-js/blob/main/src/util/dom.ts
  * */
+type ScaleReturnValue = {
+  x: number;
+  y: number;
+  boundingClientRect: DOMRect;
+};
+
 export class DOM {
-  static #docStyle = typeof window !== 'undefined' && window.document && window.document.documentElement.style;
+  private static readonly docStyle = typeof window !== 'undefined' && window.document && window.document.documentElement.style;
 
-  static #userSelect;
+  private static userSelect: string;
 
-  static #selectProp = DOM.testProp(['userSelect', 'MozUserSelect', 'WebkitUserSelect', 'msUserSelect']);
+  private static selectProp = DOM.testProp(['userSelect', 'MozUserSelect', 'WebkitUserSelect', 'msUserSelect']);
 
-  static #transformProp = DOM.testProp(['transform', 'WebkitTransform']);
+  private static transformProp = DOM.testProp(['transform', 'WebkitTransform']);
 
-  static testProp(props) {
-    if (!DOM['#docStyle']) return props[0];
+  private static testProp(props: string[]): string {
+    if (!DOM.docStyle) return props[0];
     for (let i = 0; i < props.length; i++) {
-      if (props[i] in DOM['#docStyle']) {
+      if (props[i] in DOM.docStyle) {
         return props[i];
       }
     }
     return props[0];
   }
 
-  static create(tagName, className?, container?) {
+  public static create<K extends keyof HTMLElementTagNameMap>(tagName: K, className?: string, container?: HTMLElement): HTMLElementTagNameMap[K] {
     const el = window.document.createElement(tagName);
     if (className !== undefined) el.className = className;
     if (container) container.appendChild(el);
     return el;
   }
 
-  static createNS(namespaceURI, tagName) {
+  public static createNS(namespaceURI: string, tagName: string) {
     const el = window.document.createElementNS(namespaceURI, tagName);
     return el;
   }
 
-  static disableDrag() {
-    if (DOM['#docStyle'] && DOM['#selectProp']) {
-      DOM['#userSelect'] = DOM['#docStyle'][DOM['#selectProp']];
-      DOM['#docStyle'][DOM['#selectProp']] = 'none';
+  public static disableDrag() {
+    if (DOM.docStyle && DOM.selectProp) {
+      DOM.userSelect = DOM.docStyle[DOM.selectProp];
+      DOM.docStyle[DOM.selectProp] = 'none';
     }
   }
 
-  static enableDrag() {
-    if (DOM['#docStyle'] && DOM['#selectProp']) {
-      DOM['#docStyle'][DOM['#selectProp']] = DOM['#userSelect'];
+  public static enableDrag() {
+    if (DOM.docStyle && DOM.selectProp) {
+      DOM.docStyle[DOM.selectProp] = DOM.userSelect;
     }
   }
 
-  static setTransform(el, value) {
-    el.style[DOM['#transformProp']] = value;
+  public static setTransform(el: HTMLElement, value: string) {
+    el.style[DOM.transformProp] = value;
   }
 
-  static addEventListener(target, type, callback, options) {
+  public static addEventListener(target: HTMLElement | Window | Document, type: string, callback: EventListenerOrEventListenerObject, options: {
+    passive?: boolean;
+    capture?: boolean;
+  } = {}) {
     if ('passive' in options) {
       target.addEventListener(type, callback, options);
     } else {
@@ -60,7 +69,10 @@ export class DOM {
     }
   }
 
-  static removeEventListener(target, type, callback, options) {
+  public static removeEventListener(target: HTMLElement | Window | Document, type: string, callback: EventListenerOrEventListenerObject, options: {
+    passive?: boolean;
+    capture?: boolean;
+  } = {}) {
     if ('passive' in options) {
       target.removeEventListener(type, callback, options);
     } else {
@@ -69,57 +81,59 @@ export class DOM {
   }
 
   // Suppress the next click, but only if it's immediate.
-  static #suppressClickInternal(e) {
+  private static suppressClickInternal(e) {
     e.preventDefault();
     e.stopPropagation();
-    window.removeEventListener('click', DOM['#transformProp'], true);
+    window.removeEventListener('click', DOM.suppressClickInternal, true);
   }
 
-  static suppressClick() {
-    window.addEventListener('click', DOM['#transformProp'], true);
+  public static suppressClick() {
+    window.addEventListener('click', DOM.suppressClickInternal, true);
     window.setTimeout(() => {
-      window.removeEventListener('click', DOM['#transformProp'], true);
+      window.removeEventListener('click', DOM.suppressClickInternal, true);
     }, 0);
   }
 
-  static mousePos(el, e) {
-    const rect = el.getBoundingClientRect();
+  private static getScale(element: HTMLElement): ScaleReturnValue {
+    const rect = element.getBoundingClientRect();
+    return {
+      x: (rect.width / element.offsetWidth) || 1,
+      y: (rect.height / element.offsetHeight) || 1,
+      boundingClientRect: rect,
+    };
+  }
+
+  private static getPoint(el: HTMLElement, scale: ScaleReturnValue, e: MouseEvent | Touch): Point {
+    const rect = scale.boundingClientRect;
     return new Point(
-      e.clientX - rect.left - el.clientLeft,
-      e.clientY - rect.top - el.clientTop,
+      // rect.left/top values are in page scale (like clientX/Y),
+      // whereas clientLeft/Top (border width) values are the original values (before CSS scale applies).
+      ((e.clientX - rect.left) / scale.x) - el.clientLeft,
+      ((e.clientY - rect.top) / scale.y) - el.clientTop
     );
   }
 
-  static touchPos(el, touches) {
-    const rect = el.getBoundingClientRect();
-    const points = [];
+  public static mousePos(el: HTMLElement, e: MouseEvent | Touch): Point {
+    const scale = DOM.getScale(el);
+    return DOM.getPoint(el, scale, e);
+  }
+
+  public static touchPos(el: HTMLElement, touches: TouchList) {
+    const points: Point[] = [];
+    const scale = DOM.getScale(el);
     for (let i = 0; i < touches.length; i++) {
-      points.push(new Point(
-        touches[i].clientX - rect.left - el.clientLeft,
-        touches[i].clientY - rect.top - el.clientTop,
-      ));
+      points.push(DOM.getPoint(el, scale, touches[i]));
     }
     return points;
   }
 
-  static mouseButton(e) {
+  public static mouseButton(e: MouseEvent) {
     return e.button;
   }
 
-  static remove(node) {
+  public static remove(node: HTMLElement) {
     if (node.parentNode) {
       node.parentNode.removeChild(node);
     }
   }
-}
-
-/**
- * This function is a copy of maplibre-gl-js's util function and rewrite it to JavaScript.
- * https://github.com/maplibre/maplibre-gl-js/blob/main/src/util/util.ts#L223-L228
- * */
-export function bindAll(fns, context) {
-  fns.forEach((fn) => {
-    if (!context[fn]) { return; }
-    context[fn] = context[fn].bind(context);
-  });
 }
