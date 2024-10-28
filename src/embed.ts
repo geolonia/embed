@@ -77,7 +77,7 @@ const geolonia: Geolonia = Object.assign(window.geolonia || {}, maplibregl, {
 });
 
 window.geolonia =
-  window.maplibregl =
+  (window.maplibregl as any) =
   window.mapboxgl = geolonia;
 
 renderGeoloniaMap();
