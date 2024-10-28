@@ -49,7 +49,7 @@ export type EmbedAttributes = {
 export type EmbedPlugin<PluginAttributes extends { [otherKey: string]: string } = {}> = (map: GeoloniaMap, target: HTMLElement, atts: EmbedAttributes & PluginAttributes) => void;
 
 // Type for `window.geolonia`
-export type Geolonia = Partial<typeof maplibregl> & {
+export type Geolonia = typeof maplibregl & {
   accessToken?: string;
   embedVersion: string;
   Map: typeof GeoloniaMap;
