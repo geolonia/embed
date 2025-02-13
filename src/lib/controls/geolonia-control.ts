@@ -22,6 +22,7 @@ export class GeoloniaControl implements IControl {
     link.href = 'https://geolonia.com/';
     link.appendChild(img);
     link.title = 'Powered by Geolonia';
+    link.setAttribute('target', '_blank');
 
     this.container.appendChild(link);
 
