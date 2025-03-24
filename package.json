@@ -5,6 +5,7 @@
   "main": "dist/embed.js",
   "types": "dist/embed.d.ts",
   "scripts": {
+    "postinstall": "playwright install",
     "prestart": "npm run build:version",
     "prelint": "npm run build:version",
     "start": "webpack serve --config ./docs/webpack.config.js",
@@ -14,7 +15,8 @@
     "analyze": "ANALYZE=true webpack --mode production",
     "format": "prettier-eslint \"./src/**/*.ts\" --write",
     "lint": "eslint --ext .js,.cjs,.mjs,.jsx,.ts,.tsx .",
-    "test": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha"
+    "test": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha",
+    "test:e2e": "npm run build && cp ./dist/embed.js ./tests/html/embed.js && playwright test"
   },
   "author": "Geolonia (https://geolonia.com)",
   "repository": {
@@ -28,8 +30,10 @@
   "homepage": "https://github.com/geolonia/embed#readme",
   "devDependencies": {
     "@geolonia/eslint-config": "latest",
+    "@playwright/test": "^1.51.1",
     "@types/jsdom": "^21.1.7",
     "@types/mocha": "^10.0.1",
+    "@types/node": "^22.13.11",
     "babel-loader": "^9.1.0",
     "chai": "^5.2.0",
     "css-loader": "^6.7.2",

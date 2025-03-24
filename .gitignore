@@ -80,4 +80,10 @@ typings/
 # Automatically generated version.ts
 /src/version.ts
 
-test/embed.js
+test/html/embed.js
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

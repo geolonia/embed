@@ -1,8 +1,7 @@
 module.exports = {
   extension: [ "ts", "tsx", "js", "jsx" ],
   spec: [
-    "src/**/*.test.ts",
-    "test/**/*.test.ts"
+    "src/**/*.test.ts"
   ],
   recursive: true,
   require: [
