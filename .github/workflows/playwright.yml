@@ -15,5 +15,5 @@ jobs:
         node-version: lts/*
     - name: Install dependencies
       run: yarn install
-    - name: Install Playwright Browsers
+    - name: Run E2E tests
       run: yarn run test:e2e
