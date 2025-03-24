@@ -8,13 +8,18 @@ declare global {
 
 async function goTo(page: Page, url: string): Promise<any> {
   await page.goto(url);
-  // ページ内のスクリプト実行完了まで待機し、window._map を取得
   await page.waitForFunction(() => window._map !== undefined, { timeout: 10000 });
 }
 
-test('should display map with center (35.6798619, 139.7648345) and zoom level 16', async ({ page }) => {
+// 各テストの実行前に window._map を undefined に初期化
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    window._map = undefined;
+  });
+});
 
-  // ページが読み込まれるまで待機
+test('中心が (35.6798619, 139.7648345) で、ズームレベル16でデフォルトのマーカーが表示されること', async ({ page }) => {
+
   await goTo(page, 'http://localhost:3000/index.html');
 
   const mapState = await page.evaluate(() => {

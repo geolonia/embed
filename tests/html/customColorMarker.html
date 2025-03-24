@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Geolonia Map E2E Test</title>
+  <style>
+    html,body, #map {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div
+    id="map"
+    data-zoom="16"
+    data-lat="35.6798619"
+    data-lng="139.7648345"
+    data-marker-color="#555555"
+    data-style="geolonia/basic"
+  ></div>
+  <script type="text/javascript" src="./embed.js?geolonia-api-key=YOUR-API-KEY"></script>
+  <script>
+    const map = new geolonia.Map({
+      container: "map"
+    })
+    window._map = map;
+  </script>
+</body>
+</html>
