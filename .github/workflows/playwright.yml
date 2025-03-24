@@ -1,4 +1,4 @@
-name: Playwright Tests
+name: E2E Tests
 on:
   push:
     branches: [ main, master ]
@@ -17,9 +17,3 @@ jobs:
       run: yarn install
     - name: Install Playwright Browsers
       run: yarn run test:e2e
-    - uses: actions/upload-artifact@v4
-      if: ${{ !cancelled() }}
-      with:
-        name: playwright-report
-        path: playwright-report/
-        retention-days: 30
