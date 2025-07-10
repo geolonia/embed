@@ -79,3 +79,9 @@ typings/
 
 # Automatically generated version.ts
 /src/version.ts
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
