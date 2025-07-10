@@ -14,7 +14,8 @@
     "analyze": "ANALYZE=true webpack --mode production",
     "format": "prettier-eslint \"./src/**/*.ts\" --write",
     "lint": "eslint --ext .js,.cjs,.mjs,.jsx,.ts,.tsx .",
-    "test": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha"
+    "test": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha",
+    "e2e": "npx playwright test"
   },
   "author": "Geolonia (https://geolonia.com)",
   "repository": {
@@ -30,6 +31,7 @@
     "@geolonia/eslint-config": "latest",
     "@types/jsdom": "^21.1.7",
     "@types/mocha": "^10.0.1",
+    "@types/node": "^24.0.4",
     "babel-loader": "^9.1.0",
     "css-loader": "^6.7.2",
     "eslint": "^8.29.0",
@@ -53,6 +55,7 @@
     "@geolonia/mbgl-gesture-handling": "^1.0.15",
     "@mapbox/geojson-extent": "^1.0.0",
     "@mapbox/point-geometry": "^0.1.0",
+    "@playwright/test": "^1.53.1",
     "@turf/center": "^6.0.1",
     "maplibre-gl": "4.7.1",
     "pmtiles": "^3.0.6",

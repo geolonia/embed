@@ -23,6 +23,8 @@
     "newLine": "lf"
   },
   "include": [
-    "src"
+    "src",
+    "e2e",
+    "playwright.config.ts",
   ]
 }
