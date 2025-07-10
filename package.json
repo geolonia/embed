@@ -15,7 +15,7 @@
     "format": "prettier-eslint \"./src/**/*.ts\" --write",
     "lint": "eslint --ext .js,.cjs,.mjs,.jsx,.ts,.tsx .",
     "test": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha",
-    "e2e": "npx playwright test"
+    "e2e": "playwright test"
   },
   "author": "Geolonia (https://geolonia.com)",
   "repository": {

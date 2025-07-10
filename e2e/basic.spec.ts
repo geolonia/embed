@@ -16,9 +16,9 @@ test.describe('1. 基本的な地図表示', () => {
   test('1.1 ページ読み込み時に地図が表示されること', async ({ page }) => {
     await page.goto(`${TEST_URL}/basic.html`);
     await waitForMapLoad(page);
-    const mapContainer = await page.locator('.geolonia');
+    const mapContainer = page.locator('.geolonia');
     await expect(mapContainer).toBeVisible();
-    const canvas = await page.locator('.geolonia canvas');
+    const canvas = page.locator('.geolonia canvas');
     await expect(canvas).toBeVisible();
   });
 
