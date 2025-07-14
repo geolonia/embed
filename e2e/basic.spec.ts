@@ -1,18 +1,21 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
+import { Geolonia } from '../src/embed';
+import { TEST_URL, waitForMapLoad } from './helper';
 
-// テスト用の設定
-const TEST_URL = 'http://localhost:3000/e2e';
-const LOAD_TIMEOUT = 5000;
-
-// ヘルパー関数
-async function waitForMapLoad(page: Page, selector = '.geolonia') {
-  // 地図コンテナの存在を確認
-  await page.waitForSelector(selector);
-  // Maplibreのcanvasが表示されるまで待機
-  await page.waitForSelector(`${selector} canvas`, { timeout: LOAD_TIMEOUT });
+declare global {
+  interface Window {
+    geolonia: Geolonia,
+    maplibregl?: Geolonia,
+    mapboxgl?: Geolonia,
+  }
 }
 
 test.describe('1. 基本的な地図表示', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto(`${TEST_URL}/basic.html`);
+    await waitForMapLoad(page);
+  });
+
   test('1.1 ページ読み込み時に地図が表示されること', async ({ page }) => {
     await page.goto(`${TEST_URL}/basic.html`);
     await waitForMapLoad(page);
@@ -26,8 +29,7 @@ test.describe('1. 基本的な地図表示', () => {
     await page.goto(`${TEST_URL}/basic.html`);
     await waitForMapLoad(page);
     const center = await page.evaluate(() => {
-      // @ts-ignore
-      const map = new (window as any).geolonia.Map('map');
+      const map = new window.geolonia.Map('map');
       return map.getCenter();
     });
     // 日本のおおよその中心座標
