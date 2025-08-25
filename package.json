@@ -32,6 +32,7 @@
     "@types/jsdom": "^21.1.7",
     "@types/mocha": "^10.0.1",
     "@types/node": "^24.0.4",
+    "@types/sinon": "^17.0.4",
     "babel-loader": "^9.1.0",
     "css-loader": "^6.7.2",
     "eslint": "^8.29.0",
@@ -41,6 +42,7 @@
     "node-fetch": "2",
     "prettier-eslint": "^15.0.0",
     "prettier-eslint-cli": "^7.1.0",
+    "sinon": "^21.0.0",
     "style-loader": "^3.3.1",
     "svg-inline-loader": "^0.8.2",
     "ts-loader": "^9.4.3",
@@ -61,5 +63,6 @@
     "pmtiles": "^3.0.6",
     "sanitize-html": "^2.8.0",
     "tinycolor2": "^1.4.1"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
