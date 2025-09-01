@@ -355,4 +355,56 @@ describe('GeoloniaMap constructor options', () => {
       'url passed to SimpleStyleVector should match the input with geolonia schema',
     );
   });
+
+  it('should change layout property to enable 3d', () => {
+    dom.window.document.body.innerHTML = `
+      <div class="geolonia" data-3d="on" style="height: 400px;"></div>
+    `;
+
+    const container = dom.window.document.querySelector('.geolonia') as HTMLElement;
+    new GeoloniaMap({container});
+
+    const styledataCallback = mockMapInstance.on.getCalls()
+      .find((call) => call.args[0] === 'styledata')?.args[1];
+    assert(styledataCallback, 'Map load event listener should be registered');
+
+    const mockGetStyle = sinon.stub().returns({
+      layers: [
+        {id: 'building', type: 'fill-extrusion', metadata: {'visible-on-3d': true}},
+        {id: 'flood', type: 'fill-extrusion', metadata: {'visible-on-3d': false}},
+      ],
+    });
+    const mockSetLayoutProperty = sinon.spy();
+    styledataCallback({target: {...mockMapInstance, getStyle: mockGetStyle, setLayoutProperty: mockSetLayoutProperty}});
+
+    assert(mockGetStyle.calledOnce, 'getStyle should be called once');
+    assert(mockSetLayoutProperty.calledOnce, 'setLayoutProperty should be called once');
+    assert(mockSetLayoutProperty.calledWith('building', 'visibility', 'visible'), '3D building layer should be set to visible');
+  });
+
+  it('should change layout property to disable 3d', () => {
+    dom.window.document.body.innerHTML = `
+      <div class="geolonia" data-3d="off" style="height: 400px;"></div>
+    `;
+
+    const container = dom.window.document.querySelector('.geolonia') as HTMLElement;
+    new GeoloniaMap({container});
+
+    const styledataCallback = mockMapInstance.on.getCalls()
+      .find((call) => call.args[0] === 'styledata')?.args[1];
+    assert(styledataCallback, 'Map load event listener should be registered');
+
+    const mockGetStyle = sinon.stub().returns({
+      layers: [
+        {id: 'building', type: 'fill-extrusion', metadata: {'visible-on-3d': true}},
+        {id: 'flood', type: 'fill-extrusion', metadata: {'visible-on-3d': false}},
+      ],
+    });
+    const mockSetLayoutProperty = sinon.spy();
+    styledataCallback({target: {...mockMapInstance, getStyle: mockGetStyle, setLayoutProperty: mockSetLayoutProperty}});
+
+    assert(mockGetStyle.calledOnce, 'getStyle should be called once');
+    assert(mockSetLayoutProperty.calledOnce, 'setLayoutProperty should be called once');
+    assert(mockSetLayoutProperty.calledWith('building', 'visibility', 'none'), '3D building layer should be set to visible');
+  });
 });
