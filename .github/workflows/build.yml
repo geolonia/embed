@@ -101,7 +101,7 @@ jobs:
             echo "is_prerelease=false" >> $GITHUB_OUTPUT
           fi
       - name: load the built
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v4
         with:
           name: the-built
       - name: 'Publish to NPM (latest)'
