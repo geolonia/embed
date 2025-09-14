@@ -67,11 +67,11 @@ declare global {
   }
 }
 
-const geolonia: Geolonia = Object.assign(window.geolonia || {}, maplibregl, {
+const geolonia: Geolonia = Object.create(maplibregl); // 明確な継承を意識
+Object.assign(geolonia, {
   Map: GeoloniaMap,
   Marker: GeoloniaMarker,
-  SimpleStyle: SimpleStyle,
-  simpleStyle: SimpleStyle,
+  SimpleStyle,
   embedVersion,
   registerPlugin,
 });
