@@ -113,7 +113,7 @@ export default class GeoloniaMap extends maplibregl.Map {
       const transformedUrlObj = new URL(transformedUrl);
 
       if (resourceType === 'Source' && transformedUrl.startsWith('https://tileserver.geolonia.com')) {
-        if (atts.stage !== 'v1') {
+        if (atts.stage === 'dev') {
           transformedUrlObj.hostname = `tileserver-${atts.stage}.geolonia.com`;
         }
         transformedUrlObj.searchParams.set('sessionId', sessionId);
