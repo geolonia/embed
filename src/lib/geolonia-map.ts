@@ -114,7 +114,7 @@ export default class GeoloniaMap extends maplibregl.Map {
 
       if (resourceType === 'Source' && transformedUrl.startsWith('https://tileserver.geolonia.com')) {
         if (atts.stage === 'dev') {
-          transformedUrlObj.hostname = `tileserver-${atts.stage}.geolonia.com`;
+          transformedUrlObj.hostname = 'tileserver-dev.geolonia.com';
         }
         transformedUrlObj.searchParams.set('sessionId', sessionId);
         transformedUrlObj.searchParams.set('key', atts.key);
