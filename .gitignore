@@ -85,3 +85,6 @@ typings/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Automatic CI test using act
+.actrc

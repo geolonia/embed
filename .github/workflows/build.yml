@@ -11,19 +11,31 @@ on:
     branches: [master]
 
 jobs:
+  act-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Block obsolete job execution
+        run: |
+          if [ -n "$ACT" ]; then
+            echo "Running in act, some jobs are skipped"
+            exit 1
+          else
+            exit 0
+          fi
+    continue-on-error: true
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: ['18.x']
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - name: Cache node_modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: node_modules
           key: modules-cache-v1-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
@@ -32,7 +44,7 @@ jobs:
       - run: yarn test
       - run: yarn build
       - name: save the built
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: "!failure()"
         with:
           retention-days: 1
@@ -46,10 +58,11 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - build
+      - act-test
     if: ${{ github.ref == 'refs/heads/master' }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '18.x'
       - name: Clean repo
@@ -57,7 +70,7 @@ jobs:
           git checkout --orphan gh-pages
           git rm -rf . > /dev/null 2>&1
       - name: load the built
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: the-built
       - name: Setup and deploy Github Pages
@@ -75,17 +88,18 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - build
+      - act-test
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           tag_name: 'v%s'
           node-version: '18.x'
           registry-url: 'https://registry.npmjs.org'
           scope: '@geolonia'
       - name: load the built
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: the-built
       - name: 'Publish to NPM (latest)'
@@ -98,23 +112,70 @@ jobs:
         run: npm publish --access=public --tag=next
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: 'Checkout geolonia/cdn.geolonia.com'
-        uses: actions/checkout@v3
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    # These permissions are needed to interact with GitHub's OIDC Token endpoint.
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.PAT_FOR_CDN_GEOLONIA_COM }}
-          repository: geolonia/cdn.geolonia.com
-          path: ./cdn.geolonia.com
-      - name: 'Build Embed API'
-        run: npm run build:embed
-        working-directory: ./cdn.geolonia.com
-      - name: 'Create PR in geolonia/cdn.geolonia.com'
-        uses: peter-evans/create-pull-request@v4
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v4
+        with: { name: the-built, path: ./ }
+
+      - name: Read version
+        id: version
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          VERSION=${TAG#v}
+          MAJOR=$(echo $VERSION | cut -d. -f1)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "major_version=$MAJOR" >> "$GITHUB_OUTPUT"
+
+      - name: Restore timestamps
+        uses: chetan/git-restore-mtime-action@v1
+
+      - name: Configure AWS Credentials for test
+        if: ${{ env.ACT }}
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          token: ${{ secrets.PAT_FOR_CDN_GEOLONIA_COM }}
-          path: ./cdn.geolonia.com
-          title: "Release @geolonia/embed"
-          body: |
-            Release @geolonia/embed
-            https://github.com/geolonia/embed の GitHub Actions によって自動作成
-          labels: 🚀♻️リリース定期タスク
-          reviewers: keichan34
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Configure AWS Credentials for deploy
+        if: ${{ !env.ACT }}
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ap-northeast-1
+          role-to-assume: arn:aws:iam::762706324393:role/github-actions-cdn-geolonia-deploy
+
+      - name: Deploy to S3
+        run: |
+          # Note: The default max-age is set at 3600 seconds or 1 hour. After 1 hour,
+          # the client will mark the resource as stale, and require a refresh.
+          # In most cases, this will result in a if-modified-since conditional request.
+
+          # For resources that are immutable (for example, embed-chunks), the max-age is set to immutable.
+          # For resources that will be manually invalidated, an addition s-maxage so CloudFront keeps the file in its cache as long as possible.
+
+          # Deploy embed chunks -- because they have fingerprints in the filename, they're immutable
+          aws s3 sync ./dist/embed-chunks s3://${{ secrets.CDN_BUCKET }}/v${{ steps.version.outputs.major_version }}/embed-chunks --cache-control "public,max-age=31536000,immutable"
+          aws s3 sync ./dist/embed-chunks s3://${{ secrets.CDN_BUCKET }}/v${{ steps.version.outputs.version }}/embed-chunks --cache-control "public,max-age=31536000,immutable"
+
+          # Deploy main embed entrypoint
+          # I used to use s-maxage here, but after testing decided to revert back to only using max-age.
+          # If you use s-maxage that is much longer than max-age, the age header will be longer than
+          # max-age, and the browser will think that the file is expired. Using max-age will make
+          # CloudFront fetch a new file every 3600 seconds, resetting the Age header
+          aws s3 cp ./dist/embed s3://${{ secrets.CDN_BUCKET }}/v${{ steps.version.outputs.major_version }}/embed --cache-control "public,max-age=3600" --content-type "application/javascript; charset=UTF-8"
+          aws s3 cp ./dist/embed s3://${{ secrets.CDN_BUCKET }}/v${{ steps.version.outputs.version }}/embed --cache-control "public,max-age=3600" --content-type "application/javascript; charset=UTF-8"
+
+          aws cloudfront create-invalidation --distribution-id "E1ZFNBWBSCLVFC" --paths "/v${{ steps.version.outputs.major_version }}/embed" "/v${{ steps.version.outputs.version }}/embed"
