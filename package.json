@@ -57,7 +57,7 @@
     "@mapbox/point-geometry": "^0.1.0",
     "@playwright/test": "^1.53.1",
     "@turf/center": "^6.0.1",
-    "maplibre-gl": "4.7.1",
+    "maplibre-gl": "5.7.0",
     "pmtiles": "^3.0.6",
     "sanitize-html": "^2.8.0",
     "tinycolor2": "^1.4.1"
