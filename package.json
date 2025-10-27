@@ -14,7 +14,7 @@
     "analyze": "ANALYZE=true webpack --mode production",
     "format": "prettier-eslint \"./src/**/*.ts\" --write",
     "lint": "eslint --ext .js,.cjs,.mjs,.jsx,.ts,.tsx .",
-    "test": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha",
+    "test": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' NODE_OPTIONS=\"--no-experimental-strip-types\" mocha",
     "e2e": "playwright test"
   },
   "author": "Geolonia (https://geolonia.com)",
