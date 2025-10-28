@@ -46,6 +46,12 @@ You can see more examples at [https://geolonia.github.io/embed/](https://geoloni
 
 ## Development
 
+### Requirements
+
+- node.js >= 22.18
+
+### How to build
+
 ```shell
 $ git clone git@github.com:geolonia/embed.git
 $ cd embed
