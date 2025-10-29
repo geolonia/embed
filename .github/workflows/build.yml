@@ -38,11 +38,11 @@ jobs:
         uses: actions/cache@v4
         with:
           path: node_modules
-          key: modules-cache-v1-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
-      - run: yarn install
-      - run: yarn lint
-      - run: yarn test
-      - run: yarn build
+          key: modules-cache-v1-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - run: npm install
+      - run: npm run lint
+      - run: npm run test
+      - run: npm run build
       - name: save the built
         uses: actions/upload-artifact@v4
         if: "!failure()"
