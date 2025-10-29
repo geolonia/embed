@@ -155,7 +155,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-region: ap-northeast-1
-          role-to-assume: arn:aws:iam::762706324393:role/github-actions-embed-deploy
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE }}
 
       - name: Deploy to S3
         run: |
@@ -180,4 +180,4 @@ jobs:
           aws s3 cp ./dist/embed s3://${{ secrets.CDN_BUCKET }}/v${{ steps.version.outputs.version }}/embed --cache-control "public,max-age=3600" --content-type "application/javascript; charset=UTF-8"
           aws s3 cp ./dist/embed.js.LICENSE.txt s3://${{ secrets.CDN_BUCKET }}/v${{ steps.version.outputs.version }}/embed.js.LICENSE.txt --cache-control "public,max-age=3600" --content-type "text/plain; charset=UTF-8"
 
-          aws cloudfront create-invalidation --distribution-id "E1ZFNBWBSCLVFC" --paths "/v${{ steps.version.outputs.major_version }}/embed" "/v${{ steps.version.outputs.version }}/embed"
+          aws cloudfront create-invalidation --distribution-id "${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}" --paths "/v${{ steps.version.outputs.major_version }}/embed" "/v${{ steps.version.outputs.version }}/embed"
