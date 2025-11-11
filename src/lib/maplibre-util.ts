@@ -5,13 +5,13 @@ import Point from '@mapbox/point-geometry';
  * https://github.com/maplibre/maplibre-gl-js/blob/main/src/util/dom.ts
  * */
 export class DOM {
-  static #docStyle = typeof window !== 'undefined' && window.document && window.document.documentElement.style;
+  // static #docStyle = typeof window !== 'undefined' && window.document && window.document.documentElement.style;
 
-  static #userSelect;
+  // static #userSelect;
 
-  static #selectProp = DOM.testProp(['userSelect', 'MozUserSelect', 'WebkitUserSelect', 'msUserSelect']);
+  // static #selectProp = DOM.testProp(['userSelect', 'MozUserSelect', 'WebkitUserSelect', 'msUserSelect']);
 
-  static #transformProp = DOM.testProp(['transform', 'WebkitTransform']);
+  // static #transformProp = DOM.testProp(['transform', 'WebkitTransform']);
 
   static testProp(props) {
     if (!DOM['#docStyle']) return props[0];
@@ -69,11 +69,11 @@ export class DOM {
   }
 
   // Suppress the next click, but only if it's immediate.
-  static #suppressClickInternal(e) {
+  /*static #suppressClickInternal(e) {
     e.preventDefault();
     e.stopPropagation();
     window.removeEventListener('click', DOM['#transformProp'], true);
-  }
+  }*/
 
   static suppressClick() {
     window.addEventListener('click', DOM['#transformProp'], true);

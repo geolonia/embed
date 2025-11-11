@@ -17,7 +17,7 @@ test.describe('1. 基本的な地図表示', () => {
           return map && map.loaded();
         }, { timeout: LOAD_TIMEOUT });
         // 成功
-      } catch (e) {
+      } catch {
         // タイムアウト
         expect(false).toBe(true); // テスト失敗
       }

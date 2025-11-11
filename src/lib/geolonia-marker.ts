@@ -1,10 +1,9 @@
 'use strict';
 
-import maplibregl from 'maplibre-gl';
+import maplibregl, { type MarkerOptions } from 'maplibre-gl';
 import tinycolor from 'tinycolor2';
 import markerSVG from './marker.svg';
 import { handleMarkerOptions } from './util';
-import type { MarkerOptions } from 'maplibre-gl';
 
 /**
  * Geolonia default marker

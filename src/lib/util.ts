@@ -80,7 +80,7 @@ export function checkPermission() {
     if (window.self.location.origin === window.top.location.origin) {
       return true;
     }
-  } catch (e) {
+  } catch {
     return false;
   }
 

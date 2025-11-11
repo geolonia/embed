@@ -40,16 +40,6 @@ class CustomAttributionControl implements IControl {
 
   constructor(options = {}) {
     this.options = options;
-    this._map;
-    this._compact;
-    this._container;
-    this._shadowContainer;
-    this._innerContainer;
-    this._compactButton;
-    this._editLink;
-    this._attribHTML;
-    this.styleId;
-    this.styleOwner;
 
     bindAll([
       '_toggleAttribution',

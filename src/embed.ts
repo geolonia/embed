@@ -46,7 +46,7 @@ export type EmbedAttributes = {
   [otherKey: string]: string;
 };
 
-export type EmbedPlugin<PluginAttributes extends { [otherKey: string]: string } = {}> = (map: GeoloniaMap, target: HTMLElement, atts: EmbedAttributes & PluginAttributes) => void;
+export type EmbedPlugin<PluginAttributes extends { [otherKey: string]: string } = { [otherKey: string]: string }> = (map: GeoloniaMap, target: HTMLElement, atts: EmbedAttributes & PluginAttributes) => void;
 
 // Type for `window.geolonia`
 export type Geolonia = Partial<typeof maplibregl> & {

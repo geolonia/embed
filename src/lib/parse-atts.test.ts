@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-
 import parseAtts from './parse-atts';
 import assert from 'assert';
 import { JSDOM } from 'jsdom';

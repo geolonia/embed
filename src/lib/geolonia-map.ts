@@ -1,4 +1,4 @@
-import maplibregl, { FullscreenControl, GeolocateControl, NavigationControl, Popup, ScaleControl } from 'maplibre-gl';
+import maplibregl, { FullscreenControl, GeolocateControl, NavigationControl, Popup, ScaleControl, MapOptions, PointLike, StyleOptions, StyleSpecification, StyleSwapOptions, GetResourceResponse } from 'maplibre-gl';
 import Marker from './geolonia-marker';
 import { GeoloniaControl } from './controls/geolonia-control';
 import CustomAttributionControl from './CustomAttributionControl';
@@ -9,8 +9,6 @@ import { SimpleStyle } from './simplestyle';
 import SimpleStyleVector from './simplestyle-vector';
 
 import { getContainer, getOptions, getSessionId, getStyle, handleRestrictedMode, isScrollable, parseControlOption, parseSimpleVector, handleErrorMode, loadImageCompatibility, GetImageCallback } from './util';
-
-import type { MapOptions, PointLike, StyleOptions, StyleSpecification, StyleSwapOptions, GetResourceResponse } from 'maplibre-gl';
 
 export type GeoloniaMapOptions = MapOptions & { interactive?: boolean };
 
@@ -30,7 +28,7 @@ const isCssSelector = (string) => {
   } else {
     try {
       return document.querySelector(string);
-    } catch (e) {
+    } catch {
       return false;
     }
   }
@@ -188,7 +186,7 @@ export default class GeoloniaMap extends maplibregl.Map {
       if (atts.loader !== 'off') {
         try {
           container.removeChild(loading);
-        } catch (e) {
+        } catch {
           // Nothing to do.
         }
       }
