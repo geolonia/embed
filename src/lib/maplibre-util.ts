@@ -94,10 +94,12 @@ export class DOM {
     const rect = el.getBoundingClientRect();
     const points = [];
     for (let i = 0; i < touches.length; i++) {
-      points.push(new Point(
-        touches[i].clientX - rect.left - el.clientLeft,
-        touches[i].clientY - rect.top - el.clientTop,
-      ));
+      points.push(
+        new Point(
+          touches[i].clientX - rect.left - el.clientLeft,
+          touches[i].clientY - rect.top - el.clientTop,
+        ),
+      );
     }
     return points;
   }
@@ -119,7 +121,9 @@ export class DOM {
  * */
 export function bindAll(fns, context) {
   fns.forEach((fn) => {
-    if (!context[fn]) { return; }
+    if (!context[fn]) {
+      return;
+    }
     context[fn] = context[fn].bind(context);
   });
 }

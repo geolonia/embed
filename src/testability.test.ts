@@ -10,10 +10,13 @@ import maplibregl from 'maplibre-gl';
 
 describe('maplibre-gl jsdom limitation', () => {
   it('jsdom上ではMaplibre Mapインスタンス生成時にエラー（WebGL未対応のため）', () => {
-    const dom = new JSDOM('<!DOCTYPE html><html><body><div id="map"></div></body></html>', {
-      url: 'http://localhost',
-      pretendToBeVisual: true, // jsdomを視覚的な環境として
-    });
+    const dom = new JSDOM(
+      '<!DOCTYPE html><html><body><div id="map"></div></body></html>',
+      {
+        url: 'http://localhost',
+        pretendToBeVisual: true, // jsdomを視覚的な環境として
+      },
+    );
     // @ts-ignore
     global.window = dom.window;
     global.document = dom.window.document;

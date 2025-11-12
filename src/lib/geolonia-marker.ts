@@ -32,12 +32,16 @@ export default class GeoloniaMarker extends maplibregl.Marker {
       options.element = markerElement;
 
       if (options.color) {
-        (markerElement.querySelector('.left') as HTMLElement).style.fill = options.color;
-        (markerElement.querySelector('.right') as HTMLElement).style.fill = tinycolor(options.color).darken().toString();
+        (markerElement.querySelector('.left') as HTMLElement).style.fill =
+          options.color;
+        (markerElement.querySelector('.right') as HTMLElement).style.fill =
+          tinycolor(options.color).darken().toString();
       } else {
         const defaultColor = '#E4402F';
-        (markerElement.querySelector('.left') as HTMLElement).style.fill = defaultColor;
-        (markerElement.querySelector('.right') as HTMLElement).style.fill = tinycolor(defaultColor).darken().toString();
+        (markerElement.querySelector('.left') as HTMLElement).style.fill =
+          defaultColor;
+        (markerElement.querySelector('.right') as HTMLElement).style.fill =
+          tinycolor(defaultColor).darken().toString();
       }
 
       options.offset = [0, -15];

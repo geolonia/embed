@@ -4,7 +4,6 @@ const {
 } = require("eslint/config");
 
 const globals = require("globals");
-const editorconfig = require("eslint-plugin-editorconfig");
 const _import = require("eslint-plugin-import");
 const promise = require("eslint-plugin-promise");
 
@@ -31,7 +30,6 @@ const compat = new FlatCompat({
 module.exports = defineConfig([{
     extends: compat.extends(
         "eslint:recommended",
-        "plugin:editorconfig/all",
         "plugin:promise/recommended",
     ),
 
@@ -51,7 +49,6 @@ module.exports = defineConfig([{
     },
 
     plugins: {
-        editorconfig,
         import: fixupPluginRules(_import),
         promise,
     },
@@ -151,22 +148,22 @@ module.exports = defineConfig([{
             "ts-ignore": true,
         }],
 
-        "@/comma-dangle": ["error", "always-multiline"],
+        "comma-dangle": ["error", "always-multiline"],
 
-        "@/comma-spacing": ["error", {
+        "comma-spacing": ["error", {
             before: false,
             after: true,
         }],
 
-        "@/no-duplicate-imports": "error",
+        "no-duplicate-imports": "error",
         "@typescript-eslint/no-useless-constructor": "error",
 
         "@typescript-eslint/no-unused-vars": ["warn", {
             argsIgnorePattern: "^_",
         }],
 
-        "@/quotes": ["error", "single"],
-        "@/semi": ["error", "always"],
+        "quotes": ["error", "single"],
+        "semi": ["error", "always"],
 
         "@typescript-eslint/no-misused-promises": ["warn", {
             "checksConditionals": true,

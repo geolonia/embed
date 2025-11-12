@@ -1,1 +1,4 @@
-module.exports = {}
+module.exports = {
+  "singleQuote": true,
+  "semi": true
+}

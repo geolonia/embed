@@ -11,8 +11,8 @@ const backgroundColor = 'rgba(255, 0, 0, 0.4)';
 const strokeColor = '#FFFFFF';
 
 const template = {
-  'type': 'FeatureCollection',
-  'features': [],
+  type: 'FeatureCollection',
+  features: [],
 };
 
 export class SimpleStyle {
@@ -35,21 +35,24 @@ export class SimpleStyle {
   }
 
   updateData(geojson) {
-
     this.setGeoJSON(geojson);
 
     const features = this.geojson.features;
-    const polygonandlines = features.filter((feature) => (feature.geometry.type.toLowerCase() !== 'point'));
-    const points = features.filter((feature) => (feature.geometry.type.toLowerCase() === 'point'));
+    const polygonandlines = features.filter(
+      (feature) => feature.geometry.type.toLowerCase() !== 'point',
+    );
+    const points = features.filter(
+      (feature) => feature.geometry.type.toLowerCase() === 'point',
+    );
 
     this.map.getSource(this.options.id).setData({
-      'type': 'FeatureCollection',
-      'features': polygonandlines,
+      type: 'FeatureCollection',
+      features: polygonandlines,
     });
 
     this.map.getSource(`${this.options.id}-points`).setData({
-      'type': 'FeatureCollection',
-      'features': points,
+      type: 'FeatureCollection',
+      features: points,
     });
 
     return this;
@@ -59,8 +62,12 @@ export class SimpleStyle {
     this.map = map;
 
     const features = this.geojson.features;
-    const polygonandlines = features.filter((feature) => (feature.geometry.type.toLowerCase() !== 'point'));
-    const points = features.filter((feature) => (feature.geometry.type.toLowerCase() === 'point'));
+    const polygonandlines = features.filter(
+      (feature) => feature.geometry.type.toLowerCase() !== 'point',
+    );
+    const points = features.filter(
+      (feature) => feature.geometry.type.toLowerCase() === 'point',
+    );
 
     this.map.addSource(this.options.id, {
       type: 'geojson',
@@ -91,7 +98,11 @@ export class SimpleStyle {
       filter: ['==', '$type', 'Polygon'],
       paint: {
         'text-color': ['string', ['get', 'text-color'], textColor],
-        'text-halo-color': ['string', ['get', 'text-halo-color'], textHaloColor],
+        'text-halo-color': [
+          'string',
+          ['get', 'text-halo-color'],
+          textHaloColor,
+        ],
         'text-halo-width': 1,
       },
       layout: {
@@ -110,7 +121,11 @@ export class SimpleStyle {
       filter: ['==', '$type', 'LineString'],
       paint: {
         'text-color': ['string', ['get', 'text-color'], textColor],
-        'text-halo-color': ['string', ['get', 'text-halo-color'], textHaloColor],
+        'text-halo-color': [
+          'string',
+          ['get', 'text-halo-color'],
+          textHaloColor,
+        ],
         'text-halo-width': 1,
       },
       layout: {
@@ -130,7 +145,6 @@ export class SimpleStyle {
   }
 
   fitBounds(options = {}) {
-
     this.callFitBounds = true;
 
     const _options = {
@@ -203,8 +217,10 @@ export class SimpleStyle {
       paint: {
         'circle-radius': [
           'case',
-          ['==', 'small', ['get', 'marker-size']], 7,
-          ['==', 'large', ['get', 'marker-size']], 13,
+          ['==', 'small', ['get', 'marker-size']],
+          7,
+          ['==', 'large', ['get', 'marker-size']],
+          13,
           9,
         ],
         'circle-color': ['string', ['get', 'marker-color'], backgroundColor],
@@ -222,7 +238,11 @@ export class SimpleStyle {
       filter: ['!', ['has', 'point_count']],
       paint: {
         'text-color': ['string', ['get', 'text-color'], textColor],
-        'text-halo-color': ['string', ['get', 'text-halo-color'], textHaloColor],
+        'text-halo-color': [
+          'string',
+          ['get', 'text-halo-color'],
+          textHaloColor,
+        ],
         'text-halo-width': 1,
       },
       layout: {
@@ -236,8 +256,10 @@ export class SimpleStyle {
         'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
         'text-radial-offset': [
           'case',
-          ['==', 'small', ['get', 'marker-size']], 1,
-          ['==', 'large', ['get', 'marker-size']], 1.6,
+          ['==', 'small', ['get', 'marker-size']],
+          1,
+          ['==', 'large', ['get', 'marker-size']],
+          1.6,
           1.2,
         ],
       },
@@ -249,12 +271,18 @@ export class SimpleStyle {
 
   async setPopup(map, source) {
     map.on('click', source, async (e) => {
-      const center = turfCenter(e.features[0]).geometry.coordinates as [ number, number ];
+      const center = turfCenter(e.features[0]).geometry.coordinates as [
+        number,
+        number,
+      ];
       const description = e.features[0].properties.description;
 
       if (description) {
         const sanitizedDescription = await sanitizeDescription(description);
-        new maplibregl.Popup().setLngLat(center).setHTML(sanitizedDescription).addTo(map);
+        new maplibregl.Popup()
+          .setLngLat(center)
+          .setHTML(sanitizedDescription)
+          .addTo(map);
       }
     });
 
@@ -298,9 +326,13 @@ export class SimpleStyle {
     });
 
     this.map.on('click', `${this.options.id}-clusters`, async (e) => {
-      const features = this.map.queryRenderedFeatures(e.point, { layers: [`${this.options.id}-clusters`] });
+      const features = this.map.queryRenderedFeatures(e.point, {
+        layers: [`${this.options.id}-clusters`],
+      });
       const clusterId = features[0].properties.cluster_id;
-      const zoom = await this.map.getSource(`${this.options.id}-points`).getClusterExpansionZoom(clusterId);
+      const zoom = await this.map
+        .getSource(`${this.options.id}-points`)
+        .getClusterExpansionZoom(clusterId);
 
       this.map.easeTo({
         center: features[0].geometry.coordinates,
@@ -318,39 +350,28 @@ export class SimpleStyle {
   }
 
   setGeoJSON(geojson) {
-
     if (typeof geojson === 'string' && isURL(geojson)) {
-
       this.geojson = template;
 
       const fetchGeoJSON = async () => {
-
         try {
-
           const response = await window.fetch(geojson);
           const data = response.ok ? await response.json() : {};
           this.geojson = data;
           this.updateData(data);
 
           if (this.callFitBounds) {
-
             this.fitBounds();
             this.callFitBounds = false;
-
           }
-
         } catch (error) {
-
           console.error('[Geolonia] Failed to load GeoJSON:', error); // eslint-disable-line no-console
         }
-
       };
 
       this._loadingPromise = fetchGeoJSON();
-
     } else {
       this.geojson = geojson;
     }
-
   }
 }
