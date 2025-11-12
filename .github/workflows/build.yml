@@ -180,4 +180,4 @@ jobs:
           aws s3 cp ./dist/embed s3://${{ secrets.CDN_BUCKET }}/v${{ steps.version.outputs.version }}/embed --cache-control "public,max-age=3600" --content-type "application/javascript; charset=UTF-8"
           aws s3 cp ./dist/embed.js.LICENSE.txt s3://${{ secrets.CDN_BUCKET }}/v${{ steps.version.outputs.version }}/embed.js.LICENSE.txt --cache-control "public,max-age=3600" --content-type "text/plain; charset=UTF-8"
 
-          aws cloudfront create-invalidation --distribution-id "${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}" --paths "/v${{ steps.version.outputs.major_version }}/embed" "/v${{ steps.version.outputs.version }}/embed"
+          aws cloudfront create-invalidation --distribution-id "${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}" --paths "/embed/v${{ steps.version.outputs.major_version }}/embed" "/embed/v${{ steps.version.outputs.version }}/embed"
