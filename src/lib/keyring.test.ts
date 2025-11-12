@@ -5,6 +5,10 @@ import assert from 'assert';
 describe('parse api key from dom', () => {
   beforeEach(() => {
     keyring.reset();
+    process.env.MAP_PLATFORM_STAGE = 'dev';
+  });
+  afterEach(() => {
+    delete process.env.MAP_PLATFORM_STAGE;
   });
   after(() => {
     keyring.reset();
@@ -70,7 +74,8 @@ describe('parse api key from dom', () => {
     delete process.env.MAP_PLATFORM_STAGE;
   });
 
-  it('should be "YOUR-API-KEY" and "dev"', () => {
+  it('should be "YOUR-API-KEY" and "dev" if process.env.MAP_PLATFORM_STAGE is not set', () => {
+    delete process.env.MAP_PLATFORM_STAGE;
     const { document: mocDocument } = new JSDOM(`<html><body>
       <script src="https://external.example.com/jquery.js"></script>
       <script src="https://external.example.com/?geolonia-api-key=YOUR-API-KEY"></script>

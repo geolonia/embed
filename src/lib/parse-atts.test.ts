@@ -10,6 +10,7 @@ describe('tests for parse Attributes', () => {
   const prevWindow = global.window;
 
   beforeEach(() => {
+    process.env.MAP_PLATFORM_STAGE = 'v1';
     global.window = {
       // @ts-ignore forcefully assigning values to readonly properties
       navigator: { languages: ['ja'] },
@@ -19,7 +20,6 @@ describe('tests for parse Attributes', () => {
   });
 
   it('should parse attribute', () => {
-    process.env.MAP_PLATFORM_STAGE = 'v1';
     const { document: mocDocument } = new JSDOM(`<html><body>
           <script type="text/javascript" src="https://cdn.geolonia.com/v1/embed?geolonia-api-key=YOUR-API-KEY"></script>
           </body></html>`).window;
@@ -59,11 +59,11 @@ describe('tests for parse Attributes', () => {
       '3d': '',
     });
 
-    delete process.env.MAP_PLATFORM_STAGE;
   });
 
   afterEach(() => {
     global.window = prevWindow;
     keyring.reset();
+    delete process.env.MAP_PLATFORM_STAGE;
   });
 });
