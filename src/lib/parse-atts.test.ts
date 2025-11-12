@@ -19,6 +19,7 @@ describe('tests for parse Attributes', () => {
   });
 
   it('should parse attribute', () => {
+    process.env.MAP_PLATFORM_STAGE = 'v1';
     const { document: mocDocument } = new JSDOM(`<html><body>
           <script type="text/javascript" src="https://cdn.geolonia.com/v1/embed?geolonia-api-key=YOUR-API-KEY"></script>
           </body></html>`).window;
@@ -57,6 +58,8 @@ describe('tests for parse Attributes', () => {
       maxZoom: 20,
       '3d': '',
     });
+
+    delete process.env.MAP_PLATFORM_STAGE;
   });
 
   afterEach(() => {

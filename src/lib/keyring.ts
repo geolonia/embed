@@ -56,10 +56,7 @@ class Keyring {
       if (apiKey) {
         this.#apiKey = apiKey;
 
-        const res = url.pathname.match( /^\/(v[0-9.]+)\/embed/ );
-        if (res && res[1]) {
-          this.#stage = res[1];
-        }
+        this.#stage = process.env.MAP_PLATFORM_STAGE || 'dev';
 
         break;
       }
