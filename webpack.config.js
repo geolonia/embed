@@ -5,7 +5,7 @@ const { DefinePlugin } = require('webpack');
 const plugins = [
   new DefinePlugin({
     'process.env.MAP_PLATFORM_STAGE': JSON.stringify(process.env.MAP_PLATFORM_STAGE || 'dev'),
-  })
+  }),
 ];
 if (process.env.ANALYZE === 'true') {
   plugins.push(new BundleAnalyzerPlugin());
