@@ -2,6 +2,14 @@ const path = require('path');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const { DefinePlugin } = require('webpack');
 
+const plugins = [
+  new DefinePlugin({
+    'process.env.MAP_PLATFORM_STAGE': JSON.stringify(process.env.MAP_PLATFORM_STAGE || 'dev'),
+  })
+];
+if (process.env.ANALYZE === 'true') {
+  plugins.push(new BundleAnalyzerPlugin());
+}
 module.exports = {
   entry: './src/embed.ts',
   output: {
@@ -15,10 +23,7 @@ module.exports = {
       type: 'umd',
     },
   },
-  plugins: process.env.ANALYZE === 'true' ? [new BundleAnalyzerPlugin()] : [
-    new DefinePlugin({
-      'process.env.MAP_PLATFORM_STAGE': JSON.stringify(process.env.MAP_PLATFORM_STAGE || 'dev'),
-    })],
+  plugins: plugins,
   module: {
     rules: [
       {
