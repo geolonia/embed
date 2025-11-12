@@ -167,17 +167,17 @@ jobs:
           # For resources that will be manually invalidated, an addition s-maxage so CloudFront keeps the file in its cache as long as possible.
 
           # Deploy embed chunks -- because they have fingerprints in the filename, they're immutable
-          aws s3 sync ./dist/embed-chunks s3://${{ secrets.CDN_BUCKET }}/v${{ steps.version.outputs.major_version }}/embed-chunks --cache-control "public,max-age=31536000,immutable"
-          aws s3 sync ./dist/embed-chunks s3://${{ secrets.CDN_BUCKET }}/v${{ steps.version.outputs.version }}/embed-chunks --cache-control "public,max-age=31536000,immutable"
+          aws s3 sync ./dist/embed-chunks s3://${{ secrets.CDN_BUCKET }}/embed/v${{ steps.version.outputs.major_version }}/embed-chunks --cache-control "public,max-age=31536000,immutable"
+          aws s3 sync ./dist/embed-chunks s3://${{ secrets.CDN_BUCKET }}/embed/v${{ steps.version.outputs.version }}/embed-chunks --cache-control "public,max-age=31536000,immutable"
 
           # Deploy main embed entrypoint
           # I used to use s-maxage here, but after testing decided to revert back to only using max-age.
           # If you use s-maxage that is much longer than max-age, the age header will be longer than
           # max-age, and the browser will think that the file is expired. Using max-age will make
           # CloudFront fetch a new file every 3600 seconds, resetting the Age header
-          aws s3 cp ./dist/embed s3://${{ secrets.CDN_BUCKET }}/v${{ steps.version.outputs.major_version }}/embed --cache-control "public,max-age=3600" --content-type "application/javascript; charset=UTF-8"
-          aws s3 cp ./dist/embed.js.LICENSE.txt s3://${{ secrets.CDN_BUCKET }}/v${{ steps.version.outputs.major_version }}/embed.js.LICENSE.txt --cache-control "public,max-age=3600" --content-type "text/plain; charset=UTF-8"
-          aws s3 cp ./dist/embed s3://${{ secrets.CDN_BUCKET }}/v${{ steps.version.outputs.version }}/embed --cache-control "public,max-age=3600" --content-type "application/javascript; charset=UTF-8"
-          aws s3 cp ./dist/embed.js.LICENSE.txt s3://${{ secrets.CDN_BUCKET }}/v${{ steps.version.outputs.version }}/embed.js.LICENSE.txt --cache-control "public,max-age=3600" --content-type "text/plain; charset=UTF-8"
+          aws s3 cp ./dist/embed s3://${{ secrets.CDN_BUCKET }}/embed/v${{ steps.version.outputs.major_version }}/embed --cache-control "public,max-age=3600" --content-type "application/javascript; charset=UTF-8"
+          aws s3 cp ./dist/embed.js.LICENSE.txt s3://${{ secrets.CDN_BUCKET }}/embed/v${{ steps.version.outputs.major_version }}/embed.js.LICENSE.txt --cache-control "public,max-age=3600" --content-type "text/plain; charset=UTF-8"
+          aws s3 cp ./dist/embed s3://${{ secrets.CDN_BUCKET }}/embed/v${{ steps.version.outputs.version }}/embed --cache-control "public,max-age=3600" --content-type "application/javascript; charset=UTF-8"
+          aws s3 cp ./dist/embed.js.LICENSE.txt s3://${{ secrets.CDN_BUCKET }}/embed/v${{ steps.version.outputs.version }}/embed.js.LICENSE.txt --cache-control "public,max-age=3600" --content-type "text/plain; charset=UTF-8"
 
           aws cloudfront create-invalidation --distribution-id "${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}" --paths "/v${{ steps.version.outputs.major_version }}/embed" "/v${{ steps.version.outputs.version }}/embed"
