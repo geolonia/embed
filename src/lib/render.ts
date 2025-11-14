@@ -108,7 +108,7 @@ export const renderGeoloniaMap = () => {
   } else {
     /* eslint-disable-next-line no-console */
     console.error(
-      '[Geolonia] We are very sorry, but we can\'t display our map in iframe.',
+      "[Geolonia] We are very sorry, but we can't display our map in iframe.",
     );
   }
 };

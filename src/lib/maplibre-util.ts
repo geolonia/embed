@@ -5,18 +5,26 @@ import Point from '@mapbox/point-geometry';
  * https://github.com/maplibre/maplibre-gl-js/blob/main/src/util/dom.ts
  * */
 export class DOM {
-  // static #docStyle = typeof window !== 'undefined' && window.document && window.document.documentElement.style;
+  static #docStyle =
+    typeof window !== 'undefined' &&
+    window.document &&
+    window.document.documentElement.style;
 
-  // static #userSelect;
+  static #userSelect;
 
-  // static #selectProp = DOM.testProp(['userSelect', 'MozUserSelect', 'WebkitUserSelect', 'msUserSelect']);
+  static #selectProp = DOM.testProp([
+    'userSelect',
+    'MozUserSelect',
+    'WebkitUserSelect',
+    'msUserSelect',
+  ]);
 
-  // static #transformProp = DOM.testProp(['transform', 'WebkitTransform']);
+  static #transformProp = DOM.testProp(['transform', 'WebkitTransform']);
 
   static testProp(props) {
-    if (!DOM['#docStyle']) return props[0];
+    if (!DOM.#docStyle) return props[0];
     for (let i = 0; i < props.length; i++) {
-      if (props[i] in DOM['#docStyle']) {
+      if (props[i] in DOM.#docStyle) {
         return props[i];
       }
     }
@@ -36,20 +44,20 @@ export class DOM {
   }
 
   static disableDrag() {
-    if (DOM['#docStyle'] && DOM['#selectProp']) {
-      DOM['#userSelect'] = DOM['#docStyle'][DOM['#selectProp']];
-      DOM['#docStyle'][DOM['#selectProp']] = 'none';
+    if (DOM.#docStyle && DOM.#selectProp) {
+      DOM.#userSelect = DOM.#docStyle[DOM.#selectProp];
+      DOM.#docStyle[DOM.#selectProp] = 'none';
     }
   }
 
   static enableDrag() {
-    if (DOM['#docStyle'] && DOM['#selectProp']) {
-      DOM['#docStyle'][DOM['#selectProp']] = DOM['#userSelect'];
+    if (DOM.#docStyle && DOM.#selectProp) {
+      DOM.#docStyle[DOM.#selectProp] = DOM.#userSelect;
     }
   }
 
   static setTransform(el, value) {
-    el.style[DOM['#transformProp']] = value;
+    el.style[DOM.#transformProp] = value;
   }
 
   static addEventListener(target, type, callback, options) {
@@ -76,9 +84,9 @@ export class DOM {
   }*/
 
   static suppressClick() {
-    window.addEventListener('click', DOM['#transformProp'], true);
+    window.addEventListener('click', DOM.#transformProp, true);
     window.setTimeout(() => {
-      window.removeEventListener('click', DOM['#transformProp'], true);
+      window.removeEventListener('click', DOM.#transformProp, true);
     }, 0);
   }
 

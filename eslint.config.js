@@ -162,7 +162,9 @@ module.exports = defineConfig([{
             argsIgnorePattern: "^_",
         }],
 
-        "quotes": ["error", "single"],
+        "quotes": ["error", "single", {
+            "avoidEscape": true,
+        }],
         "semi": ["error", "always"],
 
         "@typescript-eslint/no-misused-promises": ["warn", {
