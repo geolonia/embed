@@ -7,6 +7,7 @@ describe('tests for parse Attributes', () => {
   const prevWindow = global.window;
 
   beforeEach(() => {
+    process.env.MAP_PLATFORM_STAGE = 'v1';
     global.window = {
       // @ts-ignore forcefully assigning values to readonly properties
       navigator: { languages: ['ja'] },
@@ -59,5 +60,6 @@ describe('tests for parse Attributes', () => {
   afterEach(() => {
     global.window = prevWindow;
     keyring.reset();
+    delete process.env.MAP_PLATFORM_STAGE;
   });
 });
