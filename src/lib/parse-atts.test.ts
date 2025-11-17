@@ -55,7 +55,6 @@ describe('tests for parse Attributes', () => {
       maxZoom: 20,
       '3d': '',
     });
-
   });
 
   afterEach(() => {

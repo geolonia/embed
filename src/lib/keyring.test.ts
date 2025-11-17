@@ -48,7 +48,7 @@ describe('parse api key from dom', () => {
 
   it('should be "YOUR-API-KEY" and "v1"', () => {
     process.env.MAP_PLATFORM_STAGE = 'v1';
-    const {document: mocDocument} = new JSDOM(`<html><body>
+    const { document: mocDocument } = new JSDOM(`<html><body>
       <script src="https://external.example.com/jquery.js"></script>
       <script type="text/javascript" src="https://api.geolonia.com/v1/embed?geolonia-api-key=YOUR-API-KEY"></script>
     </body></html>`).window;
