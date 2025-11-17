@@ -1,10 +1,19 @@
 'use strict';
 
 import { keyring } from './keyring';
-import type { GetResourceResponse, MapOptions, MarkerOptions, ExpiryData } from 'maplibre-gl';
+import type {
+  GetResourceResponse,
+  MapOptions,
+  MarkerOptions,
+  ExpiryData,
+} from 'maplibre-gl';
 
 // GetImageCallback extracted from maplibre-gl v3.6.2 ( https://github.com/maplibre/maplibre-gl-js/releases/tag/v3.6.2 )
-export type GetImageCallback = (error?: Error | null, image?: HTMLImageElement | ImageBitmap | null, expiry?: ExpiryData | null) => void;
+export type GetImageCallback = (
+  error?: Error | null,
+  image?: HTMLImageElement | ImageBitmap | null,
+  expiry?: ExpiryData | null,
+) => void;
 
 /**
  *
@@ -18,7 +27,7 @@ export function isURL(str: string): string | false {
     try {
       return new URL(str, location.href).href;
     } catch (error) {
-      console.error('[Geolonia]', error) // eslint-disable-line
+      console.error('[Geolonia]', error); // eslint-disable-line
       return false;
     }
   }
@@ -45,7 +54,10 @@ export function checkPermission() {
     window.self.location.origin === 'https://cdpn.io' ||
     window.self.location.origin === 'https://codepen.io'
   ) {
-    if (window.self !== window.parent && window.document.referrer.indexOf('https://codepen.io') === 0) {
+    if (
+      window.self !== window.parent &&
+      window.document.referrer.indexOf('https://codepen.io') === 0
+    ) {
       return true;
     }
   }
@@ -54,7 +66,10 @@ export function checkPermission() {
    * For the https://jsfiddle.net/
    */
   if (window.self.location.origin === 'https://fiddle.jshell.net') {
-    if (window.self !== window.parent && window.document.referrer.indexOf('https://jsfiddle.net') === 0) {
+    if (
+      window.self !== window.parent &&
+      window.document.referrer.indexOf('https://jsfiddle.net') === 0
+    ) {
       return true;
     }
   }
@@ -67,7 +82,10 @@ export function checkPermission() {
    * another one is in new window.
    */
   if (window.self.location.origin.match(/csb\.app$/)) {
-    if (window.self !== window.parent && window.document.referrer.indexOf('https://codesandbox.io') === 0) {
+    if (
+      window.self !== window.parent &&
+      window.document.referrer.indexOf('https://codesandbox.io') === 0
+    ) {
       return true;
     }
   }
@@ -80,7 +98,7 @@ export function checkPermission() {
     if (window.self.location.origin === window.top.location.origin) {
       return true;
     }
-  } catch (e) {
+  } catch {
     return false;
   }
 
@@ -88,11 +106,11 @@ export function checkPermission() {
 }
 
 export function getLang() {
-  const lang = (
-    window.navigator.languages &&
-    window.navigator.languages[0] &&
-    window.navigator.languages[0].toLowerCase()
-  ) || window.navigator.language.toLowerCase();
+  const lang =
+    (window.navigator.languages &&
+      window.navigator.languages[0] &&
+      window.navigator.languages[0].toLowerCase()) ||
+    window.navigator.language.toLowerCase();
 
   if (lang === 'ja' || lang === 'ja-jp') {
     return 'ja';
@@ -108,7 +126,10 @@ export function isScrollable() {
   const body = document.body;
   const html = document.documentElement;
 
-  return body.scrollHeight > body.clientHeight || html.scrollHeight > html.clientHeight;
+  return (
+    body.scrollHeight > body.clientHeight ||
+    html.scrollHeight > html.clientHeight
+  );
 }
 
 /**
@@ -117,10 +138,13 @@ export function isScrollable() {
  * @param {*} o
  */
 export function isDomElement(o): o is HTMLElement {
-  return (
-    typeof HTMLElement === 'object' ? o instanceof HTMLElement : // DOM2
-      o && typeof o === 'object' && o !== null && o.nodeType === 1 && typeof o.nodeName === 'string'
-  );
+  return typeof HTMLElement === 'object'
+    ? o instanceof HTMLElement // DOM2
+    : o &&
+        typeof o === 'object' &&
+        o !== null &&
+        o.nodeType === 1 &&
+        typeof o.nodeName === 'string';
 }
 
 /**
@@ -130,18 +154,23 @@ export function isDomElement(o): o is HTMLElement {
  * @param {*} arg
  * @return {HTMLElement | false}
  */
-export function getContainer(arg: HTMLElement | string | { container: HTMLElement | string; }): HTMLElement | false {
+export function getContainer(
+  arg: HTMLElement | string | { container: HTMLElement | string },
+): HTMLElement | false {
   if (isDomElement(arg)) {
     return arg;
   } else if (typeof arg === 'string') {
-    const el = document.querySelector(arg) as HTMLElement || document.getElementById(arg);
+    const el =
+      (document.querySelector(arg) as HTMLElement) ||
+      document.getElementById(arg);
     return el || false;
-
   } else if (arg.container) {
     if (isDomElement(arg.container)) {
       return arg.container;
     } else if (typeof arg.container === 'string') {
-      const el = document.querySelector(arg.container) as HTMLElement || document.getElementById(arg.container);
+      const el =
+        (document.querySelector(arg.container) as HTMLElement) ||
+        document.getElementById(arg.container);
       return el || false;
     }
   }
@@ -155,7 +184,10 @@ export function getContainer(arg: HTMLElement | string | { container: HTMLElemen
  * @param {*} options
  * @param {*} legacyOptions
  */
-export function handleMarkerOptions(options: MarkerOptions | null | undefined | false, legacyOptions: MarkerOptions) {
+export function handleMarkerOptions(
+  options: MarkerOptions | null | undefined | false,
+  legacyOptions: MarkerOptions,
+) {
   if (options && isDomElement(options)) {
     options = {
       element: options as HTMLElement,
@@ -199,12 +231,15 @@ export function getOptions(container, params, atts): MapOptions {
     bearing: parseFloat(atts.bearing),
     pitch: parseFloat(atts.pitch),
     zoom: parseFloat(atts.zoom),
-    hash: (atts.hash === 'on'),
+    hash: atts.hash === 'on',
     localIdeographFontFamily: 'sans-serif',
     attributionControl: false,
   };
 
-  if (atts.minZoom !== '' && (Number(atts.minZoom) === 0 || Number(atts.minZoom))) {
+  if (
+    atts.minZoom !== '' &&
+    (Number(atts.minZoom) === 0 || Number(atts.minZoom))
+  ) {
     options.minZoom = Number(atts.minZoom);
   }
 
@@ -224,7 +259,11 @@ export function getOptions(container, params, atts): MapOptions {
  */
 export function parseControlOption(att) {
   const normalizedAtt = att.toLowerCase();
-  if (['top-right', 'bottom-right', 'bottom-left', 'top-left'].includes(normalizedAtt)) {
+  if (
+    ['top-right', 'bottom-right', 'bottom-left', 'top-left'].includes(
+      normalizedAtt,
+    )
+  ) {
     return { enabled: true, position: normalizedAtt };
   } else if (['on', 'off'].includes(normalizedAtt)) {
     return { enabled: normalizedAtt === 'on', position: void 0 };
@@ -249,9 +288,9 @@ export const getSessionId = (digit) => {
   } else {
     const array = new Uint8Array(digit / 2);
     window.crypto.getRandomValues(array);
-    const value = Array
-      .from(array, (dec) => dec.toString(16).padStart(2, '0'))
-      .join('');
+    const value = Array.from(array, (dec) =>
+      dec.toString(16).padStart(2, '0'),
+    ).join('');
     sessionId = value;
     return value;
   }
@@ -276,7 +315,6 @@ export const handleRestrictedMode = (map) => {
 };
 
 export const handleErrorMode = (container) => {
-
   const errorContainer = document.createElement('div');
   errorContainer.classList.add('geolonia__error-container');
 
@@ -287,7 +325,8 @@ export const handleErrorMode = (container) => {
   div.appendChild(h1);
 
   div.classList.add('geolonia__error-message');
-  div.innerHTML += '<div class="geolonia__error-message-description">地図の初期化に失敗しました。管理者にお問い合わせ下さい。開発者の方は開発者ツールでエラー詳細をご確認下さい。</div>';
+  div.innerHTML +=
+    '<div class="geolonia__error-message-description">地図の初期化に失敗しました。管理者にお問い合わせ下さい。開発者の方は開発者ツールでエラー詳細をご確認下さい。</div>';
 
   errorContainer.appendChild(div);
   container.appendChild(errorContainer);
@@ -296,8 +335,11 @@ export const handleErrorMode = (container) => {
 export const sanitizeDescription = async (description) => {
   const { default: sanitizeHtml } = await import('sanitize-html');
   return sanitizeHtml(description, {
-    allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ]),
-    allowedAttributes: {...sanitizeHtml.defaults.allowedAttributes, '*': ['class']},
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
+    allowedAttributes: {
+      ...sanitizeHtml.defaults.allowedAttributes,
+      '*': ['class'],
+    },
   });
 };
 

@@ -1,12 +1,9 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-
 import parseAtts from './parse-atts';
 import assert from 'assert';
 import { JSDOM } from 'jsdom';
 import { keyring } from './keyring';
 
 describe('tests for parse Attributes', () => {
-
   const prevWindow = global.window;
 
   beforeEach(() => {
