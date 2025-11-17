@@ -13,7 +13,7 @@ export const renderGeoloniaMap = () => {
   const protocol = new Protocol();
   maplibregl.addProtocol('pmtiles', protocol.tile);
 
-  if ( checkPermission() ) {
+  if (checkPermission()) {
     let isDOMContentLoaded = false;
     const alreadyRenderedMaps = [];
     const isRemoved = Symbol('map-is-removed');
@@ -35,7 +35,9 @@ export const renderGeoloniaMap = () => {
       // remove map instance automatically if the container removed.
       // prevent memory leak
       const observer = new MutationObserver((mutationRecords) => {
-        const removed = mutationRecords.some((record) => [...record.removedNodes].some((node) => node === target));
+        const removed = mutationRecords.some((record) =>
+          [...record.removedNodes].some((node) => node === target),
+        );
         if (removed && !map[isRemoved]) {
           map.remove();
         }
@@ -77,12 +79,16 @@ export const renderGeoloniaMap = () => {
       });
     });
 
-    const containers = document.querySelectorAll('.geolonia[data-lazy-loading="off"]');
-    const lazyContainers = document.querySelectorAll('.geolonia:not([data-lazy-loading="off"])');
+    const containers = document.querySelectorAll(
+      '.geolonia[data-lazy-loading="off"]',
+    );
+    const lazyContainers = document.querySelectorAll(
+      '.geolonia:not([data-lazy-loading="off"])',
+    );
 
     // This is required for correct initialization! Don't delete!
     if (!keyring.apiKey) {
-      console.error('[Geolonia] Missing API key.') // eslint-disable-line
+      console.error('[Geolonia] Missing API key.'); // eslint-disable-line
     }
 
     // render Map immediately
@@ -100,11 +106,16 @@ export const renderGeoloniaMap = () => {
       observer.observe(lazyContainers[i]);
     }
   } else {
-    console.error( '[Geolonia] We are very sorry, but we can\'t display our map in iframe.' ) // eslint-disable-line
+    /* eslint-disable-next-line no-console */
+    console.error(
+      "[Geolonia] We are very sorry, but we can't display our map in iframe.",
+    );
   }
 };
 
-export const registerPlugin = (plugin: (map: GeoloniaMap, target: HTMLElement, atts) => void): void => {
+export const registerPlugin = (
+  plugin: (map: GeoloniaMap, target: HTMLElement, atts) => void,
+): void => {
   plugins.push(plugin);
   return void 0;
 };

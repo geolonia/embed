@@ -46,7 +46,15 @@ export type EmbedAttributes = {
   [otherKey: string]: string;
 };
 
-export type EmbedPlugin<PluginAttributes extends { [otherKey: string]: string } = {}> = (map: GeoloniaMap, target: HTMLElement, atts: EmbedAttributes & PluginAttributes) => void;
+export type EmbedPlugin<
+  PluginAttributes extends { [otherKey: string]: string } = {
+    [otherKey: string]: string;
+  },
+> = (
+  map: GeoloniaMap,
+  target: HTMLElement,
+  atts: EmbedAttributes & PluginAttributes,
+) => void;
 
 // Type for `window.geolonia`
 export type Geolonia = Partial<typeof maplibregl> & {
@@ -61,9 +69,9 @@ export type Geolonia = Partial<typeof maplibregl> & {
 
 declare global {
   interface Window {
-    geolonia: Geolonia,
-    maplibregl?: Geolonia,
-    mapboxgl?: Geolonia,
+    geolonia: Geolonia;
+    maplibregl?: Geolonia;
+    mapboxgl?: Geolonia;
   }
 }
 
@@ -76,9 +84,7 @@ const geolonia: Geolonia = Object.assign(window.geolonia || {}, maplibregl, {
   registerPlugin,
 });
 
-window.geolonia =
-  (window.maplibregl as any) =
-  window.mapboxgl = geolonia;
+window.geolonia = (window.maplibregl as any) = window.mapboxgl = geolonia;
 
 renderGeoloniaMap();
 

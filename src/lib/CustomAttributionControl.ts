@@ -40,23 +40,16 @@ class CustomAttributionControl implements IControl {
 
   constructor(options = {}) {
     this.options = options;
-    this._map;
-    this._compact;
-    this._container;
-    this._shadowContainer;
-    this._innerContainer;
-    this._compactButton;
-    this._editLink;
-    this._attribHTML;
-    this.styleId;
-    this.styleOwner;
 
-    bindAll([
-      '_toggleAttribution',
-      '_updateData',
-      '_updateCompact',
-      '_updateCompactMinimize',
-    ], this);
+    bindAll(
+      [
+        '_toggleAttribution',
+        '_updateData',
+        '_updateCompact',
+        '_updateCompactMinimize',
+      ],
+      this,
+    );
   }
 
   getDefaultPosition(): ControlPosition {
@@ -68,13 +61,24 @@ class CustomAttributionControl implements IControl {
     this._compact = this.options && this.options.compact;
     this._container = DOM.create('div');
 
-    const shadow = this._container.attachShadow({mode: 'open'});
+    const shadow = this._container.attachShadow({ mode: 'open' });
 
-    this._shadowContainer = DOM.create('details', 'maplibregl-ctrl maplibregl-ctrl-attrib');
-    this._compactButton = DOM.create('summary', 'maplibregl-ctrl-attrib-button', this._shadowContainer);
+    this._shadowContainer = DOM.create(
+      'details',
+      'maplibregl-ctrl maplibregl-ctrl-attrib',
+    );
+    this._compactButton = DOM.create(
+      'summary',
+      'maplibregl-ctrl-attrib-button',
+      this._shadowContainer,
+    );
     this._compactButton.addEventListener('click', this._toggleAttribution);
     this._setElementTitle(this._compactButton, 'ToggleAttribution');
-    this._innerContainer = DOM.create('div', 'maplibregl-ctrl-attrib-inner', this._shadowContainer);
+    this._innerContainer = DOM.create(
+      'div',
+      'maplibregl-ctrl-attrib-inner',
+      this._shadowContainer,
+    );
 
     const style = document.createElement('style');
     style.textContent = `
@@ -274,7 +278,13 @@ class CustomAttributionControl implements IControl {
   }
 
   _updateData(e) {
-    if (e && (e.sourceDataType === 'metadata' || e.sourceDataType === 'visibility' || e.dataType === 'style' || e.type === 'terrain')) {
+    if (
+      e &&
+      (e.sourceDataType === 'metadata' ||
+        e.sourceDataType === 'visibility' ||
+        e.dataType === 'style' ||
+        e.type === 'terrain')
+    ) {
       this._updateAttributions();
     }
   }
@@ -306,7 +316,10 @@ class CustomAttributionControl implements IControl {
       const sourceCache = sourceCaches[id];
       if (sourceCache.used || sourceCache.usedForTerrain) {
         const source = sourceCache.getSource();
-        if (source.attribution && attributions.indexOf(source.attribution) < 0) {
+        if (
+          source.attribution &&
+          attributions.indexOf(source.attribution) < 0
+        ) {
           attributions.push(source.attribution);
         }
       }
@@ -320,7 +333,9 @@ class CustomAttributionControl implements IControl {
     attributions.sort((a, b) => a.length - b.length);
     attributions = attributions.filter((attrib, i) => {
       for (let j = i + 1; j < attributions.length; j++) {
-        if (attributions[j].indexOf(attrib) >= 0) { return false; }
+        if (attributions[j].indexOf(attrib) >= 0) {
+          return false;
+        }
       }
       return true;
     });
@@ -346,14 +361,23 @@ class CustomAttributionControl implements IControl {
     if (this._map.getCanvasContainer().offsetWidth <= 640 || this._compact) {
       if (this._compact === false) {
         this._shadowContainer.setAttribute('open', '');
-      } else if (!this._shadowContainer.classList.contains('maplibregl-compact') && !this._shadowContainer.classList.contains('maplibregl-attrib-empty')) {
+      } else if (
+        !this._shadowContainer.classList.contains('maplibregl-compact') &&
+        !this._shadowContainer.classList.contains('maplibregl-attrib-empty')
+      ) {
         this._shadowContainer.setAttribute('open', '');
-        this._shadowContainer.classList.add('maplibregl-compact', 'maplibregl-compact-show');
+        this._shadowContainer.classList.add(
+          'maplibregl-compact',
+          'maplibregl-compact-show',
+        );
       }
     } else {
       this._shadowContainer.setAttribute('open', '');
       if (this._shadowContainer.classList.contains('maplibregl-compact')) {
-        this._shadowContainer.classList.remove('maplibregl-compact', 'maplibregl-compact-show');
+        this._shadowContainer.classList.remove(
+          'maplibregl-compact',
+          'maplibregl-compact-show',
+        );
       }
     }
   }
@@ -365,7 +389,6 @@ class CustomAttributionControl implements IControl {
       }
     }
   }
-
 }
 
 export default CustomAttributionControl;

@@ -39,18 +39,19 @@ class Keyring {
    * @param {Document} document
    */
   public parse(doc: Document = document) {
-    const scripts: HTMLScriptElement[] | HTMLCollectionOf<HTMLScriptElement> = doc.currentScript ?
-      [doc.currentScript as HTMLScriptElement]
-      :
-      doc.getElementsByTagName('script');
+    const scripts: HTMLScriptElement[] | HTMLCollectionOf<HTMLScriptElement> =
+      doc.currentScript
+        ? [doc.currentScript as HTMLScriptElement]
+        : doc.getElementsByTagName('script');
 
     for (const script of scripts) {
       const url = new URL(
-        (
-          script.src.startsWith('https://') ||
-          script.src.startsWith('http://') ||
-          script.src.startsWith('//')
-        ) ? script.src : `https://${location.host}/${script.src}`);
+        script.src.startsWith('https://') ||
+        script.src.startsWith('http://') ||
+        script.src.startsWith('//')
+          ? script.src
+          : `https://${location.host}/${script.src}`,
+      );
       const apiKey = url.searchParams.get('geolonia-api-key');
 
       if (apiKey) {

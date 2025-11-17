@@ -19,21 +19,30 @@ class SimpleStyleVector {
   addTo(map) {
     const container = map.getContainer();
 
-    if (!container.dataset || (!container.dataset.lng && !container.dataset.lat)) {
+    if (
+      !container.dataset ||
+      (!container.dataset.lng && !container.dataset.lat)
+    ) {
       let initialZoomDone = false;
       map.on('sourcedata', (event) => {
         // skip events for sources that don't concern us
-        if (event.sourceId !== this.sourceName) { return; }
+        if (event.sourceId !== this.sourceName) {
+          return;
+        }
 
         const source = map.getSource(event.sourceId);
         // query the map to see if the source is actually loaded or not. We can't trust `isSourceLoaded` in the event
         // because it's unreliable and often incorrect.
         const isLoaded = source && source.loaded();
 
-        if (isLoaded !== true) { return; }
+        if (isLoaded !== true) {
+          return;
+        }
 
         // Only zoom once.
-        if (initialZoomDone) { return; }
+        if (initialZoomDone) {
+          return;
+        }
         initialZoomDone = true;
 
         map.fitBounds(source.bounds, {
@@ -59,7 +68,11 @@ class SimpleStyleVector {
       filter: ['==', '$type', 'Polygon'],
       paint: {
         'text-color': ['string', ['get', 'text-color'], textColor],
-        'text-halo-color': ['string', ['get', 'text-halo-color'], textHaloColor],
+        'text-halo-color': [
+          'string',
+          ['get', 'text-halo-color'],
+          textHaloColor,
+        ],
         'text-halo-width': 1,
       },
       layout: {
@@ -79,7 +92,11 @@ class SimpleStyleVector {
       filter: ['==', '$type', 'LineString'],
       paint: {
         'text-color': ['string', ['get', 'text-color'], textColor],
-        'text-halo-color': ['string', ['get', 'text-halo-color'], textHaloColor],
+        'text-halo-color': [
+          'string',
+          ['get', 'text-halo-color'],
+          textHaloColor,
+        ],
         'text-halo-width': 1,
       },
       layout: {
@@ -158,8 +175,10 @@ class SimpleStyleVector {
       paint: {
         'circle-radius': [
           'case',
-          ['==', 'small', ['get', 'marker-size']], 7,
-          ['==', 'large', ['get', 'marker-size']], 13,
+          ['==', 'small', ['get', 'marker-size']],
+          7,
+          ['==', 'large', ['get', 'marker-size']],
+          13,
           9,
         ],
         'circle-color': ['string', ['get', 'marker-color'], backgroundColor],
@@ -178,7 +197,11 @@ class SimpleStyleVector {
       filter: ['==', '$type', 'Point'],
       paint: {
         'text-color': ['string', ['get', 'text-color'], textColor],
-        'text-halo-color': ['string', ['get', 'text-halo-color'], textHaloColor],
+        'text-halo-color': [
+          'string',
+          ['get', 'text-halo-color'],
+          textHaloColor,
+        ],
         'text-halo-width': 1,
       },
       layout: {
@@ -190,8 +213,10 @@ class SimpleStyleVector {
         'text-max-width': 12,
         'text-offset': [
           'case',
-          ['==', 'small', ['get', 'marker-size']], ['literal', [0, 1]],
-          ['==', 'large', ['get', 'marker-size']], ['literal', [0, 1.6]],
+          ['==', 'small', ['get', 'marker-size']],
+          ['literal', [0, 1]],
+          ['==', 'large', ['get', 'marker-size']],
+          ['literal', [0, 1.6]],
           ['literal', [0, 1.2]],
         ],
         'text-allow-overlap': false,
@@ -204,12 +229,16 @@ class SimpleStyleVector {
 
   async setPopup(map, source) {
     map.on('click', source, async (e) => {
-      const center: [ number, number ] = turfCenter(e.features[0]).geometry.coordinates as [ number, number ];
+      const center: [number, number] = turfCenter(e.features[0]).geometry
+        .coordinates as [number, number];
       const description = e.features[0].properties.description;
 
       if (description) {
         const sanitizedDescription = await sanitizeDescription(description);
-        new maplibregl.Popup().setLngLat(center).setHTML(sanitizedDescription).addTo(map);
+        new maplibregl.Popup()
+          .setLngLat(center)
+          .setHTML(sanitizedDescription)
+          .addTo(map);
       }
     });
 

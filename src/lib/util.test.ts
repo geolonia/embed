@@ -1,8 +1,18 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-
 import assert from 'assert';
 import { JSDOM } from 'jsdom';
-import { getContainer, getLang, getOptions, getStyle, handleMarkerOptions, isDomElement, isURL, parseControlOption, parseSimpleVector, sanitizeDescription, loadImageCompatibility } from './util';
+import {
+  getContainer,
+  getLang,
+  getOptions,
+  getStyle,
+  handleMarkerOptions,
+  isDomElement,
+  isURL,
+  parseControlOption,
+  parseSimpleVector,
+  sanitizeDescription,
+  loadImageCompatibility,
+} from './util';
 
 const base = 'https://base.example.com/parent/';
 
@@ -52,7 +62,10 @@ describe('Tests for util.js', () => {
       <div class="test-class"></div>
     </body></html>`).window;
 
-    assert.deepEqual(true, isDomElement(mocDocument.querySelector('.test-class')));
+    assert.deepEqual(
+      true,
+      isDomElement(mocDocument.querySelector('.test-class')),
+    );
     assert.deepEqual(false, isDomElement('hello world'));
     assert.deepEqual(false, isDomElement({ hello: 'world' }));
   });
@@ -83,7 +96,8 @@ describe('Tests for util.js', () => {
     assert.deepEqual(false, getContainer('#fail-element'));
     assert.deepEqual(false, getContainer({ container: '#fail-element' }));
     assert.deepEqual(false, getContainer('fail-element'));
-    assert.deepEqual(false, getContainer({ container: 'fail-element' }));  });
+    assert.deepEqual(false, getContainer({ container: 'fail-element' }));
+  });
 
   it('should merge legacyoptions into options as expected.', () => {
     const dom = new JSDOM(`<html><body>
@@ -94,7 +108,10 @@ describe('Tests for util.js', () => {
     global.window = dom.window;
     global.document = dom.window.document;
 
-    const options1 = handleMarkerOptions(document.getElementById('test-element'), { color: '#FF1122' });
+    const options1 = handleMarkerOptions(
+      document.getElementById('test-element'),
+      { color: '#FF1122' },
+    );
     assert.deepEqual(document.getElementById('test-element'), options1.element);
     assert.deepEqual(options1.color, '#FF1122');
 
@@ -135,10 +152,22 @@ describe('Tests for util.js', () => {
       key: '1234',
     };
 
-    assert.deepEqual('https://cdn.geolonia.com/style/hello/world/en.json', getStyle('hello/world', atts));
-    assert.deepEqual('https://example.com/style.json', getStyle('https://example.com/style.json', atts));
-    assert.deepEqual('https://base.example.com/parent/style.json', getStyle('./style.json', atts));
-    assert.deepEqual('https://base.example.com/style.json', getStyle('/style.json', atts));
+    assert.deepEqual(
+      'https://cdn.geolonia.com/style/hello/world/en.json',
+      getStyle('hello/world', atts),
+    );
+    assert.deepEqual(
+      'https://example.com/style.json',
+      getStyle('https://example.com/style.json', atts),
+    );
+    assert.deepEqual(
+      'https://base.example.com/parent/style.json',
+      getStyle('./style.json', atts),
+    );
+    assert.deepEqual(
+      'https://base.example.com/style.json',
+      getStyle('/style.json', atts),
+    );
   });
 
   it('should handle maplibregl options `minZoom` and `maxZoom` well', () => {
@@ -188,18 +217,12 @@ describe('Tests for util.js', () => {
 
   it('should parse simple vector value with http.', () => {
     const attributeValue = 'https://example.com/path/to/tile.json';
-    assert.strictEqual(
-      attributeValue,
-      parseSimpleVector(attributeValue),
-    );
+    assert.strictEqual(attributeValue, parseSimpleVector(attributeValue));
   });
 
   it('should parse simple vector value with geolonia schema.', () => {
     const attributeValue = 'geolonia://tiles/username/ct_123';
-    assert.strictEqual(
-      attributeValue,
-      parseSimpleVector(attributeValue),
-    );
+    assert.strictEqual(attributeValue, parseSimpleVector(attributeValue));
   });
 
   it('should parse simple vector value with customtile ID', () => {
@@ -212,7 +235,8 @@ describe('Tests for util.js', () => {
 
   describe('Tests for sanitizeDescription', async () => {
     it('should sanitize description', async () => {
-      const description = '<script>alert("hello");</script>ここが集合場所です。13時までに集合してください。';
+      const description =
+        '<script>alert("hello");</script>ここが集合場所です。13時までに集合してください。';
       assert.strictEqual(
         'ここが集合場所です。13時までに集合してください。',
         await sanitizeDescription(description),
@@ -221,7 +245,8 @@ describe('Tests for util.js', () => {
 
     it('should not sanitize img tag, but should sanitize attributes other than "src", "srcset", "alt", "title", "width", "height", "loading"', async () => {
       // Ref. https://www.npmjs.com/package/sanitize-html
-      const description = '<img decoding="auto" src="hibiya-park.jpeg" /><br />ここが集合場所です。13時までに集合してください。';
+      const description =
+        '<img decoding="auto" src="hibiya-park.jpeg" /><br />ここが集合場所です。13時までに集合してください。';
       assert.strictEqual(
         '<img src="hibiya-park.jpeg" /><br />ここが集合場所です。13時までに集合してください。',
         await sanitizeDescription(description),
@@ -229,7 +254,8 @@ describe('Tests for util.js', () => {
     });
 
     it('should not sanitize "class" attribute', async () => {
-      const description = '<span class="red">ここが集合場所です。13時までに集合してください。</span>';
+      const description =
+        '<span class="red">ここが集合場所です。13時までに集合してください。</span>';
       assert.strictEqual(
         '<span class="red">ここが集合場所です。13時までに集合してください。</span>',
         await sanitizeDescription(description),
@@ -237,7 +263,6 @@ describe('Tests for util.js', () => {
     });
   });
 });
-
 
 describe('loadImageCompatibility', () => {
   it('should call the callback with response data when the promise resolves', (done) => {

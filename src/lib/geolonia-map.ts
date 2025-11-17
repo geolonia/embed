@@ -1,4 +1,16 @@
-import maplibregl, { FullscreenControl, GeolocateControl, NavigationControl, Popup, ScaleControl } from 'maplibre-gl';
+import maplibregl, {
+  FullscreenControl,
+  GeolocateControl,
+  NavigationControl,
+  Popup,
+  ScaleControl,
+  MapOptions,
+  PointLike,
+  StyleOptions,
+  StyleSpecification,
+  StyleSwapOptions,
+  GetResourceResponse,
+} from 'maplibre-gl';
 import Marker from './geolonia-marker';
 import { GeoloniaControl } from './controls/geolonia-control';
 import CustomAttributionControl from './CustomAttributionControl';
@@ -8,9 +20,19 @@ import parseAtts from './parse-atts';
 import { SimpleStyle } from './simplestyle';
 import SimpleStyleVector from './simplestyle-vector';
 
-import { getContainer, getOptions, getSessionId, getStyle, handleRestrictedMode, isScrollable, parseControlOption, parseSimpleVector, handleErrorMode, loadImageCompatibility, GetImageCallback } from './util';
-
-import type { MapOptions, PointLike, StyleOptions, StyleSpecification, StyleSwapOptions, GetResourceResponse } from 'maplibre-gl';
+import {
+  getContainer,
+  getOptions,
+  getSessionId,
+  getStyle,
+  handleRestrictedMode,
+  isScrollable,
+  parseControlOption,
+  parseSimpleVector,
+  handleErrorMode,
+  loadImageCompatibility,
+  GetImageCallback,
+} from './util';
 
 export type GeoloniaMapOptions = MapOptions & { interactive?: boolean };
 
@@ -30,7 +52,7 @@ const isCssSelector = (string) => {
   } else {
     try {
       return document.querySelector(string);
-    } catch (e) {
+    } catch {
       return false;
     }
   }
@@ -46,14 +68,17 @@ export default class GeoloniaMap extends maplibregl.Map {
   private __styleExtensionLoadRequired: boolean;
 
   constructor(params: string | GeoloniaMapOptions) {
-
     const container = getContainer(params) as Container | false;
 
     if (!container) {
       if (typeof params === 'string') {
-        throw new Error(`[Geolonia] No HTML elements found matching \`${params}\`. Please ensure the map container element exists.`);
+        throw new Error(
+          `[Geolonia] No HTML elements found matching \`${params}\`. Please ensure the map container element exists.`,
+        );
       } else {
-        throw new Error('[Geolonia] No HTML elements found. Please ensure the map container element exists.');
+        throw new Error(
+          '[Geolonia] No HTML elements found. Please ensure the map container element exists.',
+        );
       }
     }
 
@@ -63,10 +88,14 @@ export default class GeoloniaMap extends maplibregl.Map {
 
     if (container.clientHeight === 0) {
       // eslint-disable-next-line no-console
-      console.warn('[Geolonia] Embed API failed to render the map because the container has no height. Please set the CSS property `height` to the container.');
+      console.warn(
+        '[Geolonia] Embed API failed to render the map because the container has no height. Please set the CSS property `height` to the container.',
+      );
     }
 
-    const atts = parseAtts(container, { interactive: typeof params === 'object' ? params.interactive : true });
+    const atts = parseAtts(container, {
+      interactive: typeof params === 'object' ? params.interactive : true,
+    });
     const options = getOptions(container, params, atts);
 
     // Getting content should be fire just before initialize the map.
@@ -96,7 +125,10 @@ export default class GeoloniaMap extends maplibregl.Map {
     // Pass API key and requested tile version to `/sources` (tile json).
     const _transformRequest = options.transformRequest;
     options.transformRequest = (url, resourceType) => {
-      if (resourceType === 'Source' && url.startsWith('https://api.geolonia.com')) {
+      if (
+        resourceType === 'Source' &&
+        url.startsWith('https://api.geolonia.com')
+      ) {
         return {
           url: sourcesUrl.toString(),
         };
@@ -104,7 +136,9 @@ export default class GeoloniaMap extends maplibregl.Map {
 
       let transformedUrl = url;
       if (url.startsWith('geolonia://')) {
-        const tilesMatch = url.match(/^geolonia:\/\/tiles\/(?<username>.+)\/(?<customtileId>.+)/);
+        const tilesMatch = url.match(
+          /^geolonia:\/\/tiles\/(?<username>.+)\/(?<customtileId>.+)/,
+        );
         if (tilesMatch) {
           transformedUrl = `https://tileserver.geolonia.com/customtiles/${tilesMatch.groups.customtileId}/tiles.json`;
         }
@@ -112,7 +146,10 @@ export default class GeoloniaMap extends maplibregl.Map {
 
       const transformedUrlObj = new URL(transformedUrl);
 
-      if (resourceType === 'Source' && transformedUrl.startsWith('https://tileserver.geolonia.com')) {
+      if (
+        resourceType === 'Source' &&
+        transformedUrl.startsWith('https://tileserver.geolonia.com')
+      ) {
         if (atts.stage === 'dev') {
           transformedUrlObj.hostname = 'tileserver-dev.geolonia.com';
         }
@@ -123,7 +160,9 @@ export default class GeoloniaMap extends maplibregl.Map {
         };
       } else if (
         (resourceType === 'SpriteJSON' || resourceType === 'SpriteImage') &&
-        transformedUrl.match(/^https:\/\/api\.geolonia\.com\/(dev|v1)\/sprites\//)
+        transformedUrl.match(
+          /^https:\/\/api\.geolonia\.com\/(dev|v1)\/sprites\//,
+        )
       ) {
         const pathParts = transformedUrlObj.pathname.split('/');
         pathParts[1] = atts.stage;
@@ -157,27 +196,39 @@ export default class GeoloniaMap extends maplibregl.Map {
 
     // Note: GeoloniaControl should be placed before another controls.
     // Because this control should be "very" bottom-left(default) or the attributed position.
-    const { position: geoloniaControlPosition } = parseControlOption(atts.geoloniaControl);
+    const { position: geoloniaControlPosition } = parseControlOption(
+      atts.geoloniaControl,
+    );
     map.addControl(new GeoloniaControl(), geoloniaControlPosition);
 
     map.addControl(new CustomAttributionControl(), 'bottom-right');
 
-    const { enabled: fullscreenControlEnabled, position: fullscreenControlPosition } = parseControlOption(atts.fullscreenControl);
+    const {
+      enabled: fullscreenControlEnabled,
+      position: fullscreenControlPosition,
+    } = parseControlOption(atts.fullscreenControl);
     if (fullscreenControlEnabled) {
       map.addControl(new FullscreenControl(), fullscreenControlPosition);
     }
 
-    const { enabled: navigationControlEnabled, position: navigationControlPosition } = parseControlOption(atts.navigationControl);
+    const {
+      enabled: navigationControlEnabled,
+      position: navigationControlPosition,
+    } = parseControlOption(atts.navigationControl);
     if (navigationControlEnabled) {
       map.addControl(new NavigationControl(), navigationControlPosition);
     }
 
-    const { enabled: geolocateControlEnabled, position: geolocateControlPosition } = parseControlOption(atts.geolocateControl);
+    const {
+      enabled: geolocateControlEnabled,
+      position: geolocateControlPosition,
+    } = parseControlOption(atts.geolocateControl);
     if (geolocateControlEnabled) {
       map.addControl(new GeolocateControl({}), geolocateControlPosition);
     }
 
-    const { enabled: scaleControlEnabled, position: scaleControlPosition } = parseControlOption(atts.scaleControl);
+    const { enabled: scaleControlEnabled, position: scaleControlPosition } =
+      parseControlOption(atts.scaleControl);
     if (scaleControlEnabled) {
       map.addControl(new ScaleControl({}), scaleControlPosition);
     }
@@ -188,7 +239,7 @@ export default class GeoloniaMap extends maplibregl.Map {
       if (atts.loader !== 'off') {
         try {
           container.removeChild(loading);
-        } catch (e) {
+        } catch {
           // Nothing to do.
         }
       }
@@ -205,21 +256,31 @@ export default class GeoloniaMap extends maplibregl.Map {
             const offset = atts.customMarkerOffset.split(/,/).map((n) => {
               return Number(n.trim());
             });
-            const container: HTMLElement = document.querySelector(atts.customMarker);
+            const container: HTMLElement = document.querySelector(
+              atts.customMarker,
+            );
             container.style.display = 'block';
             marker = new Marker({
               element: container,
               offset: offset as PointLike,
-            }).setLngLat(options.center).addTo(map).setPopup(popup);
+            })
+              .setLngLat(options.center)
+              .addTo(map)
+              .setPopup(popup);
           } else {
-            marker = new Marker({ color: atts.markerColor }).setLngLat(options.center).addTo(map).setPopup(popup);
+            marker = new Marker({ color: atts.markerColor })
+              .setLngLat(options.center)
+              .addTo(map)
+              .setPopup(popup);
           }
           if (atts.openPopup === 'on') {
             marker.togglePopup();
           }
           marker.getElement().classList.add('geolonia-clickable-marker');
         } else {
-          new Marker({ color: atts.markerColor }).setLngLat(options.center).addTo(map);
+          new Marker({ color: atts.markerColor })
+            .setLngLat(options.center)
+            .addTo(map);
         }
       }
     });
@@ -247,12 +308,15 @@ export default class GeoloniaMap extends maplibregl.Map {
         }
 
         const ss = new SimpleStyle(json, {
-          cluster: (atts.cluster === 'on'),
+          cluster: atts.cluster === 'on',
           clusterColor: atts.clusterColor,
         });
         ss.addTo(map);
 
-        if (!container.dataset || (!container.dataset.lng && !container.dataset.lat)) {
+        if (
+          !container.dataset ||
+          (!container.dataset.lng && !container.dataset.lat)
+        ) {
           ss.fitBounds();
         }
       }
@@ -260,13 +324,29 @@ export default class GeoloniaMap extends maplibregl.Map {
       if (atts['3d']) {
         const style = map.getStyle();
         style.layers.forEach((layer) => {
-          if (atts['3d'] === 'on' && layer.metadata && layer.metadata['visible-on-3d'] === true) {
+          if (
+            atts['3d'] === 'on' &&
+            layer.metadata &&
+            layer.metadata['visible-on-3d'] === true
+          ) {
             map.setLayoutProperty(layer.id, 'visibility', 'visible');
-          } else if (atts['3d'] === 'off' && layer.metadata && layer.metadata['visible-on-3d'] === true) {
+          } else if (
+            atts['3d'] === 'off' &&
+            layer.metadata &&
+            layer.metadata['visible-on-3d'] === true
+          ) {
             map.setLayoutProperty(layer.id, 'visibility', 'none');
-          } else if (atts['3d'] === 'on' && layer.metadata && layer.metadata['hide-on-3d'] === true) {
+          } else if (
+            atts['3d'] === 'on' &&
+            layer.metadata &&
+            layer.metadata['hide-on-3d'] === true
+          ) {
             map.setLayoutProperty(layer.id, 'visibility', 'none');
-          } else if (atts['3d'] === 'off' && layer.metadata && layer.metadata['hide-on-3d'] === true) {
+          } else if (
+            atts['3d'] === 'off' &&
+            layer.metadata &&
+            layer.metadata['hide-on-3d'] === true
+          ) {
             map.setLayoutProperty(layer.id, 'visibility', 'visible');
           }
         });
@@ -275,10 +355,7 @@ export default class GeoloniaMap extends maplibregl.Map {
 
     // handle Geolonia Server errors
     map.on('error', async (error) => {
-      if (
-        error.error &&
-        error.error.status === 402
-      ) {
+      if (error.error && error.error.status === 402) {
         handleRestrictedMode(map);
       }
     });
@@ -293,7 +370,10 @@ export default class GeoloniaMap extends maplibregl.Map {
    * @param {string|null} style style identity or `null` when map.remove()
    * @param {*} options
    */
-  setStyle(style: string | StyleSpecification, options: StyleSwapOptions & StyleOptions = {}): this {
+  setStyle(
+    style: string | StyleSpecification,
+    options: StyleSwapOptions & StyleOptions = {},
+  ): this {
     if (style !== null) {
       // It can't access `this` because `setStyle()` will be called with `super()`.
       // So, we need to run `parseAtts()` again(?)
@@ -317,7 +397,8 @@ export default class GeoloniaMap extends maplibregl.Map {
   remove(): void {
     const container = this.getContainer();
     super.remove.call(this);
-    delete (container as HTMLElement & { geoloniaMap: GeoloniaMap }).geoloniaMap;
+    delete (container as HTMLElement & { geoloniaMap: GeoloniaMap })
+      .geoloniaMap;
   }
 
   /**
@@ -327,9 +408,13 @@ export default class GeoloniaMap extends maplibregl.Map {
    * @param callback
    */
   loadImage(url: string, callback: GetImageCallback): void;
-  loadImage(url: string): Promise<GetResourceResponse<HTMLImageElement | ImageBitmap>>;
-  loadImage(url: string, callback?: GetImageCallback): Promise<GetResourceResponse<HTMLImageElement | ImageBitmap>> | void {
-
+  loadImage(
+    url: string,
+  ): Promise<GetResourceResponse<HTMLImageElement | ImageBitmap>>;
+  loadImage(
+    url: string,
+    callback?: GetImageCallback,
+  ): Promise<GetResourceResponse<HTMLImageElement | ImageBitmap>> | void {
     const promise = super.loadImage(url);
 
     if (callback) {
