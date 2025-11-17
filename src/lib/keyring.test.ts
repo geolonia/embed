@@ -56,8 +56,6 @@ describe('parse api key from dom', () => {
     keyring.parse(mocDocument);
     assert.deepEqual('YOUR-API-KEY', keyring.apiKey);
     assert.deepEqual('v1', keyring.stage);
-
-    delete process.env.MAP_PLATFORM_STAGE;
   });
 
   it('should be "YOUR-API-KEY" and "v123.4"', () => {
@@ -70,8 +68,6 @@ describe('parse api key from dom', () => {
     keyring.parse(mocDocument);
     assert.deepEqual('YOUR-API-KEY', keyring.apiKey);
     assert.deepEqual('v123.4', keyring.stage);
-
-    delete process.env.MAP_PLATFORM_STAGE;
   });
 
   it('should be "YOUR-API-KEY" and "dev" if process.env.MAP_PLATFORM_STAGE is not set', () => {
