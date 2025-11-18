@@ -66,7 +66,7 @@ describe('Tests for util.js', () => {
     });
 
     it('detects tiles.geolonia.com subdomains', () => {
-      const url = new URL('https://osm.tiles.geolonia.com/tiles.json');
+      const url = new URL('https://osm.v2.tiles.geolonia.com/tiles.json');
       assert.strictEqual(isGeoloniaTilesHost(url), true);
     });
 
