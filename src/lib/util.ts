@@ -35,6 +35,20 @@ export function isURL(str: string): string | false {
   return false;
 }
 
+export function isGeoloniaTilesHost(url: string | URL): boolean {
+  try {
+    const urlObj = typeof url === 'string' ? new URL(url) : url;
+
+    return (
+      // NOTE: Add tile server hostnames here. If you want to add your custom domain,
+      urlObj.hostname === 'tileserver.geolonia.com' ||
+      urlObj.hostname.endsWith('.v2.tiles.geolonia.com')
+    );
+  } catch {
+    return false;
+  }
+}
+
 export function checkPermission() {
   // It looks that isn't iFrame, so returs true.
   if (window.self === window.parent) {
