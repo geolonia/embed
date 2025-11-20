@@ -70,6 +70,11 @@ describe('Tests for util.js', () => {
       assert.strictEqual(isGeoloniaTilesHost(url), true);
     });
 
+    it('detects tiles.geolonia.com subdomains', () => {
+      const url = new URL('https://osm.v3.tiles.geolonia.com/tiles.json');
+      assert.strictEqual(isGeoloniaTilesHost(url), true);
+    });
+
     it('returns false for other hosts or invalid urls', () => {
       assert.strictEqual(isGeoloniaTilesHost('https://example.com/tiles'), false);
       assert.strictEqual(isGeoloniaTilesHost('not-a-url'), false);

@@ -42,7 +42,7 @@ export function isGeoloniaTilesHost(url: string | URL): boolean {
     return (
       // NOTE: Add tile server hostnames here. If you want to add your custom domain,
       urlObj.hostname === 'tileserver.geolonia.com' ||
-      urlObj.hostname.endsWith('.v2.tiles.geolonia.com')
+      urlObj.hostname.endsWith('.tiles.geolonia.com')
     );
   } catch {
     return false;
