@@ -32,6 +32,7 @@ import {
   handleErrorMode,
   loadImageCompatibility,
   GetImageCallback,
+  isGeoloniaTilesHost,
 } from './util';
 
 export type GeoloniaMapOptions = MapOptions & { interactive?: boolean };
@@ -145,10 +146,11 @@ export default class GeoloniaMap extends maplibregl.Map {
       }
 
       const transformedUrlObj = new URL(transformedUrl);
+      const geoloniaTilesHost = isGeoloniaTilesHost(transformedUrlObj);
 
       if (
         resourceType === 'Source' &&
-        transformedUrl.startsWith('https://tileserver.geolonia.com')
+        geoloniaTilesHost
       ) {
         if (atts.stage === 'dev') {
           transformedUrlObj.hostname = 'tileserver-dev.geolonia.com';
