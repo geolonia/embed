@@ -48,7 +48,7 @@ export default (container, params: ParseAttsParams = {}): EmbedAttributes => {
     simpleVector: '',
     cluster: 'on',
     clusterColor: '#ff0000',
-    style: 'geolonia/basic-v1',
+    style: 'geolonia/basic-v2',
     lang: lang,
     plugin: 'off',
     key: keyring.apiKey,
