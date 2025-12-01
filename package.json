@@ -3,7 +3,7 @@
   "version": "5.0.2",
   "description": "Geolonia embed JS API",
   "main": "dist/embed.js",
-  "types": "dist/embed.d.ts",
+  "types": "dist/src/embed.d.ts",
   "scripts": {
     "prestart": "npm run build:version",
     "prelint": "npm run build:version",
