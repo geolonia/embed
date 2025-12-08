@@ -112,13 +112,11 @@ jobs:
       - name: 'Publish to NPM (latest)'
         if: "!contains(github.ref, '-pre.')"
         run: npm publish --access=public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: 'Publish to NPM (next)'
         if: "contains(github.ref, '-pre.')"
         run: npm publish --access=public --tag=next
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
