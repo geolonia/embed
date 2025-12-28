@@ -87,7 +87,7 @@ export const renderGeoloniaMap = () => {
     );
 
     // This is required for correct initialization! Don't delete!
-    if (!keyring.apiKey) {
+    if (keyring.isGeoloniaStyle && !keyring.apiKey) {
       console.error('[Geolonia] Missing API key.'); // eslint-disable-line
     }
 

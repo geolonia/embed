@@ -215,15 +215,60 @@ export function handleMarkerOptions(
 }
 
 export function getStyle(style, atts) {
+  // Geolonia スタイルを使う場合は API キー必須
+  if (keyring.isGeoloniaStyleCheck(style) && !atts.key) {
+    throw new Error('[Geolonia] API key is required to use Geolonia styles. Please provide an API key or use an external style URL.');
+  }
+
+  // 空の場合はデフォルト（既存挙動を維持）
+  if (!style || style === '') {
+    if (atts.lang === 'ja') {
+      return 'https://cdn.geolonia.com/style/geolonia/basic-v2/ja.json';
+    } else {
+      return 'https://cdn.geolonia.com/style/geolonia/basic-v2/en.json';
+    }
+  }
+
+  // URL モード: http:// or https:// で始まる、または相対パス（/、./、../）
   const styleUrl = isURL(style);
   if (styleUrl) {
-    return styleUrl;
-  } else {
-    if (atts.lang === 'ja') {
-      return `https://cdn.geolonia.com/style/${style}/ja.json`;
-    } else {
-      return `https://cdn.geolonia.com/style/${style}/en.json`;
+    // Mixed Content の警告
+    if (
+      location.protocol === 'https:' &&
+      styleUrl.startsWith('http:')
+    ) {
+      console.warn( // eslint-disable-line no-console
+        `[Geolonia] Mixed Content Warning: You are loading a style from an insecure HTTP URL (${styleUrl}) on an HTTPS page. This may fail in modern browsers.`,
+      );
     }
+    return styleUrl;
+  }
+
+  // *.json で終わる場合も URL として扱う（相対パスの可能性）
+  if (style.endsWith('.json')) {
+    try {
+      const absoluteUrl = new URL(style, location.href).href;
+      if (
+        location.protocol === 'https:' &&
+        absoluteUrl.startsWith('http:')
+      ) {
+        console.warn( // eslint-disable-line no-console
+          `[Geolonia] Mixed Content Warning: You are loading a style from an insecure HTTP URL (${absoluteUrl}) on an HTTPS page. This may fail in modern browsers.`,
+        );
+      }
+      return absoluteUrl;
+    } catch (error) {
+      console.error('[Geolonia] Failed to resolve style URL:', style, error); // eslint-disable-line no-console
+      // フォールバック: そのまま返す
+      return style;
+    }
+  }
+
+  // 従来モード: geolonia/basic などの論理名
+  if (atts.lang === 'ja') {
+    return `https://cdn.geolonia.com/style/${style}/ja.json`;
+  } else {
+    return `https://cdn.geolonia.com/style/${style}/en.json`;
   }
 }
 

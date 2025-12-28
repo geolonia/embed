@@ -174,24 +174,98 @@ describe('Tests for util.js', () => {
     const atts = {
       apiUrl: 'https://example.com',
       key: '1234',
+      lang: 'en',
     };
 
+    // 従来モード: 論理名（API キー必須）
     assert.deepEqual(
       'https://cdn.geolonia.com/style/hello/world/en.json',
       getStyle('hello/world', atts),
     );
+
+    // URL モード: https://（外部 URL、API キー不要）
     assert.deepEqual(
       'https://example.com/style.json',
       getStyle('https://example.com/style.json', atts),
     );
+
+    // URL モード: 相対パス ./（外部 URL、API キー不要）
     assert.deepEqual(
       'https://base.example.com/parent/style.json',
       getStyle('./style.json', atts),
     );
+
+    // URL モード: 絶対パス /（外部 URL、API キー不要）
     assert.deepEqual(
       'https://base.example.com/style.json',
       getStyle('/style.json', atts),
     );
+
+    // URL モード: .json で終わる（外部 URL として解決）
+    assert.deepEqual(
+      'https://base.example.com/parent/custom.json',
+      getStyle('custom.json', atts),
+    );
+
+    // デフォルト: 空文字列（API キー必須）
+    assert.deepEqual(
+      'https://cdn.geolonia.com/style/geolonia/basic-v2/en.json',
+      getStyle('', atts),
+    );
+
+    // デフォルト: null/undefined（API キー必須）
+    assert.deepEqual(
+      'https://cdn.geolonia.com/style/geolonia/basic-v2/en.json',
+      getStyle(null, atts),
+    );
+
+    // 日本語環境でのデフォルト
+    const attsJa = { ...atts, lang: 'ja' };
+    assert.deepEqual(
+      'https://cdn.geolonia.com/style/geolonia/basic-v2/ja.json',
+      getStyle('', attsJa),
+    );
+
+    // 日本語環境での論理名
+    assert.deepEqual(
+      'https://cdn.geolonia.com/style/geolonia/basic/ja.json',
+      getStyle('geolonia/basic', attsJa),
+    );
+  });
+
+  it('should throw error when using Geolonia styles without API key', () => {
+    const attsNoKey = {
+      apiUrl: 'https://example.com',
+      key: '',
+      lang: 'en',
+    };
+
+    // 論理名: API キー無しでエラー
+    assert.throws(
+      () => getStyle('geolonia/basic', attsNoKey),
+      /API key is required/,
+    );
+
+    // デフォルト: API キー無しでエラー
+    assert.throws(
+      () => getStyle('', attsNoKey),
+      /API key is required/,
+    );
+
+    // Geolonia CDN の URL: API キー無しでエラー
+    assert.throws(
+      () => getStyle('https://cdn.geolonia.com/style/geolonia/basic/en.json', attsNoKey),
+      /API key is required/,
+    );
+
+    // 外部 URL: API キー無しでも OK
+    assert.doesNotThrow(() => {
+      getStyle('https://tile.openstreetmap.jp/styles/osm-bright/style.json', attsNoKey);
+    });
+
+    assert.doesNotThrow(() => {
+      getStyle('./my-style.json', attsNoKey);
+    });
   });
 
   it('should handle maplibregl options `minZoom` and `maxZoom` well', () => {
