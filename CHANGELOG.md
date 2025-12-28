@@ -13,7 +13,6 @@
   - Added Mixed Content warnings for HTTP styles on HTTPS pages
   - Added CORS error guidance for external styles
 - **Improvement**: API key scope is now limited to Geolonia domains only (security enhancement)
-- **Breaking Change**: `keyring.parse()` no longer throws an error when API key is missing (allows key-less usage with external styles)
 - Renamed as `@geolonia/embed`
 - plugin system
 
