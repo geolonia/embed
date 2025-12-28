@@ -50,12 +50,12 @@ export function isGeoloniaTilesHost(url: string | URL): boolean {
 }
 
 export function checkPermission() {
-  // It looks that isn't iFrame, so returs true.
+  // It looks that isn't iFrame, so returns true.
   if (window.self === window.parent) {
     return true;
   }
 
-  // Always returs true if API key is loaded.
+  // Always returns true if API key is loaded.
   if (keyring.apiKey) {
     return true;
   }
@@ -106,7 +106,7 @@ export function checkPermission() {
 
   /**
    * `window.parent` will be blocked if same origin policy is activated.
-   *  So, it should be catched.
+   *  So, it should be caught.
    */
   try {
     if (window.self.location.origin === window.top.location.origin) {
@@ -147,7 +147,7 @@ export function isScrollable() {
 }
 
 /**
- * Detects the object is HTMLElment?
+ * Detects the object is HTMLElement?
  *
  * @param {*} o
  */
@@ -269,7 +269,7 @@ export function getOptions(container, params, atts): MapOptions {
 /**
  *
  * @param {string} an data-*-control Embed attribute
- * @returns { enabled: bolean, position: 'top-right' | 'bottom-right' | 'bottom-left' | 'top-left' | void }
+ * @returns { enabled: boolean, position: 'top-right' | 'bottom-right' | 'bottom-left' | 'top-left' | void }
  */
 export function parseControlOption(att) {
   const normalizedAtt = att.toLowerCase();

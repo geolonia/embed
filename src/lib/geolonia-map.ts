@@ -106,7 +106,7 @@ export default class GeoloniaMap extends maplibregl.Map {
     let loading;
     if (atts.loader !== 'off') {
       loading = document.createElement('div');
-      // prevent pinchin & pinchout
+      // prevent pinch-in & pinch-out
       loading.addEventListener('touchmove', (e) => {
         if (e.touches && e.touches.length > 1) {
           e.preventDefault();

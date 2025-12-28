@@ -123,7 +123,7 @@ describe('Tests for util.js', () => {
     assert.deepEqual(false, getContainer({ container: 'fail-element' }));
   });
 
-  it('should merge legacyoptions into options as expected.', () => {
+  it('should merge legacy options into options as expected.', () => {
     const dom = new JSDOM(`<html><body>
       <div id="test-element"></div>
     </body></html>`);
@@ -249,7 +249,7 @@ describe('Tests for util.js', () => {
     assert.strictEqual(attributeValue, parseSimpleVector(attributeValue));
   });
 
-  it('should parse simple vector value with customtile ID', () => {
+  it('should parse simple vector value with custom tile ID', () => {
     const attributeValue = 'ct_123';
     assert.strictEqual(
       'geolonia://tiles/custom/ct_123',
