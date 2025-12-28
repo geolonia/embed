@@ -1,10 +1,13 @@
 {
     "cSpell.words": [
         "atts",
+        "chunkhash",
         "Codepen",
         "codesandbox",
         "customtile",
+        "deckgl",
         "Geolonia",
+        "hibiya",
         "linestring",
         "mapbox",
         "mapboxgl",
@@ -12,7 +15,11 @@
         "mbgl",
         "Neue",
         "Noto",
+        "openmaptiles",
+        "pickable",
         "pmtiles",
+        "recalc",
+        "rgba",
         "simplestyle",
         "styledata",
         "tileserver"
