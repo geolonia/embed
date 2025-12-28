@@ -54,6 +54,7 @@ You can use external style.json URLs without a Geolonia API key. This is useful 
 <html>
   <body>
     <!-- Using OpenStreetMap Japan tiles (no API key needed) -->
+    <!-- Note: tile.openstreetmap.jp is for non-commercial use only -->
     <div
       class="geolonia"
       data-lat="35.6812"
