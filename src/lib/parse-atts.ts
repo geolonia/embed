@@ -26,6 +26,10 @@ export default (container, params: ParseAttsParams = {}): EmbedAttributes => {
 
   keyring.parse(container);
 
+  // Check if using Geolonia style or external style
+  const style = container.dataset.style || 'geolonia/basic-v2';
+  keyring.isGeoloniaStyle = keyring.isGeoloniaStyleCheck(style);
+
   return {
     lat: 0,
     lng: 0,

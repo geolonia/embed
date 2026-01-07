@@ -148,6 +148,7 @@ export default class GeoloniaMap extends maplibregl.Map {
       const transformedUrlObj = new URL(transformedUrl);
       const geoloniaTilesHost = isGeoloniaTilesHost(transformedUrlObj);
 
+      // Geolonia ドメインのみに API キーを付与（外部 URL には付与しない）
       if (
         resourceType === 'Source' &&
         geoloniaTilesHost

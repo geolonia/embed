@@ -82,3 +82,58 @@ describe('parse api key from dom', () => {
     assert.deepEqual('dev', keyring.stage);
   });
 });
+
+describe('isGeoloniaStyleCheck', () => {
+  const originalHref = 'https://base.example.com/parent/';
+
+  before(() => {
+    global.location = {
+      ...global.location,
+      href: originalHref,
+    };
+  });
+
+  afterEach(() => {
+    // Reset location after each test
+    global.location = {
+      ...global.location,
+      href: originalHref,
+    };
+  });
+
+  it('should return true for empty or null style (default)', () => {
+    assert.strictEqual(keyring.isGeoloniaStyleCheck(''), true);
+    assert.strictEqual(keyring.isGeoloniaStyleCheck(null), true);
+    assert.strictEqual(keyring.isGeoloniaStyleCheck(undefined), true);
+  });
+
+  it('should return true for Geolonia logical names', () => {
+    assert.strictEqual(keyring.isGeoloniaStyleCheck('geolonia/basic'), true);
+    assert.strictEqual(keyring.isGeoloniaStyleCheck('geolonia/basic-v2'), true);
+    assert.strictEqual(keyring.isGeoloniaStyleCheck('geolonia/gsi'), true);
+  });
+
+  it('should return true for Geolonia CDN URLs', () => {
+    assert.strictEqual(keyring.isGeoloniaStyleCheck('https://cdn.geolonia.com/style/geolonia/basic/ja.json'), true);
+    assert.strictEqual(keyring.isGeoloniaStyleCheck('https://api.geolonia.com/v1/styles/basic.json'), true);
+  });
+
+  it('should return false for external HTTPS URLs', () => {
+    assert.strictEqual(keyring.isGeoloniaStyleCheck('https://tile.openstreetmap.jp/styles/osm-bright/style.json'), false);
+    assert.strictEqual(keyring.isGeoloniaStyleCheck('https://example.com/style.json'), false);
+  });
+
+  it('should return false for relative paths to external .json files', () => {
+    assert.strictEqual(keyring.isGeoloniaStyleCheck('./my-style.json'), false);
+    assert.strictEqual(keyring.isGeoloniaStyleCheck('/styles/custom.json'), false);
+  });
+
+  it('should return true for relative paths to geolonia.com', () => {
+    // Simulate being on geolonia.com
+    global.location = {
+      ...global.location,
+      href: 'https://cdn.geolonia.com/demo.html',
+    };
+    assert.strictEqual(keyring.isGeoloniaStyleCheck('./style.json'), true);
+  });
+});
