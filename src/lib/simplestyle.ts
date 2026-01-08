@@ -38,7 +38,7 @@ export class SimpleStyle {
     this.setGeoJSON(geojson);
 
     const features = this.geojson.features;
-    const polygonandlines = features.filter(
+    const polygonAndLines = features.filter(
       (feature) => feature.geometry.type.toLowerCase() !== 'point',
     );
     const points = features.filter(
@@ -47,7 +47,7 @@ export class SimpleStyle {
 
     this.map.getSource(this.options.id).setData({
       type: 'FeatureCollection',
-      features: polygonandlines,
+      features: polygonAndLines,
     });
 
     this.map.getSource(`${this.options.id}-points`).setData({
@@ -62,7 +62,7 @@ export class SimpleStyle {
     this.map = map;
 
     const features = this.geojson.features;
-    const polygonandlines = features.filter(
+    const polygonAndLines = features.filter(
       (feature) => feature.geometry.type.toLowerCase() !== 'point',
     );
     const points = features.filter(
@@ -73,7 +73,7 @@ export class SimpleStyle {
       type: 'geojson',
       data: {
         type: 'FeatureCollection',
-        features: polygonandlines,
+        features: polygonAndLines,
       },
     });
 
