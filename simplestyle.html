@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="./style.css">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>SimpleStyle + @geolonia/embed</title>
+  <style>
+    body, .map {
+      margin: 0;
+      width: 100vw;
+      height: 50vh;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="map1" class="map"></div>
+  <div id="map2" class="map"></div>
+
+  <script type="text/javascript" src="./embed?geolonia-api-key=YOUR-API-KEY"></script>
+
+  <script>
+  const map1 = new geolonia.Map('#map1')
+
+  const geojson = {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {},
+        "geometry": {
+          "coordinates": [
+            [
+              [
+                139.48333678837685,
+                35.76475359292033
+              ],
+              [
+                139.49020324345577,
+                35.60301310632396
+              ],
+              [
+                139.95643554325926,
+                35.57397671065041
+              ],
+              [
+                139.9502557336886,
+                35.778124316357406
+              ],
+              [
+                139.48333678837685,
+                35.76475359292033
+              ]
+            ]
+          ],
+          "type": "Polygon"
+        }
+      }
+    ]
+  }
+
+  let empty = {
+    "type": "FeatureCollection",
+    "features": []
+  }
+
+  const updateGeoJsonByInterval = (map, geojson) => {
+
+    const ss = new geolonia.simpleStyle(geojson, {
+      id: 'test'
+    })
+
+    ss.addTo(map).fitBounds()
+
+    let i = 0;
+
+    setInterval(() => {
+      i = i + 1
+      if ( 1 === i % 2 ) {
+        ss.updateData(geojson)
+      } else {
+        ss.updateData(empty)
+      }
+    }, 2000)
+
+  }
+
+  map1.on('load', () => {
+
+    updateGeoJsonByInterval(map1, geojson);
+
+  })
+
+  const map2 = new geolonia.Map('#map2')
+  const geojsonUrl = 'https://gist.githubusercontent.com/miya0001/56c3dc174f5cdf1d9565cbca0fbd3c48/raw/c13330036d28ef547a8a87cb6df3fa12de19ddb6/test.geojson';
+
+  map2.on('load', () => {
+
+    updateGeoJsonByInterval(map2, geojsonUrl);
+
+  })
+  </script>
+
+</body>
+</html>
