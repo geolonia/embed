@@ -19,7 +19,7 @@ export default class GeoloniaMarker extends maplibregl.Marker {
       markerElement.className = 'geolonia-default-marker';
       markerElement.innerHTML = markerSVG;
 
-      // Following shoud follow the dimention of marker.svg 52:67.
+      // Following should follow the dimension of marker.svg 52:67.
       markerElement.style.margin = '0';
       markerElement.style.padding = '0';
       markerElement.style.width = '26px';
