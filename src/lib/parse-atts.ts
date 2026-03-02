@@ -2,7 +2,7 @@
 
 import { keyring } from './keyring';
 import { getLang } from './util';
-import type { EmbedAttributes } from '../embed';
+import type { EmbedAttributes } from '../types';
 
 type ParseAttsParams = {
   interactive?: boolean;

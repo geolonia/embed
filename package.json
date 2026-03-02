@@ -4,10 +4,20 @@
   "description": "Geolonia embed JS API",
   "main": "dist/embed.js",
   "types": "dist/src/embed.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/src/embed.d.ts",
+      "default": "./dist/embed.js"
+    },
+    "./core": {
+      "types": "./dist/src/embed-core.d.ts",
+      "default": "./dist/embed-core.js"
+    }
+  },
   "scripts": {
     "prestart": "npm run build:version",
     "prelint": "npm run build:version",
-    "start": "webpack serve --config ./docs/webpack.config.js",
+    "start": "MAP_PLATFORM_STAGE=v1 webpack serve --config ./docs/webpack.config.js",
     "build": "npm run build:version && npm run build:embed",
     "build:version": "node ./scripts/build-version.mjs",
     "build:embed": "MAP_PLATFORM_STAGE=v1 webpack --mode production && cp ./dist/embed.js ./dist/embed && cp -r ./dist/* ./docs/ && rm -rf ./docs/*.d.ts ./docs/lib/",

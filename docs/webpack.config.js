@@ -1,9 +1,10 @@
-const config = require('../webpack.config')
+const configs = require('../webpack.config')
+const embedConfig = configs[0] // embed.ts エントリのみ使用
 
 module.exports = {
-  ...config,
+  ...embedConfig,
   output: {
-    ...config.output,
+    ...embedConfig.output,
     path: __dirname,
     filename: 'embed'
   },
