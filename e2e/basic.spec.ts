@@ -41,7 +41,12 @@ test.describe('1. 基本的な地図表示', () => {
     const consoleErrors: string[] = [];
     page.on('console', (msg) => {
       if (msg.type() === 'error') {
-        consoleErrors.push(msg.text());
+        const text = msg.text();
+        // タイル取得失敗などブラウザレベルのネットワークエラーは除外し、
+        // アプリコードが出すエラーのみチェックする
+        if (!text.startsWith('Failed to load resource')) {
+          consoleErrors.push(text);
+        }
       }
     });
     await page.goto(`${TEST_URL}/basic.html`);

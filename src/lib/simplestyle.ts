@@ -349,6 +349,30 @@ export class SimpleStyle {
     });
   }
 
+  remove() {
+    const id = this.options.id;
+    const layerIds = [
+      `${id}-polygon-symbol`,
+      `${id}-linestring-symbol`,
+      `${id}-circle-points`,
+      `${id}-symbol-points`,
+      `${id}-polygon`,
+      `${id}-linestring`,
+      `${id}-clusters`,
+      `${id}-cluster-count`,
+    ];
+    for (const layerId of layerIds) {
+      if (this.map.getLayer(layerId)) {
+        this.map.removeLayer(layerId);
+      }
+    }
+    for (const sourceId of [id, `${id}-points`]) {
+      if (this.map.getSource(sourceId)) {
+        this.map.removeSource(sourceId);
+      }
+    }
+  }
+
   setGeoJSON(geojson) {
     if (typeof geojson === 'string' && isURL(geojson)) {
       this.geojson = template;

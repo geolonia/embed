@@ -10,19 +10,8 @@ const plugins = [
 if (process.env.ANALYZE === 'true') {
   plugins.push(new BundleAnalyzerPlugin());
 }
-module.exports = {
-  entry: './src/embed.ts',
-  output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'embed.js',
-    chunkFilename: path.join('embed-chunks', '[chunkhash].js'),
-    clean: true,
-    publicPath: 'auto',
-    library: {
-      name: 'geoloniaEmbed',
-      type: 'umd',
-    },
-  },
+
+const sharedConfig = {
   plugins: plugins,
   module: {
     rules: [
@@ -47,3 +36,37 @@ module.exports = {
     extensions: ['.tsx', '.ts', '.js'],
   },
 };
+
+const embedConfig = {
+  ...sharedConfig,
+  entry: './src/embed.ts',
+  output: {
+    path: path.join(__dirname, 'dist'),
+    filename: 'embed.js',
+    chunkFilename: path.join('embed-chunks', '[chunkhash].js'),
+    clean: true,
+    publicPath: 'auto',
+    library: {
+      name: 'geoloniaEmbed',
+      type: 'umd',
+    },
+  },
+};
+
+const embedCoreConfig = {
+  ...sharedConfig,
+  entry: './src/embed-core.ts',
+  output: {
+    path: path.join(__dirname, 'dist'),
+    filename: 'embed-core.js',
+    chunkFilename: path.join('embed-chunks', '[chunkhash].js'),
+    clean: false,
+    publicPath: 'auto',
+    library: {
+      name: 'geoloniaEmbedCore',
+      type: 'umd',
+    },
+  },
+};
+
+module.exports = [embedConfig, embedCoreConfig];
