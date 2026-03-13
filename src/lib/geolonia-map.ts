@@ -32,8 +32,12 @@ import {
   handleErrorMode,
   loadImageCompatibility,
   GetImageCallback,
-  isGeoloniaTilesHost,
 } from './util';
+import {
+  transformGeoloniaApiSource,
+  transformGeoloniaTileSource,
+  transformGeoloniaSprite,
+} from './transform-request';
 
 export type GeoloniaMapOptions = MapOptions & { interactive?: boolean };
 
@@ -126,63 +130,28 @@ export default class GeoloniaMap extends maplibregl.Map {
     // Pass API key and requested tile version to `/sources` (tile json).
     const _transformRequest = options.transformRequest;
     options.transformRequest = (url, resourceType) => {
-      if (
-        resourceType === 'Source' &&
-        url.startsWith('https://api.geolonia.com')
-      ) {
-        return {
-          url: sourcesUrl.toString(),
-        };
-      }
-
-      let transformedUrl = url;
-      if (url.startsWith('geolonia://')) {
-        const tilesMatch = url.match(
-          /^geolonia:\/\/tiles\/(?<username>.+)\/(?<customtileId>.+)/,
+      if (resourceType === 'Source') {
+        return (
+          transformGeoloniaApiSource(url, sourcesUrl) ??
+          transformGeoloniaTileSource(url, atts, sessionId) ??
+          (typeof _transformRequest === 'function'
+            ? _transformRequest(url, resourceType)
+            : undefined)
         );
-        if (tilesMatch) {
-          transformedUrl = `https://tileserver.geolonia.com/customtiles/${tilesMatch.groups.customtileId}/tiles.json`;
-        }
       }
 
-      const transformedUrlObj = new URL(transformedUrl);
-      const geoloniaTilesHost = isGeoloniaTilesHost(transformedUrlObj);
-
-      // Geolonia ドメインのみに API キーを付与（外部 URL には付与しない）
-      if (
-        resourceType === 'Source' &&
-        geoloniaTilesHost
-      ) {
-        if (atts.stage === 'dev') {
-          transformedUrlObj.hostname = 'tileserver-dev.geolonia.com';
-        }
-        transformedUrlObj.searchParams.set('sessionId', sessionId);
-        transformedUrlObj.searchParams.set('key', atts.key);
-        return {
-          url: transformedUrlObj.toString(),
-        };
-      } else if (
-        (resourceType === 'SpriteJSON' || resourceType === 'SpriteImage') &&
-        transformedUrl.match(
-          /^https:\/\/api\.geolonia\.com\/(dev|v1)\/sprites\//,
-        )
-      ) {
-        const pathParts = transformedUrlObj.pathname.split('/');
-        pathParts[1] = String(atts.stage);
-        transformedUrlObj.pathname = pathParts.join('/');
-        transformedUrlObj.searchParams.set('key', atts.key);
-        return {
-          url: transformedUrlObj.toString(),
-        };
+      if (resourceType === 'SpriteJSON' || resourceType === 'SpriteImage') {
+        return (
+          transformGeoloniaSprite(url, atts) ??
+          (typeof _transformRequest === 'function'
+            ? _transformRequest(url, resourceType)
+            : undefined)
+        );
       }
 
-      let request;
-      // Additional transformation
       if (typeof _transformRequest === 'function') {
-        request = _transformRequest(transformedUrl, resourceType);
+        return _transformRequest(url, resourceType);
       }
-
-      return request;
     };
 
     try {

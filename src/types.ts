@@ -26,6 +26,7 @@ export type EmbedAttributes = {
   plugin: string;
   key: string;
   apiUrl: string;
+  stage: string;
   loader: string;
   minZoom: string | number;
   maxZoom: string | number;
