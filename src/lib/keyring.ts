@@ -76,6 +76,15 @@ class Keyring {
       }
     }
 
+    // Fallback: <meta name="geolonia-api-key" content="YOUR-API-KEY" />
+    if (!this.#apiKey) {
+      const meta = doc.querySelector<HTMLMetaElement>('meta[name="geolonia-api-key"]');
+      if (meta && meta.content) {
+        this.#apiKey = meta.content;
+        this.#stage = process.env.MAP_PLATFORM_STAGE || 'dev';
+      }
+    }
+
     if (!this.#stage) {
       this.#stage = 'dev';
     }

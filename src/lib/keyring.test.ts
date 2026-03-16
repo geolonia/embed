@@ -83,6 +83,75 @@ describe('parse api key from dom', () => {
   });
 });
 
+describe('parse api key from meta tag (fallback)', () => {
+  beforeEach(() => {
+    keyring.reset();
+    process.env.MAP_PLATFORM_STAGE = 'dev';
+  });
+  afterEach(() => {
+    delete process.env.MAP_PLATFORM_STAGE;
+  });
+  after(() => {
+    keyring.reset();
+  });
+
+  it('should parse API key from meta tag when no script tag has it', () => {
+    const { document: mocDocument } = new JSDOM(`<html><head>
+      <meta name="geolonia-api-key" content="meta-key-123" />
+    </head><body>
+      <script src="https://cdn.geolonia.com/v1/embed"></script>
+    </body></html>`).window;
+
+    keyring.parse(mocDocument);
+    assert.deepEqual('meta-key-123', keyring.apiKey);
+    assert.deepEqual('dev', keyring.stage);
+  });
+
+  it('should prefer script tag API key over meta tag', () => {
+    const { document: mocDocument } = new JSDOM(`<html><head>
+      <meta name="geolonia-api-key" content="meta-key" />
+    </head><body>
+      <script src="https://cdn.geolonia.com/v1/embed?geolonia-api-key=script-key"></script>
+    </body></html>`).window;
+
+    keyring.parse(mocDocument);
+    assert.deepEqual('script-key', keyring.apiKey);
+  });
+
+  it('should throw when neither script nor meta tag provides API key and using Geolonia style', () => {
+    const { document: mocDocument } = new JSDOM(`<html><head></head><body>
+      <script src="https://cdn.geolonia.com/v1/embed"></script>
+    </body></html>`).window;
+
+    keyring.isGeoloniaStyle = true;
+    assert.throws(() => keyring.parse(mocDocument), /Cannot load API key/);
+  });
+
+  it('should parse API key from meta tag with v1 stage', () => {
+    process.env.MAP_PLATFORM_STAGE = 'v1';
+    const { document: mocDocument } = new JSDOM(`<html><head>
+      <meta name="geolonia-api-key" content="meta-v1-key" />
+    </head><body>
+      <script src="https://cdn.geolonia.com/v1/embed"></script>
+    </body></html>`).window;
+
+    keyring.parse(mocDocument);
+    assert.deepEqual('meta-v1-key', keyring.apiKey);
+    assert.deepEqual('v1', keyring.stage);
+  });
+
+  it('should ignore meta tag with empty content', () => {
+    const { document: mocDocument } = new JSDOM(`<html><head>
+      <meta name="geolonia-api-key" content="" />
+    </head><body>
+      <script src="https://cdn.geolonia.com/v1/embed"></script>
+    </body></html>`).window;
+
+    keyring.isGeoloniaStyle = true;
+    assert.throws(() => keyring.parse(mocDocument), /Cannot load API key/);
+  });
+});
+
 describe('isGeoloniaStyleCheck', () => {
   const originalHref = 'https://base.example.com/parent/';
 
