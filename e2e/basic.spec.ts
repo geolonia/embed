@@ -53,5 +53,28 @@ test.describe('1. 基本的な地図表示', () => {
     await waitForMapLoad(page);
     expect(consoleErrors).toHaveLength(0);
   });
+
+  test('1.4 アトリビューションが表示されていること', async ({ page }) => {
+    await page.goto(`${TEST_URL}/basic.html`);
+    await waitForMapLoad(page);
+
+    // CustomAttributionControl は Shadow DOM 内にアトリビューションを描画する
+    const attributionText = await page.evaluate(() => {
+      const containers = document.querySelectorAll('.geolonia .maplibregl-control-container .maplibregl-ctrl-bottom-right > div');
+      for (const container of containers) {
+        const shadow = container.shadowRoot;
+        if (shadow) {
+          const inner = shadow.querySelector('.maplibregl-ctrl-attrib-inner');
+          if (inner) {
+            return inner.innerHTML;
+          }
+        }
+      }
+      return null;
+    });
+
+    expect(attributionText).not.toBeNull();
+    expect(attributionText).not.toBe('');
+  });
 });
 
