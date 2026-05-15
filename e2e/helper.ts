@@ -85,6 +85,15 @@ export async function hasSource(page: Page, sourceId: string, selector = '#map')
   );
 }
 
+// Geolonia ベクトルタイルのホスト。TileJSON で返す URL とリクエスト捕捉用 regex の両方が
+// この定数から派生するので、両者が乖離することは構造上ありえない。
+const GEOLONIA_TILE_HOST = 'tiles.geolonia.com';
+const GEOLONIA_TILE_URL_TEMPLATE = `https://${GEOLONIA_TILE_HOST}/{z}/{x}/{y}.pbf`;
+// サブドメイン付き (`osm.v3.tiles.geolonia.com` 等) もサブドメイン無しも同一 regex で捕捉。
+const GEOLONIA_TILE_PBF_REGEX = new RegExp(
+  String.raw`(?:[^/]+\.)?` + GEOLONIA_TILE_HOST.replace(/\./g, String.raw`\.`) + String.raw`\/.*\.pbf`,
+);
+
 /**
  * Geolonia のスタイル/タイル/スプライト等を最小レスポンスでモックする。
  * テスト先頭の beforeEach で呼ぶ前提。
@@ -120,15 +129,15 @@ export async function mockGeoloniaTiles(page: Page) {
       contentType: 'application/json',
       body: JSON.stringify({
         tilejson: '2.2.0',
-        tiles: ['https://tiles.geolonia.com/{z}/{x}/{y}.pbf'],
+        tiles: [GEOLONIA_TILE_URL_TEMPLATE],
         minzoom: 0,
         maxzoom: 14,
       }),
     }),
   );
 
-  // ベクトルタイル
-  await page.route(/\.tiles\.geolonia\.com\/.*\.pbf/, (route) =>
+  // ベクトルタイル (上記 TileJSON が返した URL を必ず捕捉)
+  await page.route(GEOLONIA_TILE_PBF_REGEX, (route) =>
     route.fulfill({ status: 204, body: '' }),
   );
 
