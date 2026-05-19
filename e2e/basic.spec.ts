@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { Geolonia } from '../src/embed';
-import { TEST_URL, waitForMapLoad } from './helper';
+import { TEST_URL, waitForMapLoad, waitForStyleLoad } from './helper';
 
 declare global {
   interface Window {
@@ -57,6 +57,7 @@ test.describe('1. 基本的な地図表示', () => {
   test('1.4 アトリビューションが表示されていること', async ({ page }) => {
     await page.goto(`${TEST_URL}/basic.html`);
     await waitForMapLoad(page);
+    await waitForStyleLoad(page);
 
     // CustomAttributionControl は Shadow DOM 内にアトリビューションを描画する
     const attributionText = await page.evaluate(() => {
