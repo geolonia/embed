@@ -1,0 +1,206 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="./style.css">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>@geolonia/embed</title>
+</head>
+
+<body>
+  <h1>@geolonia/embed</h1>
+
+  後方互換性テストのためのサンプルコードです。
+
+  <h2>loadImage</h2>
+  <div>MapLibre GL JS v4.4.1 の から、loadImage の呼び出し方が以下のように変更になりました。Embed API では後方互換性を保つため、v4.4.1 以前の書き方も引き続きサポートしています。</div>
+  <a href="https://github.com/maplibre/maplibre-gl-js/pull/3422/" target="_blank">関連する ISSUE: Remove callback from loadImage</a>
+  <br/>
+  <code>
+  <pre>
+  // v4.4.1 以降
+  map.loadImage(url)
+
+  // v4.4.1 以前
+  map.loadImage(url, callback)</pre>
+  </code>
+
+  <div class="example">
+    <h2>v4.4.1 以降</h2>
+    <div
+      id="my-map1"
+      class="geolonia"
+      data-lat="35.681236"
+      data-lng="139.767125"
+      data-zoom="9"
+      data-marker="off"
+    ></div>
+    <pre>
+      var map1 = new geolonia.Map('my-map1');
+      map1.on('load', async () => {
+          image = await map1.loadImage('https://upload.wikimedia.org/wikipedia/commons/7/7c/201408_cat.png');
+          map1.addImage('cat', image.data);
+          map1.addSource('point', {
+              'type': 'geojson',
+              'data': {
+                  'type': 'FeatureCollection',
+                  'features': [
+                      {
+                          'type': 'Feature',
+                          'geometry': {
+                              'type': 'Point',
+                              'coordinates': [139.767125, 35.681236]
+                          }
+                      }
+                  ]
+              }
+          });
+          map1.addLayer({
+              'id': 'points',
+              'type': 'symbol',
+              'source': 'point',
+              'layout': {
+                  'icon-image': 'cat',
+                  'icon-size': 0.25
+              }
+          });
+      });
+    </pre>
+  </div>
+
+  <div class="example">
+    <h2>v4.4.1 以前</h2>
+    <div
+      id="my-map2"
+      class="geolonia"
+      data-lat="35.681236"
+      data-lng="139.767125"
+      data-zoom="9"
+      data-marker="off"
+    ></div>
+    <pre>
+      var map2 = new geolonia.Map('my-map2');
+      map2.on('load', () => {
+        map2.loadImage(
+            'https://upload.wikimedia.org/wikipedia/commons/7/7c/201408_cat.png',
+            (error, image) => {
+                if (error) throw error;
+                map2.addImage('cat', image);
+            }
+        );
+        map2.addSource('point', {
+            'type': 'geojson',
+            'data': {
+                'type': 'FeatureCollection',
+                'features': [
+                    {
+                        'type': 'Feature',
+                        'geometry': {
+                            'type': 'Point',
+                            'coordinates': [139.767125, 35.681236]
+                        }
+                    }
+                ]
+            }
+        });
+        map2.addLayer({
+            'id': 'points',
+            'type': 'symbol',
+            'source': 'point',
+            'layout': {
+                'icon-image': 'cat',
+                'icon-size': 0.25
+            }
+        });
+      });
+    </pre>
+  </div>
+
+  <footer>
+    &copy; <a href="https://geolonia.com">geolonia.com</a>
+  </footer>
+
+  <script>
+    var examples = document.querySelectorAll('.example');
+    for (var i = 0; i < examples.length; i++) {
+      var example = examples[i];
+      var html = example.querySelector('.geolonia, #my-map').outerHTML;
+      var pre = document.createElement('pre');
+      pre.innerText = html.replace(/(<div.+?)(>)/g, "$1\n$2").replace(/ ([^ ]+=[^ ]+)/g, "\n  $1");
+      example.insertBefore(pre, example.querySelector('.geolonia'));
+    }
+  </script>
+
+  <a class="forkme" href="https://github.com/geolonia/embed"><img width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+  <script src="./embed?geolonia-api-key=YOUR-API-KEY"></script>
+  <script>
+    var map1 = new geolonia.Map('my-map1');
+    map1.on('load', async () => {
+          image = await map1.loadImage('https://upload.wikimedia.org/wikipedia/commons/7/7c/201408_cat.png');
+          map1.addImage('cat', image.data);
+          map1.addSource('point', {
+              'type': 'geojson',
+              'data': {
+                  'type': 'FeatureCollection',
+                  'features': [
+                      {
+                          'type': 'Feature',
+                          'geometry': {
+                              'type': 'Point',
+                              'coordinates': [139.767125, 35.681236]
+                          }
+                      }
+                  ]
+              }
+          });
+          map1.addLayer({
+              'id': 'points',
+              'type': 'symbol',
+              'source': 'point',
+              'layout': {
+                  'icon-image': 'cat',
+                  'icon-size': 0.25
+              }
+          });
+      });
+
+      var map2 = new geolonia.Map('my-map2');
+      map2.on('load', () => {
+        map2.loadImage(
+            'https://upload.wikimedia.org/wikipedia/commons/7/7c/201408_cat.png',
+            (error, image) => {
+                if (error) throw error;
+                map2.addImage('cat', image);
+            }
+        );
+        map2.addSource('point', {
+            'type': 'geojson',
+            'data': {
+                'type': 'FeatureCollection',
+                'features': [
+                    {
+                        'type': 'Feature',
+                        'geometry': {
+                            'type': 'Point',
+                            'coordinates': [139.767125, 35.681236]
+                        }
+                    }
+                ]
+            }
+        });
+        map2.addLayer({
+            'id': 'points',
+            'type': 'symbol',
+            'source': 'point',
+            'layout': {
+                'icon-image': 'cat',
+                'icon-size': 0.25
+            }
+        });
+      });
+  </script>
+</body>
+
+</html>
