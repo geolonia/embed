@@ -20,7 +20,9 @@ test.describe('PR0 helper sanity', () => {
 
     expect(await hasMapInstance(page)).toBe(true);
     const layers = await getStyleLayerIds(page);
-    expect(layers).toEqual(['background']);
+    // mockGeoloniaTiles の minimal style に含まれるレイヤ
+    // (background + fixture。fixture は attribution 検証用の dummy source)
+    expect(layers).toEqual(['background', 'fixture']);
   });
 
   test('recordRequests で geolonia 系へのリクエストを観測できる', async ({ page }) => {

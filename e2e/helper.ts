@@ -98,7 +98,12 @@ const GEOLONIA_TILE_PBF_REGEX = new RegExp(
  * Geolonia のスタイル/タイル/スプライト等を最小レスポンスでモックする。
  * テスト先頭の beforeEach で呼ぶ前提。
  *
- * 返すスタイルは layers=[background] のみのミニマル style v8。
+ * 返すスタイルは maps-core の sample-basic-style.json (PR #81) に揃えた
+ * minimal style v8。具体的には:
+ * - `glyphs` フィールド (symbol layer が silently skip されないため必須)
+ * - dummy `fixture` source + attribution (attribution テストで集計対象を作る)
+ * - background + fixture fill レイヤ
+ *
  * 認証URL検証など transformRequest の挙動は実リクエスト前にここで握る。
  */
 export async function mockGeoloniaTiles(page: Page) {
@@ -109,15 +114,24 @@ export async function mockGeoloniaTiles(page: Page) {
       contentType: 'application/json',
       body: JSON.stringify({
         version: 8,
-        sources: {},
+        glyphs: '/glyphs/{fontstack}/{range}.pbf',
+        sources: {
+          fixture: {
+            type: 'geojson',
+            data: { type: 'FeatureCollection', features: [] },
+            attribution: '<a href="https://example.com">Test fixture</a>',
+          },
+        },
         layers: [
           { id: 'background', type: 'background', paint: { 'background-color': '#cccccc' } },
+          { id: 'fixture', type: 'fill', source: 'fixture', paint: { 'fill-color': '#cccccc' } },
         ],
       }),
     }),
   );
 
-  // スプライト / グリフ / フォント関連は 404 でよい (background のみなので参照されない)
+  // スプライト / グリフ / フォント関連は 404 でよい (実体は不要だが minimal style 内の
+  // glyphs path に対するリクエストが net error にならないよう route で握る)
   await page.route(/cdn\.geolonia\.com\/(sprite|glyph|font)/, (route) =>
     route.fulfill({ status: 404, body: '' }),
   );
