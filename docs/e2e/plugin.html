@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../style.css">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>@geolonia/embed - plugin</title>
+  <style>
+    .geolonia { width: 400px; height: 250px; margin-bottom: 16px; }
+  </style>
+  <script>
+    // registerPlugin の観測フック。embed.js より前に DOMContentLoaded リスナを仕込む。
+    // embed.js は同期読込なので、DOMContentLoaded 発火時には window.geolonia が存在する。
+    window.__pluginCalls = [];
+    document.addEventListener('DOMContentLoaded', function () {
+      window.geolonia.registerPlugin(function (map, target, atts) {
+        window.__pluginCalls.push({ targetId: target.id, lat: atts.lat });
+      });
+    });
+  </script>
+</head>
+<body>
+  <div class="example">
+    <h2>Plugin</h2>
+    <div id="map-1" class="geolonia" data-lazy-loading="off" data-lat="35" data-lng="139"></div>
+    <div id="map-2" class="geolonia" data-lazy-loading="off" data-lat="40" data-lng="140"></div>
+  </div>
+  <script src="../embed?geolonia-api-key=YOUR-API-KEY"></script>
+</body>
+</html>
