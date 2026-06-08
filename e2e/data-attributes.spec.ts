@@ -35,3 +35,20 @@ test.describe('data-* → options フォワーディング (wrapper-only)', () =
     expect(await getPitch(page, '#map')).toBeCloseTo(20, 4);
   });
 });
+
+// data-* を一切指定しない場合の既定値。parse-atts の既定 (lat/lng = 0) に由来する
+// embed 固有挙動で、maps-core 側には対応がない (options.spec は明示 center のみ検証)。
+test.describe('data-* 無し → 既定値フォワーディング (wrapper-only)', () => {
+  test.beforeEach(async ({ page }) => {
+    await mockGeoloniaTiles(page);
+    // basic.html は data-* を持たない .geolonia
+    await page.goto(`${TEST_URL}/basic.html`);
+    await waitForStyleLoad(page, '#map');
+  });
+
+  test('data-lat / data-lng 無しなら中心は原点 (0, 0)', async ({ page }) => {
+    const center = await getCenter(page, '#map');
+    expect(center.lat).toBeCloseTo(0, 0);
+    expect(center.lng).toBeCloseTo(0, 0);
+  });
+});
