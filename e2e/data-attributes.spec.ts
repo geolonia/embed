@@ -48,7 +48,9 @@ test.describe('data-* 無し → 既定値フォワーディング (wrapper-only
 
   test('data-lat / data-lng 無しなら中心は原点 (0, 0)', async ({ page }) => {
     const center = await getCenter(page, '#map');
-    expect(center.lat).toBeCloseTo(0, 0);
-    expect(center.lng).toBeCloseTo(0, 0);
+    // 既定値は厳密に 0 (parse-atts の lat/lng 既定)。粗い精度だと既定転送の
+    // リグレッションを取りこぼすため、他の data-* テストと同等以上に厳密に見る。
+    expect(center.lat).toBeCloseTo(0, 5);
+    expect(center.lng).toBeCloseTo(0, 5);
   });
 });
