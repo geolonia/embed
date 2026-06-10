@@ -1,81 +1,16 @@
 import { test, expect } from '@playwright/test';
-import { Geolonia } from '../src/embed';
-import { TEST_URL, waitForMapLoad, waitForStyleLoad } from './helper';
+import { TEST_URL, mockGeoloniaTiles, waitForMapLoad } from './helper';
 
-declare global {
-  interface Window {
-    geolonia: Geolonia,
-    maplibregl?: Geolonia,
-    mapboxgl?: Geolonia,
-  }
-}
-
-test.describe('1. 基本的な地図表示', () => {
-  test.beforeEach(async ({ page }) => {
+// 統合スモーク (embed-only): script タグ読込 → auto-render → canvas 描画 までが
+// end-to-end で繋がっていることだけを1本で保証する。
+// 個別の表示・機能は maps-core 側 E2E が担保し、embed 固有挙動は他の spec が担保する。
+test.describe('統合スモーク', () => {
+  test('script タグ読込で .geolonia が auto-render され canvas が描画される', async ({ page }) => {
+    await mockGeoloniaTiles(page);
     await page.goto(`${TEST_URL}/basic.html`);
     await waitForMapLoad(page);
-  });
 
-  test('1.1 ページ読み込み時に地図が表示されること', async ({ page }) => {
-    await page.goto(`${TEST_URL}/basic.html`);
-    await waitForMapLoad(page);
-    const mapContainer = page.locator('.geolonia');
-    await expect(mapContainer).toBeVisible();
-    const canvas = page.locator('.geolonia canvas');
-    await expect(canvas).toBeVisible();
-  });
-
-  test('1.2 デフォルトで原点に地図が表示されること', async ({ page }) => {
-    await page.goto(`${TEST_URL}/basic.html`);
-    await waitForMapLoad(page);
-    const center = await page.evaluate(() => {
-      const map = new window.geolonia.Map('map');
-      return map.getCenter();
-    });
-    // 日本のおおよその中心座標
-    expect(center.lat).toBeCloseTo(0.0, 0);
-    expect(center.lng).toBeCloseTo(0.0, 0);
-  });
-
-  test('1.3 コンソールエラーが発生していないこと', async ({ page }) => {
-    const consoleErrors: string[] = [];
-    page.on('console', (msg) => {
-      if (msg.type() === 'error') {
-        const text = msg.text();
-        // タイル取得失敗などブラウザレベルのネットワークエラーは除外し、
-        // アプリコードが出すエラーのみチェックする
-        if (!text.startsWith('Failed to load resource')) {
-          consoleErrors.push(text);
-        }
-      }
-    });
-    await page.goto(`${TEST_URL}/basic.html`);
-    await waitForMapLoad(page);
-    expect(consoleErrors).toHaveLength(0);
-  });
-
-  test('1.4 アトリビューションが表示されていること', async ({ page }) => {
-    await page.goto(`${TEST_URL}/basic.html`);
-    await waitForMapLoad(page);
-    await waitForStyleLoad(page);
-
-    // CustomAttributionControl は Shadow DOM 内にアトリビューションを描画する
-    const attributionText = await page.evaluate(() => {
-      const containers = document.querySelectorAll('.geolonia .maplibregl-control-container .maplibregl-ctrl-bottom-right > div');
-      for (const container of containers) {
-        const shadow = container.shadowRoot;
-        if (shadow) {
-          const inner = shadow.querySelector('.maplibregl-ctrl-attrib-inner');
-          if (inner) {
-            return inner.innerHTML;
-          }
-        }
-      }
-      return null;
-    });
-
-    expect(attributionText).not.toBeNull();
-    expect(attributionText).not.toBe('');
+    await expect(page.locator('.geolonia')).toBeVisible();
+    await expect(page.locator('.geolonia canvas')).toBeVisible();
   });
 });
-
