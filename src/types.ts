@@ -5,9 +5,9 @@ import type { GeoloniaMap } from '@geolonia/maps-core';
  *
  * 各プロパティは kebab-case の `data-*` 属性に対応する（`markerColor` は
  * `data-marker-color`、`'3d'` は `data-3d`）。
- * `parseAtts` がコンテナの `dataset` を読み、以下に示す既定値を補ったうえで、
- * 各値を文字列（表示位置に関わるフィールドは数値）として保持する。
- * on/off のフラグはリテラル文字列 `'on'` / `'off'` である。
+ * `parseAtts` がコンテナの `dataset` を読み、以下に示す既定値を補う。
+ * `data-*` で指定された値は文字列のまま保持され、未指定の数値フィールドには
+ * 数値の既定値が入る。on/off のフラグはリテラル文字列 `'on'` / `'off'` である。
  * この形はそのまま登録済みの {@link EmbedPlugin} に渡されるため、後方互換のために
  * 構造を安定させている。地図自体はこの値から `attsToOptions` を経て構築される。
  */
@@ -128,9 +128,11 @@ export type EmbedAttributes = {
    */
   style: string;
   /**
-   * `data-lang`：ラベルの言語。`'ja'`、`'en'`、または `'auto'`（ブラウザの言語に
-   * 従う）。`ja` / `ja-jp` のみ日本語に解決され、それ以外の値は英語に解決される。
-   * @defaultValue `'auto'`
+   * `data-lang`：ラベルの言語。`data-lang` に指定できるのは `'ja'`、`'en'`、
+   * `'auto'` など。`parseAtts` は `'ja'` のみを `'ja'` に解決し、それ以外の明示値は
+   * `'en'` に解決する（`'ja-jp'` も `'en'` になる）。`'auto'` および未指定のときは
+   * ブラウザ言語（`getLang()` の結果。`'ja'` または `'en'`）になる。
+   * @defaultValue 未指定のときは `getLang()` の結果（`'ja'` または `'en'`）
    */
   lang: string;
   /**
@@ -177,8 +179,13 @@ export type EmbedAttributes = {
 };
 
 /**
- * 埋め込みプラグインの型。地図の生成後に、地図インスタンス、対象のコンテナ要素、
- * 正規化済みの {@link EmbedAttributes} を受け取って呼び出される。
+ * 埋め込みプラグインの型。地図インスタンス、対象のコンテナ要素、正規化済みの
+ * {@link EmbedAttributes} を受け取って呼び出される。
+ *
+ * 呼び出しのタイミングは地図の生成時点で異なる。`DOMContentLoaded` 後に生成された
+ * 地図では生成直後に呼び出される。それ以前に生成された地図では `DOMContentLoaded`
+ * まで保留され、そのイベント時にまとめて呼び出される。呼び出し前に削除された地図に
+ * 対しては呼び出されない。
  */
 export type EmbedPlugin<
   PluginAttributes extends { [otherKey: string]: string } = {
