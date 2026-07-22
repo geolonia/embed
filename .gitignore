@@ -65,6 +65,9 @@ typings/
 # secrets
 .envrc
 
+# TypeDoc API documentation output
+/api-docs
+
 # Others
 /dist
 /docs/embed
