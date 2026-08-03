@@ -8,7 +8,7 @@ import parseAtts from './parse-atts';
 import { SimpleStyle } from './simplestyle';
 import SimpleStyleVector from './simplestyle-vector';
 
-import { getContainer, getOptions, getSessionId, getStyle, handleRestrictedMode, isScrollable, parseControlOption, parseSimpleVector, handleErrorMode } from './util';
+import { getContainer, getOptions, getSessionId, getStyle, handleRestrictedMode, isScrollable, parseControlOption, parseSimpleVector, handleErrorMode, isGeoloniaTilesHost } from './util';
 
 import type { MapOptions, PointLike, StyleOptions, StyleSpecification, StyleSwapOptions } from 'maplibre-gl';
 
@@ -111,9 +111,13 @@ export default class GeoloniaMap extends maplibregl.Map {
       }
 
       const transformedUrlObj = new URL(transformedUrl);
+      const geoloniaTilesHost = isGeoloniaTilesHost(transformedUrlObj);
 
-      if (resourceType === 'Source' && transformedUrl.startsWith('https://tileserver.geolonia.com')) {
-        if (atts.stage !== 'v1') {
+      if (resourceType === 'Source' && geoloniaTilesHost) {
+        // NOTE: Only the legacy `tileserver.geolonia.com` has per-stage hosts.
+        // `*.tiles.geolonia.com` must be left as-is, otherwise a non-v1 stage
+        // would rewrite it to `tileserver-<stage>.geolonia.com` and lose the host.
+        if (atts.stage !== 'v1' && transformedUrlObj.hostname === 'tileserver.geolonia.com') {
           transformedUrlObj.hostname = `tileserver-${atts.stage}.geolonia.com`;
         }
         transformedUrlObj.searchParams.set('sessionId', sessionId);
