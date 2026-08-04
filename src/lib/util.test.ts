@@ -2,7 +2,7 @@
 
 import assert from 'assert';
 import { JSDOM } from 'jsdom';
-import { getContainer, getLang, getOptions, getStyle, handleMarkerOptions, isDomElement, isURL, parseControlOption, parseSimpleVector, sanitizeDescription } from './util';
+import { getContainer, getLang, getOptions, getStyle, handleMarkerOptions, isDomElement, isGeoloniaTilesHost, isURL, parseControlOption, parseSimpleVector, sanitizeDescription } from './util';
 
 const base = 'https://base.example.com/parent/';
 
@@ -45,6 +45,29 @@ describe('Tests for util.js', () => {
 
   it('Name should not be detected', () => {
     assert.deepEqual(false, isURL('example.com/hello'));
+  });
+
+  describe('isGeoloniaTilesHost', () => {
+    it('detects primary tileserver hostname', () => {
+      const url =
+        'https://tileserver.geolonia.com/v3/tiles.json?key=YOUR-API-KEY';
+      assert.strictEqual(isGeoloniaTilesHost(url), true);
+    });
+
+    it('detects tiles.geolonia.com subdomains (v2)', () => {
+      const url = new URL('https://osm.v2.tiles.geolonia.com/tiles.json');
+      assert.strictEqual(isGeoloniaTilesHost(url), true);
+    });
+
+    it('detects tiles.geolonia.com subdomains (v3)', () => {
+      const url = new URL('https://osm.v3.tiles.geolonia.com/tiles.json');
+      assert.strictEqual(isGeoloniaTilesHost(url), true);
+    });
+
+    it('returns false for other hosts or invalid urls', () => {
+      assert.strictEqual(isGeoloniaTilesHost('https://example.com/tiles'), false);
+      assert.strictEqual(isGeoloniaTilesHost('not-a-url'), false);
+    });
   });
 
   it('should detect the object is DOM correctly', () => {
