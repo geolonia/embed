@@ -2,6 +2,11 @@
 
 ## @geolonia/embed
 
+### v6.0.0-pre.3
+
+- **Fix**: maplibre-gl 5.11.0 以降で帰属表示が空になる問題を修正しました（[#512](https://github.com/geolonia/embed/issues/512)）。ソースに指定した `attribution` だけでなく、ベーススタイルの `© Geolonia` / `© OpenStreetMap` も表示されない状態でした。修正の実体は [maps-core#102](https://github.com/geolonia/maps-core/pull/102) で、embed 側は依存を更新して取り込みます。
+- **Internal**: `@geolonia/maps-core` `^0.5.1` に依存します。
+
 ### v6.0.0-pre.2
 
 コア実装を `@geolonia/maps-core` に委譲し、embed は「HTML 埋め込みラッパー」に専念する構成へ移行しました。
