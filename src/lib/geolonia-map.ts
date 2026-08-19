@@ -35,7 +35,14 @@ import {
   isGeoloniaTilesHost,
 } from './util';
 
-export type GeoloniaMapOptions = MapOptions & { interactive?: boolean };
+export type GeoloniaMapOptions = MapOptions & {
+  interactive?: boolean;
+  /**
+   * 地図の初期化に失敗したときに表示する文言。`'off'` を指定すると
+   * エラー表示自体を行わない。未指定のときは Embed 既定の案内を表示する。
+   */
+  errorMessage?: string;
+};
 
 type Container = HTMLElement & {
   geoloniaMap: GeoloniaMap;
@@ -189,7 +196,18 @@ export default class GeoloniaMap extends maplibregl.Map {
       // Generate Map
       super(options);
     } catch (error) {
-      handleErrorMode(container);
+      // 初期化に失敗した以上ローディングは終わらないので、先に消す。
+      // 消さないと `errorMessage: 'off'` のとき「読み込み中」のまま見えてしまう。
+      container.querySelector('.loading-geolonia-map')?.remove();
+      // `data-error-message` / コンストラクタの `errorMessage` で
+      // 文言の差し替えと表示の無効化（`'off'`）ができる。
+      handleErrorMode(container, {
+        message: String(
+          atts.errorMessage ||
+            (typeof params === 'object' && params.errorMessage) ||
+            '',
+        ),
+      });
       throw error;
     }
 

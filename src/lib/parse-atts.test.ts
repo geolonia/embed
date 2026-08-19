@@ -51,6 +51,7 @@ describe('tests for parse Attributes', () => {
       apiUrl: 'https://api.geolonia.com/v1',
       stage: 'v1',
       loader: 'on',
+      errorMessage: '',
       minZoom: '',
       maxZoom: 20,
       '3d': '',

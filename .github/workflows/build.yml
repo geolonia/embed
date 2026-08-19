@@ -5,10 +5,10 @@ name: build
 
 on:
   push:
-    branches: [master]
+    branches: [master, 'maintenance/**']
     tags: ['*']
   pull_request:
-    branches: [master]
+    branches: [master, 'maintenance/**']
 
 jobs:
   act-test:

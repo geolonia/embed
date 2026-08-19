@@ -111,6 +111,11 @@
 }
 
 /* Style for error message */
+/*
+ * 文言は「手順を書き切った版」と「短縮版」の両方が DOM にあり、
+ * どちらを見せるかは地図コンテナの広さで切り替える。
+ * コンテナクエリ非対応のブラウザでは手順を書き切った版が出る（情報が減る側に倒さない）。
+ */
 .geolonia__error-container {
   display: flex;
   justify-content: center;
@@ -120,22 +125,82 @@
   background-color: #dedede;
   z-index: 9999;
   position: absolute;
+  container-type: size;
+  container-name: geolonia-error;
 }
 
 .geolonia__error-message {
-  max-width: 300px;
+  max-width: 360px;
+  max-height: calc(100% - 20px);
+  overflow: auto;
   background-color: #ffffff;
   margin: 10px;
   padding: 0.75rem 1.25rem;
   border-radius: 6px;
-  position: absolute;
   z-index: 99999;
   word-wrap: break-word;
-  box-shadow: 0 4px 10px #0000001a
+  box-shadow: 0 4px 10px #0000001a;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333333;
+}
+
+.geolonia__error-message-title {
+  margin: 0 0 0.5em;
+  font-size: 16px;
+  line-height: 1.4;
 }
 
 .geolonia__error-message-description {
-  margin: 15px 0;
+  margin: 0;
+}
+
+.geolonia__error-message-lead {
+  margin: 0 0 0.5em;
+}
+
+.geolonia__error-message-steps {
+  margin: 0 0 0.5em;
+  padding-left: 1.4em;
+}
+
+.geolonia__error-message-contact {
+  margin: 0;
+}
+
+.geolonia__error-message-brief {
+  display: none;
+  margin: 0;
+}
+
+/* 中くらいの地図：手順リストは収まらないので 1 行の短縮版に切り替える */
+@container geolonia-error ((max-width: 379px) or (max-height: 259px)) {
+  .geolonia__error-message-lead,
+  .geolonia__error-message-steps,
+  .geolonia__error-message-contact {
+    display: none;
+  }
+
+  .geolonia__error-message-brief {
+    display: block;
+  }
+}
+
+/* 小さい地図：見出しだけにする */
+@container geolonia-error ((max-width: 239px) or (max-height: 139px)) {
+  .geolonia__error-message {
+    padding: 0.5rem 0.75rem;
+    font-size: 13px;
+  }
+
+  .geolonia__error-message-title {
+    margin: 0;
+    font-size: 14px;
+  }
+
+  .geolonia__error-message-brief {
+    display: none;
+  }
 }
 
 /* CSS for Attribution */

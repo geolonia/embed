@@ -110,6 +110,32 @@ The `data-style` attribute accepts:
 
 You can see more examples at [https://geolonia.github.io/embed/](https://geolonia.github.io/embed/).
 
+### Error message when the map fails to initialize
+
+When the map cannot be initialized (typically because WebGL is unavailable on the
+device), the embed replaces the map with a message that tells the visitor what to
+try: restart the browser, restart the device, try another browser, update the
+graphics driver, and contact the site owner if it still fails. The message shrinks
+to a shorter version, and finally to the headline alone, as the map container gets
+smaller.
+
+Use `data-error-message` to take over that message:
+
+```html
+<!-- Replace the wording -->
+<div
+  class="geolonia"
+  data-error-message="Sorry, the map is unavailable. Please call 0120-000-000."
+></div>
+
+<!-- Show nothing at all, e.g. when the site renders its own fallback -->
+<div class="geolonia" data-error-message="off"></div>
+```
+
+The value is rendered as plain text; HTML is not interpreted. The same option is
+available to the programmatic API as `errorMessage`.
+
+
 # Contributing
 
 ## Development

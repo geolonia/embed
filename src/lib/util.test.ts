@@ -14,6 +14,7 @@ import {
   parseSimpleVector,
   sanitizeDescription,
   loadImageCompatibility,
+  handleErrorMode,
 } from './util';
 
 const base = 'https://base.example.com/parent/';
@@ -360,5 +361,87 @@ describe('loadImageCompatibility', () => {
         resolve();
       });
     });
+  });
+});
+
+describe('handleErrorMode', () => {
+  const createContainer = () => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+    return container;
+  };
+
+  it('既定では行動につながる文言（見出し・手順・問い合わせ案内）を描画する', () => {
+    const container = createContainer();
+    handleErrorMode(container);
+
+    const errorContainer = container.querySelector(
+      '.geolonia__error-container',
+    );
+    expect(errorContainer).not.toBeNull();
+    expect(
+      errorContainer.querySelector('.geolonia__error-message-title')
+        .textContent,
+    ).toBe('地図を表示できませんでした');
+    // 手順は 4 つ（ブラウザ再起動 → 端末再起動 → 別ブラウザ → ドライバ更新）
+    expect(
+      errorContainer.querySelectorAll('.geolonia__error-message-steps li')
+        .length,
+    ).toBe(4);
+    expect(
+      errorContainer.querySelector('.geolonia__error-message-contact'),
+    ).not.toBeNull();
+  });
+
+  it('既定では狭いコンテナ向けの短縮文も同時に描画する（表示切替は CSS が担う）', () => {
+    const container = createContainer();
+    handleErrorMode(container);
+
+    expect(
+      container.querySelector('.geolonia__error-message-brief'),
+    ).not.toBeNull();
+  });
+
+  it('開発者向けの案内文（開発者ツール）を含まない', () => {
+    const container = createContainer();
+    handleErrorMode(container);
+
+    expect(container.textContent).not.toContain('開発者ツール');
+  });
+
+  it('data-error-message で文言を差し替えられる', () => {
+    const container = createContainer();
+    handleErrorMode(container, { message: '地図の表示に失敗しました。0120-000-000 までご連絡ください。' });
+
+    const description = container.querySelector(
+      '.geolonia__error-message-description',
+    );
+    expect(description.textContent).toBe(
+      '地図の表示に失敗しました。0120-000-000 までご連絡ください。',
+    );
+    // 既定の手順リストは描画しない
+    expect(
+      container.querySelector('.geolonia__error-message-steps'),
+    ).toBeNull();
+  });
+
+  it('差し替え文言の HTML はエスケープする', () => {
+    const container = createContainer();
+    handleErrorMode(container, {
+      message: '<img src=x onerror="alert(1)">お問い合わせください',
+    });
+
+    expect(container.querySelector('img')).toBeNull();
+    expect(container.textContent).toContain(
+      '<img src=x onerror="alert(1)">お問い合わせください',
+    );
+  });
+
+  it('off を指定すると何も描画しない', () => {
+    const container = createContainer();
+    handleErrorMode(container, { message: 'off' });
+
+    expect(container.querySelector('.geolonia__error-container')).toBeNull();
+    expect(container.children.length).toBe(0);
   });
 });
