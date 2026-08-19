@@ -38,10 +38,11 @@ import {
 export type GeoloniaMapOptions = MapOptions & {
   interactive?: boolean;
   /**
-   * 地図の初期化に失敗したときに表示する文言。`'off'` を指定すると
-   * エラー表示自体を行わない。未指定のときは Embed 既定の案内を表示する。
+   * 地図の初期化に失敗したときに表示する文言。`false` または `'off'` を
+   * 指定するとエラー表示自体を行わない。
+   * 未指定のときは Embed 既定の案内を表示する。
    */
-  errorMessage?: string;
+  errorMessage?: string | false;
 };
 
 type Container = HTMLElement & {
@@ -200,13 +201,14 @@ export default class GeoloniaMap extends maplibregl.Map {
       // 消さないと `errorMessage: 'off'` のとき「読み込み中」のまま見えてしまう。
       container.querySelector('.loading-geolonia-map')?.remove();
       // `data-error-message` / コンストラクタの `errorMessage` で
-      // 文言の差し替えと表示の無効化（`'off'`）ができる。
+      // 文言の差し替えと表示の無効化（`'off'` または `false`）ができる。
+      const attErrorMessage = atts.errorMessage
+        ? String(atts.errorMessage)
+        : undefined;
+      const optionErrorMessage =
+        typeof params === 'object' ? params.errorMessage : undefined;
       handleErrorMode(container, {
-        message: String(
-          atts.errorMessage ||
-            (typeof params === 'object' && params.errorMessage) ||
-            '',
-        ),
+        message: attErrorMessage ?? optionErrorMessage,
       });
       throw error;
     }

@@ -437,11 +437,13 @@ describe('handleErrorMode', () => {
     );
   });
 
-  it('off を指定すると何も描画しない', () => {
-    const container = createContainer();
-    handleErrorMode(container, { message: 'off' });
+  it('off / false を指定すると何も描画しない', () => {
+    for (const message of ['off', 'OFF', false] as const) {
+      const container = createContainer();
+      handleErrorMode(container, { message });
 
-    expect(container.querySelector('.geolonia__error-container')).toBeNull();
-    expect(container.children.length).toBe(0);
+      expect(container.querySelector('.geolonia__error-container')).toBeNull();
+      expect(container.children.length).toBe(0);
+    }
   });
 });

@@ -380,15 +380,20 @@ export const handleRestrictedMode = (map) => {
  * 復旧手順を描画する。手順を書き切った版と 1 行の短縮版の両方を DOM に入れておき、
  * どちらを見せるかは地図コンテナの広さに応じて CSS（コンテナクエリ）が決める。
  * 消費側で文言を差し替えたい場合は `data-error-message` に文字列を、
- * エラー表示自体を止めたい場合は `data-error-message="off"` を指定する。
+ * エラー表示自体を止めたい場合は `data-error-message="off"`（プログラム API では
+ * `errorMessage: false`）を指定する。
  *
  * @param container 地図コンテナ
- * @param options `message` に差し替え文言、または `'off'`（表示しない）
+ * @param options `message` に差し替え文言、`false` / `'off'` で表示しない
  */
 export const handleErrorMode = (
   container: HTMLElement,
-  options: { message?: string } = {},
+  options: { message?: string | false } = {},
 ): void => {
+  if (options.message === false) {
+    return;
+  }
+
   const message = (options.message ?? '').trim();
 
   if (message.toLowerCase() === 'off') {

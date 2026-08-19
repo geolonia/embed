@@ -5,7 +5,7 @@
 ### nightly
 
 - **Improvement**: The message shown when the map fails to initialize (typically no WebGL) now tells the visitor what to try (restart the browser, restart the device, try another browser, update the graphics driver, contact the site owner). The developer-tools sentence was removed, and the message is shortened automatically on small map containers.
-- **Feature**: `data-error-message` (`errorMessage` in the programmatic API) replaces that message with your own text, or disables the error display entirely with `off`. The value is rendered as plain text.
+- **Feature**: `data-error-message` (`errorMessage` in the programmatic API) replaces that message with your own text, or disables the error display entirely with `off` (`false` in the programmatic API). The value is rendered as plain text.
 - **Fix**: The loading animation is now removed when the map fails to initialize.
 
 - **Feature**: Added support for external style.json URLs in `data-style` attribute

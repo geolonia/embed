@@ -133,7 +133,8 @@ Use `data-error-message` to take over that message:
 ```
 
 The value is rendered as plain text; HTML is not interpreted. The same option is
-available to the programmatic API as `errorMessage`.
+available to the programmatic API as `errorMessage`, which also accepts `false`
+to disable the error display.
 
 
 # Contributing
