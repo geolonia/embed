@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../style.css">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>@geolonia/embed - WebGL 初期化失敗時の表示</title>
+  <style>
+    body { font-family: sans-serif; margin: 1rem; }
+    .example { margin-bottom: 1.5rem; }
+    .geolonia { border: 1px solid #ccc; }
+  </style>
+  <script>
+    // WebGL が使えない端末を再現する（地図の初期化を必ず失敗させる）
+    const originalGetContext = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function (type, ...args) {
+      if (typeof type === 'string' && type.indexOf('webgl') === 0) {
+        return null;
+      }
+      return originalGetContext.call(this, type, ...args);
+    };
+  </script>
+</head>
+<body>
+  <div class="example">
+    <h2>大きい地図（既定文言・手順つき）</h2>
+    <div id="map-large" class="geolonia" data-lazy-loading="off" style="width: 640px; height: 400px;"></div>
+  </div>
+
+  <div class="example">
+    <h2>中くらいの地図（既定文言・短縮版）</h2>
+    <div id="map-medium" class="geolonia" data-lazy-loading="off" style="width: 360px; height: 240px;"></div>
+  </div>
+
+  <div class="example">
+    <h2>小さい地図（既定文言・見出しのみ）</h2>
+    <div id="map-small" class="geolonia" data-lazy-loading="off" style="width: 220px; height: 130px;"></div>
+  </div>
+
+  <div class="example">
+    <h2>文言を差し替えた地図（data-error-message）</h2>
+    <div
+      id="map-custom"
+      class="geolonia"
+      data-lazy-loading="off"
+      style="width: 640px; height: 240px;"
+      data-error-message="地図を表示できませんでした。お手数ですが 0120-000-000 までご連絡ください。"
+    ></div>
+  </div>
+
+  <div class="example">
+    <h2>エラー表示を無効にした地図（data-error-message="off"）</h2>
+    <div
+      id="map-off"
+      class="geolonia"
+      data-lazy-loading="off"
+      style="width: 640px; height: 160px;"
+      data-error-message="off"
+    ></div>
+  </div>
+
+  <script src="../embed?geolonia-api-key=YOUR-API-KEY"></script>
+</body>
+</html>

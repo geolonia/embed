@@ -27,6 +27,12 @@ export type EmbedAttributes = {
   key: string;
   apiUrl: string;
   loader: string;
+  /**
+   * `data-error-message`：地図の初期化に失敗したときの表示。
+   * 文字列を指定するとその文言に差し替え、`'off'` を指定するとエラー表示自体を行わない。
+   * 未指定のときは Embed 既定の案内（復旧手順つき）を表示する。
+   */
+  errorMessage: string;
   minZoom: string | number;
   maxZoom: string | number;
   '3d': string;

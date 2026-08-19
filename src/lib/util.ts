@@ -373,19 +373,88 @@ export const handleRestrictedMode = (map) => {
   }
 };
 
-export const handleErrorMode = (container) => {
+/**
+ * 地図の初期化に失敗したときのエラー表示。
+ *
+ * 既定では「WebGL が使えない状態かもしれない」という原因と、利用者が自分で試せる
+ * 復旧手順を描画する。手順を書き切った版と 1 行の短縮版の両方を DOM に入れておき、
+ * どちらを見せるかは地図コンテナの広さに応じて CSS（コンテナクエリ）が決める。
+ * 消費側で文言を差し替えたい場合は `data-error-message` に文字列を、
+ * エラー表示自体を止めたい場合は `data-error-message="off"`（プログラム API では
+ * `errorMessage: false`）を指定する。
+ *
+ * @param container 地図コンテナ
+ * @param options `message` に差し替え文言、`false` / `'off'` で表示しない
+ */
+export const handleErrorMode = (
+  container: HTMLElement,
+  options: { message?: string | false } = {},
+): void => {
+  if (options.message === false) {
+    return;
+  }
+
+  const message = (options.message ?? '').trim();
+
+  if (message.toLowerCase() === 'off') {
+    return;
+  }
+
   const errorContainer = document.createElement('div');
   errorContainer.classList.add('geolonia__error-container');
 
   const div = document.createElement('div');
-
-  const h1 = document.createElement('h2');
-  h1.textContent = 'Geolonia Maps';
-  div.appendChild(h1);
-
   div.classList.add('geolonia__error-message');
-  div.innerHTML +=
-    '<div class="geolonia__error-message-description">地図の初期化に失敗しました。管理者にお問い合わせ下さい。開発者の方は開発者ツールでエラー詳細をご確認下さい。</div>';
+  div.setAttribute('role', 'alert');
+
+  const description = document.createElement('div');
+  description.classList.add('geolonia__error-message-description');
+
+  if (message) {
+    // 消費側が指定した文言。HTML は解釈せずテキストとして描画する。
+    description.textContent = message;
+    div.appendChild(description);
+  } else {
+    const title = document.createElement('h2');
+    title.classList.add('geolonia__error-message-title');
+    title.textContent = '地図を表示できませんでした';
+    div.appendChild(title);
+
+    const lead = document.createElement('p');
+    lead.classList.add('geolonia__error-message-lead');
+    lead.textContent =
+      'お使いの環境で地図の描画機能（WebGL）が利用できない状態になっている可能性があります。次の順にお試しください。';
+    description.appendChild(lead);
+
+    const steps = document.createElement('ol');
+    steps.classList.add('geolonia__error-message-steps');
+    for (const step of [
+      'ブラウザをすべて閉じて、開き直す',
+      'パソコンやスマートフォンを再起動する',
+      '別のブラウザで開く',
+      'パソコンの場合は、グラフィックドライバを更新する',
+    ]) {
+      const li = document.createElement('li');
+      li.textContent = step;
+      steps.appendChild(li);
+    }
+    description.appendChild(steps);
+
+    const contact = document.createElement('p');
+    contact.classList.add('geolonia__error-message-contact');
+    contact.textContent =
+      '解決しない場合は、このサイトの窓口までご連絡ください。';
+    description.appendChild(contact);
+
+    // 手順を書き切れない狭いコンテナ向け。表示の切り替えは CSS が行う。
+    const brief = document.createElement('p');
+    brief.classList.add('geolonia__error-message-brief');
+    brief.textContent =
+      'ブラウザや端末を再起動すると解消する場合があります。';
+    description.appendChild(brief);
+
+    div.appendChild(description);
+  }
 
   errorContainer.appendChild(div);
   container.appendChild(errorContainer);

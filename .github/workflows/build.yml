@@ -5,10 +5,12 @@ name: build
 
 on:
   push:
-    branches: [master]
+    # v5 は LTS なので GitHub Actions でリリースする。
+    # maintenance/v1 は手動リリースに移行したため、意図的に含めていない。
+    branches: [master, maintenance/v5]
     tags: ['*']
   pull_request:
-    branches: [master]
+    branches: [master, maintenance/v5]
 
 jobs:
   act-test:

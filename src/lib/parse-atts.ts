@@ -59,6 +59,7 @@ export default (container, params: ParseAttsParams = {}): EmbedAttributes => {
     apiUrl: `https://api.geolonia.com/${keyring.stage}`,
     stage: keyring.stage,
     loader: 'on',
+    errorMessage: '',
     minZoom: '',
     maxZoom: 20,
     '3d': '',
