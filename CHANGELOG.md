@@ -2,6 +2,14 @@
 
 ## @geolonia/embed
 
+### v6.0.0-pre.4
+
+- **Breaking**: バンドルする maplibre-gl を v6 系（`6.11.2`）へ更新しました（[#518](https://github.com/geolonia/embed/issues/518)）。`@geolonia/maps-core` `^0.6.0` の `peerDependencies` が `maplibre-gl: ^6.0.0` になったことへの追従です。maplibre-gl v6 にデフォルトエクスポートはありません。`window.geolonia` 経由で maplibre の API を直接触っている場合は [maplibre-gl v6 の変更点](https://github.com/maplibre/maplibre-gl-js/releases) を確認してください。
+- **Fix**: UMD バンドルで地図が表示されない問題に対処しました。maplibre-gl v6 は worker を `import.meta.url` 基準で解決しますが、UMD 出力では webpack が `import.meta.url` をビルド時に解決してしまうため、実行時に worker を読み込めません。embed は 1 ファイルで完結する配布形態を保つため、worker を esbuild で自己完結する 1 ファイルへ束ねてバンドルへ埋め込み、実行時に Blob URL 化して maplibre に渡します。
+  - **Note**: このため worker は `blob:` URL から起動します。Content-Security-Policy を設定しているページでは `worker-src blob:` の許可が必要です。
+  - **Note**: worker を埋め込むぶん配布ファイルが大きくなります。`dist/embed.js` は gzip で約 297 KB → 456 KB になりました。
+- **Internal**: `@geolonia/maps-core` `^0.6.0` に依存します。0.6.0 は ESM-only（`main` と `exports.require` を廃止）ですが、embed は webpack で `exports.import` を解決するため影響はありません。
+
 ### v6.0.0-pre.3
 
 - **Fix**: maplibre-gl 5.11.0 以降で帰属表示が空になる問題を修正しました（[#512](https://github.com/geolonia/embed/issues/512)）。ソースに指定した `attribution` だけでなく、ベーススタイルの `© Geolonia` / `© OpenStreetMap` も表示されない状態でした。修正の実体は [maps-core#102](https://github.com/geolonia/maps-core/pull/102) で、embed 側は依存を更新して取り込みます。

@@ -5,6 +5,7 @@
 import * as maplibregl from 'maplibre-gl';
 import { GeoloniaMap, GeoloniaMarker, SimpleStyle } from '@geolonia/maps-core';
 import { VERSION as embedVersion } from './version';
+import { installMaplibreWorker } from './lib/maplibre-worker';
 import { registerPlugin, renderGeoloniaMap } from './lib/render';
 
 export type { GeoloniaMapOptions } from '@geolonia/maps-core';
@@ -32,6 +33,10 @@ declare global {
     mapboxgl?: Geolonia;
   }
 }
+
+// UMD 出力では maplibre が worker を自力で解決できない。地図を作る前に
+// バンドルへ埋め込んだ worker を登録する (#518)。
+installMaplibreWorker();
 
 const geolonia: Geolonia = Object.assign(window.geolonia || {}, maplibregl, {
   Map: GeoloniaMap,
