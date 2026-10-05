@@ -4,6 +4,7 @@
 
 ### Unreleased
 
+- **Fix**: `dist/embed-core.js` に maplibre-gl のライセンス表記が付かなくなっていた問題を修正しました。6.0.0-pre.4 では `dist/embed-core.js.LICENSE.txt` が出力されず、maplibre-gl を同梱しながら表記が無い状態で公開されていました（6.0.0-pre.3 までは出力されていました）。terser が maplibre のソース先頭の `@license` コメントを、付随するコードごと落としていたのが原因です。webpack の `BannerPlugin` で明示的に付与するよう変更し、偶然に依存しないようにしました。
 - **Internal**: パッケージマネージャを npm から pnpm へ移行しました（[#520](https://github.com/geolonia/embed/issues/520)）。配布物の中身は変わりません。`@types/geojson` を devDependencies に明示（これまで hoist に依存していました）、`.npmrc` の設定を `pnpm-workspace.yaml` へ移設、CI と publish を pnpm 化しています。
 
 ### v6.0.0-pre.4
