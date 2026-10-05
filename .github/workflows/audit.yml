@@ -1,0 +1,73 @@
+# 週次の依存監査。
+#
+# Dependabot は pnpm 11 以降が書くマルチドキュメント形式の pnpm-lock.yaml を読めないため
+# (対応は pnpm v7-v10, dependabot/dependabot-core#14919)、このリポジトリでは依存グラフが空に
+# なっており npm 依存のアラートが届かない。そのぶんを `pnpm audit` で補う。
+#
+# 上流に修正版が無い勧告で毎週赤くなると誰も見なくなるので、対応できる勧告があるときだけ
+# issue を立てる。仕分けは .github/scripts/audit-report.mjs が行う。
+#
+# このワークフローで使う action は commit SHA で固定している (build.yml はタグ参照のまま)。
+name: audit
+
+on:
+  schedule:
+    # 毎週月曜 00:00 UTC (09:00 JST)
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      # `pnpm audit` は lockfile だけで動くので install は不要。
+      # 入れるものが無いので setup-node のキャッシュも切る。
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '22.x'
+          package-manager-cache: false
+
+      - name: Run pnpm audit
+        id: audit
+        run: node .github/scripts/audit-report.mjs
+
+      # 本文はファイル渡し。パッケージ名などを run の中へ展開しない。
+      - name: Open, update or close the audit issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # checkout を persist-credentials: false にしているので、対象リポジトリは
+          # git remote ではなく GH_REPO で明示する。
+          GH_REPO: ${{ github.repository }}
+          ACTIONABLE: ${{ steps.audit.outputs.actionable }}
+          TITLE: 'chore(deps): pnpm audit が対応可能な脆弱性を検出しました'
+        run: |
+          set -euo pipefail
+          existing="$(gh issue list --state open --limit 100 --json number,title \
+            --jq 'map(select(.title == env.TITLE)) | .[0].number // empty')"
+
+          if [ "${ACTIONABLE}" -gt 0 ]; then
+            if [ -n "${existing}" ]; then
+              echo "既存の issue #${existing} へ追記します"
+              gh issue comment "${existing}" --body-file audit-report.md
+            else
+              echo "issue を作成します"
+              gh issue create --title "${TITLE}" --body-file audit-report.md
+            fi
+          elif [ -n "${existing}" ]; then
+            echo "対応可能な脆弱性は無くなったので issue #${existing} を閉じます"
+            gh issue comment "${existing}" \
+              --body '対応可能な脆弱性は検出されなくなりました。自動でクローズします。'
+            gh issue close "${existing}"
+          else
+            echo "対応可能な脆弱性はありません"
+          fi

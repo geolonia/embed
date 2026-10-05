@@ -91,3 +91,6 @@ typings/
 
 # Automatic CI test using act
 .actrc
+
+# audit ワークフローが生成するレポート
+/audit-report.md

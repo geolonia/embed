@@ -166,6 +166,27 @@ $ pnpm run build # build production bundle
 
 Then you can see `http://localhost:3000/`.
 
+## Dependency updates
+
+Dependabot cannot read this repository's `pnpm-lock.yaml`: pnpm 11 and later write it as a
+multi-document YAML stream, and Dependabot supports pnpm v7-v10 only
+([dependabot-core#14919](https://github.com/dependabot/dependabot-core/issues/14919)).
+The dependency graph is therefore empty and no npm alerts arrive, so dependencies are updated by hand.
+
+```shell
+$ pnpm audit            # vulnerabilities
+$ pnpm outdated         # available updates
+$ pnpm why <pkg>        # who pulls it in
+$ pnpm update <pkg>     # direct dependency (add --latest to cross the range)
+$ pnpm audit --fix      # transitive: writes overrides into pnpm-workspace.yaml
+```
+
+After any of these, verify with `pnpm install --frozen-lockfile`, `pnpm run lint`, `pnpm run test`,
+`pnpm run build` and `pnpm run e2e`.
+
+To keep this from going unnoticed, `.github/workflows/audit.yml` runs `pnpm audit` weekly and opens
+(or updates, or closes) a single issue when an advisory has a fix available upstream.
+
 ## Run Bundle analyzer
 
 ```shell
