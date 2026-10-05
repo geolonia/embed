@@ -1,6 +1,6 @@
 const path = require('path');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const { DefinePlugin } = require('webpack');
+const { BannerPlugin, DefinePlugin } = require('webpack');
 const esbuild = require('esbuild');
 
 /**
@@ -27,10 +27,36 @@ const bundleMaplibreWorkerSource = () => {
   return result.outputFiles[0].text;
 };
 
+/**
+ * バンドルした maplibre-gl のライセンス表記。
+ *
+ * maplibre-gl のソース先頭には `@license` コメントがあり、通常は terser の
+ * extractComments が `<bundle>.js.LICENSE.txt` へ切り出す。ただし terser はコメント単体
+ * ではなく「コメントが付いているコード」を基準に扱うため、そのコードが削除・並べ替えされると
+ * コメントごと消え、extractComments まで届かない。
+ *
+ * embed.js は `Object.assign(..., maplibregl, ...)` で名前空間を丸ごと使うので偶然残るが、
+ * embed-core.js は一部のシンボルしか使わないため消える。実際 6.0.0-pre.4 の
+ * `dist/embed-core.js` は maplibre を同梱しながらライセンス表記が無い状態で公開された
+ * （6.0.0-pre.3 までは残っていた）。偶然に頼らず明示する。
+ *
+ * バージョンは maplibre-gl から読むので手で追従する必要はない。maplibre を同梱しなくなったら
+ * この banner も外すこと。
+ */
+const maplibreLicenseBanner = `/**
+* MapLibre GL JS
+* @license 3-Clause BSD. Full text of license: https://github.com/maplibre/maplibre-gl-js/blob/v${require('maplibre-gl/package.json').version}/LICENSE.txt
+*/`;
+
 const plugins = [
   new DefinePlugin({
     'process.env.MAP_PLATFORM_STAGE': JSON.stringify(process.env.MAP_PLATFORM_STAGE || 'dev'),
     __MAPLIBRE_WORKER_SOURCE__: JSON.stringify(bundleMaplibreWorkerSource()),
+  }),
+  new BannerPlugin({
+    banner: maplibreLicenseBanner,
+    raw: true,
+    entryOnly: true,
   }),
 ];
 if (process.env.ANALYZE === 'true') {

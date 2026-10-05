@@ -152,14 +152,16 @@ You can see more examples at [https://geolonia.github.io/embed/](https://geoloni
 
 ### How to build
 
+This project uses [pnpm](https://pnpm.io/). The version is pinned in the `packageManager` field of `package.json`, so [Corepack](https://nodejs.org/api/corepack.html) (`corepack enable`) will pick up the right one.
+
 ```shell
 $ git clone git@github.com:geolonia/embed.git
 $ cd embed
-$ npm install
-$ npm start # run dev server
-$ npm test # run tests
-$ npm run e2e # run e2e tests
-$ npm run build # build production bundle
+$ pnpm install
+$ pnpm start # run dev server
+$ pnpm test # run tests
+$ pnpm run e2e # run e2e tests
+$ pnpm run build # build production bundle
 ```
 
 Then you can see `http://localhost:3000/`.
@@ -167,7 +169,7 @@ Then you can see `http://localhost:3000/`.
 ## Run Bundle analyzer
 
 ```shell
-$ npm run analyze
+$ pnpm run analyze
 ```
 
 ## Snapshot testing
@@ -177,6 +179,6 @@ $ npm run analyze
 ```shell
 $ cp .envrc.sample .envrc
 $ vi .envrc
-$ npm run build
+$ pnpm run build
 $ docker build . -t geolonia/embed
 ```

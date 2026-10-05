@@ -1,0 +1,9 @@
+# pnpm の設定ファイル。pnpm 11 以降、これらの設定は .npmrc ではなくここで指定する。
+#
+# ignoreScripts: 依存パッケージのライフサイクルスクリプトを実行しない。
+# 以前は .npmrc の `ignore-scripts=true` で同じことをしていたが、pnpm は .npmrc の
+# この設定を読まないため移設した。設定が無いと pnpm は esbuild のビルドスクリプトを
+# 無視したことを ERR_PNPM_IGNORED_BUILDS として扱い、install が失敗する。
+# esbuild は 0.25 以降プラットフォーム別パッケージを optionalDependencies で解決するので、
+# ビルドスクリプトを実行しなくても動作する。
+ignoreScripts: true
