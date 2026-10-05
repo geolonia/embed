@@ -52,7 +52,8 @@ jobs:
           TITLE: 'chore(deps): pnpm audit が対応可能な脆弱性を検出しました'
         run: |
           set -euo pipefail
-          existing="$(gh issue list --state open --limit 100 --json number,title \
+          # open issue を取り逃すと毎週重複した issue を立ててしまうので、上限は多めに取る。
+          existing="$(gh issue list --state open --limit 500 --json number,title \
             --jq 'map(select(.title == env.TITLE)) | .[0].number // empty')"
 
           if [ "${ACTIONABLE}" -gt 0 ]; then
