@@ -1,7 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
 import { JSDOM } from 'jsdom';
 
-import maplibregl from 'maplibre-gl';
+// maplibre-gl v6 にデフォルトエクスポートは無いので名前空間でインポートする。
+import * as maplibregl from 'maplibre-gl';
 
 /**
  * このテストは、jsdom環境ではmaplibre-glのMapインスタンスが

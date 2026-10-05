@@ -42,7 +42,7 @@ Or
 
 ### Using with npm (for React, Next.js, Astro, Fresh, etc.)
 
-For modern web frameworks, use `@geolonia/embed/core` — a side-effect-free entry point designed for programmatic use.
+For modern web frameworks, use `@geolonia/embed/core` — an entry point designed for programmatic use.
 
 ```shell
 npm install @geolonia/embed
@@ -61,7 +61,16 @@ const map = new GeoloniaMap({
 });
 ```
 
-Unlike the default `@geolonia/embed` entry point, `/core` does **not** automatically scan the DOM or set `window.geolonia`. This makes it safe to use in SSR environments and avoids double-initialization issues in frameworks like React, Preact, and Vue.
+Unlike the default `@geolonia/embed` entry point, `/core` does **not** automatically scan the DOM or set `window.geolonia`. This makes it safe to use in SSR environments and avoids double-initialization issues in frameworks like React, Preact, and Vue. (Its only import-time side effect is registering the bundled MapLibre worker, which is skipped outside the browser.)
+
+### Content Security Policy
+
+`@geolonia/embed` ships as a single file, so the MapLibre worker is embedded in the bundle and started from a `blob:` URL.
+If your page sets a Content Security Policy, allow `blob:` as a worker source:
+
+```
+Content-Security-Policy: worker-src blob:;
+```
 
 ### Using External Styles Without API Key
 
