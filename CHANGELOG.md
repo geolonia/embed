@@ -2,6 +2,10 @@
 
 ## @geolonia/embed
 
+### Unreleased
+
+- **Internal**: パッケージマネージャを npm から pnpm へ移行しました（[#520](https://github.com/geolonia/embed/issues/520)）。配布物の中身は変わりません。`@types/geojson` を devDependencies に明示（これまで hoist に依存していました）、`.npmrc` の設定を `pnpm-workspace.yaml` へ移設、CI と publish を pnpm 化しています。
+
 ### v6.0.0-pre.4
 
 - **Breaking**: バンドルする maplibre-gl を v6 系（`6.11.2`）へ更新しました（[#518](https://github.com/geolonia/embed/issues/518)）。`@geolonia/maps-core` `^0.6.0` の `peerDependencies` が `maplibre-gl: ^6.0.0` になったことへの追従です。maplibre-gl v6 にデフォルトエクスポートはありません。`window.geolonia` 経由で maplibre の API を直接触っている場合は [maplibre-gl v6 の変更点](https://github.com/maplibre/maplibre-gl-js/releases) を確認してください。

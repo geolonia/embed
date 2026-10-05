@@ -2,6 +2,7 @@
   "name": "@geolonia/embed",
   "version": "6.0.0-pre.4",
   "description": "Geolonia embed JS API",
+  "packageManager": "pnpm@12.9.1",
   "main": "dist/embed.js",
   "types": "dist/src/embed.d.ts",
   "exports": {
@@ -16,7 +17,7 @@
   },
   "scripts": {
     "start": "MAP_PLATFORM_STAGE=v1 webpack serve --config ./docs/webpack.config.js",
-    "build": "npm run build:version && npm run build:embed",
+    "build": "pnpm run build:version && pnpm run build:embed",
     "build:version": "node ./scripts/build-version.mjs",
     "build:embed": "MAP_PLATFORM_STAGE=v1 webpack --mode production && cp ./dist/embed.js ./dist/embed && cp -r ./dist/* ./docs/ && rm -rf ./docs/*.d.ts ./docs/lib/",
     "analyze": "ANALYZE=true MAP_PLATFORM_STAGE=v1 webpack --mode production",
@@ -40,6 +41,7 @@
     "@eslint/compat": "^1.4.1",
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.39.1",
+    "@types/geojson": "^7946.0.16",
     "@types/jsdom": "^21.1.7",
     "@types/node": "^24.0.4",
     "@typescript-eslint/eslint-plugin": "^8.46.4",

@@ -3,3 +3,7 @@
 assets
 docs
 sample
+
+# npm はこれらを常にパッケージから除外するが、pnpm は除外しないので明示する。
+.gitignore
+.npmignore
