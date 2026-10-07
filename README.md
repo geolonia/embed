@@ -152,7 +152,12 @@ You can see more examples at [https://geolonia.github.io/embed/](https://geoloni
 
 ### How to build
 
-This project uses [pnpm](https://pnpm.io/). The version is pinned in the `packageManager` field of `package.json`, so [Corepack](https://nodejs.org/api/corepack.html) (`corepack enable`) will pick up the right one.
+This project uses [pnpm](https://pnpm.io/). The version is pinned in two places, which must be kept
+in sync: the `packageManager` field of `package.json` (used by
+[Corepack](https://nodejs.org/api/corepack.html) and by `pnpm/action-setup` in CI) and
+`.tool-versions` (used by [asdf](https://asdf-vm.com/) and [mise](https://mise.jdx.dev/)).
+`pnpm-workspace.yaml` sets `pmOnFail: ignore`, so pnpm itself will not correct a mismatch; the
+`build` workflow compares the two pins instead and fails if they disagree.
 
 ```shell
 $ git clone git@github.com:geolonia/embed.git

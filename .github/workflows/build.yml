@@ -38,6 +38,31 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
+
+      # pnpm のバージョンは package.json の packageManager と .tool-versions の 2 箇所に
+      # 固定されている。pnpm-workspace.yaml で pmOnFail: ignore にしているため、両者が
+      # 食い違っても pnpm 自身は何も言わない (ignore にした理由は pnpm-workspace.yaml の
+      # コメントを参照)。黙ってズレるのを防ぐためここで突き合わせる。
+      #
+      # Node のピン (.tool-versions / .nvmrc / この workflow) は粒度を変えて運用しているので
+      # 対象外。ここで見ているのは pnpm だけ。
+      - name: Check the pnpm pins agree
+        run: |
+          set -euo pipefail
+          # corepack use は packageManager を "pnpm@12.9.1+sha512.xxx" の形で書くので + 以降を落とす。
+          pm="$(node -p "(require('./package.json').packageManager || '').replace(/^pnpm@/, '').split('+')[0]")"
+          # .tool-versions は 1 行に複数版を書けるので先頭 (既定) だけを見る。# 始まりはコメント。
+          tv="$(awk '!/^[[:space:]]*#/ && $1=="pnpm" {print $2; exit}' .tool-versions)"
+          if [ -z "$pm" ] || [ -z "$tv" ]; then
+            echo "pnpm のピンが見つかりません (packageManager='$pm' .tool-versions='$tv')"
+            exit 1
+          fi
+          if [ "$pm" != "$tv" ]; then
+            echo "pnpm のピンが不一致です: package.json の packageManager=$pm / .tool-versions=$tv"
+            exit 1
+          fi
+          echo "pnpm pin OK: $pm"
+
       - run: pnpm install --frozen-lockfile
       - run: pnpm run lint
       - run: pnpm run test
