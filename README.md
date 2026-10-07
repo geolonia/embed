@@ -185,7 +185,7 @@ To check by hand:
 ```shell
 $ pnpm audit            # vulnerabilities
 $ pnpm outdated         # available updates
-$ pnpm why <pkg>        # who pulls it in
+$ pnpm why maplibre-gl  # who pulls a package in
 ```
 
 ## Run Bundle analyzer
