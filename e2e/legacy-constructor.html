@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../style.css">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>@geolonia/embed - legacy constructor (maps-core#90)</title>
+  <style>
+    .m { width: 400px; height: 300px; }
+  </style>
+</head>
+<body>
+  <!--
+    maps-core#90 の後方互換な呼び出し規約 (セレクタ文字列 / HTMLElement /
+    options オブジェクト) を embed バンドルの window.geolonia.Map 経由で検証する。
+    コンテナは意図的に `.geolonia` クラスを付けない: embed の auto-scan
+    (renderGeoloniaMap) が触らないようにして、spec 側でプログラム的に構築する。
+  -->
+  <div id="map-selector" class="m" data-lat="35" data-lng="139" data-zoom="10"></div>
+  <div id="map-element" class="m" data-lat="34" data-lng="135" data-zoom="8"></div>
+  <div id="map-options" class="m" data-zoom="2"></div>
+  <script src="../embed?geolonia-api-key=YOUR-API-KEY"></script>
+</body>
+</html>

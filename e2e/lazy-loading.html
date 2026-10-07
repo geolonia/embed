@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../style.css">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>@geolonia/embed - lazy loading</title>
+  <style>
+    .spacer { height: 2000px; }
+    .geolonia { width: 400px; height: 250px; }
+  </style>
+</head>
+<body>
+  <div class="example">
+    <h2>Lazy loading</h2>
+    <div class="spacer"></div>
+    <!-- data-lazy-loading="off": viewport 外でも即時初期化されるべき -->
+    <div id="eager-map" class="geolonia" data-lazy-loading="off" data-lat="35" data-lng="139"></div>
+    <div class="spacer"></div>
+    <!-- デフォルト (data-lazy-loading 無し): viewport に入るまで未初期化 -->
+    <div id="lazy-map" class="geolonia" data-lat="35" data-lng="139"></div>
+  </div>
+  <script src="../embed?geolonia-api-key=YOUR-API-KEY"></script>
+</body>
+</html>
