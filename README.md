@@ -166,6 +166,25 @@ $ pnpm run build # build production bundle
 
 Then you can see `http://localhost:3000/`.
 
+## Dependency updates
+
+Dependencies are updated by Dependabot, configured in `.github/dependabot.yml`.
+
+`pnpm-workspace.yaml` sets `pmOnFail: ignore`, and that line is load-bearing: without it pnpm 12
+writes `pnpm-lock.yaml` as two YAML documents, GitHub's dependency-graph parser reads only the
+first one (which holds nothing but pnpm itself), and no npm package ever reaches the graph — so no
+Dependabot alert is raised. See `pnpm-workspace.yaml` and
+[dependabot-core#15904](https://github.com/dependabot/dependabot-core/issues/15904). Keep the
+lockfile a single YAML document.
+
+To check by hand:
+
+```shell
+$ pnpm audit            # vulnerabilities
+$ pnpm outdated         # available updates
+$ pnpm why <pkg>        # who pulls it in
+```
+
 ## Run Bundle analyzer
 
 ```shell

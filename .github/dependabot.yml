@@ -1,0 +1,26 @@
+# Dependabot の設定。
+#
+# embed は pnpm を使うが、Dependabot では pnpm も `package-ecosystem: npm` で扱う
+# (pnpm-lock.yaml を更新する)。pnpm 12 のマルチドキュメント lock でも version updates は
+# 動作する。依存グラフ側のパーサーだけが 1 つ目のドキュメントしか読めないため、
+# pnpm-workspace.yaml の `pmOnFail: ignore` で lock を単一ドキュメントに保っている。
+# 詳細は pnpm-workspace.yaml のコメントと geolonia/embed#524 を参照。
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    # リリース直後の不安定な版を掴まないよう、公開から 8 日待つ。
+    cooldown:
+      default-days: 8
+    groups:
+      # minor / patch は週 1 本の PR にまとめる。major はグループから外れて個別 PR に
+      # なるので、破壊的変更は単独でレビューできる。security updates も個別のまま
+      # (groups の既定は applies-to: version-updates)。
+      npm:
+        patterns:
+          - '*'
+        update-types:
+          - minor
+          - patch
