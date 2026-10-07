@@ -7,3 +7,17 @@
 # esbuild は 0.25 以降プラットフォーム別パッケージを optionalDependencies で解決するので、
 # ビルドスクリプトを実行しなくても動作する。
 ignoreScripts: true
+
+# pmOnFail: `packageManager` のバージョン不一致チェックをスキップする
+# (pnpm のドキュメント上は旧 `managePackageManagerVersions: false` 相当)。
+#
+# 既定の `download` だと、pnpm 12 は宣言された pnpm 自身を解決するための
+# "env lockfile" を pnpm-lock.yaml の 1 つ目の YAML ドキュメントとして書く。
+# GitHub の依存グラフの静的パーサーは 1 つ目しか読まないため、グラフには
+# pnpm と @pnpm/exe.* だけが載り、npm パッケージが 1 つも入らなくなる。
+# その結果 Dependabot アラートも届かない (dependabot/dependabot-core#15904)。
+#
+# `ignore` にすると env lockfile が作られず lock は単一ドキュメントに戻るので、
+# パーサーが実依存を読めるようになる。
+# CI は pnpm/action-setup が packageManager を読んで版を揃えるため影響はない。
+pmOnFail: ignore

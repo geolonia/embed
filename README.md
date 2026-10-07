@@ -166,6 +166,28 @@ $ pnpm run build # build production bundle
 
 Then you can see `http://localhost:3000/`.
 
+## Dependency updates
+
+Dependencies are updated by Dependabot, configured in `.github/dependabot.yml`. Minor and patch
+updates arrive as one grouped weekly PR. Major version updates are ignored for now — there is a
+backlog of them and each needs its own plan — but security updates still arrive for any version,
+major included, because an `ignore` on `version-update:semver-major` only scopes version updates.
+
+`pnpm-workspace.yaml` sets `pmOnFail: ignore`, and that line is load-bearing: without it pnpm 12
+writes `pnpm-lock.yaml` as two YAML documents, GitHub's dependency-graph parser reads only the
+first one (which holds nothing but pnpm itself), and no npm package ever reaches the graph — so no
+Dependabot alert is raised. See `pnpm-workspace.yaml` and
+[dependabot-core#15904](https://github.com/dependabot/dependabot-core/issues/15904). Keep the
+lockfile a single YAML document.
+
+To check by hand:
+
+```shell
+$ pnpm audit            # vulnerabilities
+$ pnpm outdated         # available updates
+$ pnpm why maplibre-gl  # who pulls a package in
+```
+
 ## Run Bundle analyzer
 
 ```shell
