@@ -1,6 +1,14 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
+# action は commit SHA で固定する (Geolonia の標準。geolonia/skills の
+# skills/geolonia-actions-pinning/SKILL.md を参照)。`@v6` のようなタグは可変で、
+# 付け替えられると気づかないまま別のコードが走る (tj-actions/changed-files の事例)。
+#
+# SHA と行末の版コメントは手で書かない。`pinact run` が生成し、更新は Dependabot の
+# github-actions エコシステムが SHA ごと書き換える (.github/dependabot.yml)。
+# 設定は .pinact.yml (geolonia/.github の canonical をそのまま置いたもの)。
+
 name: build
 
 on:
@@ -29,12 +37,12 @@ jobs:
       matrix:
         node-version: ['22.x']
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
       # setup-node の cache: 'pnpm' は store path を引くのに pnpm を必要とするので先に入れる。
       # pnpm のバージョンは package.json の packageManager から読まれる。
       - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
@@ -68,7 +76,7 @@ jobs:
       - run: pnpm run test
       - run: pnpm run build
       - name: save the built
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: "!failure()"
         with:
           retention-days: 1
@@ -82,9 +90,9 @@ jobs:
     timeout-minutes: 30
     needs: build
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
       - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
         with:
           node-version: '22.x'
           cache: 'pnpm'
@@ -95,7 +103,7 @@ jobs:
       # 展開する。dev サーバーの出力ファイル名は `embed` なので、`embed.js` は
       # ここで展開した production の出力が静的配信される。
       - name: load the built
-        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: the-built
 
@@ -104,7 +112,7 @@ jobs:
       - name: Run e2e tests
         run: pnpm run e2e
       - name: Upload Playwright report
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: ${{ !cancelled() }}
         with:
           name: playwright-report
@@ -119,8 +127,8 @@ jobs:
       - act-test
     if: ${{ github.ref == 'refs/heads/master' }}
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
         with:
           node-version: '22.x'
       - name: Clean repo
@@ -128,7 +136,7 @@ jobs:
           git checkout --orphan gh-pages
           git rm -rf . > /dev/null 2>&1
       - name: load the built
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: the-built
       - name: Setup and deploy Github Pages
@@ -153,15 +161,15 @@ jobs:
       - act-test
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
       - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
         with:
           node-version: '22.x'
           registry-url: 'https://registry.npmjs.org'
           scope: '@geolonia'
       - name: load the built
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: the-built
 
@@ -189,11 +197,11 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
           fetch-depth: 0
 
-      - uses: actions/download-artifact@v8
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with: { name: the-built, path: ./ }
 
       - name: Read version
@@ -206,19 +214,21 @@ jobs:
           echo "major_version=$MAJOR" >> "$GITHUB_OUTPUT"
 
       - name: Restore timestamps
-        uses: chetan/git-restore-mtime-action@v1
+        uses: chetan/git-restore-mtime-action@d186aca54f8760da4dec55313195e51ed3ebb0b3 # v2.3
 
       - name: Configure AWS Credentials for test
         if: ${{ env.ACT }}
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+          # 下の deploy 用ステップと同じリージョンに揃える。以前は未定義の
+          # env.AWS_REGION を参照していた (v6 で aws-region は required)。
+          aws-region: ap-northeast-1
 
       - name: Configure AWS Credentials for deploy
         if: ${{ !env.ACT }}
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
         with:
           aws-region: ap-northeast-1
           role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE }}

@@ -1,0 +1,80 @@
+# Canonical pinact config for the Geolonia org.
+#
+# Drop this file at the root of your repository as `.pinact.yml`. pinact
+# reads it both locally (pre-commit, manual `pinact run`) and in CI (the
+# Action Pinning Check), so local and CI behave identically. Requires
+# pinact v4+ (the `version` field below).
+#
+# What it does:
+#
+#   min_age.value: 7    Do not pin (or update to) an action release that
+#                       is younger than 7 days. A freshly published tag or
+#                       release is the window when a hijacked-tag supply
+#                       chain attack is most likely to still be live, so
+#                       we wait it out. This is the GitHub Actions analog
+#                       of pnpm's `minimumReleaseAge`.
+#
+#   min_age.always: true  Verify the 7-day age of CURRENT pins on every
+#                       run, not only when `--verify-min-age` is passed.
+#                       Keeps the rule on by default for local runs.
+#
+#   rules (geolonia/*)  Exempt our own org from the cooldown. The 7-day
+#                       window guards against a hijacked THIRD-PARTY
+#                       release; we author and control geolonia/* releases
+#                       ourselves, and a brand-new geolonia/.github
+#                       reusable would otherwise be un-adoptable for a
+#                       week (no older release contains it). Still
+#                       SHA-pinned; Dependabot maintains them.
+#
+# Pin comments use pinact's default single-space separator (`@<sha> # vX.Y.Z`),
+# which is also what Prettier emits for YAML, so the two never fight.
+#
+# Bump an action by letting Dependabot (github-actions, weekly, with an
+# 8-day cooldown: one day over this min_age, so its PRs always clear the
+# pinact gate) open the PR, or run `pinact run --update`
+# locally. Do not hand-edit the SHA or the version comment; pinact keeps
+# the two in sync.
+version: 3
+# Besides this repo's own workflows, also verify the GitHub Actions pinned in the
+# org workflow templates served by the "New workflow" picker (workflow-templates/).
+# The picker copies these files verbatim, so they must already be SHA-pinned for
+# an adopting repo's Action Pinning Check to pass on first commit. Dependabot's
+# github-actions ecosystem only scans .github/workflows, so it cannot reach these
+# template files; this check covers them here, catching any unpinned or
+# comment-mismatched ref at PR time. Setting `files` replaces pinact's default
+# list, so the default workflow and composite-action patterns are repeated first.
+files:
+  - pattern: .github/workflows/*.yml
+  - pattern: .github/workflows/*.yaml
+  - pattern: .github/actions/*/action.yml
+  - pattern: .github/actions/*/action.yaml
+  - pattern: workflow-templates/*.yml
+  - pattern: workflow-templates/*.yaml
+min_age:
+  value: 7
+  always: true
+rules:
+  - min_age: 0
+    conditions:
+      - expr: |
+          ActionName matches "geolonia/.*"
+  # Let geolonia/.github reusable workflows float on a major tag (v1, v2, ...)
+  # instead of being SHA-pinned. Our reusables use bot-moved major tags by
+  # design (a vX.Y.Z push fast-forwards vX), so a caller pinned to @v1 always
+  # gets the newest release with no chain-bump. That is what the org "Security
+  # Suite" ruleset relies on: security-suite.yml -> reusable-security-suite.yml
+  # -> the scanner reusables, all at @v1, so a suite change ships in one
+  # release instead of a caller-bump-per-release treadmill.
+  #
+  # Scope and safety: this only exempts references to geolonia org actions and
+  # reusables at a bare major tag (^v[0-9]+$). SHA pins still pass (ignore
+  # never forces un-pinning), and mutable refs like @main or a branch are
+  # still flagged. It reuses the same `geolonia/*` scope as the cooldown
+  # exemption above, on the same "we author and control these releases" basis;
+  # a hijacked @v1 here is the same threat as this repo being compromised.
+  # (The org zizmor.yml mirrors this with an unpinned-uses ref-pin policy for
+  # `geolonia/*`.) Third-party actions remain SHA-pinned as normal.
+  - ignore: true
+    conditions:
+      - expr: |
+          ActionName matches "geolonia/.*" && ActionVersion matches "^v[0-9]+$"
