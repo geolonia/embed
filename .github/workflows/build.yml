@@ -89,6 +89,16 @@ jobs:
           node-version: '22.x'
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
+
+      # production 出力 (docs/embed.js) は .gitignore 対象で、このジョブは build を
+      # 実行しない。e2e/production-bundle.spec.ts が読むので build ジョブの成果物を
+      # 展開する。dev サーバーの出力ファイル名は `embed` なので、`embed.js` は
+      # ここで展開した production の出力が静的配信される。
+      - name: load the built
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: the-built
+
       - name: Install Playwright
         run: pnpm exec playwright install --with-deps chromium
       - name: Run e2e tests

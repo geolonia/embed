@@ -165,7 +165,7 @@ $ cd embed
 $ pnpm install
 $ pnpm start # run dev server
 $ pnpm test # run tests
-$ pnpm run e2e # run e2e tests
+$ pnpm run e2e # run e2e tests (run `pnpm run build` first to include the production-bundle test)
 $ pnpm run build # build production bundle
 ```
 
