@@ -42,7 +42,26 @@ updates:
   # Dependabot は SHA と行末の版コメントの両方を書き換えるので、SHA 固定が
   # 腐らない。cooldown を 8 日にしてあるのは .pinact.yml の min_age (7 日) より
   # 1 日長くするため。Dependabot は暦日で数え pinact は 168 時間で判定するので、
-  # この 1 日ぶんの余裕で Dependabot の PR は必ず pinact のゲートを通る。
+  # この 1 日ぶんの余裕で version updates の PR は pinact の min_age を満たす。
+  #
+  # ただし cooldown は version updates 専用で、security updates には効かない
+  # (GitHub のドキュメントに明記がある)。脆弱性の修正版が公開直後に提案されると
+  # pinact の min_age (always: true なので既存のピンも毎回監査される) に引っかかる。
+  # その場合は「待つ」を選ばない。脆弱性を抱えたまま 7 日置くほうが危険なので、
+  # 取り込みを優先して例外を切る:
+  #
+  #   1. .pinact.yml の rules に当該 action だけの一時例外を足す。geolonia/* の
+  #      免除と同じ書き方で、conditions の ActionName を当該 action にして
+  #      `min_age: 0` を付ける
+  #   2. マージする
+  #   3. リリースから 7 日経ったら 1. の例外を外す
+  #
+  #   CI のゲートはリポジトリの .pinact.yml を読むので、効くのは 1. の方法だけ。
+  #   CLI の `--min-age 0` では上書きできない (設定ファイルが優先される。実測済み)。
+  #   手元で一度だけ黙らせたいときは `pinact run --check --exclude '<正規表現>'`。
+  #
+  # なお Action Pinning Check (org の Security Suite の一部) はこのリポジトリには
+  # まだ入っていないので、現時点でこれがゲートになることはない。導入時に効いてくる。
   #
   # なぜ今まで 1 件も来なかったか: この設定ファイル自体が #525 まで存在せず、
   # 設定の無い Dependabot は security updates しか動かない。そのため
