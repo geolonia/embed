@@ -34,3 +34,37 @@ updates:
         update-types:
           - minor
           - patch
+
+  # GitHub Actions のピン運用は Geolonia の標準に従う。canonical な設定は
+  # geolonia/.github の `pinact/dependabot.yml` と `.pinact.yml`、解説は
+  # geolonia/skills の skills/geolonia-actions-pinning/SKILL.md。
+  #
+  # Dependabot は SHA と行末の版コメントの両方を書き換えるので、SHA 固定が
+  # 腐らない。cooldown を 8 日にしてあるのは .pinact.yml の min_age (7 日) より
+  # 1 日長くするため。Dependabot は暦日で数え pinact は 168 時間で判定するので、
+  # この 1 日ぶんの余裕で Dependabot の PR は必ず pinact のゲートを通る。
+  #
+  # なぜ今まで 1 件も来なかったか: この設定ファイル自体が #525 まで存在せず、
+  # 設定の無い Dependabot は security updates しか動かない。そのため
+  # aws-actions/configure-aws-credentials と chetan/git-restore-mtime-action は
+  # 長く v1 のままだった (OIDC などの互換性が理由ではない)。その間 action.yml の
+  # 宣言は node12 / node16 のままで GitHub に 2 度強制移行され
+  # (node12/16 -> node20 -> node24)、リリースのたびに「forced to run on
+  # Node.js 24」と `set-output` の非推奨警告が出ていた。両 action は
+  # この設定を入れた PR で最新版に上げてある。
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 8
+    groups:
+      # minor / patch は週 1 本の PR にまとめる。major はここから外してあるので
+      # 個別の PR として届き、破壊的変更を単独でレビューできる。security updates も
+      # 個別のまま (groups の既定は applies-to: version-updates)。
+      github-actions:
+        patterns:
+          - '*'
+        update-types:
+          - minor
+          - patch
