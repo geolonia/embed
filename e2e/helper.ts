@@ -1,6 +1,7 @@
 import { Page } from '@playwright/test';
 
-export const TEST_URL = 'http://localhost:3000/e2e';
+export const BASE_URL = 'http://localhost:3000';
+export const TEST_URL = `${BASE_URL}/e2e`;
 export const LOAD_TIMEOUT = 5000;
 
 /** 地図コンテナと canvas の出現を待つ。既存テスト互換。 */
