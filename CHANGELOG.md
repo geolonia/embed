@@ -2,10 +2,22 @@
 
 ## @geolonia/embed
 
-### Unreleased
+### v6.0.0-pre.5
 
+配布物に関わる変更は、maplibre-gl の更新とライセンス表記の修正の 2 点です。それ以外は開発環境と CI の整備で、`dist/` の中身は 6.0.0-pre.4 と実質同一です。
+
+- **Fix**: 同梱する maplibre-gl を `6.11.2` から `6.12.0` へ更新しました。利用者に関係する修正として、1 つの attribution に閉じていないタグがあると他の attribution まで消えてしまう問題（各 attribution を個別にサニタイズするよう修正、maplibre-gl-js#8569）、`GeoJSONSource#setData` を worker の処理より速く呼ぶとメモリが増え続けてページがクラッシュする問題、terrain 有効時に `fill-outline-color` と塗りのアンチエイリアス縁が描画されない問題などが含まれます。
+  - **Note**: 6.12.0 には、WebGL コンテキストが失われている最中に `setStyle` を呼ぶと未捕捉エラーになる不具合があります（maplibre-gl-js#8693 で 6.14.0 にて修正）。embed 自身はこのコードパスを通りませんが、`window.geolonia` 経由で `map.setStyle()` を直接呼んでいる場合は該当しえます。
+    - **回避策**: コンテキストが失われている間は `setStyle()` を呼ばず、`map.on('webglcontextrestored', ...)` の中で適用してください。maplibre はコンテキスト復元時に painter を再生成したうえでこのイベントを発火するため、この中での `setStyle()` は安全です。喪失は `map.on('webglcontextlost', ...)` で検知できます。
+    - なお maplibre は**喪失前のスタイルを復元時に自動で適用し直す**ため、スタイルを切り替えていない場合は特に対処は要りません。
+    - `try`/`catch` では防げません。エラーは `setStyle()` の呼び出し時ではなく、破棄済みの painter でレンダリングしようとした時点で発生します（6.14.0 の修正も、コンテキスト喪失中はレンダリングを飛ばすというものです）。
+    - 6.14.0 への更新は [#534](https://github.com/geolonia/embed/issues/534) で対応します。
 - **Fix**: `dist/embed-core.js` に maplibre-gl のライセンス表記が付かなくなっていた問題を修正しました。6.0.0-pre.4 では `dist/embed-core.js.LICENSE.txt` が出力されず、maplibre-gl を同梱しながら表記が無い状態で公開されていました（6.0.0-pre.3 までは出力されていました）。terser が maplibre のソース先頭の `@license` コメントを、付随するコードごと落としていたのが原因です。webpack の `BannerPlugin` で明示的に付与するよう変更し、偶然に依存しないようにしました。
 - **Internal**: パッケージマネージャを npm から pnpm へ移行しました（[#520](https://github.com/geolonia/embed/issues/520)）。配布物の中身は変わりません。`@types/geojson` を devDependencies に明示（これまで hoist に依存していました）、`.npmrc` の設定を `pnpm-workspace.yaml` へ移設、CI と publish を pnpm 化しています。
+- **Internal**: Dependabot が動かなくなっていた問題を解消しました（[#524](https://github.com/geolonia/embed/issues/524)）。pnpm 12 は `pnpm-lock.yaml` を複数ドキュメントで書き出しますが、GitHub の依存グラフのパーサーは先頭のドキュメントしか読まないため、グラフが 23 パッケージまで縮んでアラートが出ない状態でした。`pnpm-workspace.yaml` の `pmOnFail: ignore` で単一ドキュメントに戻し（796 パッケージに回復）、あわせて `.github/dependabot.yml` を追加しています。
+- **Internal**: webpack 系のツールチェーンをまとめて更新しました（[#527](https://github.com/geolonia/embed/issues/527)）。webpack-dev-server 6 / webpack-cli 7 / webpack-bundle-analyzer 5 / css-loader 7 / style-loader 4 へ上げ、未使用だった babel-loader を削除しています。いずれも開発時のみの依存です。これにより `uuid` の脆弱性アラート（GHSA-w5hq-g745-h8pq、webpack-dev-server 5 の sockjs 経由）が解消し、open なアラートは 0 件になりました。出力の差分は webpack の内部モジュール ID の採番のみで、ファイル構成は一致しています。
+- **Internal**: production バンドル（`dist/embed.js`）を直接読み込む e2e を追加しました（[#529](https://github.com/geolonia/embed/pull/529)）。これまでの e2e は dev サーバーのバンドルを読んでおり、minify やローダーの更新で production だけが壊れる事故を検知できませんでした。
+- **Internal**: 開発環境と CI を整備しました。pnpm を `.tool-versions` で管理し、`package.json` の `packageManager` とのズレを CI で検査します（[#526](https://github.com/geolonia/embed/pull/526)）。また workflow の GitHub Actions をすべて commit SHA で固定し（[#530](https://github.com/geolonia/embed/pull/530)）、長く `@v1` のままだった `aws-actions/configure-aws-credentials`（→ v6.3.0）と `chetan/git-restore-mtime-action`（→ v2.3）、および `actions/checkout`（→ v7.0.1）、`actions/setup-node`（→ v7.0.0）を更新しました。
 
 ### v6.0.0-pre.4
 
