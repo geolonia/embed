@@ -54,10 +54,13 @@ min_age:
   value: 7
   always: true
 rules:
+  # Match the parsed repository owner exactly. `ActionName matches "geolonia/.*"`
+  # is an unanchored regex on the full name, so it also matched another owner's
+  # action whose name contains "geolonia/" (notgeolonia/x, someone/geolonia/x).
   - min_age: 0
     conditions:
       - expr: |
-          ActionName matches "geolonia/.*"
+          ActionRepoOwner == "geolonia"
   # Let geolonia/.github reusable workflows float on a major tag (v1, v2, ...)
   # instead of being SHA-pinned. Our reusables use bot-moved major tags by
   # design (a vX.Y.Z push fast-forwards vX), so a caller pinned to @v1 always
@@ -77,4 +80,4 @@ rules:
   - ignore: true
     conditions:
       - expr: |
-          ActionName matches "geolonia/.*" && ActionVersion matches "^v[0-9]+$"
+          ActionRepoOwner == "geolonia" && ActionVersion matches "^v[0-9]+$"
