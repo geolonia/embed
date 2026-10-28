@@ -154,14 +154,17 @@ const parseColors = (value: string): string[] => {
   return colors.map((c) => c.trim()).filter((c) => c !== '');
 };
 
-/** Parse `"min,max"` into a range, or `undefined` when it is not two numbers. */
+/**
+ * Parse `"min,max"` into a range, or `undefined` when it is not two numbers
+ * with min < max (a reversed range would paint everything in one color).
+ */
 const parseRange = (value: string): [number, number] | undefined => {
   const parts = value.split(',').map((n) => n.trim());
   if (parts.length !== 2 || parts.some((n) => n === '')) {
     return undefined;
   }
   const [min, max] = parts.map(Number);
-  if (!Number.isFinite(min) || !Number.isFinite(max)) {
+  if (!Number.isFinite(min) || !Number.isFinite(max) || min >= max) {
     return undefined;
   }
   return [min, max];
@@ -192,10 +195,12 @@ const dataDrivenOptions = (
     options.choropleth = choropleth;
   }
 
-  if (atts.heatmap && atts.heatmap !== 'off') {
+  const heatmapValue = String(atts.heatmap ?? '').trim();
+  const heatmapFlag = heatmapValue.toLowerCase();
+  if (heatmapValue && heatmapFlag !== 'off') {
     const heatmap: HeatmapOptions = {};
-    if (atts.heatmap !== 'on') {
-      heatmap.weight = String(atts.heatmap);
+    if (heatmapFlag !== 'on') {
+      heatmap.weight = heatmapValue;
     }
     if (atts.heatmapColors) {
       heatmap.colors = parseColors(String(atts.heatmapColors));

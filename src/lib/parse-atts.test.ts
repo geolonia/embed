@@ -235,7 +235,7 @@ describe('attsToOptions のデータ駆動の描き方', () => {
   });
 
   it('読めない data-choropleth-range は無視する', () => {
-    for (const range of ['abc', '1', '1,2,3', '1,x', '']) {
+    for (const range of ['abc', '1', '1,2,3', '1,x', '', '100,0', '5,5']) {
       expect(
         toOptions({ choropleth: 'value', choroplethRange: range }).choropleth,
       ).toEqual({ property: 'value' });
@@ -258,6 +258,23 @@ describe('attsToOptions のデータ駆動の描き方', () => {
   it('data-heatmap="off" と空の値はヒートマップにしない', () => {
     expect(toOptions({ heatmap: 'off' }).heatmap).toBe(undefined);
     expect(toOptions({ heatmap: '' }).heatmap).toBe(undefined);
+  });
+
+  it('data-heatmap の on / off は大文字小文字と前後の空白を区別しない', () => {
+    expect(toOptions({ heatmap: 'ON' }).heatmap).toEqual({});
+    expect(toOptions({ heatmap: ' On ' }).heatmap).toEqual({});
+    expect(toOptions({ heatmap: 'OFF' }).heatmap).toBe(undefined);
+    expect(toOptions({ heatmap: 'Off' }).heatmap).toBe(undefined);
+  });
+
+  it('data-heatmap のプロパティ名は大文字小文字をそのまま渡す', () => {
+    expect(toOptions({ heatmap: 'Weight' }).heatmap).toEqual({
+      weight: 'Weight',
+    });
+  });
+
+  it('data-heatmap が無ければ data-heatmap-colors は無視する', () => {
+    expect(toOptions({ heatmapColors: '#ff0,#f00' }).heatmap).toBe(undefined);
   });
 
   it('data-heatmap にプロパティ名を書くとその値を重みにする', () => {
