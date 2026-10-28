@@ -3,8 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="../style.css">
-  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <meta name="viewport" content="initial-scale=1" />
   <title>@geolonia/embed - data-driven geojson</title>
+  <script>
+    // 地図ごとに MapLibre の error イベントを記録する。プラグインは DOMContentLoaded で
+    // 呼ばれ、スタイルの読み込みより前なので、paint を設定したときのエラーも拾える。
+    window.__mapErrors = {};
+    document.addEventListener('DOMContentLoaded', function () {
+      window.geolonia.registerPlugin(function (map, target) {
+        window.__mapErrors[target.id] = [];
+        map.on('error', function (e) {
+          var error = e.error || {};
+          window.__mapErrors[target.id].push({
+            message: String(error.message || e),
+            status: error.status,
+            url: error.url,
+          });
+        });
+      });
+    });
+  </script>
 </head>
 <body>
   <script id="polygons" type="application/json">

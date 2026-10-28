@@ -4,9 +4,17 @@ import { TEST_URL, mockGeoloniaTiles, waitForStyleLoad, hasLayer } from './helpe
 // embed (wrapper) 固有: data-choropleth / data-heatmap / data-circle-* を読んで
 // maps-core の choropleth / heatmap / circle オプションへ渡す (embed#546)。
 // 式がどう描かれるか (option → 描画) は maps-core 側 E2E (maps-core#156) が担保する。
-// ここでは、属性で指定したプロパティ名と色がレイヤーの paint に届くことを見る。
+// ここでは、属性で指定したプロパティ名と色がレイヤーの paint に届き、MapLibre が
+// その式を受け付ける (error イベントもページのエラーも出ない) ことを見る。
 test.describe('data-choropleth / data-heatmap / data-circle-* フォワーディング (wrapper-only)', () => {
+  let pageErrors: string[];
+
   test.beforeEach(async ({ page }) => {
+    pageErrors = [];
+    page.on('pageerror', (error) => pageErrors.push(error.message));
+    page.on('console', (message) => {
+      if (message.type() === 'error') pageErrors.push(message.text());
+    });
     await mockGeoloniaTiles(page);
     await page.goto(`${TEST_URL}/data-driven.html`);
   });
@@ -40,6 +48,14 @@ test.describe('data-choropleth / data-heatmap / data-circle-* フォワーディ
           { timeout: 5000 },
         )
         .toBe('ok');
+
+      // 不正な式は MapLibre が拒否して error イベントで報告する
+      const mapErrors = await page.evaluate(
+        (id) => (window as any).__mapErrors[id],
+        selector.slice(1),
+      );
+      expect(mapErrors).toEqual([]);
+      expect(pageErrors).toEqual([]);
     });
   }
 });
