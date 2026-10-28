@@ -1,7 +1,14 @@
 'use strict';
 
 import type { ControlPosition } from 'maplibre-gl';
-import { getLang, keyring, type GeoloniaMapOptions } from '@geolonia/maps-core';
+import {
+  getLang,
+  keyring,
+  type ChoroplethOptions,
+  type CircleOptions,
+  type GeoloniaMapOptions,
+  type HeatmapOptions,
+} from '@geolonia/maps-core';
 import type { EmbedAttributes } from '../types';
 
 type ParseAttsParams = {
@@ -126,6 +133,94 @@ const resolveGeojson = (
 };
 
 /**
+ * Split a comma-separated list of CSS colors. Commas inside parentheses
+ * (`rgb(0, 0, 0)`) are part of the color, not separators.
+ */
+const parseColors = (value: string): string[] => {
+  const colors: string[] = [];
+  let depth = 0;
+  let current = '';
+  for (const char of value) {
+    if (char === '(') depth++;
+    if (char === ')') depth = Math.max(0, depth - 1);
+    if (char === ',' && depth === 0) {
+      colors.push(current);
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+  colors.push(current);
+  return colors.map((c) => c.trim()).filter((c) => c !== '');
+};
+
+/** Parse `"min,max"` into a range, or `undefined` when it is not two numbers. */
+const parseRange = (value: string): [number, number] | undefined => {
+  const parts = value.split(',').map((n) => n.trim());
+  if (parts.length !== 2 || parts.some((n) => n === '')) {
+    return undefined;
+  }
+  const [min, max] = parts.map(Number);
+  if (!Number.isFinite(min) || !Number.isFinite(max)) {
+    return undefined;
+  }
+  return [min, max];
+};
+
+/**
+ * Convert `data-choropleth` / `data-heatmap` / `data-circle-*` into maps-core's
+ * data-driven options. The `-colors` / `-range` attributes only apply when the
+ * attribute that turns the drawing on is present.
+ */
+const dataDrivenOptions = (
+  atts: EmbedAttributes,
+): Pick<GeoloniaMapOptions, 'choropleth' | 'heatmap' | 'circle'> => {
+  const options: Pick<GeoloniaMapOptions, 'choropleth' | 'heatmap' | 'circle'> =
+    {};
+
+  if (atts.choropleth) {
+    const choropleth: ChoroplethOptions = { property: String(atts.choropleth) };
+    if (atts.choroplethColors) {
+      choropleth.colors = parseColors(String(atts.choroplethColors));
+    }
+    const range = atts.choroplethRange
+      ? parseRange(String(atts.choroplethRange))
+      : undefined;
+    if (range) {
+      choropleth.range = range;
+    }
+    options.choropleth = choropleth;
+  }
+
+  if (atts.heatmap && atts.heatmap !== 'off') {
+    const heatmap: HeatmapOptions = {};
+    if (atts.heatmap !== 'on') {
+      heatmap.weight = String(atts.heatmap);
+    }
+    if (atts.heatmapColors) {
+      heatmap.colors = parseColors(String(atts.heatmapColors));
+    }
+    options.heatmap = heatmap;
+  }
+
+  if (atts.circleSize || atts.circleColor) {
+    const circle: CircleOptions = {};
+    if (atts.circleSize) {
+      circle.size = String(atts.circleSize);
+    }
+    if (atts.circleColor) {
+      circle.color = String(atts.circleColor);
+    }
+    if (atts.circleColors) {
+      circle.colors = parseColors(String(atts.circleColors));
+    }
+    options.circle = circle;
+  }
+
+  return options;
+};
+
+/**
  * Convert normalised {@link EmbedAttributes} into a typed `GeoloniaMapOptions`
  * for maps-core's `GeoloniaMap` constructor.
  *
@@ -195,6 +290,7 @@ export const attsToOptions = (
   if (atts.simpleVector) {
     options.simpleVector = String(atts.simpleVector);
   }
+  Object.assign(options, dataDrivenOptions(atts));
 
   if (
     atts.minZoom !== '' &&

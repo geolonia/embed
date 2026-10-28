@@ -171,6 +171,135 @@ describe('attsToOptions', () => {
   });
 });
 
+// data-choropleth / data-heatmap / data-circle-* (embed#546 / maps-core#156)。
+describe('attsToOptions のデータ駆動の描き方', () => {
+  beforeEach(() => {
+    keyring.reset();
+    keyring.setApiKey('YOUR-API-KEY');
+    keyring.setStage('v1');
+  });
+
+  afterEach(() => {
+    keyring.reset();
+  });
+
+  const toOptions = (dataset: Record<string, string>) => {
+    const container = document.createElement('div');
+    Object.assign(container.dataset, dataset);
+    return attsToOptions(container, parseAtts(container));
+  };
+
+  it('属性が無ければ choropleth / heatmap / circle を渡さない', () => {
+    const options = toOptions({});
+
+    expect(options.choropleth).toBe(undefined);
+    expect(options.heatmap).toBe(undefined);
+    expect(options.circle).toBe(undefined);
+  });
+
+  it('data-choropleth はプロパティ名だけを渡す', () => {
+    expect(toOptions({ choropleth: 'value' }).choropleth).toEqual({
+      property: 'value',
+    });
+  });
+
+  it('data-choropleth-colors と data-choropleth-range を読む', () => {
+    const options = toOptions({
+      choropleth: 'value',
+      choroplethColors: '#ffffff, #ff0000',
+      choroplethRange: '0, 100',
+    });
+
+    expect(options.choropleth).toEqual({
+      property: 'value',
+      colors: ['#ffffff', '#ff0000'],
+      range: [0, 100],
+    });
+  });
+
+  it('色の区切りは括弧の中のカンマを区切りとして扱わない', () => {
+    const options = toOptions({
+      choropleth: 'value',
+      choroplethColors:
+        'rgb(255, 255, 255),rgba(255, 0, 0, 0.5) , hsl(0, 100%, 50%)',
+    });
+
+    expect(options.choropleth).toEqual({
+      property: 'value',
+      colors: [
+        'rgb(255, 255, 255)',
+        'rgba(255, 0, 0, 0.5)',
+        'hsl(0, 100%, 50%)',
+      ],
+    });
+  });
+
+  it('読めない data-choropleth-range は無視する', () => {
+    for (const range of ['abc', '1', '1,2,3', '1,x', '']) {
+      expect(
+        toOptions({ choropleth: 'value', choroplethRange: range }).choropleth,
+      ).toEqual({ property: 'value' });
+    }
+  });
+
+  it('data-choropleth が無ければ -colors と -range は無視する', () => {
+    const options = toOptions({
+      choroplethColors: '#fff,#f00',
+      choroplethRange: '0,1',
+    });
+
+    expect(options.choropleth).toBe(undefined);
+  });
+
+  it('data-heatmap="on" は重みなしのヒートマップにする', () => {
+    expect(toOptions({ heatmap: 'on' }).heatmap).toEqual({});
+  });
+
+  it('data-heatmap="off" と空の値はヒートマップにしない', () => {
+    expect(toOptions({ heatmap: 'off' }).heatmap).toBe(undefined);
+    expect(toOptions({ heatmap: '' }).heatmap).toBe(undefined);
+  });
+
+  it('data-heatmap にプロパティ名を書くとその値を重みにする', () => {
+    expect(toOptions({ heatmap: 'weight' }).heatmap).toEqual({
+      weight: 'weight',
+    });
+  });
+
+  it('data-heatmap-colors を読む', () => {
+    expect(
+      toOptions({ heatmap: 'on', heatmapColors: '#ff0,#f00' }).heatmap,
+    ).toEqual({ colors: ['#ff0', '#f00'] });
+  });
+
+  it('data-circle-size と data-circle-color と data-circle-colors を読む', () => {
+    const options = toOptions({
+      circleSize: 'weight',
+      circleColor: 'category',
+      circleColors: '#f00,#0f0,#00f',
+    });
+
+    expect(options.circle).toEqual({
+      size: 'weight',
+      color: 'category',
+      colors: ['#f00', '#0f0', '#00f'],
+    });
+  });
+
+  it('data-circle-size か data-circle-color の片方だけでも円にする', () => {
+    expect(toOptions({ circleSize: 'weight' }).circle).toEqual({
+      size: 'weight',
+    });
+    expect(toOptions({ circleColor: 'category' }).circle).toEqual({
+      color: 'category',
+    });
+  });
+
+  it('data-circle-colors だけでは円にしない', () => {
+    expect(toOptions({ circleColors: '#f00' }).circle).toBe(undefined);
+  });
+});
+
 // data-lang の言語解決 (embed#462 / maps-core#50)。
 // 正しい契約 (maps-core#50 のテストが基準):
 //   - `ja` / `ja-jp` のみ日本語スタイル、それ以外は英語スタイル
