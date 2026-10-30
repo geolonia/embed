@@ -172,6 +172,40 @@ export type EmbedAttributes = {
    */
   '3d': string;
   /**
+   * `data-choropleth`：`data-geojson` のポリゴンを、このプロパティの値で塗り分ける。
+   * 既定値はなく、指定したときだけキーが入る。
+   */
+  choropleth?: string;
+  /**
+   * `data-choropleth-colors`：塗り分けの色。値の小さい側から順にカンマで区切る。
+   * `data-choropleth` が無いときは無視する。
+   */
+  choroplethColors?: string;
+  /**
+   * `data-choropleth-range`：色を割り当てる値の範囲。`"最小,最大"` 形式。
+   * 省略時や読めないときはデータの最小値と最大値を使う。
+   */
+  choroplethRange?: string;
+  /**
+   * `data-heatmap`：`data-geojson` のポイントをヒートマップで描く。`'on'` で重みなし、
+   * プロパティ名でその値を重みにする。`'off'` または空なら描かない。
+   */
+  heatmap?: string;
+  /**
+   * `data-heatmap-colors`：ヒートマップの色。密度の低い側から順にカンマで区切る。
+   * `data-heatmap` が無いときは無視する。
+   */
+  heatmapColors?: string;
+  /** `data-circle-size`：ポイントの円の大きさに使うプロパティ名。 */
+  circleSize?: string;
+  /** `data-circle-color`：ポイントの円の色に使うプロパティ名。 */
+  circleColor?: string;
+  /**
+   * `data-circle-colors`：`data-circle-color` に使う色をカンマで区切る。
+   * `data-circle-size` と `data-circle-color` のどちらも無いときは無視する。
+   */
+  circleColors?: string;
+  /**
    * 追加の `data-*` 属性はそのまま透過される（{@link EmbedPlugin} が利用する
    * プラグイン固有の属性など）。
    */
