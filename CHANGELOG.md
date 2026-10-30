@@ -7,13 +7,14 @@
 `@geolonia/maps-core` を `^0.8.0` へ更新し、GeoJSON をデータの値で描き分ける `data-*` 属性を追加しました。同梱する maplibre-gl は `6.12.0` のままです。
 
 - **Feature**: `data-choropleth`、`data-heatmap`、`data-circle-*` 属性で、GeoJSON をコロプレス、ヒートマップ、データ駆動の円で描けるようにしました（[#546](https://github.com/geolonia/embed/issues/546)）。maps-core 0.8.0 の `choropleth`、`heatmap`、`circle` オプションへそのまま渡します。例は `docs/data-viz/` にあります。
-  - `data-choropleth` にプロパティ名を指定すると、ポリゴンをその値で塗り分けます。色は `data-choropleth-colors`、値の範囲は `data-choropleth-range`（`最小,最大`）で指定します。範囲を省略するか、数値 2 つとして読めない値や最小が最大以上の値を指定すると、データの最小値と最大値を使います。
-  - `data-heatmap` にプロパティ名を指定すると、その値を重みにしたヒートマップで描きます。`on` で重みなし、`off` か空の値でヒートマップにしません（`on` と `off` は大文字小文字と前後の空白を区別しません）。色は `data-heatmap-colors` で指定します。
-  - `data-circle-size` と `data-circle-color` にプロパティ名を指定すると、ポイントの円の大きさと色をその値で変えます。色は `data-circle-colors` で指定します。
+  - `data-choropleth` にプロパティ名を指定すると、ポリゴンをその値で塗り分けます。色は `data-choropleth-colors`、値の範囲は `data-choropleth-range`（`最小,最大`）で指定します。範囲を省略するか、数値 2 つとして読めない値や最小が最大以上の値を指定すると、データの最小値と最大値を使います。地物の simplestyle の `fill` より優先し、`fill-opacity` が無い地物は不透明度 0.7 で描きます。
+  - `data-heatmap` にプロパティ名を指定すると、その値を重みにしたヒートマップで描きます。`on` で重みなし、`off` か空の値でヒートマップにしません（`on` と `off` は大文字小文字と前後の空白を区別しません）。色は `data-heatmap-colors` で指定します。ヒートマップにするとクラスタリングとポイントのマーカーは表示しません。
+  - `data-circle-size` と `data-circle-color` にプロパティ名を指定すると、ポイントの円の大きさと色をその値で変えます。色は `data-circle-colors` で指定します。指定するとクラスタリングは行わず、`marker-symbol` を持つポイントも円で描きます（アイコンとタイトルは表示しません）。
   - 色はカンマで区切ります。`rgb(0, 0, 255)` のような括弧の中のカンマは区切りとして扱いません。`-colors` と `-range` は、描き方を有効にする属性が無いときは無視します。
   - **Note**: これまで同じ名前の `data-*` 属性を独自の用途で付けていたページでは、その値が地図の描き方に使われるようになります。
-- **Change**: ナビゲーションコントロールのコンパスが地図の傾きも表し、クリックで向きと傾きの両方を戻すようになりました（maps-core#154）。`data-navigation-control` を使うすべての地図に効きます。傾けていない地図では見た目は変わりません。
-- **Change**: `new geolonia.Map({ transformRequest })` や `map.setTransformRequest()` で渡した関数が、Geolonia のソースとスプライトへのリクエストにも呼ばれるようになりました（maps-core#140）。HTML 属性だけで地図を使っている場合は影響ありません。
+- **Change**: ナビゲーションコントロールのコンパスが地図の傾きも表し、クリックで向きと傾きの両方を戻すようになりました（[maps-core#154](https://github.com/geolonia/maps-core/pull/154)）。`data-navigation-control` を使うすべての地図に効きます。傾けていない地図では見た目は変わりません。
+- **Change**: `new geolonia.Map({ transformRequest })` で渡した関数が、Geolonia のソースとスプライトへのリクエストにも、maps-core が `key` や `sessionId` を付けた後の URL で呼ばれるようになりました（[maps-core#140](https://github.com/geolonia/maps-core/pull/140)）。HTML 属性だけで地図を使っている場合は影響ありません。
+  - **Note**: `map.setTransformRequest()` で関数を差し替えると、maps-core の変換も外れます。後から差し替える場合は `key` や `sessionId` を自分で付ける必要があります。
 - **Internal**: `@geolonia/maps-core` `^0.8.0` に依存します（[#544](https://github.com/geolonia/embed/issues/544)）。あわせてポップアップ本文のサニタイズに使う sanitize-html が `2.18.0` から `2.18.1` になりました。
 
 ### v6.0.0-pre.5
