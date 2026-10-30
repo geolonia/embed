@@ -2,6 +2,20 @@
 
 ## @geolonia/embed
 
+### v6.0.0-pre.6
+
+`@geolonia/maps-core` を `^0.8.0` へ更新し、GeoJSON をデータの値で描き分ける `data-*` 属性を追加しました。同梱する maplibre-gl は `6.12.0` のままです。
+
+- **Feature**: `data-choropleth`、`data-heatmap`、`data-circle-*` 属性で、GeoJSON をコロプレス、ヒートマップ、データ駆動の円で描けるようにしました（[#546](https://github.com/geolonia/embed/issues/546)）。maps-core 0.8.0 の `choropleth`、`heatmap`、`circle` オプションへそのまま渡します。例は `docs/data-viz/` にあります。
+  - `data-choropleth` にプロパティ名を指定すると、ポリゴンをその値で塗り分けます。色は `data-choropleth-colors`、値の範囲は `data-choropleth-range`（`最小,最大`）で指定します。範囲を省略するか、数値 2 つとして読めない値や最小が最大以上の値を指定すると、データの最小値と最大値を使います。
+  - `data-heatmap` にプロパティ名を指定すると、その値を重みにしたヒートマップで描きます。`on` で重みなし、`off` か空の値でヒートマップにしません（`on` と `off` は大文字小文字と前後の空白を区別しません）。色は `data-heatmap-colors` で指定します。
+  - `data-circle-size` と `data-circle-color` にプロパティ名を指定すると、ポイントの円の大きさと色をその値で変えます。色は `data-circle-colors` で指定します。
+  - 色はカンマで区切ります。`rgb(0, 0, 255)` のような括弧の中のカンマは区切りとして扱いません。`-colors` と `-range` は、描き方を有効にする属性が無いときは無視します。
+  - **Note**: これまで同じ名前の `data-*` 属性を独自の用途で付けていたページでは、その値が地図の描き方に使われるようになります。
+- **Change**: ナビゲーションコントロールのコンパスが地図の傾きも表し、クリックで向きと傾きの両方を戻すようになりました（maps-core#154）。`data-navigation-control` を使うすべての地図に効きます。傾けていない地図では見た目は変わりません。
+- **Change**: `new geolonia.Map({ transformRequest })` や `map.setTransformRequest()` で渡した関数が、Geolonia のソースとスプライトへのリクエストにも呼ばれるようになりました（maps-core#140）。HTML 属性だけで地図を使っている場合は影響ありません。
+- **Internal**: `@geolonia/maps-core` `^0.8.0` に依存します（[#544](https://github.com/geolonia/embed/issues/544)）。あわせてポップアップ本文のサニタイズに使う sanitize-html が `2.18.0` から `2.18.1` になりました。
+
 ### v6.0.0-pre.5
 
 配布物に関わる変更は、maplibre-gl の更新とライセンス表記の修正の 2 点です。それ以外は開発環境と CI の整備で、`dist/` の中身は 6.0.0-pre.4 と実質同一です。
