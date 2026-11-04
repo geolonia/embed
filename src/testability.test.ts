@@ -1,5 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
-import { JSDOM } from 'jsdom';
+import { describe, it, expect } from 'vitest';
 
 // maplibre-gl v6 にデフォルトエクスポートは無いので名前空間でインポートする。
 import * as maplibregl from 'maplibre-gl';
@@ -12,19 +11,13 @@ import * as maplibregl from 'maplibre-gl';
 
 describe('maplibre-gl jsdom limitation', () => {
   it('jsdom上ではMaplibre Mapインスタンス生成時にエラー（WebGL未対応のため）', () => {
-    // jsdom の "Not implemented" メッセージを抑制
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    // vitest.config.ts の environment: 'jsdom' が用意する document を使う。
+    // 以前はここで JSDOM を自前に生成して global.window / global.document を
+    // 差し替えていたが、vitest 5 では jsdom 環境の document が getter のみになり
+    // 代入できない (Cannot set property document of [object Window])。
+    // 環境として jsdom が既にあるので、器だけ用意すれば足りる。
+    document.body.innerHTML = '<div id="map"></div>';
 
-    const dom = new JSDOM(
-      '<!DOCTYPE html><html><body><div id="map"></div></body></html>',
-      {
-        url: 'http://localhost',
-        pretendToBeVisual: true,
-      },
-    );
-    // @ts-ignore
-    global.window = dom.window;
-    global.document = dom.window.document;
     let errorCaught = null;
     try {
       new maplibregl.Map({
@@ -41,7 +34,15 @@ describe('maplibre-gl jsdom limitation', () => {
       /webgl|WebGL|context|device|Not implemented/i.test(errorCaught.message),
     ).toBe(true);
 
-    consoleSpy.mockRestore();
+    // 実行すると jsdom が
+    //   Not implemented: HTMLCanvasElement's getContext() method
+    // をテスト出力に書く。これは失敗ではなく、このテストが記録している
+    // 「jsdom には WebGL が無い」ことの証跡そのもの。
+    //
+    // 以前は console.error を spy で潰していたが、vitest 5 では jsdom 環境が
+    // 環境セットアップ時に VirtualConsole を作るため、テスト内で貼る spy では
+    // もう捕まえられない (environmentOptions.jsdom.console: true でも同じ)。
+    // 何も抑制しない spy を残すと誤解を生むので外してある。
   });
 
   it('【NOTE】描画テストが必要な場合はE2E（ブラウザ実行）で行うこと', () => {
