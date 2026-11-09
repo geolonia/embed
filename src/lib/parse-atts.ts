@@ -32,7 +32,7 @@ export default (
     container.dataset = {};
   }
 
-  let lang = 'auto';
+  let lang: string;
   if (container.dataset.lang && container.dataset.lang === 'auto') {
     lang = getLang();
   } else if (container.dataset.lang && container.dataset.lang === 'ja') {
