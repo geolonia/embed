@@ -5,7 +5,9 @@ import { checkPermission, parseScriptTagApiKey } from './util';
 import parseAtts, { attsToOptions } from './parse-atts';
 import type { EmbedAttributes, EmbedPlugin } from '../types';
 
-const plugins: EmbedPlugin[] = [];
+// 登録済みプラグインは個別の PluginAttributes を持ちうるので、配列としては
+// それらをまとめて保持できる形にしておく (呼び出しは常に EmbedAttributes で行う)。
+const plugins: EmbedPlugin<any>[] = [];
 
 /**
  * Move any inline HTML the author placed inside the map container into
@@ -164,7 +166,13 @@ export const renderGeoloniaMap = () => {
   }
 };
 
-export const registerPlugin = (plugin: EmbedPlugin): void => {
+// PluginAttributes を推論させる。EmbedPlugin<{ foo: string }> のように固有の
+// data-* を要求するプラグインも、そのまま登録できるようにするため。
+export const registerPlugin = <
+  PluginAttributes extends { [otherKey: string]: string | number | undefined },
+>(
+  plugin: EmbedPlugin<PluginAttributes>,
+): void => {
   plugins.push(plugin);
   return void 0;
 };

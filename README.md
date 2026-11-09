@@ -148,7 +148,7 @@ You can see more examples at [https://geolonia.github.io/embed/](https://geoloni
 
 ### Requirements
 
-- node.js >= 22.18
+- node.js >= 22.22.2 (the floor required by `jsdom` 30; `.tool-versions` pins the latest 22.x)
 
 ### How to build
 
