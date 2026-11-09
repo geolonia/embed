@@ -125,9 +125,7 @@ const isCssSelector = (value: string): Element | false => {
  * a URL / inline JSON string, or a parsed FeatureCollection when the value is a
  * CSS selector referencing an inline element.
  */
-const resolveGeojson = (
-  value: string,
-): string | FeatureCollection => {
+const resolveGeojson = (value: string): string | FeatureCollection => {
   const el = isCssSelector(value);
   if (el && el.textContent) {
     return JSON.parse(el.textContent) as FeatureCollection;
