@@ -3,8 +3,9 @@ import '../style.css';
 import { GeoloniaMap, keyring } from '@geolonia/maps-core';
 import { checkPermission, parseScriptTagApiKey } from './util';
 import parseAtts, { attsToOptions } from './parse-atts';
+import type { EmbedAttributes, EmbedPlugin } from '../types';
 
-const plugins = [];
+const plugins: EmbedPlugin[] = [];
 
 /**
  * Move any inline HTML the author placed inside the map container into
@@ -45,21 +46,29 @@ export const renderGeoloniaMap = () => {
 
   if (checkPermission()) {
     let isDOMContentLoaded = false;
-    const alreadyRenderedMaps = [];
     const isRemoved = Symbol('map-is-removed');
+
+    // 手動で remove された地図に印を付けるための symbol プロパティ。
+    type RemovableMap = GeoloniaMap & { [isRemoved]?: boolean };
+
+    const alreadyRenderedMaps: {
+      map: RemovableMap;
+      target: HTMLElement;
+      atts: EmbedAttributes;
+    }[] = [];
 
     /**
      *
      * @param {HTMLElement} target
      */
-    const renderSingleMap = (target) => {
+    const renderSingleMap = (target: HTMLElement) => {
       const atts = parseAtts(target);
 
       // Dedup: if this container was already initialised (e.g. constructed
       // programmatically before the lazy observer fired), reuse the instance.
       // Must happen before extractPopupContent(), otherwise we'd wipe the
       // already-rendered map DOM out of the container.
-      let map = target.geoloniaMap;
+      let map: RemovableMap | undefined = target.geoloniaMap;
       if (!map) {
         // Grab inline popup content before maps-core clears/renders the container.
         extractPopupContent(target);
@@ -81,7 +90,10 @@ export const renderGeoloniaMap = () => {
           map.remove();
         }
       });
-      observer.observe(target.parentNode, { childList: true });
+      // 親が無いコンテナは DOM から外されることがないので監視しない。
+      if (target.parentNode) {
+        observer.observe(target.parentNode, { childList: true });
+      }
 
       // plugin
       if (isDOMContentLoaded && !map[isRemoved]) {
@@ -108,7 +120,8 @@ export const renderGeoloniaMap = () => {
           return;
         }
         try {
-          renderSingleMap(item.target);
+          // 監視対象は下の querySelectorAll<HTMLElement> で集めた要素に限られる。
+          renderSingleMap(item.target as HTMLElement);
         } catch (e) {
           // Not throw error because, following maps will not be rendered.
           console.error('[Geolonia] Failed to initialize map', e); // eslint-disable-line
@@ -117,10 +130,10 @@ export const renderGeoloniaMap = () => {
       });
     });
 
-    const containers = document.querySelectorAll(
+    const containers = document.querySelectorAll<HTMLElement>(
       '.geolonia[data-lazy-loading="off"]',
     );
-    const lazyContainers = document.querySelectorAll(
+    const lazyContainers = document.querySelectorAll<HTMLElement>(
       '.geolonia:not([data-lazy-loading="off"])',
     );
 
@@ -151,9 +164,7 @@ export const renderGeoloniaMap = () => {
   }
 };
 
-export const registerPlugin = (
-  plugin: (map: GeoloniaMap, target: HTMLElement, atts) => void,
-): void => {
+export const registerPlugin = (plugin: EmbedPlugin): void => {
   plugins.push(plugin);
   return void 0;
 };

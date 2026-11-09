@@ -12,9 +12,7 @@
     "sourceMap": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    // TypeScript 6 で strict の既定が true になった。これまでの挙動を保つため
-    // 明示的に false にしている (有効化すると型エラーが 25 件出る。別途対応)。
-    "strict": false,
+    "strict": true,
     "forceConsistentCasingInFileNames": true,
     "module": "esnext",
     "moduleResolution": "bundler",

@@ -26,11 +26,13 @@ type ParseAttsParams = {
  * `GeoloniaMapOptions` for maps-core.
  */
 export default (
-  container,
+  container: HTMLElement,
   params: ParseAttsParams = {},
 ): EmbedAttributes => {
+  // HTMLElement なら dataset は必ずあるが、plain object を渡していた頃の経路の
+  // 保険として残している。HTMLElement.dataset は readonly なのでキャストする。
   if (!container.dataset) {
-    container.dataset = {};
+    (container as unknown as { dataset: DOMStringMap }).dataset = {};
   }
 
   let lang: string;

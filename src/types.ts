@@ -209,7 +209,7 @@ export type EmbedAttributes = {
    * 追加の `data-*` 属性はそのまま透過される（{@link EmbedPlugin} が利用する
    * プラグイン固有の属性など）。
    */
-  [otherKey: string]: string | number;
+  [otherKey: string]: string | number | undefined;
 };
 
 /**
@@ -222,9 +222,10 @@ export type EmbedAttributes = {
  * 対しては呼び出されない。
  */
 export type EmbedPlugin<
-  PluginAttributes extends { [otherKey: string]: string } = {
-    [otherKey: string]: string;
-  },
+  PluginAttributes extends { [otherKey: string]: string | number | undefined } =
+    {
+      [otherKey: string]: string | number | undefined;
+    },
 > = (
   map: GeoloniaMap,
   target: HTMLElement,
