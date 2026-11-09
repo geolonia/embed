@@ -95,7 +95,7 @@ module.exports = defineConfig([{
         "promise/prefer-await-to-then": "error",
     },
 }, {
-    files: ["**/*.js", "**/*.cjs", "**/*.mjs", "**/*.jsx"],
+    files: ["**/*.js", "**/*.cjs", "**/*.mjs"],
 
     rules: {
         "comma-dangle": ["error", "always-multiline"],
@@ -124,14 +124,14 @@ module.exports = defineConfig([{
         parserOptions: {},
     },
 }, {
-    files: ["**/*.mjs", "**/*.jsx"],
+    files: ["**/*.mjs"],
 
     languageOptions: {
         sourceType: "module",
         parserOptions: {},
     },
 }, {
-    files: ["**/*.ts", "**/*.tsx"],
+    files: ["**/*.ts"],
     extends: compat.extends("plugin:@typescript-eslint/recommended"),
 
     languageOptions: {
@@ -184,12 +184,8 @@ module.exports = defineConfig([{
     files: [
         "**/*.test.js",
         "**/*.test.ts",
-        "**/*.test.jsx",
-        "**/*.test.tsx",
         "**/*.spec.js",
         "**/*.spec.ts",
-        "**/*.spec.jsx",
-        "**/*.spec.tsx",
     ],
 
     rules: {

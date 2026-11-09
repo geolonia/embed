@@ -83,7 +83,7 @@ const sharedConfig = {
         },
       },
       {
-        test: /\.tsx?$/,
+        test: /\.ts$/,
         use: {
           loader: 'ts-loader',
           options: {
@@ -99,7 +99,7 @@ const sharedConfig = {
     ],
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
+    extensions: ['.ts', '.js'],
   },
 };
 
