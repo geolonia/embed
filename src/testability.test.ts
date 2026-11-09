@@ -18,7 +18,7 @@ describe('maplibre-gl jsdom limitation', () => {
     // 環境として jsdom が既にあるので、器だけ用意すれば足りる。
     document.body.innerHTML = '<div id="map"></div>';
 
-    let errorCaught = null;
+    let errorCaught: unknown = null;
     try {
       new maplibregl.Map({
         container: 'map',
@@ -31,7 +31,9 @@ describe('maplibre-gl jsdom limitation', () => {
     }
     expect(errorCaught).toBeInstanceOf(Error);
     expect(
-      /webgl|WebGL|context|device|Not implemented/i.test(errorCaught.message),
+      /webgl|WebGL|context|device|Not implemented/i.test(
+        (errorCaught as Error).message,
+      ),
     ).toBe(true);
 
     // 実行すると jsdom が

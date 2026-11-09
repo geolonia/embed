@@ -13,7 +13,6 @@ export type { GeoloniaMapOptions } from '@geolonia/maps-core';
 export type Popup = maplibregl.Popup;
 
 export type { EmbedAttributes, EmbedPlugin } from './types';
-import type { EmbedPlugin } from './types';
 
 // Type for `window.geolonia`
 export type Geolonia = Partial<typeof maplibregl> & {
@@ -23,7 +22,8 @@ export type Geolonia = Partial<typeof maplibregl> & {
   Marker: typeof GeoloniaMarker;
   SimpleStyle: typeof SimpleStyle;
   simpleStyle: typeof SimpleStyle; // backward compatibility
-  registerPlugin: (embedPlugin: EmbedPlugin) => void;
+  // render.ts の実装とシグネチャを必ず一致させる。
+  registerPlugin: typeof registerPlugin;
 };
 
 declare global {

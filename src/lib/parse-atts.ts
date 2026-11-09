@@ -1,6 +1,7 @@
 'use strict';
 
 import type { ControlPosition } from 'maplibre-gl';
+import type { FeatureCollection } from 'geojson';
 import {
   getLang,
   keyring,
@@ -25,14 +26,16 @@ type ParseAttsParams = {
  * `GeoloniaMapOptions` for maps-core.
  */
 export default (
-  container,
+  container: HTMLElement,
   params: ParseAttsParams = {},
 ): EmbedAttributes => {
+  // HTMLElement なら dataset は必ずあるが、plain object を渡していた頃の経路の
+  // 保険として残している。HTMLElement.dataset は readonly なのでキャストする。
   if (!container.dataset) {
-    container.dataset = {};
+    (container as unknown as { dataset: DOMStringMap }).dataset = {};
   }
 
-  let lang = 'auto';
+  let lang: string;
   if (container.dataset.lang && container.dataset.lang === 'auto') {
     lang = getLang();
   } else if (container.dataset.lang && container.dataset.lang === 'ja') {
@@ -122,12 +125,10 @@ const isCssSelector = (value: string): Element | false => {
  * a URL / inline JSON string, or a parsed FeatureCollection when the value is a
  * CSS selector referencing an inline element.
  */
-const resolveGeojson = (
-  value: string,
-): string | GeoJSON.FeatureCollection => {
+const resolveGeojson = (value: string): string | FeatureCollection => {
   const el = isCssSelector(value);
   if (el && el.textContent) {
-    return JSON.parse(el.textContent) as GeoJSON.FeatureCollection;
+    return JSON.parse(el.textContent) as FeatureCollection;
   }
   return value;
 };

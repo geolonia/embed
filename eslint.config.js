@@ -9,12 +9,9 @@ const promise = require("eslint-plugin-promise");
 
 const {
     fixupPluginRules,
-    fixupConfigRules,
 } = require("@eslint/compat");
 
 const tsParser = require("@typescript-eslint/parser");
-const react = require("eslint-plugin-react");
-const reactHooks = require("eslint-plugin-react-hooks");
 const js = require("@eslint/js");
 
 const {
@@ -98,7 +95,7 @@ module.exports = defineConfig([{
         "promise/prefer-await-to-then": "error",
     },
 }, {
-    files: ["**/*.js", "**/*.cjs", "**/*.mjs", "**/*.jsx"],
+    files: ["**/*.js", "**/*.cjs", "**/*.mjs"],
 
     rules: {
         "comma-dangle": ["error", "always-multiline"],
@@ -127,14 +124,14 @@ module.exports = defineConfig([{
         parserOptions: {},
     },
 }, {
-    files: ["**/*.mjs", "**/*.jsx"],
+    files: ["**/*.mjs"],
 
     languageOptions: {
         sourceType: "module",
         parserOptions: {},
     },
 }, {
-    files: ["**/*.ts", "**/*.tsx"],
+    files: ["**/*.ts"],
     extends: compat.extends("plugin:@typescript-eslint/recommended"),
 
     languageOptions: {
@@ -184,45 +181,11 @@ module.exports = defineConfig([{
         "@typescript-eslint/no-var-requires": "off",
     },
 }, {
-    files: ["**/*.jsx", "**/*.tsx"],
-
-    extends: fixupConfigRules(
-        compat.extends("plugin:react/recommended", "plugin:react-hooks/recommended"),
-    ),
-
-    languageOptions: {
-        globals: {
-            ...globals.browser,
-        },
-    },
-
-    plugins: {
-        react: fixupPluginRules(react),
-        "react-hooks": fixupPluginRules(reactHooks),
-    },
-
-    settings: {
-        react: {
-            pragma: "React",
-            version: "detect",
-        },
-    },
-
-    rules: {
-        "react/jsx-uses-react": "off",
-        "react/prop-types": "off",
-        "react/react-in-jsx-scope": "off",
-    },
-}, {
     files: [
         "**/*.test.js",
         "**/*.test.ts",
-        "**/*.test.jsx",
-        "**/*.test.tsx",
         "**/*.spec.js",
         "**/*.spec.ts",
-        "**/*.spec.jsx",
-        "**/*.spec.tsx",
     ],
 
     rules: {

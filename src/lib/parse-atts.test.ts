@@ -346,17 +346,17 @@ describe('data-lang 言語解決', () => {
   it('data-lang="en" は browser が ja でも英語スタイルになる (ja にならない)', () => {
     const opts = optionsFor('en', ['ja']);
     expect(opts.lang).toBe('en');
-    expect(getStyle('geolonia/basic-v2', { lang: 'en', apiKey: 'KEY' })).toContain(
-      '/en.json',
-    );
+    expect(
+      getStyle('geolonia/basic-v2', { lang: 'en', apiKey: 'KEY' }),
+    ).toContain('/en.json');
   });
 
   it('data-lang="ja" は browser が en でも日本語スタイルになる', () => {
     const opts = optionsFor('ja', ['en']);
     expect(opts.lang).toBe('ja');
-    expect(getStyle('geolonia/basic-v2', { lang: 'ja', apiKey: 'KEY' })).toContain(
-      '/ja.json',
-    );
+    expect(
+      getStyle('geolonia/basic-v2', { lang: 'ja', apiKey: 'KEY' }),
+    ).toContain('/ja.json');
   });
 
   it('data-lang="ja-jp" は日本語スタイルになる (maps-core#50)', () => {

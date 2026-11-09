@@ -1,5 +1,10 @@
 {
   "extends": "./tsconfig.json",
+  "compilerOptions": {
+    // TypeScript 6 は rootDir の明示を要求する (TS5011)。これまでの推論結果と
+    // 同じ ./src を指定しており、dist の .d.ts の配置は変わらない。
+    "rootDir": "./src"
+  },
   "exclude": [
     "src/**/*.test.ts",
     "e2e",

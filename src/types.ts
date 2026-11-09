@@ -209,8 +209,18 @@ export type EmbedAttributes = {
    * 追加の `data-*` 属性はそのまま透過される（{@link EmbedPlugin} が利用する
    * プラグイン固有の属性など）。
    */
-  [otherKey: string]: string | number;
+  [otherKey: string]: string | number | undefined;
 };
+
+/**
+ * プラグインが独自に読む `data-*` 属性の型。
+ *
+ * {@link EmbedAttributes} のインデックスシグネチャが `number` も許すのは、
+ * `maxZoom: 20` のように既定値が数値の組み込み属性があるため。一方こちらは
+ * プラグイン固有の `data-*` だけを指し、`parseAtts` が `container.dataset`
+ * (`DOMStringMap`) をそのまま広げて渡すので、実行時には必ず文字列か未定義になる。
+ */
+export type EmbedPluginAttributes = { [otherKey: string]: string | undefined };
 
 /**
  * 埋め込みプラグインの型。地図インスタンス、対象のコンテナ要素、正規化済みの
@@ -222,9 +232,7 @@ export type EmbedAttributes = {
  * 対しては呼び出されない。
  */
 export type EmbedPlugin<
-  PluginAttributes extends { [otherKey: string]: string } = {
-    [otherKey: string]: string;
-  },
+  PluginAttributes extends EmbedPluginAttributes = EmbedPluginAttributes,
 > = (
   map: GeoloniaMap,
   target: HTMLElement,
