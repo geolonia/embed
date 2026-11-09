@@ -3,7 +3,11 @@ import '../style.css';
 import { GeoloniaMap, keyring } from '@geolonia/maps-core';
 import { checkPermission, parseScriptTagApiKey } from './util';
 import parseAtts, { attsToOptions } from './parse-atts';
-import type { EmbedAttributes, EmbedPlugin } from '../types';
+import type {
+  EmbedAttributes,
+  EmbedPlugin,
+  EmbedPluginAttributes,
+} from '../types';
 
 // 登録済みプラグインは個別の PluginAttributes を持ちうるので、配列としては
 // それらをまとめて保持できる形にしておく (呼び出しは常に EmbedAttributes で行う)。
@@ -168,9 +172,7 @@ export const renderGeoloniaMap = () => {
 
 // PluginAttributes を推論させる。EmbedPlugin<{ foo: string }> のように固有の
 // data-* を要求するプラグインも、そのまま登録できるようにするため。
-export const registerPlugin = <
-  PluginAttributes extends { [otherKey: string]: string | number | undefined },
->(
+export const registerPlugin = <PluginAttributes extends EmbedPluginAttributes>(
   plugin: EmbedPlugin<PluginAttributes>,
 ): void => {
   plugins.push(plugin);
