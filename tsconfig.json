@@ -12,10 +12,15 @@
     "sourceMap": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    // "strict": true,
+    // TypeScript 6 で strict の既定が true になった。これまでの挙動を保つため
+    // 明示的に false にしている (有効化すると型エラーが 25 件出る。別途対応)。
+    "strict": false,
     "forceConsistentCasingInFileNames": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
+    // TypeScript 6 は node_modules/@types を自動で全部取り込まなくなったので、
+    // グローバル型が要るものを明示する (process など)。
+    "types": ["node"],
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noFallthroughCasesInSwitch": true,

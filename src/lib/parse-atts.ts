@@ -1,6 +1,7 @@
 'use strict';
 
 import type { ControlPosition } from 'maplibre-gl';
+import type { FeatureCollection } from 'geojson';
 import {
   getLang,
   keyring,
@@ -124,10 +125,10 @@ const isCssSelector = (value: string): Element | false => {
  */
 const resolveGeojson = (
   value: string,
-): string | GeoJSON.FeatureCollection => {
+): string | FeatureCollection => {
   const el = isCssSelector(value);
   if (el && el.textContent) {
-    return JSON.parse(el.textContent) as GeoJSON.FeatureCollection;
+    return JSON.parse(el.textContent) as FeatureCollection;
   }
   return value;
 };
