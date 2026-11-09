@@ -9,12 +9,9 @@ const promise = require("eslint-plugin-promise");
 
 const {
     fixupPluginRules,
-    fixupConfigRules,
 } = require("@eslint/compat");
 
 const tsParser = require("@typescript-eslint/parser");
-const react = require("eslint-plugin-react");
-const reactHooks = require("eslint-plugin-react-hooks");
 const js = require("@eslint/js");
 
 const {
@@ -182,36 +179,6 @@ module.exports = defineConfig([{
         "@typescript-eslint/no-loss-of-precision": "off",
         "@typescript-eslint/no-this-alias": "off",
         "@typescript-eslint/no-var-requires": "off",
-    },
-}, {
-    files: ["**/*.jsx", "**/*.tsx"],
-
-    extends: fixupConfigRules(
-        compat.extends("plugin:react/recommended", "plugin:react-hooks/recommended"),
-    ),
-
-    languageOptions: {
-        globals: {
-            ...globals.browser,
-        },
-    },
-
-    plugins: {
-        react: fixupPluginRules(react),
-        "react-hooks": fixupPluginRules(reactHooks),
-    },
-
-    settings: {
-        react: {
-            pragma: "React",
-            version: "detect",
-        },
-    },
-
-    rules: {
-        "react/jsx-uses-react": "off",
-        "react/prop-types": "off",
-        "react/react-in-jsx-scope": "off",
     },
 }, {
     files: [
