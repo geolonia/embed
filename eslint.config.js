@@ -4,12 +4,13 @@ const {
 } = require("eslint/config");
 
 const globals = require("globals");
-const _import = require("eslint-plugin-import");
-const promise = require("eslint-plugin-promise");
 
-const {
-    fixupPluginRules,
-} = require("@eslint/compat");
+// eslint-plugin-import ではなく import-x を使う (geolonia/embed#561)。
+// 本家は 2025-06-20 を最後にリリースが止まっており、eslint 10 を peer に
+// 宣言したバージョンが無い。import-x はそのフォークで flat config に対応して
+// いるため、@eslint/compat の fixupPluginRules も要らない。
+const importX = require("eslint-plugin-import-x");
+const promise = require("eslint-plugin-promise");
 
 const tsParser = require("@typescript-eslint/parser");
 const js = require("@eslint/js");
@@ -46,7 +47,7 @@ module.exports = defineConfig([{
     },
 
     plugins: {
-        import: fixupPluginRules(_import),
+        "import-x": importX,
         promise,
     },
 
@@ -78,7 +79,7 @@ module.exports = defineConfig([{
             exceptRange: true,
         }],
 
-        "import/no-extraneous-dependencies": ["warn", {
+        "import-x/no-extraneous-dependencies": ["warn", {
             "devDependencies": [
                 "**/.eslintrc.js",
                 "**/.eslintrc.cjs",
@@ -88,6 +89,9 @@ module.exports = defineConfig([{
                 "**/next.config.js",
                 "**/vite.config.js",
                 "**/vite.config.ts",
+                // import-x に替えて初めて報告されるようになった。本家は同じ
+                // ファイルの prettier は報告するのに vitest だけ見落としていた。
+                "**/vitest.config.ts",
                 "**/webpack.config.js",
             ],
         }],
@@ -190,6 +194,6 @@ module.exports = defineConfig([{
 
     rules: {
         "no-import-assign": "off",
-        "import/no-extraneous-dependencies": "off",
+        "import-x/no-extraneous-dependencies": "off",
     },
 }, globalIgnores(["node_modules/", "docs", "dist", "eslint.config.js", ".*.js"])]);
