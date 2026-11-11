@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1" />
+  <title>@geolonia/embed - iframe</title>
+</head>
+<body>
+  <!-- no-api-key.html を ?origin= で指定したオリジンの iframe で開く。E2E ではこのページと別のオリジンを渡す -->
+  <iframe id="frame" style="width: 400px; height: 300px;"></iframe>
+  <script>
+    var origin = new URLSearchParams(location.search).get('origin') || location.origin;
+    document.getElementById('frame').src = origin + '/e2e/no-api-key.html';
+  </script>
+</body>
+</html>
