@@ -23,5 +23,9 @@ export {
 } from '@geolonia/maps-core';
 export { registerPlugin } from './lib/render';
 export { VERSION as embedVersion } from './version';
-export type { EmbedAttributes, EmbedPlugin } from './types';
+export type {
+  EmbedAttributes,
+  EmbedPlugin,
+  EmbedPluginAttributes,
+} from './types';
 export type { GeoloniaMapOptions } from '@geolonia/maps-core';

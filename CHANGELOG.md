@@ -6,6 +6,26 @@
 
 `6.0.0-pre.2` から続いた pre 表記が外れる最初の正式版です。配布物に関わる変更は、同梱する maplibre-gl の更新と型定義の変更の 2 点です。それ以外は開発環境の整備で、地図の見た目や `data-*` 属性の振る舞いは 6.0.0-pre.6 から変わりません。
 
+#### 5.x から更新する場合
+
+npm の `latest` は現在 `5.2.2` です。この節は `6.0.0-pre.6` からの差分なので、5.x から上げる場合に対応が要るものをここにまとめます。詳細は各 prerelease の節を参照してください。
+
+- **同梱する maplibre-gl が `5.19.0` から `6.16.0` になりました**（v6.0.0-pre.4）。`window.geolonia`（および `window.maplibregl` / `window.mapboxgl`）経由で maplibre の API を直接触っている場合は、maplibre-gl v6 の破壊的変更を受けます。v6 にデフォルトエクスポートはありません。
+  - **対応**: [maplibre-gl v6 の変更点](https://github.com/maplibre/maplibre-gl-js/releases) を確認してください。HTML の `data-*` 属性だけで地図を使っている場合は影響ありません。
+- **Content-Security-Policy を設定しているページは `worker-src blob:` の許可が必要です**（v6.0.0-pre.4）。maplibre-gl v6 の worker を 1 ファイル配布のまま動かすため、バンドルへ埋め込んだ worker を `blob:` URL から起動します。許可が無いと worker を起動できず地図が表示されません。
+  - **対応**: CSP に `worker-src blob:` を足してください。
+  - **Note**: worker を埋め込むぶん配布ファイルが大きくなります。`dist/embed.js` は gzip で約 297 KB から 455 KB になりました。
+- **`keyring.parse()` は廃止されました**（v6.0.0-pre.2）。
+  - **対応**: `<script src="...?geolonia-api-key=KEY">` で API キーを渡す従来の方式はそのまま動きます。`keyring.parse()` を自分で呼んでいる場合のみ削除してください。
+- **`data-choropleth`、`data-heatmap`、`data-circle-size`、`data-circle-color` を独自の用途で付けていたページでは、その値が地図の描き方に使われるようになります**（v6.0.0-pre.6）。
+  - **対応**: 衝突する場合は属性名を変えてください。
+- **`new geolonia.Map({ transformRequest })` で渡した関数が、Geolonia のソースとスプライトへのリクエストにも呼ばれるようになりました**（v6.0.0-pre.6）。maps-core が `key` や `sessionId` を付けた後の URL で呼ばれます。
+  - **対応**: URL で分岐している場合は Geolonia 側の URL が来る前提に直してください。HTML 属性だけで地図を使っている場合は影響ありません。
+- **TypeScript の型定義を使っている場合、`EmbedAttributes` が `undefined` を含むようになりました**（v6.0.0。下記の Breaking を参照）。
+  - **対応**: 任意のキーで引いた値は `?? ''` などで未定義を畳んでください。
+
+#### 6.0.0-pre.6 からの変更
+
 - **Fix**: 同梱する maplibre-gl を `6.12.0` から `6.16.0` へ更新しました（[#549](https://github.com/geolonia/embed/pull/549)）。
   - **6.0.0-pre.5 で案内した `setStyle` の回避策は不要になりました。** 「WebGL コンテキストが失われている最中に `setStyle()` を呼ぶと未捕捉エラーになる」不具合は 6.14.0 で修正されており（maplibre-gl-js#8693）、6.16.0 はこれを含みます。`map.on('webglcontextrestored', ...)` の中まで `setStyle()` を遅らせる必要はもうありません。
   - WebGL コンテキストまわりでは、**喪失後のリサイズで地図が 1 ピクセルに潰れる**不具合も 6.16.0 で直っています（maplibre-gl-js#8837）。`webglcontextlost` が発火する前にリサイズが入ると起きていました。
