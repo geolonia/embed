@@ -12,7 +12,11 @@ export type { GeoloniaMapOptions } from '@geolonia/maps-core';
 
 export type Popup = maplibregl.Popup;
 
-export type { EmbedAttributes, EmbedPlugin } from './types';
+export type {
+  EmbedAttributes,
+  EmbedPlugin,
+  EmbedPluginAttributes,
+} from './types';
 
 // Type for `window.geolonia`
 export type Geolonia = Partial<typeof maplibregl> & {

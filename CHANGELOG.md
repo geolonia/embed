@@ -2,6 +2,49 @@
 
 ## @geolonia/embed
 
+### v6.0.0
+
+`6.0.0-pre.2` から続いた pre 表記が外れる最初の正式版です。配布物に関わる変更は、同梱する maplibre-gl の更新と、型定義まわりの修正と変更です。それ以外は開発環境の整備で、地図の見た目や `data-*` 属性の振る舞いは 6.0.0-pre.6 から変わりません。
+
+#### 5.x から更新する場合
+
+npm の `latest` は現在 `5.2.2` です。この節は `6.0.0-pre.6` からの差分なので、5.x から上げる場合に対応が要るものをここにまとめます。詳細は各 prerelease の節を参照してください。
+
+- **同梱する maplibre-gl が `5.19.0` から `6.16.0` になりました**（v6.0.0-pre.4）。`window.geolonia`（および `window.maplibregl` / `window.mapboxgl`）経由で maplibre の API を直接触っている場合は、maplibre-gl v6 の破壊的変更を受けます。v6 にデフォルトエクスポートはありません。
+  - **対応**: [maplibre-gl v6 の変更点](https://github.com/maplibre/maplibre-gl-js/releases) を確認してください。HTML の `data-*` 属性だけで地図を使っている場合は影響ありません。
+- **Content-Security-Policy を設定しているページは `worker-src blob:` の許可が必要です**（v6.0.0-pre.4）。maplibre-gl v6 の worker を 1 ファイル配布のまま動かすため、バンドルへ埋め込んだ worker を `blob:` URL から起動します。許可が無いと worker を起動できず地図が表示されません。
+  - **対応**: CSP に `worker-src blob:` を足してください。
+  - **Note**: worker を埋め込むぶん配布ファイルが大きくなります。`dist/embed.js` は gzip で約 297 KB から 455 KB になりました。
+- **`keyring.parse()` は廃止されました**（v6.0.0-pre.2）。
+  - **対応**: `<script src="...?geolonia-api-key=KEY">` で API キーを渡す従来の方式はそのまま動きます。`keyring.parse()` を自分で呼んでいる場合のみ削除してください。
+- **`data-choropleth`、`data-heatmap`、`data-circle-size`、`data-circle-color` を独自の用途で付けていたページでは、その値が地図の描き方に使われるようになります**（v6.0.0-pre.6）。
+  - **対応**: 衝突する場合は属性名を変えてください。
+- **`new geolonia.Map({ transformRequest })` で渡した関数が、Geolonia のソースとスプライトへのリクエストにも呼ばれるようになりました**（v6.0.0-pre.6）。maps-core が `key` や `sessionId` を付けた後の URL で呼ばれます。
+  - **対応**: URL で分岐している場合は Geolonia 側の URL が来る前提に直してください。HTML 属性だけで地図を使っている場合は影響ありません。
+- **TypeScript の型定義を使っている場合、`EmbedAttributes` が `undefined` を含むようになりました**（v6.0.0。下記の Breaking を参照）。
+  - **対応**: 任意のキーで引いた値は `?? ''` などで未定義を畳んでください。
+
+#### 6.0.0-pre.6 からの変更
+
+- **Fix**: 同梱する maplibre-gl を `6.12.0` から `6.16.0` へ更新しました（[#549](https://github.com/geolonia/embed/pull/549)）。
+  - **6.0.0-pre.5 で案内した `setStyle` の回避策は不要になりました。** 「WebGL コンテキストが失われている最中に `setStyle()` を呼ぶと未捕捉エラーになる」不具合は 6.14.0 で修正されており（maplibre-gl-js#8693）、6.16.0 はこれを含みます。`map.on('webglcontextrestored', ...)` の中まで `setStyle()` を遅らせる必要はもうありません。
+  - WebGL コンテキストまわりでは、**喪失後のリサイズで地図が 1 ピクセルに潰れる**不具合も 6.16.0 で直っています（maplibre-gl-js#8837）。`webglcontextlost` が発火する前にリサイズが入ると起きていました。
+  - **iOS / iPadOS Safari** の修正が複数入りました。省メモリのために OS がバックグラウンドの worker を落としても地図が読み込み続けるようになり（maplibre-gl-js#8461、#8491）、iPadOS 16 Safari で地図が真っ白のまま反応しなくなる問題（maplibre-gl-js#8364）も解消しています。Safari 26.6 以降でページをバックグラウンドに置くとタイルが読み込まれなくなる回帰にも対処が入りました（maplibre-gl-js#8780）。
+  - **文字まわり**では、`font-faces` で表示している文字が PBF の取得後に glyphs URL 側のグリフへ入れ替わってしまう問題（maplibre-gl-js#8490）と、glyphs URL を持つスタイルでデーヴァナーガリー・タイ・テルグなどの表記が字体混在や文字落ちを起こす問題（maplibre-gl-js#8741）が直っています。
+  - ほかに、ETag が変わらないサーバーで `setFilter()` などの再読み込み時に期限切れベクタータイルがエラーになる問題（maplibre-gl-js#8771）、`GeoJSONSource.getBounds` が空のジオメトリを持つ地物で例外を投げる問題（maplibre-gl-js#8814）、180 度をまたいで移動した後に `addImage` の画像が出ない問題（maplibre-gl-js#8858）などが含まれます。
+  - **Note**: `Map` の生成時に `transformStyle` を渡せるようになり（maplibre-gl-js#8786）、`dragRotate` に `{ around: 'pointer' }` が入りました（maplibre-gl-js#8628）。これに伴い `aroundCenter` は非推奨です。`window.geolonia` 経由で maplibre の API を直接触っている場合のみ関係します。
+- **Fix**: `package.json` が指す型定義のパスが存在しないファイルを指していた問題を修正しました（[#563](https://github.com/geolonia/embed/pull/563)）。`types` と `exports` の `types` がいずれも `dist/src/embed.d.ts` / `dist/src/embed-core.d.ts` を指していましたが、実際の出力は `dist/embed.d.ts` / `dist/embed-core.d.ts` です。`moduleResolution` が `node10`（旧 `node`）の環境では型定義がまったく解決されず、`import ... from '@geolonia/embed'` が暗黙の `any` になっていました（TS7016）。`6.0.0-pre.6` までのすべてのバージョンが該当します。
+  - `bundler` / `node16` / `nodenext` では、`exports` の `default` の隣にある宣言へ偶然フォールバックしていたため影響はありませんでした。
+  - **Note**: `@geolonia/embed/core` のサブパスは `exports` でのみ公開しているため、`node10` では型も実体も解決できません。こちらを使う場合は `bundler` / `node16` / `nodenext` を指定してください。
+- **Breaking**: `EmbedAttributes` のインデックスシグネチャが `string | number` から `string | number | undefined` になりました（[#559](https://github.com/geolonia/embed/pull/559)）。TypeScript を `strict` でビルドするようにしたのに合わせたもので、`data-choropleth` のように指定したときだけキーが入る属性の型と整合させています。型定義を使っていて、任意のキーで引いた値を `string | number` へそのまま代入している箇所があるとコンパイルが通らなくなります。`?? ''` などで未定義を畳んでください。JavaScript から使っている場合は影響ありません。
+- **Change**: プラグインの型が使いやすくなりました（[#559](https://github.com/geolonia/embed/pull/559)）。`registerPlugin` が generic になり、`EmbedPlugin<{ foo: string }>` のように固有の `data-*` を要求するプラグインをそのまま登録できます。`window.geolonia.registerPlugin` も同じ型です。あわせて `EmbedPluginAttributes`（`{ [otherKey: string]: string | undefined }`）を公開し、`EmbedPlugin` の型引数の制約をこれにしました。プラグイン固有の `data-*` は `container.dataset` 経由で必ず文字列として渡るため、`EmbedPlugin<{ foo: number }>` は宣言した時点で弾かれます。
+- **Internal**: TypeScript を 6 系へ更新し、`strict` を有効にしました（[#559](https://github.com/geolonia/embed/pull/559)）。`moduleResolution` を `bundler` へ変更し、`rootDir` と `types` を明示しています。`checkPermission` の内部で `window.top?.location.origin` と、親要素を持たないコンテナで `MutationObserver` を登録しない形に変えていますが、どちらも実質到達しない経路で戻り値は変わりません。TypeScript 7 へは上げられないことが分かっており、理由と再開条件は [#560](https://github.com/geolonia/embed/issues/560) に残してあります。
+- **Internal**: ESLint を 10 系へ更新しました（[#559](https://github.com/geolonia/embed/pull/559)）。`eslint-plugin-import` は 2025-06-20 を最後にリリースが止まっていて eslint 10 を peer に宣言していないため、フォークの `eslint-plugin-import-x` へ置き換えています（[#562](https://github.com/geolonia/embed/pull/562)、[#561](https://github.com/geolonia/embed/issues/561)）。
+- **Internal**: vitest を 5 系へ更新しました（[#556](https://github.com/geolonia/embed/pull/556)、[#555](https://github.com/geolonia/embed/issues/555)）。
+- **Internal**: 未使用の依存を 4 件削除しました（[#559](https://github.com/geolonia/embed/pull/559)）。`@types/jsdom`、`node-fetch`、`eslint-plugin-react`、`eslint-plugin-react-hooks` で、依存ツリーから 50 パッケージ減っています。React を使っていた頃の名残（`tsconfig.json` の `jsx`、`webpack.config.js` の `.tsx`、ESLint の jsx/tsx glob）も落としました。バンドルの中身は変わっていません。
+- **Internal**: 開発用の Node.js を 22.23.4 に上げました（[#559](https://github.com/geolonia/embed/pull/559)）。`jsdom` 30 が `^22.22.2` を要求するためで、`.tool-versions` と README を揃えています。
+- **Internal**: Dependabot の更新を取り込みました（[#536](https://github.com/geolonia/embed/pull/536)、[#539](https://github.com/geolonia/embed/pull/539)、[#540](https://github.com/geolonia/embed/pull/540)、[#547](https://github.com/geolonia/embed/pull/547)、[#548](https://github.com/geolonia/embed/pull/548)、[#553](https://github.com/geolonia/embed/pull/553)、[#554](https://github.com/geolonia/embed/pull/554)、[#558](https://github.com/geolonia/embed/pull/558)）。いずれも開発時のみの依存か、GitHub Actions の更新です。
+
 ### v6.0.0-pre.6
 
 `@geolonia/maps-core` を `^0.8.0` へ更新し、GeoJSON をデータの値で描き分ける `data-*` 属性を追加しました。同梱する maplibre-gl は `6.12.0` のままです。
