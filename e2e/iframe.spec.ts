@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { BASE_URL, TEST_URL, mockGeoloniaTiles, waitForMapLoad, hasMapInstance } from './helper';
+import { BASE_URL, LOAD_TIMEOUT, TEST_URL, mockGeoloniaTiles, waitForMapLoad, hasMapInstance } from './helper';
 
 // 子フレーム用の別オリジン。リクエストは route で dev サーバーへ転送する
 const OTHER_ORIGIN = 'http://embed-iframe.test';
@@ -32,6 +32,15 @@ test.describe('iframe の中での描画 (wrapper-only)', () => {
 
     const child = page.frames().find((f) => f.url().endsWith('/e2e/no-api-key.html'));
     expect(child).toBeDefined();
+    // waitForStyleLoad と同じ条件で、子フレームの地図がスタイルまで読み終えるのを待つ
+    await child!.waitForFunction(
+      () => {
+        const map = (document.querySelector('#map') as any)?.geoloniaMap;
+        return !!(map && map.loaded() && map.isStyleLoaded());
+      },
+      undefined,
+      { timeout: LOAD_TIMEOUT },
+    );
     expect(new URL(child!.url()).origin).toBe(OTHER_ORIGIN);
     expect(
       await child!.evaluate(() => !!(document.querySelector('#map') as any)?.geoloniaMap),
