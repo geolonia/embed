@@ -23,7 +23,7 @@ test.describe('iframe の中での描画 (wrapper-only)', () => {
     await mockGeoloniaTiles(page);
     await page.route(`${OTHER_ORIGIN}/**`, async (route) => {
       const url = route.request().url().replace(OTHER_ORIGIN, BASE_URL);
-      route.fulfill({ response: await route.fetch({ url }) });
+      await route.fulfill({ response: await route.fetch({ url }) });
     });
     await page.goto(`${TEST_URL}/iframe.html?origin=${encodeURIComponent(OTHER_ORIGIN)}`);
 
