@@ -4,14 +4,14 @@
   "description": "Geolonia embed JS API",
   "packageManager": "pnpm@12.9.1",
   "main": "dist/embed.js",
-  "types": "dist/src/embed.d.ts",
+  "types": "dist/embed.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/src/embed.d.ts",
+      "types": "./dist/embed.d.ts",
       "default": "./dist/embed.js"
     },
     "./core": {
-      "types": "./dist/src/embed-core.d.ts",
+      "types": "./dist/embed-core.d.ts",
       "default": "./dist/embed-core.js"
     }
   },

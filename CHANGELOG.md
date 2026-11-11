@@ -4,7 +4,7 @@
 
 ### v6.0.0
 
-`6.0.0-pre.2` から続いた pre 表記が外れる最初の正式版です。配布物に関わる変更は、同梱する maplibre-gl の更新と型定義の変更の 2 点です。それ以外は開発環境の整備で、地図の見た目や `data-*` 属性の振る舞いは 6.0.0-pre.6 から変わりません。
+`6.0.0-pre.2` から続いた pre 表記が外れる最初の正式版です。配布物に関わる変更は、同梱する maplibre-gl の更新と、型定義まわりの修正と変更です。それ以外は開発環境の整備で、地図の見た目や `data-*` 属性の振る舞いは 6.0.0-pre.6 から変わりません。
 
 #### 5.x から更新する場合
 
@@ -33,6 +33,9 @@ npm の `latest` は現在 `5.2.2` です。この節は `6.0.0-pre.6` からの
   - **文字まわり**では、`font-faces` で表示している文字が PBF の取得後に glyphs URL 側のグリフへ入れ替わってしまう問題（maplibre-gl-js#8490）と、glyphs URL を持つスタイルでデーヴァナーガリー・タイ・テルグなどの表記が字体混在や文字落ちを起こす問題（maplibre-gl-js#8741）が直っています。
   - ほかに、ETag が変わらないサーバーで `setFilter()` などの再読み込み時に期限切れベクタータイルがエラーになる問題（maplibre-gl-js#8771）、`GeoJSONSource.getBounds` が空のジオメトリを持つ地物で例外を投げる問題（maplibre-gl-js#8814）、180 度をまたいで移動した後に `addImage` の画像が出ない問題（maplibre-gl-js#8858）などが含まれます。
   - **Note**: `Map` の生成時に `transformStyle` を渡せるようになり（maplibre-gl-js#8786）、`dragRotate` に `{ around: 'pointer' }` が入りました（maplibre-gl-js#8628）。これに伴い `aroundCenter` は非推奨です。`window.geolonia` 経由で maplibre の API を直接触っている場合のみ関係します。
+- **Fix**: `package.json` が指す型定義のパスが存在しないファイルを指していた問題を修正しました（[#563](https://github.com/geolonia/embed/pull/563)）。`types` と `exports` の `types` がいずれも `dist/src/embed.d.ts` / `dist/src/embed-core.d.ts` を指していましたが、実際の出力は `dist/embed.d.ts` / `dist/embed-core.d.ts` です。`moduleResolution` が `node10`（旧 `node`）の環境では型定義がまったく解決されず、`import ... from '@geolonia/embed'` が暗黙の `any` になっていました（TS7016）。`6.0.0-pre.6` までのすべてのバージョンが該当します。
+  - `bundler` / `node16` / `nodenext` では、`exports` の `default` の隣にある宣言へ偶然フォールバックしていたため影響はありませんでした。
+  - **Note**: `@geolonia/embed/core` のサブパスは `exports` でのみ公開しているため、`node10` では型も実体も解決できません。こちらを使う場合は `bundler` / `node16` / `nodenext` を指定してください。
 - **Breaking**: `EmbedAttributes` のインデックスシグネチャが `string | number` から `string | number | undefined` になりました（[#559](https://github.com/geolonia/embed/pull/559)）。TypeScript を `strict` でビルドするようにしたのに合わせたもので、`data-choropleth` のように指定したときだけキーが入る属性の型と整合させています。型定義を使っていて、任意のキーで引いた値を `string | number` へそのまま代入している箇所があるとコンパイルが通らなくなります。`?? ''` などで未定義を畳んでください。JavaScript から使っている場合は影響ありません。
 - **Change**: プラグインの型が使いやすくなりました（[#559](https://github.com/geolonia/embed/pull/559)）。`registerPlugin` が generic になり、`EmbedPlugin<{ foo: string }>` のように固有の `data-*` を要求するプラグインをそのまま登録できます。`window.geolonia.registerPlugin` も同じ型です。あわせて `EmbedPluginAttributes`（`{ [otherKey: string]: string | undefined }`）を公開し、`EmbedPlugin` の型引数の制約をこれにしました。プラグイン固有の `data-*` は `container.dataset` 経由で必ず文字列として渡るため、`EmbedPlugin<{ foo: number }>` は宣言した時点で弾かれます。
 - **Internal**: TypeScript を 6 系へ更新し、`strict` を有効にしました（[#559](https://github.com/geolonia/embed/pull/559)）。`moduleResolution` を `bundler` へ変更し、`rootDir` と `types` を明示しています。`checkPermission` の内部で `window.top?.location.origin` と、親要素を持たないコンテナで `MutationObserver` を登録しない形に変えていますが、どちらも実質到達しない経路で戻り値は変わりません。TypeScript 7 へは上げられないことが分かっており、理由と再開条件は [#560](https://github.com/geolonia/embed/issues/560) に残してあります。
