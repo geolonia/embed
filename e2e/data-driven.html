@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../style.css">
+  <meta name="viewport" content="initial-scale=1" />
+  <title>@geolonia/embed - data-driven geojson</title>
+  <script>
+    // 地図ごとに MapLibre の error イベントを記録する。プラグインは DOMContentLoaded で
+    // 呼ばれ、スタイルの読み込みより前なので、paint を設定したときのエラーも拾える。
+    window.__mapErrors = {};
+    document.addEventListener('DOMContentLoaded', function () {
+      window.geolonia.registerPlugin(function (map, target) {
+        window.__mapErrors[target.id] = [];
+        map.on('error', function (e) {
+          var error = e.error || {};
+          window.__mapErrors[target.id].push({
+            message: String(error.message || e),
+            status: error.status,
+            url: error.url,
+          });
+        });
+      });
+    });
+  </script>
+</head>
+<body>
+  <script id="polygons" type="application/json">
+    {
+      "type": "FeatureCollection",
+      "features": [
+        { "type": "Feature", "properties": { "value": 10 }, "geometry": { "type": "Polygon", "coordinates": [[[139.0, 35.0], [139.1, 35.0], [139.1, 35.1], [139.0, 35.1], [139.0, 35.0]]] } },
+        { "type": "Feature", "properties": { "value": 90 }, "geometry": { "type": "Polygon", "coordinates": [[[139.1, 35.0], [139.2, 35.0], [139.2, 35.1], [139.1, 35.1], [139.1, 35.0]]] } }
+      ]
+    }
+  </script>
+  <script id="points" type="application/json">
+    {
+      "type": "FeatureCollection",
+      "features": [
+        { "type": "Feature", "properties": { "weight": 1, "category": "a" }, "geometry": { "type": "Point", "coordinates": [139.05, 35.05] } },
+        { "type": "Feature", "properties": { "weight": 5, "category": "b" }, "geometry": { "type": "Point", "coordinates": [139.15, 35.05] } }
+      ]
+    }
+  </script>
+
+  <div class="example">
+    <h2>data-choropleth</h2>
+    <div
+      id="choropleth"
+      class="geolonia"
+      style="width: 400px; height: 300px;"
+      data-lat="35.05"
+      data-lng="139.1"
+      data-zoom="10"
+      data-marker="off"
+      data-lazy-loading="off"
+      data-geojson="#polygons"
+      data-choropleth="value"
+      data-choropleth-colors="#00ff00, rgb(0, 0, 255)"
+      data-choropleth-range="0,100"
+    ></div>
+  </div>
+
+  <div class="example">
+    <h2>data-heatmap</h2>
+    <div
+      id="heatmap"
+      class="geolonia"
+      style="width: 400px; height: 300px;"
+      data-lat="35.05"
+      data-lng="139.1"
+      data-zoom="10"
+      data-marker="off"
+      data-lazy-loading="off"
+      data-geojson="#points"
+      data-heatmap="weight"
+      data-heatmap-colors="#00ff00,#0000ff"
+    ></div>
+  </div>
+
+  <div class="example">
+    <h2>data-circle-*</h2>
+    <div
+      id="circle"
+      class="geolonia"
+      style="width: 400px; height: 300px;"
+      data-lat="35.05"
+      data-lng="139.1"
+      data-zoom="10"
+      data-marker="off"
+      data-lazy-loading="off"
+      data-geojson="#points"
+      data-circle-size="weight"
+      data-circle-color="category"
+      data-circle-colors="#00ff00,#0000ff"
+    ></div>
+  </div>
+
+  <script src="../embed?geolonia-api-key=YOUR-API-KEY"></script>
+</body>
+</html>
