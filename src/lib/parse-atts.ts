@@ -35,11 +35,6 @@ export default (
     (container as unknown as { dataset: DOMStringMap }).dataset = {};
   }
 
-  // `data-lang` が指定されていれば、末尾の `...container.dataset` がその生の値で
-  // `lang` を上書きし、ja / en への解決は maps-core が行う。ここで決めた値が
-  // 残るのは `data-lang` が未指定のときだけ。
-  const lang = getLang();
-
   // Check if using Geolonia style or external style
   const style = container.dataset.style || 'geolonia/basic-v2';
   keyring.isGeoloniaStyle = keyring.isGeoloniaStyleCheck(style);
@@ -67,7 +62,10 @@ export default (
     cluster: 'on',
     clusterColor: '#ff0000',
     style: 'geolonia/basic-v2',
-    lang: lang,
+    // `data-lang` が指定されていれば、末尾の `...container.dataset` がその生の値で
+    // 上書きし、ja / en への解決は maps-core が行う。この値が残るのは
+    // `data-lang` が未指定のときだけ。
+    lang: getLang(),
     plugin: 'off',
     key: keyring.apiKey,
     apiUrl: `https://api.geolonia.com/${keyring.stage}`,
