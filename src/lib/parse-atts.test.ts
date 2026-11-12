@@ -392,6 +392,9 @@ describe('data-lang 言語解決', () => {
   });
 });
 
+// 「そのまま返す」「例外を投げる」のテストは、現状の挙動を固定している。
+// 対応外の値の扱いを変えるときは、これらのテストも書き換える
+// (https://github.com/geolonia/embed/issues/570)。
 describe('data-geojson の解決', () => {
   const geojsonFor = (value: string) => {
     const c = document.createElement('div');

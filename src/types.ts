@@ -108,10 +108,13 @@ export type EmbedAttributes = {
    * `data-geojson`：GeoJSON のソース。URL（`https://...`、`/data.geojson`、
    * `./data.geojson`、`../data.geojson` など）か、地図コンテナの外に置いた、中身が
    * GeoJSON のインライン要素（`<script type="application/json">` など）を指す CSS
-   * セレクタのいずれか。インラインの JSON 文字列や、`./` を付けない相対パス
-   * （`data.geojson` など）は扱えず、地物は描かれない。`.` で始まる値は、一致する
-   * 要素が無いか中身が空なら、相対 URL として取得される。セレクタが指す要素の中身が JSON として読めないときは、地図
-   * そのものが作られない。https://github.com/geolonia/embed/issues/570
+   * セレクタのいずれか。
+   *
+   * インラインの JSON 文字列や、`./` を付けない相対パス（`data.geojson` など）は
+   * 扱えない。指定すると地物は描かれず、maps-core が例外を投げて `data-3d` などの
+   * 後続の処理も止まる。`.` で始まる値は、一致する要素が無いか中身が空なら、相対
+   * URL として取得される。セレクタが指す要素の中身が JSON として読めないときは、
+   * 地図そのものが作られない。https://github.com/geolonia/embed/issues/570
    * @defaultValue `''`
    */
   geojson: string;

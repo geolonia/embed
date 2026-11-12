@@ -122,7 +122,7 @@ The `data-style` attribute accepts:
 The `data-lang` attribute controls the language of map labels:
 
 - `ja` / `ja-jp`: Japanese labels
-- `en` (or any other non-empty value): English labels
+- `en` (or any other value except `auto` and an empty value): English labels
 - `auto`: follow the browser language (`navigator.languages`)
 - **omitted**: same as `auto` (follows the browser language)
 
