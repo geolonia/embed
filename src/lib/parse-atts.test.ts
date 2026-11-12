@@ -319,8 +319,8 @@ describe('attsToOptions のデータ駆動の描き方', () => {
 
 // data-lang の言語解決 (embed#462 / maps-core#50)。
 // 正しい契約 (maps-core#50 のテストが基準):
-//   - `ja` / `ja-jp` のみ日本語スタイル、それ以外は英語スタイル
-//   - `auto` はブラウザ言語に追従
+//   - `ja` / `ja-jp` のみ日本語スタイル、それ以外は英語スタイル (大文字と小文字を区別する)
+//   - `auto` と空文字はブラウザ言語に追従 (解決するのは maps-core の GeoloniaMap のコンストラクタ)
 // embed の責務: `data-lang` を options.lang へ転送する (最終的な ja/en 判定は
 // maps-core の getStyle が担う)。未指定時のみ embed が getLang() で具体値に解決する。
 describe('data-lang 言語解決', () => {
@@ -375,5 +375,112 @@ describe('data-lang 言語解決', () => {
   it('data-lang="auto" は maps-core へ委譲される (auto のまま転送)', () => {
     expect(optionsFor('auto', ['en']).lang).toBe('auto');
     expect(optionsFor('auto', ['ja']).lang).toBe('auto');
+  });
+
+  it('data-lang の明示値は ja / en に解決せず、生の値のまま転送する', () => {
+    expect(optionsFor('', ['ja']).lang).toBe('');
+    expect(optionsFor('ja-JP', ['ja']).lang).toBe('ja-JP');
+    expect(optionsFor('fr', ['ja']).lang).toBe('fr');
+  });
+
+  // embed が生の値を転送することは直前のテストで見ている。ここでは転送先の
+  // maps-core が大文字を含む値を日本語として扱わないことを確かめる。
+  it('大文字を含む data-lang="ja-JP" は英語スタイルになる', () => {
+    expect(
+      getStyle('geolonia/basic-v2', { lang: 'ja-JP', apiKey: 'KEY' }),
+    ).toContain('/en.json');
+  });
+});
+
+// 「そのまま返す」「例外を投げる」のテストは、現状の挙動を固定している。
+// 対応外の値の扱いを変えるときは、これらのテストも書き換える
+// (https://github.com/geolonia/embed/issues/570)。
+describe('data-geojson の解決', () => {
+  const geojsonFor = (value: string) => {
+    const c = document.createElement('div');
+    c.dataset.geojson = value;
+    return attsToOptions(c, parseAtts(c)).geojson;
+  };
+
+  afterEach(() => {
+    document.body.innerHTML = '';
+  });
+
+  it('URL と相対パスは文字列のまま渡す', () => {
+    for (const value of [
+      'https://example.com/a.geojson',
+      '/a.geojson',
+      './a.geojson',
+      '../a.geojson',
+    ]) {
+      expect(geojsonFor(value)).toBe(value);
+    }
+  });
+
+  it('インライン要素を指すセレクタは中身を FeatureCollection にする', () => {
+    const fc = { type: 'FeatureCollection', features: [] };
+    const el = document.createElement('script');
+    el.type = 'application/json';
+    el.id = 'points';
+    el.textContent = JSON.stringify(fc);
+    document.body.appendChild(el);
+    expect(geojsonFor('#points')).toEqual(fc);
+  });
+
+  it('. で始まる値は、一致する要素があればセレクタ、無ければそのまま返す', () => {
+    const fc = { type: 'FeatureCollection', features: [] };
+    const el = document.createElement('script');
+    el.type = 'application/json';
+    el.className = 'points';
+    el.textContent = JSON.stringify(fc);
+    document.body.appendChild(el);
+    expect(geojsonFor('.points')).toEqual(fc);
+    expect(geojsonFor('.missing')).toBe('.missing');
+  });
+
+  it('何も指さないセレクタは、そのまま返す', () => {
+    expect(geojsonFor('#missing')).toBe('#missing');
+  });
+
+  it('要素の中身は検証せずに解析結果を返す (FeatureCollection 以外も通る)', () => {
+    const feature = {
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [0, 0] },
+      properties: {},
+    };
+    const el = document.createElement('script');
+    el.type = 'application/json';
+    el.id = 'feature';
+    el.textContent = JSON.stringify(feature);
+    document.body.appendChild(el);
+    expect(geojsonFor('#feature')).toEqual(feature);
+  });
+
+  it('インラインの JSON 文字列と ./ の無い相対パスは、そのまま返す', () => {
+    const json = '{"type":"FeatureCollection","features":[]}';
+    expect(geojsonFor(json)).toBe(json);
+    expect(geojsonFor('data.geojson')).toBe('data.geojson');
+  });
+
+  it('中身が空の要素を指すセレクタは、そのまま返す', () => {
+    const el = document.createElement('script');
+    el.type = 'application/json';
+    el.id = 'empty';
+    document.body.appendChild(el);
+    expect(geojsonFor('#empty')).toBe('#empty');
+  });
+
+  it('要素の中身が JSON として読めないときは例外を投げる (空白だけの中身を含む)', () => {
+    for (const [id, text] of [
+      ['broken', '{'],
+      ['blank', '\n  '],
+    ]) {
+      const el = document.createElement('script');
+      el.type = 'application/json';
+      el.id = id;
+      el.textContent = text;
+      document.body.appendChild(el);
+      expect(() => geojsonFor(`#${id}`)).toThrow(SyntaxError);
+    }
   });
 });

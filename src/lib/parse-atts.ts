@@ -35,17 +35,6 @@ export default (
     (container as unknown as { dataset: DOMStringMap }).dataset = {};
   }
 
-  let lang: string;
-  if (container.dataset.lang && container.dataset.lang === 'auto') {
-    lang = getLang();
-  } else if (container.dataset.lang && container.dataset.lang === 'ja') {
-    lang = 'ja';
-  } else if (container.dataset.lang && container.dataset.lang !== 'ja') {
-    lang = 'en';
-  } else {
-    lang = getLang();
-  }
-
   // Check if using Geolonia style or external style
   const style = container.dataset.style || 'geolonia/basic-v2';
   keyring.isGeoloniaStyle = keyring.isGeoloniaStyleCheck(style);
@@ -73,7 +62,10 @@ export default (
     cluster: 'on',
     clusterColor: '#ff0000',
     style: 'geolonia/basic-v2',
-    lang: lang,
+    // `data-lang` が指定されていれば、末尾の `...container.dataset` がその生の値で
+    // 上書きし、ja / en への解決は maps-core が行う。この値が残るのは
+    // `data-lang` が未指定のときだけ。
+    lang: getLang(),
     plugin: 'off',
     key: keyring.apiKey,
     apiUrl: `https://api.geolonia.com/${keyring.stage}`,
@@ -122,8 +114,13 @@ const isCssSelector = (value: string): Element | false => {
 
 /**
  * Resolve a `data-geojson` value into what maps-core's SimpleStyle accepts:
- * a URL / inline JSON string, or a parsed FeatureCollection when the value is a
- * CSS selector referencing an inline element.
+ * a URL string, or the parsed content of the inline element a CSS selector
+ * points at. The content is not validated; it must be a FeatureCollection.
+ *
+ * Any other value is returned unchanged, and maps-core usually cannot draw it.
+ * Throws when the element's content is not valid JSON. See
+ * https://github.com/geolonia/embed/issues/570 for what happens with
+ * unsupported values.
  */
 const resolveGeojson = (value: string): string | FeatureCollection => {
   const el = isCssSelector(value);

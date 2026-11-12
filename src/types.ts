@@ -105,9 +105,14 @@ export type EmbedAttributes = {
    */
   geoloniaControl: string;
   /**
-   * `data-geojson`：GeoJSON のソース。URL、インラインの JSON 文字列、または
-   * インライン要素（`<script type="application/json">` など）を指す CSS セレクタの
-   * いずれか。
+   * `data-geojson`：GeoJSON のソース。URL（`https://...`、`/data.geojson`、
+   * `./data.geojson`、`../data.geojson` など）か、地図コンテナの外に置いた、中身が
+   * GeoJSON の FeatureCollection の要素（`<script type="application/json">` など）を
+   * 指す CSS セレクタのいずれか。
+   *
+   * これ以外の値（インラインの JSON 文字列、`./` を付けない相対パス、何も指さない
+   * セレクタなど）は扱えず、地物は描かれない（多くの場合はエラーになる）。対応外の
+   * 値で起きることの詳細は https://github.com/geolonia/embed/issues/570 を参照。
    * @defaultValue `''`
    */
   geojson: string;
@@ -128,10 +133,13 @@ export type EmbedAttributes = {
    */
   style: string;
   /**
-   * `data-lang`：ラベルの言語。`data-lang` に指定できるのは `'ja'`、`'en'`、
-   * `'auto'` など。`parseAtts` は `'ja'` のみを `'ja'` に解決し、それ以外の明示値は
-   * `'en'` に解決する（`'ja-jp'` も `'en'` になる）。`'auto'` および未指定のときは
-   * ブラウザ言語（`getLang()` の結果。`'ja'` または `'en'`）になる。
+   * `data-lang`：ラベルとジェスチャー制御の文言の言語。指定した値はそのまま
+   * maps-core に渡る。`'ja'` と `'ja-jp'` は日本語、`'auto'` と空文字はブラウザ
+   * 言語に従い、それ以外の値は英語になる。比較は大文字と小文字を区別するので、
+   * `'ja-JP'` は英語になる。ラベルに効くのは、`data-style` を省略したときか
+   * Geolonia のスタイル名を指定したときだけ。`'ja'`、`'en'`、`'auto'`、空文字以外の
+   * 値では、`'ja-jp'` も含めてジェスチャー制御が付かない
+   * （https://github.com/geolonia/embed/issues/571）。
    * @defaultValue 未指定のときは `getLang()` の結果（`'ja'` または `'en'`）
    */
   lang: string;
