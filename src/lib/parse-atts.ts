@@ -122,8 +122,9 @@ const isCssSelector = (value: string): Element | false => {
 
 /**
  * Resolve a `data-geojson` value into what maps-core's SimpleStyle accepts:
- * a URL / inline JSON string, or a parsed FeatureCollection when the value is a
- * CSS selector referencing an inline element.
+ * a URL string, or a parsed FeatureCollection when the value is a CSS selector
+ * referencing an inline element. Any other string is returned unchanged, and
+ * SimpleStyle does not draw it (inline JSON strings are not supported).
  */
 const resolveGeojson = (value: string): string | FeatureCollection => {
   const el = isCssSelector(value);
