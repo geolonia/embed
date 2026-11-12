@@ -35,16 +35,10 @@ export default (
     (container as unknown as { dataset: DOMStringMap }).dataset = {};
   }
 
-  let lang: string;
-  if (container.dataset.lang && container.dataset.lang === 'auto') {
-    lang = getLang();
-  } else if (container.dataset.lang && container.dataset.lang === 'ja') {
-    lang = 'ja';
-  } else if (container.dataset.lang && container.dataset.lang !== 'ja') {
-    lang = 'en';
-  } else {
-    lang = getLang();
-  }
+  // `data-lang` が指定されていれば、末尾の `...container.dataset` がその生の値で
+  // `lang` を上書きし、ja / en への解決は maps-core が行う。ここで決めた値が
+  // 残るのは `data-lang` が未指定のときだけ。
+  const lang = getLang();
 
   // Check if using Geolonia style or external style
   const style = container.dataset.style || 'geolonia/basic-v2';
@@ -123,8 +117,9 @@ const isCssSelector = (value: string): Element | false => {
 /**
  * Resolve a `data-geojson` value into what maps-core's SimpleStyle accepts:
  * a URL string, or a parsed FeatureCollection when the value is a CSS selector
- * referencing an inline element. Any other string is returned unchanged, and
- * SimpleStyle does not draw it (inline JSON strings are not supported).
+ * referencing a non-empty inline element. Any other string (an inline JSON
+ * string, a bare relative path such as `data.geojson`) is returned unchanged;
+ * SimpleStyle does not accept it, and `addTo()` throws (#570).
  */
 const resolveGeojson = (value: string): string | FeatureCollection => {
   const el = isCssSelector(value);

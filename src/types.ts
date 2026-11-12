@@ -105,10 +105,11 @@ export type EmbedAttributes = {
    */
   geoloniaControl: string;
   /**
-   * `data-geojson`：GeoJSON のソース。`http://` / `https://` / `/` / `./` / `../` で
-   * 始まる URL、またはインライン要素（`<script type="application/json">` など）を
-   * 指す CSS セレクタのいずれか。インラインの JSON 文字列と、`./` を付けない相対
-   * パス（`data.geojson` など）は扱わない。
+   * `data-geojson`：GeoJSON のソース。URL（`https://...`、`/data.geojson`、
+   * `./data.geojson`、`../data.geojson` など）か、中身が GeoJSON のインライン要素
+   * （`<script type="application/json">` など）を指す CSS セレクタのいずれか。
+   * インラインの JSON 文字列や、`./` を付けない相対パス（`data.geojson` など）は
+   * 扱えず、指定すると地物は描かれずにエラーになる（#570）。
    * @defaultValue `''`
    */
   geojson: string;
@@ -130,7 +131,8 @@ export type EmbedAttributes = {
   style: string;
   /**
    * `data-lang`：ラベルの言語。指定した値はそのまま maps-core に渡る。`'ja'` と
-   * `'ja-jp'` は日本語、`'auto'` はブラウザ言語に従い、それ以外の値は英語になる。
+   * `'ja-jp'` は日本語、`'auto'` と空文字はブラウザ言語に従い、それ以外の値は英語に
+   * なる。比較は大文字と小文字を区別するので、`'ja-JP'` は英語になる。
    * @defaultValue 未指定のときは `getLang()` の結果（`'ja'` または `'en'`）
    */
   lang: string;
