@@ -117,8 +117,8 @@ const isCssSelector = (value: string): Element | false => {
  * a URL string, or the parsed content of the inline element a CSS selector
  * points at. The content is not validated; it must be a FeatureCollection.
  *
- * Any other value is returned unchanged, and maps-core cannot draw it. Throws
- * when the element's content is not valid JSON. See
+ * Any other value is returned unchanged, and maps-core usually cannot draw it.
+ * Throws when the element's content is not valid JSON. See
  * https://github.com/geolonia/embed/issues/570 for what happens with
  * unsupported values.
  */
