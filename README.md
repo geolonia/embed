@@ -121,10 +121,10 @@ The `data-style` attribute accepts:
 
 The `data-lang` attribute controls the language of map labels:
 
-- `ja` — Japanese labels
-- `en` (or any other non-Japanese value) — English labels
-- `auto` — follow the browser language (`navigator.languages`)
-- **omitted** — same as `auto` (follows the browser language)
+- `ja` / `ja-jp`: Japanese labels
+- `en` (or any other non-empty value): English labels
+- `auto`: follow the browser language (`navigator.languages`)
+- **omitted**: same as `auto` (follows the browser language)
 
 Only `ja` / `ja-jp` resolve to Japanese; an empty value follows the browser language, and every other value resolves to English. The match is case-sensitive, so `ja-JP` resolves to English. Values other than `ja`, `en`, `auto` and an empty value also disable the gesture handling control ([#571](https://github.com/geolonia/embed/issues/571)).
 
@@ -174,13 +174,13 @@ Then you can see `http://localhost:3000/`.
 ## Dependency updates
 
 Dependencies are updated by Dependabot, configured in `.github/dependabot.yml`. Minor and patch
-updates arrive as one grouped weekly PR. Major version updates are ignored for now — there is a
-backlog of them and each needs its own plan — but security updates still arrive for any version,
+updates arrive as one grouped weekly PR. Major version updates are ignored for now: there is a
+backlog of them and each needs its own plan: but security updates still arrive for any version,
 major included, because an `ignore` on `version-update:semver-major` only scopes version updates.
 
 `pnpm-workspace.yaml` sets `pmOnFail: ignore`, and that line is load-bearing: without it pnpm 12
 writes `pnpm-lock.yaml` as two YAML documents, GitHub's dependency-graph parser reads only the
-first one (which holds nothing but pnpm itself), and no npm package ever reaches the graph — so no
+first one (which holds nothing but pnpm itself), and no npm package ever reaches the graph: so no
 Dependabot alert is raised. See `pnpm-workspace.yaml` and
 [dependabot-core#15904](https://github.com/dependabot/dependabot-core/issues/15904). Keep the
 lockfile a single YAML document.

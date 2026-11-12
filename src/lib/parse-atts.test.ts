@@ -319,8 +319,8 @@ describe('attsToOptions のデータ駆動の描き方', () => {
 
 // data-lang の言語解決 (embed#462 / maps-core#50)。
 // 正しい契約 (maps-core#50 のテストが基準):
-//   - `ja` / `ja-jp` のみ日本語スタイル、それ以外は英語スタイル
-//   - `auto` はブラウザ言語に追従
+//   - `ja` / `ja-jp` のみ日本語スタイル、それ以外は英語スタイル (大文字と小文字を区別する)
+//   - `auto` と空文字はブラウザ言語に追従
 // embed の責務: `data-lang` を options.lang へ転送する (最終的な ja/en 判定は
 // maps-core の getStyle が担う)。未指定時のみ embed が getLang() で具体値に解決する。
 describe('data-lang 言語解決', () => {
@@ -383,6 +383,8 @@ describe('data-lang 言語解決', () => {
     expect(optionsFor('fr', ['ja']).lang).toBe('fr');
   });
 
+  // embed が生の値を転送することは直前のテストで見ている。ここでは転送先の
+  // maps-core が大文字を含む値を日本語として扱わないことを確かめる。
   it('大文字を含む data-lang="ja-JP" は英語スタイルになる', () => {
     expect(
       getStyle('geolonia/basic-v2', { lang: 'ja-JP', apiKey: 'KEY' }),
@@ -422,6 +424,17 @@ describe('data-geojson の解決', () => {
     expect(geojsonFor('#points')).toEqual(fc);
   });
 
+  it('. で始まる値は、一致する要素があればセレクタ、無ければそのまま返す', () => {
+    const fc = { type: 'FeatureCollection', features: [] };
+    const el = document.createElement('script');
+    el.type = 'application/json';
+    el.className = 'points';
+    el.textContent = JSON.stringify(fc);
+    document.body.appendChild(el);
+    expect(geojsonFor('.points')).toEqual(fc);
+    expect(geojsonFor('.missing')).toBe('.missing');
+  });
+
   it('インラインの JSON 文字列と ./ の無い相対パスは、そのまま返す', () => {
     const json = '{"type":"FeatureCollection","features":[]}';
     expect(geojsonFor(json)).toBe(json);
@@ -430,6 +443,7 @@ describe('data-geojson の解決', () => {
 
   it('中身が空の要素を指すセレクタは、そのまま返す', () => {
     const el = document.createElement('script');
+    el.type = 'application/json';
     el.id = 'empty';
     document.body.appendChild(el);
     expect(geojsonFor('#empty')).toBe('#empty');
@@ -437,6 +451,7 @@ describe('data-geojson の解決', () => {
 
   it('要素の中身が JSON として読めないときは例外を投げる', () => {
     const el = document.createElement('script');
+    el.type = 'application/json';
     el.id = 'broken';
     el.textContent = '{';
     document.body.appendChild(el);
