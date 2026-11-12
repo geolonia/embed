@@ -376,4 +376,70 @@ describe('data-lang 言語解決', () => {
     expect(optionsFor('auto', ['en']).lang).toBe('auto');
     expect(optionsFor('auto', ['ja']).lang).toBe('auto');
   });
+
+  it('data-lang の明示値は ja / en に解決せず、生の値のまま転送する', () => {
+    expect(optionsFor('', ['ja']).lang).toBe('');
+    expect(optionsFor('ja-JP', ['ja']).lang).toBe('ja-JP');
+    expect(optionsFor('fr', ['ja']).lang).toBe('fr');
+  });
+
+  it('大文字を含む data-lang="ja-JP" は英語スタイルになる', () => {
+    expect(
+      getStyle('geolonia/basic-v2', { lang: 'ja-JP', apiKey: 'KEY' }),
+    ).toContain('/en.json');
+  });
+});
+
+describe('data-geojson の解決', () => {
+  const geojsonFor = (value: string) => {
+    const c = document.createElement('div');
+    c.dataset.geojson = value;
+    return attsToOptions(c, parseAtts(c)).geojson;
+  };
+
+  afterEach(() => {
+    document.body.innerHTML = '';
+  });
+
+  it('URL と相対パスは文字列のまま渡す', () => {
+    for (const value of [
+      'https://example.com/a.geojson',
+      '/a.geojson',
+      './a.geojson',
+      '../a.geojson',
+    ]) {
+      expect(geojsonFor(value)).toBe(value);
+    }
+  });
+
+  it('インライン要素を指すセレクタは中身を FeatureCollection にする', () => {
+    const fc = { type: 'FeatureCollection', features: [] };
+    const el = document.createElement('script');
+    el.type = 'application/json';
+    el.id = 'points';
+    el.textContent = JSON.stringify(fc);
+    document.body.appendChild(el);
+    expect(geojsonFor('#points')).toEqual(fc);
+  });
+
+  it('インラインの JSON 文字列と ./ の無い相対パスは、そのまま返す', () => {
+    const json = '{"type":"FeatureCollection","features":[]}';
+    expect(geojsonFor(json)).toBe(json);
+    expect(geojsonFor('data.geojson')).toBe('data.geojson');
+  });
+
+  it('中身が空の要素を指すセレクタは、そのまま返す', () => {
+    const el = document.createElement('script');
+    el.id = 'empty';
+    document.body.appendChild(el);
+    expect(geojsonFor('#empty')).toBe('#empty');
+  });
+
+  it('要素の中身が JSON として読めないときは例外を投げる', () => {
+    const el = document.createElement('script');
+    el.id = 'broken';
+    el.textContent = '{';
+    document.body.appendChild(el);
+    expect(() => geojsonFor('#broken')).toThrow(SyntaxError);
+  });
 });

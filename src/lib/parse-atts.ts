@@ -118,8 +118,10 @@ const isCssSelector = (value: string): Element | false => {
  * Resolve a `data-geojson` value into what maps-core's SimpleStyle accepts:
  * a URL string, or a parsed FeatureCollection when the value is a CSS selector
  * referencing a non-empty inline element. Any other string (an inline JSON
- * string, a bare relative path such as `data.geojson`) is returned unchanged;
- * SimpleStyle does not accept it, and `addTo()` throws (#570).
+ * string, a bare relative path such as `data.geojson`) is returned unchanged
+ * and SimpleStyle does not draw it; values starting with `.` are fetched by
+ * maps-core as relative URLs. Throws when the referenced element's content is
+ * not valid JSON. See https://github.com/geolonia/embed/issues/570
  */
 const resolveGeojson = (value: string): string | FeatureCollection => {
   const el = isCssSelector(value);
