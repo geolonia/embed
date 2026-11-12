@@ -119,7 +119,7 @@ The `data-style` attribute accepts:
 
 #### data-lang attribute
 
-The `data-lang` attribute controls the language of map labels when `data-style` is a Geolonia style name:
+The `data-lang` attribute controls the language of map labels (when `data-style` is omitted or a Geolonia style name) and of the gesture handling messages:
 
 - `ja` / `ja-jp`: Japanese labels
 - `en` (or any other value except `auto` and an empty value): English labels

@@ -438,6 +438,24 @@ describe('data-geojson の解決', () => {
     expect(geojsonFor('.missing')).toBe('.missing');
   });
 
+  it('何も指さないセレクタは、そのまま返す', () => {
+    expect(geojsonFor('#missing')).toBe('#missing');
+  });
+
+  it('要素の中身は検証せずに解析結果を返す (FeatureCollection 以外も通る)', () => {
+    const feature = {
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [0, 0] },
+      properties: {},
+    };
+    const el = document.createElement('script');
+    el.type = 'application/json';
+    el.id = 'feature';
+    el.textContent = JSON.stringify(feature);
+    document.body.appendChild(el);
+    expect(geojsonFor('#feature')).toEqual(feature);
+  });
+
   it('インラインの JSON 文字列と ./ の無い相対パスは、そのまま返す', () => {
     const json = '{"type":"FeatureCollection","features":[]}';
     expect(geojsonFor(json)).toBe(json);
@@ -452,12 +470,17 @@ describe('data-geojson の解決', () => {
     expect(geojsonFor('#empty')).toBe('#empty');
   });
 
-  it('要素の中身が JSON として読めないときは例外を投げる', () => {
-    const el = document.createElement('script');
-    el.type = 'application/json';
-    el.id = 'broken';
-    el.textContent = '{';
-    document.body.appendChild(el);
-    expect(() => geojsonFor('#broken')).toThrow(SyntaxError);
+  it('要素の中身が JSON として読めないときは例外を投げる (空白だけの中身を含む)', () => {
+    for (const [id, text] of [
+      ['broken', '{'],
+      ['blank', '\n  '],
+    ]) {
+      const el = document.createElement('script');
+      el.type = 'application/json';
+      el.id = id;
+      el.textContent = text;
+      document.body.appendChild(el);
+      expect(() => geojsonFor(`#${id}`)).toThrow(SyntaxError);
+    }
   });
 });
