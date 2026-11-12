@@ -320,7 +320,7 @@ describe('attsToOptions のデータ駆動の描き方', () => {
 // data-lang の言語解決 (embed#462 / maps-core#50)。
 // 正しい契約 (maps-core#50 のテストが基準):
 //   - `ja` / `ja-jp` のみ日本語スタイル、それ以外は英語スタイル (大文字と小文字を区別する)
-//   - `auto` と空文字はブラウザ言語に追従
+//   - `auto` と空文字はブラウザ言語に追従 (解決するのは maps-core の GeoloniaMap のコンストラクタ)
 // embed の責務: `data-lang` を options.lang へ転送する (最終的な ja/en 判定は
 // maps-core の getStyle が担う)。未指定時のみ embed が getLang() で具体値に解決する。
 describe('data-lang 言語解決', () => {

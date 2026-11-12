@@ -127,7 +127,7 @@ The `data-lang` attribute controls the language of map labels (when `data-style`
 - empty value: same as `auto`
 - **omitted**: same as `auto` (follows the browser language)
 
-Only `ja` / `ja-jp` resolve to Japanese; an empty value follows the browser language, and every other value resolves to English. The match is case-sensitive, so `ja-JP` resolves to English. Values other than `ja`, `en`, `auto` and an empty value, including `ja-jp`, also disable the gesture handling control ([#571](https://github.com/geolonia/embed/issues/571)).
+`ja` / `ja-jp` always resolve to Japanese; `auto`, an empty value and an omitted attribute follow the browser language; every other value resolves to English. The match is case-sensitive, so `ja-JP` resolves to English. Values other than `ja`, `en`, `auto` and an empty value, including `ja-jp`, also disable the gesture handling control ([#571](https://github.com/geolonia/embed/issues/571)).
 
 **Important:** when neither `data-lang` nor `lang` is specified, the language follows the browser setting. On a non-Japanese browser this loads the English style (`en.json`). Set it explicitly to force a language:
 

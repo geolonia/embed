@@ -111,8 +111,8 @@ export type EmbedAttributes = {
    * 指す CSS セレクタのいずれか。
    *
    * これ以外の値（インラインの JSON 文字列、`./` を付けない相対パス、何も指さない
-   * セレクタなど）は扱えず、地物は描かれずにエラーになる。対応外の値で起きることの
-   * 詳細は https://github.com/geolonia/embed/issues/570 を参照。
+   * セレクタなど）は扱えず、地物は描かれない（多くの場合はエラーになる）。対応外の
+   * 値で起きることの詳細は https://github.com/geolonia/embed/issues/570 を参照。
    * @defaultValue `''`
    */
   geojson: string;
