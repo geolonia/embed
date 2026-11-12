@@ -1,35 +1,50 @@
 import { test, expect } from '@playwright/test';
-import { TEST_URL, mockGeoloniaTiles, waitForMapLoad, hasMapInstance } from './helper';
+import { BASE_URL, LOAD_TIMEOUT, TEST_URL, mockGeoloniaTiles, waitForMapLoad, hasMapInstance } from './helper';
 
-// embed (wrapper) 固有: checkPermission() による iframe 埋め込み制限。
-// maps-core にこのゲートは無い。
-//
-// 拒否される側 (iframe + API key 無し + 非特例 origin) の E2E 再現は難しいため skip し、
-// ここでは「非 iframe では拒否されず描画される」= 許可側の経路のみを守る。
-test.describe('iframe 許可チェック / checkPermission (wrapper-only)', () => {
-  test('非 iframe では拒否されず地図が描画される (iframe 拒否メッセージが出ない)', async ({ page }) => {
+// 子フレーム用の別オリジン。リクエストは route で dev サーバーへ転送する
+const OTHER_ORIGIN = 'http://embed-iframe.test';
+
+// embed (wrapper) 固有: class="geolonia" の要素は、iframe の中でも API キーの有無に関係なく地図になる。
+test.describe('iframe の中での描画 (wrapper-only)', () => {
+  test('非 iframe で地図が描画される', async ({ page }) => {
+    await mockGeoloniaTiles(page);
+    await page.goto(`${TEST_URL}/basic.html`);
+    await waitForMapLoad(page);
+
+    expect(await hasMapInstance(page, '#map')).toBe(true);
+  });
+
+  test('API キー無しの embed を別オリジンの iframe に入れても地図が描画される', async ({ page }) => {
     const consoleErrors: string[] = [];
     page.on('console', (msg) => {
       if (msg.type() === 'error') consoleErrors.push(msg.text());
     });
 
     await mockGeoloniaTiles(page);
-    await page.goto(`${TEST_URL}/basic.html`);
-    await waitForMapLoad(page);
+    await page.route(`${OTHER_ORIGIN}/**`, async (route) => {
+      const url = route.request().url().replace(OTHER_ORIGIN, BASE_URL);
+      await route.fulfill({ response: await route.fetch({ url }) });
+    });
+    await page.goto(`${TEST_URL}/iframe.html?origin=${encodeURIComponent(OTHER_ORIGIN)}`);
 
-    // 描画されている = checkPermission が許可した
-    expect(await hasMapInstance(page, '#map')).toBe(true);
+    const frame = page.frameLocator('#frame');
+    await expect(frame.locator('#map canvas')).toBeVisible({ timeout: 10000 });
 
-    // iframe 拒否のメッセージは出ていないこと
+    const child = page.frames().find((f) => f.url().endsWith('/e2e/no-api-key.html'));
+    expect(child).toBeDefined();
+    // waitForStyleLoad と同じ条件で、子フレームの地図がスタイルまで読み終えるのを待つ
+    await child!.waitForFunction(
+      () => {
+        const map = (document.querySelector('#map') as any)?.geoloniaMap;
+        return !!(map && map.loaded() && map.isStyleLoaded());
+      },
+      undefined,
+      { timeout: LOAD_TIMEOUT },
+    );
+    expect(new URL(child!.url()).origin).toBe(OTHER_ORIGIN);
+    expect(
+      await child!.evaluate(() => !!(document.querySelector('#map') as any)?.geoloniaMap),
+    ).toBe(true);
     expect(consoleErrors.some((t) => t.includes("can't display our map in iframe"))).toBe(false);
-  });
-
-  // 拒否ケース (iframe + API key 無し → console.error) は E2E では再現が難しい:
-  //  - ローカルでは特例 origin (codepen 等) + referrer を満たせない
-  //  - child frame の console は親フレームから capture しにくい
-  // このゲートは checkPermission() のユニットテスト (window.self/parent/location をモック) で
-  // 検証する方が現実的。E2E では skip する (silent に落とさず明示)。
-  test.skip('iframe + API key 無し → 拒否される (ユニットテストで担保)', async () => {
-    // intentionally skipped — see comment above
   });
 });
