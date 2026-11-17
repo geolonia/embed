@@ -230,6 +230,74 @@ export type EmbedAttributes = {
    */
   circleColors?: string;
   /**
+   * `data-extrusion`：`data-geojson` のポリゴンを、このプロパティの値に応じた高さで
+   * 立体的に描く。色も、`data-extrusion-color` を省略すると同じプロパティで決める。
+   * 地物の simplestyle の `fill` と `data-choropleth` より優先する。立体に見せるには
+   * `data-pitch` も指定する。
+   */
+  extrusion?: string;
+  /**
+   * `data-extrusion-max-height`：`data-extrusion-height-range` の最大値に割り当てる
+   * 高さ（メートル）。`data-extrusion-height-scale` があるときは使わない。数値として
+   * 読めないときは無視する。`data-extrusion` が無いときは無視する。
+   */
+  extrusionMaxHeight?: string;
+  /**
+   * `data-extrusion-height-scale`：値 1 あたりの高さ（メートル）。指定すると高さは
+   * 「値 × この数」になる。数値として読めないときは無視する。`data-extrusion` が
+   * 無いときは無視する。
+   */
+  extrusionHeightScale?: string;
+  /**
+   * `data-extrusion-height-range`：高さ 0 から最大の高さに割り当てる値の範囲。
+   * `"最小,最大"` 形式。省略時や読めないときはデータの値から決める。
+   * `data-extrusion` が無いときは無視する。
+   */
+  extrusionHeightRange?: string;
+  /**
+   * `data-extrusion-color`：色に使うプロパティ名。省略すると `data-extrusion` と同じ
+   * プロパティで色分けする。`data-extrusion` が無いときは無視する。
+   */
+  extrusionColor?: string;
+  /**
+   * `data-extrusion-colors`：色。数値は値の小さい側から順に、カテゴリは出現順に
+   * 割り当てる色をカンマで区切る。`値:色` の組をカンマで区切ると、値ごとの色の
+   * 対応表になる（`data-extrusion-color-range` は使わない）。組の読み方は
+   * `data-circle-colors` と同じ。`data-extrusion` が無いときは無視する。
+   */
+  extrusionColors?: string;
+  /**
+   * `data-extrusion-color-range`：数値の色を割り当てる値の範囲。`"最小,最大"` 形式。
+   * 省略時や読めないときはデータの最小値と最大値を使う。`data-extrusion` が無い
+   * ときは無視する。
+   */
+  extrusionColorRange?: string;
+  /**
+   * `data-mask`：指定した範囲の外側を暗くする。境界の GeoJSON の URL（`http://` か
+   * `https://` で始まるもの、または `/` か `.` で始まるパス）を指定する。それ以外の
+   * 値は maps-core がコンソールにエラーを出して無視する。`data-lat` と `data-lng`、
+   * `data-geojson`、`data-simple-vector` のどれも無いときは、境界の範囲に合わせて
+   * 表示する。
+   */
+  mask?: string;
+  /**
+   * `data-mask-color`：範囲の外側を塗る色。省略すると maps-core の既定値（黒）。
+   * `data-mask` が無いときは無視する。
+   */
+  maskColor?: string;
+  /**
+   * `data-mask-opacity`：範囲の外側を塗る不透明度（0 から 1）。数値として読めない
+   * ときは無視する。0 から 1 の外の値は maps-core がコンソールにエラーを出して
+   * 既定値（0.3）を使う。`data-mask` が無いときは無視する。
+   */
+  maskOpacity?: string;
+  /**
+   * `data-mask-outline`（`'on'` / `'off'`）：境界に線を引く。線は `data-mask-color`
+   * の色で太さ 2 ピクセル。`data-mask` が無いときは無視する。
+   * @defaultValue 未指定のときは引かない
+   */
+  maskOutline?: string;
+  /**
    * `data-projection`：地図の投影。`'globe'` で地球儀、`'mercator'` で平面に
    * する。値は前後の空白を除いて maps-core に渡り、それ以外の値は maps-core が
    * コンソールにエラーを出して無視する。省略したときと空のときは、スタイルの投影（無ければ

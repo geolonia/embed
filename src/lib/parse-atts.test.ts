@@ -719,3 +719,188 @@ describe('attsToOptions の投影と重ねるタイル', () => {
     );
   });
 });
+
+describe('attsToOptions の立体表示とマスク', () => {
+  beforeEach(() => {
+    keyring.reset();
+    keyring.setApiKey('YOUR-API-KEY');
+    keyring.setStage('v1');
+  });
+
+  afterEach(() => {
+    keyring.reset();
+    vi.restoreAllMocks();
+  });
+
+  const toOptions = (dataset: Record<string, string>) => {
+    const container = document.createElement('div');
+    Object.assign(container.dataset, dataset);
+    return attsToOptions(container, parseAtts(container));
+  };
+
+  it('属性が無ければ extrusion と mask を渡さない', () => {
+    const options = toOptions({});
+    expect('extrusion' in options).toBe(false);
+    expect('mask' in options).toBe(false);
+  });
+
+  it('data-extrusion だけならプロパティ名だけを渡す', () => {
+    expect(toOptions({ extrusion: ' population ' }).extrusion).toBe(
+      'population',
+    );
+  });
+
+  it('空の data-extrusion は渡さず、ほかの data-extrusion-* も無視する', () => {
+    const others = {
+      extrusionMaxHeight: '1000',
+      extrusionColor: 'kind',
+      extrusionColors: '#f00,#00f',
+    };
+    expect('extrusion' in toOptions(others)).toBe(false);
+    expect('extrusion' in toOptions({ ...others, extrusion: ' ' })).toBe(false);
+  });
+
+  it('data-extrusion-color だけを足すと、高さと色を別のプロパティにする', () => {
+    expect(
+      toOptions({ extrusion: 'population', extrusionColor: 'kind' }).extrusion,
+    ).toEqual({ height: 'population', color: 'kind' });
+  });
+
+  it('data-extrusion-* をすべて読む', () => {
+    expect(
+      toOptions({
+        extrusion: 'population',
+        extrusionMaxHeight: '5000',
+        extrusionHeightScale: '0.5',
+        extrusionHeightRange: '0,100',
+        extrusionColor: 'density',
+        extrusionColors: '#fff, rgb(255, 0, 0)',
+        extrusionColorRange: '10,20',
+      }).extrusion,
+    ).toEqual({
+      height: {
+        property: 'population',
+        maxHeight: 5000,
+        heightScale: 0.5,
+        range: [0, 100],
+      },
+      color: {
+        property: 'density',
+        colors: ['#fff', 'rgb(255, 0, 0)'],
+        range: [10, 20],
+      },
+    });
+  });
+
+  it('色のプロパティを省略して色を指定すると、高さと同じプロパティで色分けする', () => {
+    expect(
+      toOptions({ extrusion: 'population', extrusionColors: '#fff,#f00' })
+        .extrusion,
+    ).toEqual({
+      height: { property: 'population' },
+      color: { property: 'population', colors: ['#fff', '#f00'] },
+    });
+  });
+
+  it('data-extrusion-colors は値と色の組を対応表として読む', () => {
+    expect(
+      toOptions({
+        extrusion: 'height',
+        extrusionColor: 'kind',
+        extrusionColors: 'house:#3b82f6, shop:#ef4444',
+      }).extrusion,
+    ).toEqual({
+      height: { property: 'height' },
+      color: {
+        property: 'kind',
+        colors: { house: '#3b82f6', shop: '#ef4444' },
+      },
+    });
+  });
+
+  it('読めない数値と範囲は渡さない (0 は数値として渡す)', () => {
+    expect(
+      toOptions({
+        extrusion: 'population',
+        extrusionMaxHeight: 'high',
+        extrusionHeightScale: '0',
+        extrusionHeightRange: '100,0',
+        extrusionColorRange: '1',
+      }).extrusion,
+    ).toEqual({
+      height: { property: 'population', heightScale: 0 },
+      color: { property: 'population' },
+    });
+  });
+
+  it('読めない値しか無ければ、プロパティ名だけを渡す', () => {
+    expect(
+      toOptions({
+        extrusion: 'population',
+        extrusionMaxHeight: '',
+        extrusionHeightRange: 'a,b',
+      }).extrusion,
+    ).toBe('population');
+  });
+
+  it('data-mask だけなら URL だけを渡す', () => {
+    expect(toOptions({ mask: ' https://example.com/area.geojson ' }).mask).toBe(
+      'https://example.com/area.geojson',
+    );
+  });
+
+  it('data-mask-* をすべて読む', () => {
+    expect(
+      toOptions({
+        mask: '/area.geojson',
+        maskColor: '#123456',
+        maskOpacity: '0.5',
+        maskOutline: 'on',
+      }).mask,
+    ).toEqual({
+      geojson: '/area.geojson',
+      color: '#123456',
+      opacity: 0.5,
+      outline: true,
+    });
+  });
+
+  it('data-mask-outline は on のときだけ線を引く (大文字小文字と空白を区別しない)', () => {
+    expect(toOptions({ mask: '/a.geojson', maskOutline: ' ON ' }).mask).toEqual(
+      {
+        geojson: '/a.geojson',
+        outline: true,
+      },
+    );
+    expect(toOptions({ mask: '/a.geojson', maskOutline: 'off' }).mask).toBe(
+      '/a.geojson',
+    );
+    expect(toOptions({ mask: '/a.geojson', maskOutline: '' }).mask).toBe(
+      '/a.geojson',
+    );
+  });
+
+  it('読めない data-mask-opacity と空の data-mask-color は渡さない (0 は渡す)', () => {
+    expect(
+      toOptions({ mask: '/a.geojson', maskOpacity: 'half', maskColor: ' ' })
+        .mask,
+    ).toBe('/a.geojson');
+    expect(toOptions({ mask: '/a.geojson', maskOpacity: '0' }).mask).toEqual({
+      geojson: '/a.geojson',
+      opacity: 0,
+    });
+  });
+
+  it('範囲の外の data-mask-opacity は検査せずに渡す (maps-core がエラーを出して既定値にする)', () => {
+    expect(toOptions({ mask: '/a.geojson', maskOpacity: '2' }).mask).toEqual({
+      geojson: '/a.geojson',
+      opacity: 2,
+    });
+  });
+
+  it('data-mask が無いか空なら、ほかの data-mask-* は無視する', () => {
+    const others = { maskColor: '#000', maskOpacity: '0.5', maskOutline: 'on' };
+    expect('mask' in toOptions(others)).toBe(false);
+    expect('mask' in toOptions({ ...others, mask: '  ' })).toBe(false);
+  });
+});
