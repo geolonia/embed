@@ -196,7 +196,8 @@ const parseColorsOrMap = (
   if (!items.some((item) => lastPairSeparator(item) !== -1)) {
     return items.length > 0 ? items : undefined;
   }
-  // `{}` would turn a `__proto__` value into a prototype change instead of a key.
+  // On `{}`, assigning to `__proto__` goes to the prototype setter (which drops
+  // a string) instead of creating a key, so a `__proto__` value would be lost.
   const map: ColorMap = Object.create(null) as ColorMap;
   let size = 0;
   for (const item of items) {
@@ -205,7 +206,7 @@ const parseColorsOrMap = (
     if (color === '') {
       // eslint-disable-next-line no-console
       console.warn(
-        `[Geolonia] ${attribute}: ignored "${item}", which is not a "value:color" pair.`,
+        `[Geolonia] ${attribute}: ignored "${item}", which is not a "value:color" pair with a color.`,
       );
       continue;
     }
