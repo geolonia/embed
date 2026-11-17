@@ -97,6 +97,40 @@
     ></div>
   </div>
 
+  <div class="example">
+    <h2>data-choropleth-colors（値と色の組）</h2>
+    <div
+      id="choropleth-map"
+      class="geolonia"
+      style="width: 400px; height: 300px;"
+      data-lat="35.05"
+      data-lng="139.1"
+      data-zoom="10"
+      data-marker="off"
+      data-lazy-loading="off"
+      data-geojson="#polygons"
+      data-choropleth="value"
+      data-choropleth-colors="10:#00ff00, 90:rgb(0, 0, 255)"
+    ></div>
+  </div>
+
+  <div class="example">
+    <h2>data-circle-colors（値と色の組）</h2>
+    <div
+      id="circle-map"
+      class="geolonia"
+      style="width: 400px; height: 300px;"
+      data-lat="35.05"
+      data-lng="139.1"
+      data-zoom="10"
+      data-marker="off"
+      data-lazy-loading="off"
+      data-geojson="#points"
+      data-circle-color="category"
+      data-circle-colors="a:#00ff00, b:#0000ff"
+    ></div>
+  </div>
+
   <script src="../embed?geolonia-api-key=YOUR-API-KEY"></script>
 </body>
 </html>

@@ -186,6 +186,8 @@ export type EmbedAttributes = {
   choropleth?: string;
   /**
    * `data-choropleth-colors`：塗り分けの色。値の小さい側から順にカンマで区切る。
+   * `値:色` の組をカンマで区切ると、値ごとの色の対応表になる（`data-choropleth-range`
+   * は使わない）。組の読み方は `data-circle-colors` と同じ。
    * `data-choropleth` が無いときは無視する。
    */
   choroplethColors?: string;
@@ -201,6 +203,7 @@ export type EmbedAttributes = {
   heatmap?: string;
   /**
    * `data-heatmap-colors`：ヒートマップの色。密度の低い側から順にカンマで区切る。
+   * 密度に対する色なので、`値:色` の組（対応表）には対応しない。
    * `data-heatmap` が無いときは無視する。
    */
   heatmapColors?: string;
@@ -210,6 +213,19 @@ export type EmbedAttributes = {
   circleColor?: string;
   /**
    * `data-circle-colors`：`data-circle-color` に使う色をカンマで区切る。
+   * `normal:#3b82f6, danger:#ef4444` のように `値:色` の組をカンマで区切ると、
+   * 値ごとの色の対応表になる。組の読み方は次のとおり。
+   *
+   * - 組が 1 つでもあれば対応表として読む。`:` の無い項目と色が空の組は、
+   *   コンソールに警告を出して無視する。
+   * - 値と色は、括弧の外にある最後の `:` で分ける。値に `:` を含めてよい。
+   * - 項目は括弧の外のカンマで区切る。括弧の中のカンマ（`rgb(0, 0, 0)`）は
+   *   区切りとして扱わないので、括弧は閉じて書く。閉じていない `(` があると、
+   *   それより後ろのカンマと `:` を区切りとして読まない。
+   * - 値と色の前後の空白は除く。同じ値の組が複数あれば後のものを使う。
+   * - 使える組が 1 つも無ければ、指定しなかったときと同じ既定の色になる。
+   * - 対応表にない値の地物の色は、maps-core の `ColorMap` の規則に従う。
+   *
    * `data-circle-size` と `data-circle-color` のどちらも無いときは無視する。
    */
   circleColors?: string;

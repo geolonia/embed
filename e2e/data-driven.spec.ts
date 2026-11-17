@@ -3,6 +3,7 @@ import { TEST_URL, mockGeoloniaTiles, waitForStyleLoad, hasLayer } from './helpe
 
 // embed (wrapper) 固有: data-choropleth / data-heatmap / data-circle-* を読んで
 // maps-core の choropleth / heatmap / circle オプションへ渡す (embed#546)。
+// -colors の値と色の組は ColorMap として渡す (embed#573)。
 // 式がどう描かれるか (option → 描画) は maps-core 側 E2E (maps-core#156) が担保する。
 // ここでは、属性で指定したプロパティ名と色がレイヤーの paint に届き、MapLibre が
 // その式を受け付ける (error イベントもページのエラーも出ない) ことを見る。
@@ -25,6 +26,9 @@ test.describe('data-choropleth / data-heatmap / data-circle-* フォワーディ
     ['#heatmap', 'geolonia-simple-style-heatmap', 'heatmap-color', ['#00ff00', '#0000ff']],
     ['#circle', 'geolonia-simple-style-circle-points', 'circle-radius', ['"weight"']],
     ['#circle', 'geolonia-simple-style-circle-points', 'circle-color', ['"category"', '#00ff00', '#0000ff']],
+    // 値と色の組 (embed#573): 値ごとの match 式になる
+    ['#choropleth-map', 'geolonia-simple-style-polygon', 'fill-color', ['"match"', '"value"', '"10"', '#00ff00', '"90"', 'rgb(0, 0, 255)']],
+    ['#circle-map', 'geolonia-simple-style-circle-points', 'circle-color', ['"match"', '"category"', '"a"', '#00ff00', '"b"', '#0000ff']],
   ] as const) {
     test(`${selector} の ${property} に属性の指定が届く`, async ({ page }) => {
       await waitForStyleLoad(page, selector);
