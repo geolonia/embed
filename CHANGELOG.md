@@ -2,6 +2,26 @@
 
 ## @geolonia/embed
 
+### v6.1.0
+
+同梱する `@geolonia/maps-core` を 0.9.0 に上げ、0.9.0 で追加された機能を `data-*` 属性から使えるようにしました。既存の属性の扱いは変わりません。
+
+- **Feature**: `data-projection="globe"` で、地図を地球儀（globe 投影）で表示できるようにしました（[#580](https://github.com/geolonia/embed/pull/580)）。
+- **Feature**: `data-raster-tiles` で、他の配信元のラスタタイル（ハザードマップ、地理院タイルなど）を地図に 1 枚重ねられるようにしました（[#580](https://github.com/geolonia/embed/pull/580)）。出典は `data-raster-tiles-attribution`、不透明度は `-opacity`、タイルの大きさは `-size`、配信されているズームの範囲は `-min-zoom` と `-max-zoom` で指定します。
+  - **Note**: `data-raster-tiles-attribution` は HTML として表示されます。ページの作者が書いた値だけを入れ、URL のパラメータなど外から受け取った値を入れないでください。
+- **Feature**: `data-choropleth-colors` と `data-circle-colors` に `normal:#3b82f6, danger:#ef4444` のような `値:色` の組を書くと、値ごとの色を指定できるようにしました（[#582](https://github.com/geolonia/embed/pull/582)）。色だけを並べた書き方は、これまでどおり使えます。
+- **Feature**: `data-extrusion` で、`data-geojson` のポリゴンをプロパティの値に応じた高さで立体的に描けるようにしました（[#583](https://github.com/geolonia/embed/pull/583)）。高さは `-max-height`、`-height-scale`、`-height-range`、色は `-color`、`-colors`、`-color-range` で調整します。`-colors` にも `値:色` の組を書けます。立体に見せるには `data-pitch` も指定してください。
+- **Feature**: `data-mask` で、境界の GeoJSON で指定した範囲の外側を暗くできるようにしました（[#583](https://github.com/geolonia/embed/pull/583)）。色は `-color`、不透明度は `-opacity`、境界線は `-outline="on"` で指定します。
+- **Fix**: 地図の読み込みが終わる前に `remove()` した地図のローディング表示が、コンテナに残らないようにしました。あわせて、破棄した地図に `remove()` をもう一度呼んでも、同じコンテナに作り直した地図を壊さないようにしました（maps-core 0.9.0 の修正、[maps-core#173](https://github.com/geolonia/maps-core/pull/173)）。
+- **Docs**: `data-geojson` と `data-lang` の TSDoc と README を、実際の挙動に合わせました（[#569](https://github.com/geolonia/embed/pull/569)）。
+
+#### 6.0.1 から更新する場合
+
+- **`data-projection`、`data-raster-tiles`、`data-extrusion`、`data-mask` とその補助の属性を独自の用途で付けていたページでは、その値が地図の描き方に使われるようになります。**
+  - **対応**: 衝突する場合は属性名を変えてください。
+- **TypeScript で、`@geolonia/embed` が再エクスポートする `GeoloniaMapOptions` の `choropleth` や `circle` の `colors` を読んでいる場合、その型が `string[]` から `string[] | ColorMap` に広がりました**（maps-core 0.9.0）。値を渡す側のコードはそのまま動きます。
+  - **対応**: 値を読む側では、値と色の対応表（`ColorMap`）の場合も扱ってください。
+
 ### v6.0.1
 
 - **Fix**: API キーを付けない embed を別オリジンの iframe の中で読み込んだとき、`class="geolonia"` の要素が地図にならなかった問題を修正しました（[#565](https://github.com/geolonia/embed/pull/565)）。iframe の中かどうかで描画を止める判定を削除しました。API キーを付けない場合に表示できるのは、これまでどおり `data-style` で指定した Geolonia 以外のスタイルです。
