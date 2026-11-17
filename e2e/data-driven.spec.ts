@@ -4,10 +4,10 @@ import { TEST_URL, mockGeoloniaTiles, waitForStyleLoad, hasLayer } from './helpe
 // embed (wrapper) 固有: data-choropleth / data-heatmap / data-circle-* を読んで
 // maps-core の choropleth / heatmap / circle オプションへ渡す (embed#546)。
 // -colors の値と色の組は ColorMap として渡す (embed#573)。data-extrusion-* は extrusion へ渡す (embed#579)。
-// 式がどう描かれるか (option → 描画) は maps-core 側 E2E (maps-core#156) が担保する。
+// 式がどう描かれるか (option → 描画) は maps-core 側のテスト (maps-core#156、extrusion は maps-core#162) が担保する。
 // ここでは、属性で指定したプロパティ名と色がレイヤーの paint に届き、MapLibre が
 // その式を受け付ける (error イベントもページのエラーも出ない) ことを見る。
-test.describe('data-choropleth / data-heatmap / data-circle-* フォワーディング (wrapper-only)', () => {
+test.describe('data-choropleth / data-heatmap / data-circle-* / data-extrusion-* フォワーディング (wrapper-only)', () => {
   let pageErrors: string[];
 
   test.beforeEach(async ({ page }) => {

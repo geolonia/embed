@@ -233,7 +233,7 @@ export type EmbedAttributes = {
    * `data-extrusion`：`data-geojson` のポリゴンを、このプロパティの値に応じた高さで
    * 立体的に描く。色も、`data-extrusion-color` を省略すると同じプロパティで決める。
    * 地物の simplestyle の `fill` と `data-choropleth` より優先する。立体に見せるには
-   * `data-pitch` も指定する。
+   * `data-pitch` も指定する。`data-geojson` が無いときは何も描かない。
    */
   extrusion?: string;
   /**
@@ -275,9 +275,9 @@ export type EmbedAttributes = {
   /**
    * `data-mask`：指定した範囲の外側を暗くする。境界の GeoJSON の URL（`http://` か
    * `https://` で始まるもの、または `/` か `.` で始まるパス）を指定する。それ以外の
-   * 値は maps-core がコンソールにエラーを出して無視する。`data-lat` と `data-lng`、
-   * `data-geojson`、`data-simple-vector` のどれも無いときは、境界の範囲に合わせて
-   * 表示する。
+   * 値は maps-core がコンソールにエラーを出して無視する。中心（`data-lat` と
+   * `data-lng` の両方）、`data-geojson`、`data-simple-vector` のどれも指定して
+   * いないときは、境界の範囲に合わせて表示する。
    */
   mask?: string;
   /**

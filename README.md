@@ -157,6 +157,37 @@ The `data-raster-tiles` attribute overlays raster tiles from another provider (h
 
 **Important:** `data-raster-tiles-attribution` is rendered as HTML in the attribution control. Only put text you wrote yourself there, never a value taken from outside the page such as a URL parameter.
 
+#### data-extrusion attribute
+
+The `data-extrusion` attribute draws the polygons of `data-geojson` in 3D, with a height (and, unless `data-extrusion-color` names another property, a color) from the given property. It has no effect without `data-geojson`.
+
+```html
+<div
+  class="geolonia"
+  data-geojson="https://example.com/areas.geojson"
+  data-extrusion="population"
+  data-extrusion-max-height="3000"
+  data-pitch="60"
+></div>
+```
+
+**Important:** set `data-pitch` as well. With the default pitch of 0 the map is seen from straight above, so the polygons look flat.
+
+#### data-mask attribute
+
+The `data-mask` attribute darkens everything outside an area. Give the URL of a GeoJSON file with the boundary:
+
+```html
+<div
+  class="geolonia"
+  data-mask="https://example.com/city.geojson"
+  data-mask-opacity="0.5"
+  data-mask-outline="on"
+></div>
+```
+
+When the map has no center (`data-lat` and `data-lng`), no `data-geojson` and no `data-simple-vector`, it fits to the boundary.
+
 You can see more examples at [https://geolonia.github.io/embed/](https://geolonia.github.io/embed/).
 
 # Contributing
