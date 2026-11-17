@@ -484,3 +484,124 @@ describe('data-geojson の解決', () => {
     }
   });
 });
+
+describe('attsToOptions の投影と重ねるタイル', () => {
+  beforeEach(() => {
+    keyring.reset();
+    keyring.setApiKey('YOUR-API-KEY');
+    keyring.setStage('v1');
+  });
+
+  afterEach(() => {
+    keyring.reset();
+  });
+
+  const toOptions = (dataset: Record<string, string>) => {
+    const container = document.createElement('div');
+    Object.assign(container.dataset, dataset);
+    return attsToOptions(container, parseAtts(container));
+  };
+
+  it('属性が無ければ projection と rasterTiles を渡さない', () => {
+    const options = toOptions({});
+
+    expect('projection' in options).toBe(false);
+    expect('rasterTiles' in options).toBe(false);
+  });
+
+  it('data-projection の値を前後の空白を除いて渡す', () => {
+    expect(toOptions({ projection: 'globe' }).projection).toBe('globe');
+    expect(toOptions({ projection: ' mercator ' }).projection).toBe('mercator');
+  });
+
+  it('data-projection の値は検査せずに渡す (maps-core がエラーを出して無視する)', () => {
+    expect(toOptions({ projection: 'Globe' }).projection).toBe('Globe');
+  });
+
+  it('空の data-projection は渡さない', () => {
+    expect('projection' in toOptions({ projection: '' })).toBe(false);
+    expect('projection' in toOptions({ projection: '  ' })).toBe(false);
+  });
+
+  it('data-raster-tiles だけなら URL だけを渡す', () => {
+    expect(
+      toOptions({ rasterTiles: 'https://example.com/{z}/{x}/{y}.png' })
+        .rasterTiles,
+    ).toEqual({ url: 'https://example.com/{z}/{x}/{y}.png' });
+  });
+
+  it('data-raster-tiles-* をすべて読む', () => {
+    expect(
+      toOptions({
+        rasterTiles: 'https://example.com/{z}/{x}/{y}.png',
+        rasterTilesAttribution: '<a href="https://example.com/">出典</a>',
+        rasterTilesOpacity: '0.7',
+        rasterTilesSize: '512',
+        rasterTilesMinZoom: '2',
+        rasterTilesMaxZoom: '17',
+      }).rasterTiles,
+    ).toEqual({
+      url: 'https://example.com/{z}/{x}/{y}.png',
+      attribution: '<a href="https://example.com/">出典</a>',
+      opacity: 0.7,
+      tileSize: 512,
+      minZoom: 2,
+      maxZoom: 17,
+    });
+  });
+
+  it('0 は数値として渡す', () => {
+    expect(
+      toOptions({
+        rasterTiles: 'https://example.com/{z}/{x}/{y}.png',
+        rasterTilesOpacity: '0',
+        rasterTilesMinZoom: '0',
+      }).rasterTiles,
+    ).toEqual({
+      url: 'https://example.com/{z}/{x}/{y}.png',
+      opacity: 0,
+      minZoom: 0,
+    });
+  });
+
+  it('数値として読めない値と空の値は渡さない', () => {
+    expect(
+      toOptions({
+        rasterTiles: 'https://example.com/{z}/{x}/{y}.png',
+        rasterTilesAttribution: '  ',
+        rasterTilesOpacity: 'half',
+        rasterTilesSize: '',
+        rasterTilesMinZoom: ' ',
+        rasterTilesMaxZoom: 'Infinity',
+      }).rasterTiles,
+    ).toEqual({ url: 'https://example.com/{z}/{x}/{y}.png' });
+  });
+
+  it('範囲の外の数値は検査せずに渡す (maps-core が範囲内に収める)', () => {
+    expect(
+      toOptions({
+        rasterTiles: 'https://example.com/{z}/{x}/{y}.png',
+        rasterTilesOpacity: '1.5',
+        rasterTilesSize: '-1',
+      }).rasterTiles,
+    ).toEqual({
+      url: 'https://example.com/{z}/{x}/{y}.png',
+      opacity: 1.5,
+      tileSize: -1,
+    });
+  });
+
+  it('data-raster-tiles が無いか空なら、ほかの data-raster-tiles-* は無視する', () => {
+    const others = {
+      rasterTilesAttribution: '出典',
+      rasterTilesOpacity: '0.5',
+      rasterTilesSize: '256',
+      rasterTilesMinZoom: '2',
+      rasterTilesMaxZoom: '17',
+    };
+    expect('rasterTiles' in toOptions(others)).toBe(false);
+    expect('rasterTiles' in toOptions({ ...others, rasterTiles: ' ' })).toBe(
+      false,
+    );
+  });
+});
