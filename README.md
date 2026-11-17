@@ -141,6 +141,22 @@ When using the JavaScript API (`new GeoloniaMap({...})`), pass `lang` in the opt
 const map = new GeoloniaMap({ container: "#map", lang: "ja" });
 ```
 
+#### data-raster-tiles attribute
+
+The `data-raster-tiles` attribute overlays raster tiles from another provider (hazard maps, GSI tiles and so on). Give a URL template that contains `{z}`, `{x}` and `{y}`:
+
+```html
+<div
+  class="geolonia"
+  data-raster-tiles="https://example.com/tiles/{z}/{x}/{y}.png"
+  data-raster-tiles-attribution="Example tiles"
+  data-raster-tiles-opacity="0.7"
+  data-raster-tiles-max-zoom="17"
+></div>
+```
+
+**Important:** `data-raster-tiles-attribution` is rendered as HTML in the attribution control. Only put text you wrote yourself there, never a value taken from outside the page such as a URL parameter.
+
 You can see more examples at [https://geolonia.github.io/embed/](https://geolonia.github.io/embed/).
 
 # Contributing

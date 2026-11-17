@@ -223,8 +223,9 @@ export type EmbedAttributes = {
   /**
    * `data-raster-tiles`：重ねるラスタタイルの URL のテンプレート。`{z}`、`{x}`、
    * `{y}` を含める。スタイルの最初の symbol レイヤ（ラベル）の下に 1 枚重ね、
-   * symbol レイヤが無いスタイルでは一番上に重ねる。含まないときは maps-core が
-   * コンソールに警告を出して重ねない。
+   * symbol レイヤが無いスタイルではスタイルのレイヤの一番上に重ねる。どちらの
+   * 場合も `data-geojson` と `data-simple-vector` のレイヤはその上に描く。含まない
+   * ときは maps-core がコンソールに警告を出して重ねない。
    */
   rasterTiles?: string;
   /**
