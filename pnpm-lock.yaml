@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@geolonia/maps-core':
-        specifier: ^0.8.0
-        version: 0.8.0(maplibre-gl@6.16.0)
+        specifier: ^0.9.0
+        version: 0.9.0(maplibre-gl@6.16.0)
       '@playwright/test':
         specifier: ^1.61.1
         version: 1.64.1
@@ -374,8 +374,8 @@ packages:
     peerDependencies:
       maplibre-gl: '>=2.0.0'
 
-  '@geolonia/maps-core@0.8.0':
-    resolution: {integrity: sha512-20lmWUoSCn7lf7Gh3+DN7xXFPZob0k4Sf9F/3Y+XNkNzjTlfEml+hGJa5gGUm1UHT44+imC/eyg1wv2TYujBBQ==}
+  '@geolonia/maps-core@0.9.0':
+    resolution: {integrity: sha512-FpR3P47lFBlQUahWfBuTaYmWH+BRGlVEhr5afWRznVtSnyOWRp6uMhsQwJNdN3OFi5V6ZEaNz1yVgm9i2+iwdg==}
     peerDependencies:
       maplibre-gl: ^6.0.0
 
@@ -3417,7 +3417,7 @@ snapshots:
     dependencies:
       maplibre-gl: 6.16.0
 
-  '@geolonia/maps-core@0.8.0(maplibre-gl@6.16.0)':
+  '@geolonia/maps-core@0.9.0(maplibre-gl@6.16.0)':
     dependencies:
       '@geolonia/maplibre-gesture-handling': 3.0.0(maplibre-gl@6.16.0)
       '@turf/bbox': 7.4.0
@@ -5886,7 +5886,7 @@ snapshots:
       is-plain-object: 5.1.0
       launder: 1.7.2
       parse-srcset: 1.0.2
-      postcss: 8.5.28
+      postcss: 8.5.32
 
   saxes@6.0.0:
     dependencies:

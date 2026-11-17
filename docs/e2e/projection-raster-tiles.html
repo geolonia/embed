@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../style.css">
+  <meta name="viewport" content="initial-scale=1" />
+  <title>@geolonia/embed - data-projection / data-raster-tiles</title>
+  <script>
+    // 地図ごとに MapLibre の error イベントを記録する（data-driven.html と同じ）。
+    window.__mapErrors = {};
+    document.addEventListener('DOMContentLoaded', function () {
+      window.geolonia.registerPlugin(function (map, target) {
+        window.__mapErrors[target.id] = [];
+        map.on('error', function (e) {
+          var error = e.error || {};
+          window.__mapErrors[target.id].push({
+            message: String(error.message || e),
+            status: error.status,
+            url: error.url,
+          });
+        });
+      });
+    });
+  </script>
+</head>
+<body>
+  <div class="example">
+    <h2>data-projection</h2>
+    <div
+      id="globe"
+      class="geolonia"
+      style="width: 400px; height: 300px;"
+      data-lat="20"
+      data-lng="0"
+      data-zoom="1"
+      data-marker="off"
+      data-lazy-loading="off"
+      data-projection="globe"
+    ></div>
+  </div>
+
+  <div class="example">
+    <h2>data-raster-tiles</h2>
+    <div
+      id="raster"
+      class="geolonia"
+      style="width: 400px; height: 300px;"
+      data-lat="35.68"
+      data-lng="139.76"
+      data-zoom="10"
+      data-marker="off"
+      data-lazy-loading="off"
+      data-raster-tiles="https://raster-tiles.example.com/{z}/{x}/{y}.png"
+      data-raster-tiles-attribution="Raster fixture"
+      data-raster-tiles-opacity="0.5"
+      data-raster-tiles-max-zoom="12"
+    ></div>
+  </div>
+
+  <script src="../embed?geolonia-api-key=YOUR-API-KEY"></script>
+</body>
+</html>

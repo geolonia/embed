@@ -214,6 +214,49 @@ export type EmbedAttributes = {
    */
   circleColors?: string;
   /**
+   * `data-projection`：地図の投影。`'globe'` で地球儀、`'mercator'` で平面に
+   * する。値はそのまま maps-core に渡り、それ以外の値は maps-core がコンソールに
+   * エラーを出して無視する。省略したときと空のときは、スタイルの投影（無ければ
+   * mercator）のまま。
+   */
+  projection?: string;
+  /**
+   * `data-raster-tiles`：重ねるラスタタイルの URL のテンプレート。`{z}`、`{x}`、
+   * `{y}` を含める。スタイルのラベルの下に 1 枚重ねる。含まないときは maps-core が
+   * コンソールに警告を出して重ねない。
+   */
+  rasterTiles?: string;
+  /**
+   * `data-raster-tiles-attribution`：重ねたタイルの出典。地図の出典表示に加わる。
+   * HTML として表示するので、ページの作者が書いた値だけを入れ、URL のパラメータ
+   * など外から受け取った値を入れない。`data-raster-tiles` が無いときは無視する。
+   */
+  rasterTilesAttribution?: string;
+  /**
+   * `data-raster-tiles-opacity`：重ねたタイルの不透明度（0 から 1）。範囲を超える
+   * 値は maps-core が範囲内に収める。数値として読めないときは無視する（maps-core
+   * の既定値 1 になる）。`data-raster-tiles` が無いときは無視する。
+   */
+  rasterTilesOpacity?: string;
+  /**
+   * `data-raster-tiles-size`：タイル 1 枚の大きさ（ピクセル）。数値として読めない
+   * ときは無視する（maps-core の既定値 256 になる）。`data-raster-tiles` が無い
+   * ときは無視する。
+   */
+  rasterTilesSize?: string;
+  /**
+   * `data-raster-tiles-min-zoom`：タイルが配信されている最小ズーム。これより
+   * 小さいズームではタイルを読み込まない。数値として読めないときは無視する。
+   * `data-raster-tiles` が無いときは無視する。
+   */
+  rasterTilesMinZoom?: string;
+  /**
+   * `data-raster-tiles-max-zoom`：タイルが配信されている最大ズーム。これより
+   * 大きいズームでは、このズームのタイルを引き伸ばして表示する。数値として
+   * 読めないときは無視する。`data-raster-tiles` が無いときは無視する。
+   */
+  rasterTilesMaxZoom?: string;
+  /**
    * 追加の `data-*` 属性はそのまま透過される（{@link EmbedPlugin} が利用する
    * プラグイン固有の属性など）。
    */

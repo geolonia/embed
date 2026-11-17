@@ -9,6 +9,7 @@ import {
   type CircleOptions,
   type GeoloniaMapOptions,
   type HeatmapOptions,
+  type RasterTilesOptions,
 } from '@geolonia/maps-core';
 import type { EmbedAttributes } from '../types';
 
@@ -224,6 +225,55 @@ const dataDrivenOptions = (
 };
 
 /**
+ * Read a numeric attribute, or `undefined` when it is empty or not a finite
+ * number. `Number('')` is `0`, so empty strings are checked first.
+ */
+const finiteNumber = (value: unknown): number | undefined => {
+  if (value === undefined || String(value).trim() === '') {
+    return undefined;
+  }
+  const n = Number(value);
+  return Number.isFinite(n) ? n : undefined;
+};
+
+/**
+ * Convert `data-raster-tiles` and its `-attribution` / `-opacity` / `-size` /
+ * `-min-zoom` / `-max-zoom` attributes into maps-core's `rasterTiles` option.
+ * The other attributes only apply when `data-raster-tiles` is present.
+ * Values maps-core would reject (a URL without `{z}`/`{x}`/`{y}`, an opacity
+ * outside 0 to 1) are passed through; maps-core warns about or clamps them.
+ */
+const rasterTilesOption = (
+  atts: EmbedAttributes,
+): RasterTilesOptions | undefined => {
+  const url = String(atts.rasterTiles ?? '').trim();
+  if (!url) {
+    return undefined;
+  }
+  const rasterTiles: RasterTilesOptions = { url };
+  if (atts.rasterTilesAttribution) {
+    rasterTiles.attribution = String(atts.rasterTilesAttribution);
+  }
+  const opacity = finiteNumber(atts.rasterTilesOpacity);
+  if (opacity !== undefined) {
+    rasterTiles.opacity = opacity;
+  }
+  const tileSize = finiteNumber(atts.rasterTilesSize);
+  if (tileSize !== undefined) {
+    rasterTiles.tileSize = tileSize;
+  }
+  const minZoom = finiteNumber(atts.rasterTilesMinZoom);
+  if (minZoom !== undefined) {
+    rasterTiles.minZoom = minZoom;
+  }
+  const maxZoom = finiteNumber(atts.rasterTilesMaxZoom);
+  if (maxZoom !== undefined) {
+    rasterTiles.maxZoom = maxZoom;
+  }
+  return rasterTiles;
+};
+
+/**
  * Convert normalised {@link EmbedAttributes} into a typed `GeoloniaMapOptions`
  * for maps-core's `GeoloniaMap` constructor.
  *
@@ -294,6 +344,16 @@ export const attsToOptions = (
     options.simpleVector = String(atts.simpleVector);
   }
   Object.assign(options, dataDrivenOptions(atts));
+
+  // `globe` / `mercator` 以外の値は maps-core が console.error に出して無視する。
+  const projection = String(atts.projection ?? '').trim();
+  if (projection) {
+    options.projection = projection as GeoloniaMapOptions['projection'];
+  }
+  const rasterTiles = rasterTilesOption(atts);
+  if (rasterTiles) {
+    options.rasterTiles = rasterTiles;
+  }
 
   if (
     atts.minZoom !== '' &&
