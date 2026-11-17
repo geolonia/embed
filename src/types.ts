@@ -215,21 +215,23 @@ export type EmbedAttributes = {
   circleColors?: string;
   /**
    * `data-projection`：地図の投影。`'globe'` で地球儀、`'mercator'` で平面に
-   * する。値はそのまま maps-core に渡り、それ以外の値は maps-core がコンソールに
-   * エラーを出して無視する。省略したときと空のときは、スタイルの投影（無ければ
+   * する。値は前後の空白を除いて maps-core に渡り、それ以外の値は maps-core が
+   * コンソールにエラーを出して無視する。省略したときと空のときは、スタイルの投影（無ければ
    * mercator）のまま。
    */
   projection?: string;
   /**
    * `data-raster-tiles`：重ねるラスタタイルの URL のテンプレート。`{z}`、`{x}`、
-   * `{y}` を含める。スタイルのラベルの下に 1 枚重ねる。含まないときは maps-core が
+   * `{y}` を含める。スタイルの最初の symbol レイヤ（ラベル）の下に 1 枚重ね、
+   * symbol レイヤが無いスタイルでは一番上に重ねる。含まないときは maps-core が
    * コンソールに警告を出して重ねない。
    */
   rasterTiles?: string;
   /**
    * `data-raster-tiles-attribution`：重ねたタイルの出典。地図の出典表示に加わる。
    * HTML として表示するので、ページの作者が書いた値だけを入れ、URL のパラメータ
-   * など外から受け取った値を入れない。`data-raster-tiles` が無いときは無視する。
+   * など外から受け取った値を入れない。空のときと、`data-raster-tiles` が無いときは
+   * 無視する。
    */
   rasterTilesAttribution?: string;
   /**

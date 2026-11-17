@@ -251,8 +251,9 @@ const rasterTilesOption = (
     return undefined;
   }
   const rasterTiles: RasterTilesOptions = { url };
-  if (atts.rasterTilesAttribution) {
-    rasterTiles.attribution = String(atts.rasterTilesAttribution);
+  const attribution = String(atts.rasterTilesAttribution ?? '').trim();
+  if (attribution) {
+    rasterTiles.attribution = attribution;
   }
   const opacity = finiteNumber(atts.rasterTilesOpacity);
   if (opacity !== undefined) {

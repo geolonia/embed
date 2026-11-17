@@ -568,6 +568,7 @@ describe('attsToOptions の投影と重ねるタイル', () => {
     expect(
       toOptions({
         rasterTiles: 'https://example.com/{z}/{x}/{y}.png',
+        rasterTilesAttribution: '  ',
         rasterTilesOpacity: 'half',
         rasterTilesSize: '',
         rasterTilesMinZoom: ' ',
