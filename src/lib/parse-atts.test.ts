@@ -407,6 +407,14 @@ describe('-colors の値と色の組 (ColorMap)', () => {
     expect(warn.mock.calls[1][0]).toContain('b:');
   });
 
+  it('閉じていない ( より後ろのカンマと : は区切りとして読まない', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    // `b(:#00f, c:#0f0` が 1 つの項目になり、括弧の外に : が無いので無視される
+    expect(circleColors('a:#f00, b(:#00f, c:#0f0')).toEqual({ a: '#f00' });
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(warn.mock.calls[0][0]).toContain('b(:#00f, c:#0f0');
+  });
+
   it('使える組が 1 つも無ければ colors を渡さない (既定の色になる)', () => {
     vi.spyOn(console, 'warn').mockImplementation(() => {});
     const options = toOptions({
