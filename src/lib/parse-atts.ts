@@ -8,8 +8,12 @@ import {
   type ChoroplethOptions,
   type CircleOptions,
   type ColorMap,
+  type ExtrusionColorOptions,
+  type ExtrusionHeightOptions,
+  type ExtrusionOptions,
   type GeoloniaMapOptions,
   type HeatmapOptions,
+  type MaskOptions,
   type RasterTilesOptions,
 } from '@geolonia/maps-core';
 import type { EmbedAttributes } from '../types';
@@ -346,6 +350,100 @@ const rasterTilesOption = (
   return rasterTiles;
 };
 
+/** Read a string attribute trimmed, or `undefined` when it is empty. */
+const trimmed = (value: unknown): string | undefined => {
+  const text = String(value ?? '').trim();
+  return text === '' ? undefined : text;
+};
+
+/**
+ * Convert `data-extrusion` and its `-max-height` / `-height-scale` /
+ * `-height-range` / `-color` / `-colors` / `-color-range` attributes into
+ * maps-core's `extrusion` option. The other attributes only apply when
+ * `data-extrusion` is present. Values that cannot be read (not a finite number,
+ * not a `min,max` range) are left out so maps-core uses its defaults.
+ */
+const extrusionOption = (
+  atts: EmbedAttributes,
+): string | ExtrusionOptions | undefined => {
+  const property = trimmed(atts.extrusion);
+  if (!property) {
+    return undefined;
+  }
+
+  const height: ExtrusionHeightOptions = { property };
+  const maxHeight = finiteNumber(atts.extrusionMaxHeight);
+  if (maxHeight !== undefined) {
+    height.maxHeight = maxHeight;
+  }
+  const heightScale = finiteNumber(atts.extrusionHeightScale);
+  if (heightScale !== undefined) {
+    height.heightScale = heightScale;
+  }
+  const heightRange = atts.extrusionHeightRange
+    ? parseRange(String(atts.extrusionHeightRange))
+    : undefined;
+  if (heightRange) {
+    height.range = heightRange;
+  }
+
+  // 色のプロパティを省略すると、maps-core は高さと同じプロパティで色分けする。
+  const color: ExtrusionColorOptions = {
+    property: trimmed(atts.extrusionColor) ?? property,
+  };
+  const colors = atts.extrusionColors
+    ? parseColorsOrMap(String(atts.extrusionColors), 'data-extrusion-colors')
+    : undefined;
+  if (colors) {
+    color.colors = colors;
+  }
+  const colorRange = atts.extrusionColorRange
+    ? parseRange(String(atts.extrusionColorRange))
+    : undefined;
+  if (colorRange) {
+    color.range = colorRange;
+  }
+
+  if (Object.keys(height).length === 1 && Object.keys(color).length === 1) {
+    return color.property === property
+      ? property
+      : { height: property, color: color.property };
+  }
+  return { height, color };
+};
+
+/**
+ * Convert `data-mask` and its `-color` / `-opacity` / `-outline` attributes
+ * into maps-core's `mask` option. The other attributes only apply when
+ * `data-mask` is present. `data-mask` is passed as is (trimmed); maps-core
+ * reports a value that is not a URL with `console.error` and adds no mask.
+ */
+const maskOption = (
+  atts: EmbedAttributes,
+): string | MaskOptions | undefined => {
+  const geojson = trimmed(atts.mask);
+  if (!geojson) {
+    return undefined;
+  }
+  const mask: MaskOptions = { geojson };
+  const color = trimmed(atts.maskColor);
+  if (color) {
+    mask.color = color;
+  }
+  const opacity = finiteNumber(atts.maskOpacity);
+  if (opacity !== undefined) {
+    mask.opacity = opacity;
+  }
+  if (
+    String(atts.maskOutline ?? '')
+      .trim()
+      .toLowerCase() === 'on'
+  ) {
+    mask.outline = true;
+  }
+  return Object.keys(mask).length === 1 ? geojson : mask;
+};
+
 /**
  * Convert normalised {@link EmbedAttributes} into a typed `GeoloniaMapOptions`
  * for maps-core's `GeoloniaMap` constructor.
@@ -426,6 +524,14 @@ export const attsToOptions = (
   const rasterTiles = rasterTilesOption(atts);
   if (rasterTiles) {
     options.rasterTiles = rasterTiles;
+  }
+  const extrusion = extrusionOption(atts);
+  if (extrusion) {
+    options.extrusion = extrusion;
+  }
+  const mask = maskOption(atts);
+  if (mask) {
+    options.mask = mask;
   }
 
   if (
