@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { keyring, getStyle } from '@geolonia/maps-core';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { keyring, getStyle, type ChoroplethOptions } from '@geolonia/maps-core';
 import parseAtts, { attsToOptions } from './parse-atts';
 
 /**
@@ -314,6 +314,112 @@ describe('attsToOptions のデータ駆動の描き方', () => {
 
   it('data-circle-colors だけでは円にしない', () => {
     expect(toOptions({ circleColors: '#f00' }).circle).toBe(undefined);
+  });
+});
+
+describe('-colors の値と色の組 (ColorMap)', () => {
+  beforeEach(() => {
+    keyring.reset();
+    keyring.setApiKey('YOUR-API-KEY');
+    keyring.setStage('v1');
+  });
+
+  afterEach(() => {
+    keyring.reset();
+    vi.restoreAllMocks();
+  });
+
+  const toOptions = (dataset: Record<string, string>) => {
+    const container = document.createElement('div');
+    Object.assign(container.dataset, dataset);
+    return attsToOptions(container, parseAtts(container));
+  };
+  const choroplethColors = (value: string) =>
+    (
+      toOptions({ choropleth: 'status', choroplethColors: value })
+        .choropleth as ChoroplethOptions
+    ).colors;
+  const circleColors = (value: string) =>
+    toOptions({ circleColor: 'status', circleColors: value }).circle?.colors;
+
+  it('値:色 の組を対応表にする (data-choropleth-colors と data-circle-colors)', () => {
+    const value = 'normal:#3b82f6, warning:#eab308, danger:#ef4444';
+    const expected = {
+      normal: '#3b82f6',
+      warning: '#eab308',
+      danger: '#ef4444',
+    };
+    expect(choroplethColors(value)).toEqual(expected);
+    expect(circleColors(value)).toEqual(expected);
+  });
+
+  it('値: の無い色だけなら、いまどおり色の並びにする', () => {
+    expect(circleColors('#f00, rgb(0, 0, 255)')).toEqual([
+      '#f00',
+      'rgb(0, 0, 255)',
+    ]);
+  });
+
+  it('括弧の中のカンマは区切りとして扱わない', () => {
+    expect(circleColors('a:rgb(0, 0, 255), b:hsl(0 100% 50% / 0.5)')).toEqual({
+      a: 'rgb(0, 0, 255)',
+      b: 'hsl(0 100% 50% / 0.5)',
+    });
+  });
+
+  it('値に : を含められる (最後の : で値と色を分ける)', () => {
+    expect(circleColors('10:30:#f00, 12:00:#00f')).toEqual({
+      '10:30': '#f00',
+      '12:00': '#00f',
+    });
+  });
+
+  it('値と色の前後の空白を除き、: の前が空なら空文字の値にする', () => {
+    expect(circleColors(' a : #f00 , : #00f ')).toEqual({
+      a: '#f00',
+      '': '#00f',
+    });
+  });
+
+  it('数字の値は文字列のキーにする', () => {
+    expect(circleColors('1:#f00, 2:#00f')).toEqual({ 1: '#f00', 2: '#00f' });
+  });
+
+  it('同じ値の組が複数あれば後のものを使う', () => {
+    expect(circleColors('a:#f00, a:#00f')).toEqual({ a: '#00f' });
+  });
+
+  it('__proto__ や constructor も値として対応表に入る', () => {
+    const colors = circleColors('__proto__:#f00, constructor:#00f');
+    expect(Object.keys(colors ?? {})).toEqual(['__proto__', 'constructor']);
+    expect(Object.entries(colors ?? {})).toEqual([
+      ['__proto__', '#f00'],
+      ['constructor', '#00f'],
+    ]);
+  });
+
+  it('組と色だけの項目が混ざるときは、組だけを使い、ほかは警告して無視する', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    expect(circleColors('a:#f00, #00f, b:')).toEqual({ a: '#f00' });
+    expect(warn).toHaveBeenCalledTimes(2);
+    expect(warn.mock.calls[0][0]).toContain('data-circle-colors');
+    expect(warn.mock.calls[0][0]).toContain('#00f');
+    expect(warn.mock.calls[1][0]).toContain('b:');
+  });
+
+  it('使える組が 1 つも無ければ colors を渡さない (既定の色になる)', () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const options = toOptions({
+      choropleth: 'status',
+      choroplethColors: 'a:, b:',
+    });
+    expect(options.choropleth).toEqual({ property: 'status' });
+  });
+
+  it('空の項目しか無ければ colors を渡さない', () => {
+    expect(
+      toOptions({ circleColor: 'status', circleColors: ' , ' }).circle,
+    ).toEqual({ color: 'status' });
   });
 });
 

@@ -7,6 +7,7 @@ import {
   keyring,
   type ChoroplethOptions,
   type CircleOptions,
+  type ColorMap,
   type GeoloniaMapOptions,
   type HeatmapOptions,
   type RasterTilesOptions,
@@ -132,25 +133,86 @@ const resolveGeojson = (value: string): string | FeatureCollection => {
 };
 
 /**
- * Split a comma-separated list of CSS colors. Commas inside parentheses
- * (`rgb(0, 0, 0)`) are part of the color, not separators.
+ * Split a comma-separated list. Commas inside parentheses (`rgb(0, 0, 0)`) are
+ * part of the item, not separators. Items are trimmed and empty ones dropped.
  */
-const parseColors = (value: string): string[] => {
-  const colors: string[] = [];
+const splitList = (value: string): string[] => {
+  const items: string[] = [];
   let depth = 0;
   let current = '';
   for (const char of value) {
     if (char === '(') depth++;
     if (char === ')') depth = Math.max(0, depth - 1);
     if (char === ',' && depth === 0) {
-      colors.push(current);
+      items.push(current);
       current = '';
     } else {
       current += char;
     }
   }
-  colors.push(current);
-  return colors.map((c) => c.trim()).filter((c) => c !== '');
+  items.push(current);
+  return items.map((c) => c.trim()).filter((c) => c !== '');
+};
+
+/** Split a comma-separated list of CSS colors (see {@link splitList}). */
+const parseColors = (value: string): string[] => splitList(value);
+
+/**
+ * Index of the last `:` outside parentheses, or -1. CSS colors have no `:`
+ * outside parentheses, so the last one separates the value from the color and
+ * a value may itself contain `:` (`10:30:#ff0000`).
+ */
+const lastPairSeparator = (item: string): number => {
+  let depth = 0;
+  let index = -1;
+  for (let i = 0; i < item.length; i++) {
+    const char = item[i];
+    if (char === '(') depth++;
+    if (char === ')') depth = Math.max(0, depth - 1);
+    if (char === ':' && depth === 0) index = i;
+  }
+  return index;
+};
+
+/**
+ * Read a `-colors` attribute as either a list of colors or a value-to-color
+ * map (maps-core's `ColorMap`).
+ *
+ * - When no item has a `value:color` pair, it is a list of colors, as before.
+ * - When at least one item has a pair, it is a map. Items without a pair and
+ *   pairs with an empty color are ignored with a `console.warn`. The value and
+ *   the color are trimmed, so `: #fff` maps the empty value. A later pair for
+ *   the same value wins.
+ *
+ * Returns `undefined` when nothing usable is left, so maps-core uses its
+ * default colors (an empty map would paint every feature in the fallback
+ * color instead).
+ */
+const parseColorsOrMap = (
+  value: string,
+  attribute: string,
+): string[] | ColorMap | undefined => {
+  const items = splitList(value);
+  if (!items.some((item) => lastPairSeparator(item) !== -1)) {
+    return items.length > 0 ? items : undefined;
+  }
+  // `{}` would turn a `__proto__` value into a prototype change instead of a key.
+  const map: ColorMap = Object.create(null) as ColorMap;
+  let size = 0;
+  for (const item of items) {
+    const index = lastPairSeparator(item);
+    const color = index === -1 ? '' : item.slice(index + 1).trim();
+    if (color === '') {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `[Geolonia] ${attribute}: ignored "${item}", which is not a "value:color" pair.`,
+      );
+      continue;
+    }
+    map[item.slice(0, index).trim()] = color;
+    size++;
+  }
+  return size > 0 ? map : undefined;
 };
 
 /**
@@ -182,8 +244,14 @@ const dataDrivenOptions = (
 
   if (atts.choropleth) {
     const choropleth: ChoroplethOptions = { property: String(atts.choropleth) };
-    if (atts.choroplethColors) {
-      choropleth.colors = parseColors(String(atts.choroplethColors));
+    const colors = atts.choroplethColors
+      ? parseColorsOrMap(
+          String(atts.choroplethColors),
+          'data-choropleth-colors',
+        )
+      : undefined;
+    if (colors) {
+      choropleth.colors = colors;
     }
     const range = atts.choroplethRange
       ? parseRange(String(atts.choroplethRange))
@@ -215,8 +283,11 @@ const dataDrivenOptions = (
     if (atts.circleColor) {
       circle.color = String(atts.circleColor);
     }
-    if (atts.circleColors) {
-      circle.colors = parseColors(String(atts.circleColors));
+    const colors = atts.circleColors
+      ? parseColorsOrMap(String(atts.circleColors), 'data-circle-colors')
+      : undefined;
+    if (colors) {
+      circle.colors = colors;
     }
     options.circle = circle;
   }
