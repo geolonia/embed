@@ -57,6 +57,22 @@
     ></div>
   </div>
 
+  <div class="example">
+    <h2>data-raster-tiles-attribution (HTML は許可リストでサニタイズされる)</h2>
+    <div
+      id="raster-xss"
+      class="geolonia"
+      style="width: 400px; height: 300px;"
+      data-lat="35.68"
+      data-lng="139.76"
+      data-zoom="10"
+      data-marker="off"
+      data-lazy-loading="off"
+      data-raster-tiles="https://raster-tiles.example.com/{z}/{x}/{y}.png"
+      data-raster-tiles-attribution="&lt;a href=&quot;https://example.com/credit&quot; onclick=&quot;window.__xss = 1&quot;&gt;Credit&lt;/a&gt;&lt;svg onload=&quot;window.__xss = 1&quot;&gt;&lt;/svg&gt;&lt;script&gt;window.__xss = 1&lt;/script&gt;"
+    ></div>
+  </div>
+
   <script src="../embed?geolonia-api-key=YOUR-API-KEY"></script>
 </body>
 </html>
