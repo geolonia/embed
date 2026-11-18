@@ -78,6 +78,14 @@ describe('sanitizeAttribution', () => {
     expect(div.textContent).toBe('ab');
   });
 
+  it('doc.body を名前付き要素で隠そうとしても無害化される', () => {
+    const div = render(
+      '<img name="body"><img name="body"><a href="https://a.example" onclick="1">A</a><script>x</script>',
+    );
+    expect(div.querySelector('script')).toBeNull();
+    expect(div.querySelector('a')?.getAttributeNames()).toEqual(['href']);
+  });
+
   it('未閉じの許可されない要素があっても空の文字列で壊れない', () => {
     expect(sanitizeAttribution('').hasChildNodes()).toBe(false);
     expect(() => sanitizeAttribution('<script>')).not.toThrow();

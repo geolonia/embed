@@ -111,6 +111,19 @@ const getElementInternals = (): ElementInternals => {
   return elementInternals;
 };
 
+/**
+ * `<img name="body">` などの名前付き要素が `doc.body` を隠す実装があるため、
+ * body も Document.prototype の getter から読む。
+ */
+const getDocumentBody = (doc: Document): HTMLElement => {
+  const get = (
+    Object.getOwnPropertyDescriptor(Document.prototype, 'body') as {
+      get: () => HTMLElement;
+    }
+  ).get;
+  return get.call(doc);
+};
+
 const isAllowedElement = (element: Element): boolean => {
   const { namespaceURI, localName } = getElementInternals();
   return (
@@ -143,7 +156,7 @@ const removeDisallowedAttributes = (element: Element): void => {
 
 export const sanitizeAttribution = (html: string): DocumentFragment => {
   const doc = new DOMParser().parseFromString(html, 'text/html');
-  const body = doc.body;
+  const body = getDocumentBody(doc);
   const { querySelectorAll, remove } = getElementInternals();
   for (const element of Array.from(
     querySelectorAll.call(body, '*') as NodeListOf<Element>,
