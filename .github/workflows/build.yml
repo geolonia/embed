@@ -97,10 +97,11 @@ jobs:
         env:
           REF_NAME: ${{ github.ref_name }}
         run: |
-          case "$REF_NAME" in
-            v5.*) ;;
-            *) echo "maintenance/v5 only publishes v5.x tags: $REF_NAME" >&2; exit 1 ;;
-          esac
+          # v5 はメンテナンスモードなので、v5.X.Y 形式のタグだけを受け付ける (-pre. などの付いたタグは受け付けない)。
+          if ! printf '%s' "$REF_NAME" | grep -Eq '^v5\.[0-9]+\.[0-9]+$'; then
+            echo "maintenance/v5 only publishes v5.X.Y tags: $REF_NAME" >&2
+            exit 1
+          fi
           PKG_VERSION=$(node -p "require('./package.json').version")
           if [ "${REF_NAME#v}" != "$PKG_VERSION" ]; then
             echo "The tag $REF_NAME does not match package.json version $PKG_VERSION" >&2
@@ -133,15 +134,10 @@ jobs:
       - name: Update npm
         run: npm install -g npm@latest
 
-      # v6 が npm の `latest` / `next` を使っているため、v5 の版はそれらを動かさない別の dist-tag で公開する。
+      # v6 が npm の `latest` を使っているため、v5 の版は `latest` を動かさない別の dist-tag (`latest-5`) で公開する。
       # `--tag` なしの `npm publish` は公開した版を `latest` にしてしまう。
       - name: 'Publish to NPM (latest-5)'
-        if: "!contains(github.ref, '-pre.')"
         run: npm publish --access=public --tag=latest-5
-
-      - name: 'Publish to NPM (next-5)'
-        if: "contains(github.ref, '-pre.')"
-        run: npm publish --access=public --tag=next-5
 
   deploy:
     needs:
