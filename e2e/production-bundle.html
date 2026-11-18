@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../style.css">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>@geolonia/embed - production bundle</title>
+</head>
+<body>
+  <div class="example">
+    <h2>Production bundle</h2>
+    <!--
+      他の fixture が読む ../embed は dev サーバーが生成するバンドルだが、
+      ../embed.js は `pnpm run build` が docs/ へ置く production の出力そのもの。
+      dev サーバーの出力ファイル名は `embed` なので、`embed.js` は静的配信側が返す。
+    -->
+    <div id="map" class="geolonia" style="width:400px;height:300px;" data-lazy-loading="off"></div>
+  </div>
+  <script src="../embed.js?geolonia-api-key=YOUR-API-KEY"></script>
+</body>
+</html>
