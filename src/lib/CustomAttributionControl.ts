@@ -1,4 +1,5 @@
 import { DOM, bindAll } from './maplibre-util';
+import { sanitizeAttribution } from './sanitize-attribution';
 import type { ControlPosition, IControl } from 'maplibre-gl';
 
 /**
@@ -347,7 +348,17 @@ class CustomAttributionControl implements IControl {
     this._attribHTML = attribHTML;
 
     if (attributions.length) {
-      this._innerContainer.innerHTML = attribHTML;
+      // 外部由来の HTML なので、アトリビューションごとに無害化して DOM ノードとして挿入する。
+      const fragment = document.createDocumentFragment();
+      let isFirst = true;
+      for (const attribution of attributions) {
+        const sanitized = sanitizeAttribution(attribution);
+        if (!sanitized.hasChildNodes()) continue;
+        if (!isFirst) fragment.append(' | ');
+        fragment.append(sanitized);
+        isFirst = false;
+      }
+      this._innerContainer.replaceChildren(fragment);
       this._shadowContainer.classList.remove('maplibregl-attrib-empty');
     } else {
       this._shadowContainer.classList.add('maplibregl-attrib-empty');
