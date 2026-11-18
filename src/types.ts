@@ -315,8 +315,9 @@ export type EmbedAttributes = {
   /**
    * `data-raster-tiles-attribution`：重ねたタイルの出典。地図の出典表示に加わる。
    * HTML を書けるが、表示の前に MapLibre 本家と同じ許可リストでサニタイズする
-   * （リンクは `http:`、`https:`、`mailto:` だけ。許可リストにない要素は中身ごと、
-   * `on*` などの属性は属性ごと取り除く）。空のときと、`data-raster-tiles` が無い
+   * （許可リストにない要素は中身ごと、`on*` などの属性は属性ごと取り除く。`href`
+   * と `src` は、`http:`、`https:`、`mailto:` 以外のスキーム（`javascript:` など）
+   * なら属性ごと取り除き、相対 URL は残す）。空のときと、`data-raster-tiles` が無い
    * ときは無視する。
    */
   rasterTilesAttribution?: string;
