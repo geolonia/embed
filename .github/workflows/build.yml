@@ -106,13 +106,24 @@ jobs:
       - name: Update npm
         run: npm install -g npm@latest
 
-      - name: 'Publish to NPM (latest)'
-        if: "!contains(github.ref, '-pre.')"
-        run: npm publish --access=public
+      # v6 が npm の `latest` / `next` を使っているため、v5 の版はそれらを動かさない別の dist-tag で公開する。
+      # `--tag` なしの `npm publish` は公開した版を `latest` にしてしまう。
+      - name: 'Check the tag belongs to v5'
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          case "$REF_NAME" in
+            v5.*) ;;
+            *) echo "maintenance/v5 only publishes v5.x tags: $REF_NAME" >&2; exit 1 ;;
+          esac
 
-      - name: 'Publish to NPM (next)'
+      - name: 'Publish to NPM (latest-5)'
+        if: "!contains(github.ref, '-pre.')"
+        run: npm publish --access=public --tag=latest-5
+
+      - name: 'Publish to NPM (next-5)'
         if: "contains(github.ref, '-pre.')"
-        run: npm publish --access=public --tag=next
+        run: npm publish --access=public --tag=next-5
 
   deploy:
     needs: build
