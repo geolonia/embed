@@ -81,6 +81,32 @@ jobs:
           git commit -m "Deploy" > /dev/null 2>&1
           git push --force origin gh-pages
 
+  check-tag:
+    name: 'Check the tag belongs to v5'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      # maintenance/v5 は v5.x のタグだけを公開・配信する。npm の公開と S3 への配信の両方がこのジョブを待つ。
+      # タグの版が package.json の版と違うまま公開・配信しないことも確かめる。
+      - name: 'Check the tag'
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          case "$REF_NAME" in
+            v5.*) ;;
+            *) echo "maintenance/v5 only publishes v5.x tags: $REF_NAME" >&2; exit 1 ;;
+          esac
+          PKG_VERSION=$(node -p "require('./package.json').version")
+          if [ "${REF_NAME#v}" != "$PKG_VERSION" ]; then
+            echo "The tag $REF_NAME does not match package.json version $PKG_VERSION" >&2
+            exit 1
+          fi
+
   publish:
     name: 'Publish npm package'
     runs-on: ubuntu-latest
@@ -90,6 +116,7 @@ jobs:
     needs:
       - build
       - act-test
+      - check-tag
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
       - uses: actions/checkout@v6
@@ -108,15 +135,6 @@ jobs:
 
       # v6 が npm の `latest` / `next` を使っているため、v5 の版はそれらを動かさない別の dist-tag で公開する。
       # `--tag` なしの `npm publish` は公開した版を `latest` にしてしまう。
-      - name: 'Check the tag belongs to v5'
-        env:
-          REF_NAME: ${{ github.ref_name }}
-        run: |
-          case "$REF_NAME" in
-            v5.*) ;;
-            *) echo "maintenance/v5 only publishes v5.x tags: $REF_NAME" >&2; exit 1 ;;
-          esac
-
       - name: 'Publish to NPM (latest-5)'
         if: "!contains(github.ref, '-pre.')"
         run: npm publish --access=public --tag=latest-5
@@ -126,7 +144,9 @@ jobs:
         run: npm publish --access=public --tag=next-5
 
   deploy:
-    needs: build
+    needs:
+      - build
+      - check-tag
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
 
