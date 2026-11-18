@@ -2,6 +2,17 @@
 
 ## @geolonia/embed
 
+### v6.1.1
+
+セキュリティ修正です。同梱する `@geolonia/maps-core` を 0.9.1 に上げました。v6 系の 6.1.0 以前を使っている場合は、更新をお勧めします（v5 系は 5.2.3 で対応済みです）。
+
+- **Security**: 地図の出典表示が、スタイルや TileJSON の `attribution` と `data-raster-tiles-attribution` の値を、サニタイズせずに HTML として表示していた問題を修正しました（[#591](https://github.com/geolonia/embed/pull/591)、maps-core の修正は [geolonia/maps-core#191](https://github.com/geolonia/maps-core/pull/191)）。細工された HTML が入ると、地図を操作しなくてもスクリプトが実行される場合がありました。外部のスタイル URL を読み込むサイトは特に影響を受けます。0.9.1 以降は、MapLibre 本家と同じ許可リストでサニタイズします。
+  - 許可リストにない要素は中身ごと取り除かれ、`on*` などの属性は属性ごと取り除かれます。`href` と `src` は、`http:`、`https:`、`mailto:` 以外のスキーム（`javascript:` など）なら属性ごと取り除かれ、相対 URL は残ります。
+  - 通常のリンク（`<a href="https://...">`）と、`b`、`i`、`em` などの書式のタグは、これまでどおり表示されます。`style` 属性と、許可リストにない要素（`font`、`table` など）は表示されなくなります。
+  - 6.1.0 の `data-raster-tiles-attribution` の **Note**（HTML として表示されるので外から受け取った値を入れない）のうち、スクリプトが実行される点は、6.1.1 以降では起きません。ただし、許可リストにあるリンクや画像は表示されるため、外から受け取った値をそのまま入れる使い方は、引き続きお勧めしません。
+- **Fix**: 同梱する maps-core 0.9.1 で、新しいスタイルを適用したあとに、重ねたタイル、`data-geojson`、`data-simple-vector`、`data-mask` などの拡張を追加し直す処理が修正されました（[geolonia/maps-core#188](https://github.com/geolonia/maps-core/pull/188)）。
+- **Docs**: `data-raster-tiles-attribution` の README と型の説明を、サニタイズされる挙動に合わせました。
+
 ### v6.1.0
 
 同梱する `@geolonia/maps-core` を 0.9.0 に上げ、0.9.0 で追加された機能を `data-*` 属性から使えるようにしました。既存の属性の扱いは変わりません。
