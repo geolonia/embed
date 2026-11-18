@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { sanitizeAttribution } from './sanitize-attribution';
+import {
+  sanitizeAttribution,
+  buildAttributionFragment,
+} from './sanitize-attribution';
 
 const render = (html: string) => {
   const div = document.createElement('div');
@@ -68,7 +71,7 @@ describe('sanitizeAttribution', () => {
     expect(ng.querySelector('img')?.getAttributeNames()).toEqual([]);
   });
 
-  it('許可されない要素を消しても子のテキストは残す', () => {
+  it('許可されない要素は子ごと消し、前後の許可された内容は残す', () => {
     const div = render(
       '<a href="https://example.com">a</a><script>x</script>b',
     );
@@ -78,5 +81,34 @@ describe('sanitizeAttribution', () => {
   it('未閉じの許可されない要素があっても空の文字列で壊れない', () => {
     expect(sanitizeAttribution('').hasChildNodes()).toBe(false);
     expect(() => sanitizeAttribution('<script>')).not.toThrow();
+  });
+});
+
+describe('buildAttributionFragment', () => {
+  const text = (list: string[]) => {
+    const div = document.createElement('div');
+    div.append(buildAttributionFragment(list));
+    return div.textContent;
+  };
+
+  it('アトリビューションを " | " で区切って並べる', () => {
+    expect(text(['<a href="https://a.example">A</a>', 'B'])).toBe('A | B');
+  });
+
+  it('無害化の結果が空になったものは区切りごと除く', () => {
+    expect(text(['<script>x</script>', 'A', '<script>y</script>', 'B'])).toBe(
+      'A | B',
+    );
+  });
+
+  it('すべて空になれば何も残さない', () => {
+    expect(
+      buildAttributionFragment(['<script>x</script>']).hasChildNodes(),
+    ).toBe(false);
+    expect(buildAttributionFragment([]).hasChildNodes()).toBe(false);
+  });
+
+  it('あるアトリビューションの未閉じの許可外タグが他を消さない', () => {
+    expect(text(['<script>', 'A'])).toBe('A');
   });
 });

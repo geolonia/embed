@@ -158,3 +158,22 @@ export const sanitizeAttribution = (html: string): DocumentFragment => {
   fragment.append(...Array.from(body.childNodes));
   return fragment;
 };
+
+/**
+ * アトリビューションごとに無害化し、中身が空になったものを除いて ` | ` で区切って並べる。
+ * 1 つも残らなければ空の DocumentFragment を返す。
+ */
+export const buildAttributionFragment = (
+  attributions: string[],
+): DocumentFragment => {
+  const fragment = document.createDocumentFragment();
+  let isFirst = true;
+  for (const attribution of attributions) {
+    const sanitized = sanitizeAttribution(attribution);
+    if (!sanitized.hasChildNodes()) continue;
+    if (!isFirst) fragment.append(' | ');
+    fragment.append(sanitized);
+    isFirst = false;
+  }
+  return fragment;
+};
