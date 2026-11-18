@@ -12,7 +12,7 @@ ignoreScripts: true
 # （minimumReleaseAge）から外すパッケージ。自社のパッケージを公開直後に取り込む
 # ときだけ、その版に限って足す。版を指定するので、次の版は再び検査の対象になる。
 minimumReleaseAgeExclude:
-  - '@geolonia/maps-core@0.9.0'
+  - '@geolonia/maps-core@0.9.1'
 
 # pmOnFail: `packageManager` のバージョン不一致チェックをスキップする
 # (pnpm のドキュメント上は旧 `managePackageManagerVersions: false` 相当)。

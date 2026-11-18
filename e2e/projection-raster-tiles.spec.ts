@@ -68,4 +68,16 @@ test.describe('data-projection / data-raster-tiles-* フォワーディング (w
     expect(await mapErrorsOf(page, 'raster')).toEqual([]);
     expect(pageErrors).toEqual([]);
   });
+
+  // maps-core 0.9.1 以降、出典は許可リストでサニタイズしてから表示する (embed#590)。
+  test('data-raster-tiles-attribution の細工された HTML は実行されず、リンクは残る', async ({ page }) => {
+    await waitForStyleLoad(page, '#raster-xss');
+    const attribution = page.locator('#raster-xss .maplibregl-ctrl-attrib-inner');
+    const link = attribution.locator('a[href="https://example.com/credit"]');
+    await expect(link).toHaveText('Credit');
+    await expect(link).not.toHaveAttribute('onclick', /.*/);
+    await expect(attribution.locator('script, svg')).toHaveCount(0);
+    expect(await page.evaluate(() => (window as any).__xss)).toBeUndefined();
+    expect(pageErrors).toEqual([]);
+  });
 });
