@@ -155,7 +155,7 @@ The `data-raster-tiles` attribute overlays raster tiles from another provider (h
 ></div>
 ```
 
-`data-raster-tiles-attribution` is shown in the attribution control. It accepts the same HTML as MapLibre's attribution: links (`http:`, `https:` and `mailto:` only) and basic formatting tags are kept, and everything else (scripts, event handler attributes, other elements together with their content) is removed. This needs `@geolonia/maps-core` 0.9.1 or later, which `@geolonia/embed` 6.1.1 and later include; older versions render the value as HTML without sanitizing it.
+`data-raster-tiles-attribution` is shown in the attribution control. It accepts the same HTML as MapLibre's attribution: links and basic formatting tags are kept, and everything else is removed (scripts, event handler attributes such as `onclick`, and other elements together with their content). A `href` or `src` whose scheme is not `http:`, `https:` or `mailto:` (for example `javascript:`) is removed; relative URLs are kept. This requires `@geolonia/maps-core` 0.9.1 or later: versions of `@geolonia/embed` that bundle an earlier maps-core render the value as HTML without sanitizing it.
 
 #### data-extrusion attribute
 
