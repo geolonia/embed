@@ -23,7 +23,7 @@ Specify `.geolonia` class for target elements.
 <html>
   <body>
     <div class="geolonia" ...></div>
-    <script src="https://cdn.geolonia.com/embed/v5/embed?geolonia-api-key=YOUR-API-KEY"></script>
+    <script src="https://cdn.geolonia.com/embed/v6/embed?geolonia-api-key=YOUR-API-KEY"></script>
   </body>
 </html>
 ```
@@ -35,7 +35,7 @@ Or
 <html>
   <body>
     <div class="geolonia" data-key="YOUR-API-KEY" ...></div>
-    <script src="https://cdn.geolonia.com/embed/v5/embed"></script>
+    <script src="https://cdn.geolonia.com/embed/v6/embed"></script>
   </body>
 </html>
 ```
@@ -94,7 +94,7 @@ You can use external style.json URLs without a Geolonia API key. This is useful 
       data-zoom="14"
       data-style="https://tile.openstreetmap.jp/styles/osm-bright/style.json"
     ></div>
-    <script src="https://cdn.geolonia.com/embed/v5/embed"></script>
+    <script src="https://cdn.geolonia.com/embed/v6/embed"></script>
   </body>
 </html>
 ```
@@ -127,7 +127,7 @@ The `data-lang` attribute controls the language of map labels (when `data-style`
 - empty value: same as `auto`
 - **omitted**: same as `auto` (follows the browser language)
 
-`ja` / `ja-jp` always resolve to Japanese; `auto`, an empty value and an omitted attribute follow the browser language; every other value resolves to English. The match is case-sensitive, so `ja-JP` resolves to English. Values other than `ja`, `en`, `auto` and an empty value, including `ja-jp`, also disable the gesture handling control ([#571](https://github.com/geolonia/embed/issues/571)).
+`ja` / `ja-jp` always resolve to Japanese; `auto`, an empty value and an omitted attribute follow the browser language; every other value resolves to English. The match is case-sensitive, so `ja-JP` resolves to English.
 
 **Important:** when neither `data-lang` nor `lang` is specified, the language follows the browser setting. On a non-Japanese browser this loads the English style (`en.json`). Set it explicitly to force a language:
 
@@ -140,6 +140,20 @@ When using the JavaScript API (`new GeoloniaMap({...})`), pass `lang` in the opt
 ```ts
 const map = new GeoloniaMap({ container: "#map", lang: "ja" });
 ```
+
+#### data-projection attribute
+
+The `data-projection` attribute sets the map projection: `globe` shows the map as a globe, and `mercator` shows it flat.
+
+```html
+<div
+  class="geolonia"
+  data-zoom="2"
+  data-projection="globe"
+></div>
+```
+
+Leading and trailing spaces are removed. Any other value is reported in the console and ignored. When the attribute is omitted or empty, the projection of the style is used (mercator if the style has none).
 
 #### data-raster-tiles attribute
 

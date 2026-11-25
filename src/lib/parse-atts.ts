@@ -69,8 +69,8 @@ export default (
     clusterColor: '#ff0000',
     style: 'geolonia/basic-v2',
     // `data-lang` が指定されていれば、末尾の `...container.dataset` がその生の値で
-    // 上書きし、ja / en への解決は maps-core が行う。この値が残るのは
-    // `data-lang` が未指定のときだけ。
+    // 上書きする (plugin にはこの生の値が渡る)。maps-core へは attsToOptions が
+    // ja / en / auto に正規化して渡す。この値が残るのは `data-lang` が未指定のときだけ。
     lang: getLang(),
     plugin: 'off',
     key: keyring.apiKey,
@@ -119,21 +119,89 @@ const isCssSelector = (value: string): Element | false => {
 };
 
 /**
- * Resolve a `data-geojson` value into what maps-core's SimpleStyle accepts:
- * a URL string, or the parsed content of the inline element a CSS selector
- * points at. The content is not validated; it must be a FeatureCollection.
- *
- * Any other value is returned unchanged, and maps-core usually cannot draw it.
- * Throws when the element's content is not valid JSON. See
- * https://github.com/geolonia/embed/issues/570 for what happens with
- * unsupported values.
+ * Whether maps-core's `isURL` treats the value as a URL (absolute, or relative
+ * starting with `/`, `.` or `..`). Kept in step with maps-core, which does not
+ * export it.
  */
-const resolveGeojson = (value: string): string | FeatureCollection => {
+const isUrlForMapsCore = (value: string): boolean =>
+  /^https?:\/\//.test(value) || /^\//.test(value) || /^\.\.?/.test(value);
+
+/**
+ * Check only the top-level shape. Features without a geometry still reach
+ * maps-core, which logs the failure with `console.error`.
+ */
+const isFeatureCollection = (value: unknown): value is FeatureCollection =>
+  typeof value === 'object' &&
+  value !== null &&
+  (value as { type?: unknown }).type === 'FeatureCollection' &&
+  Array.isArray((value as { features?: unknown }).features);
+
+const warnGeojson = (value: string, reason: string): undefined => {
+  const shown = value.length > 80 ? `${value.slice(0, 80)}...` : value;
+  // eslint-disable-next-line no-console
+  console.warn(`[Geolonia] data-geojson: ignored "${shown}", ${reason}`);
+  return undefined;
+};
+
+/**
+ * Resolve a `data-geojson` value into what maps-core's SimpleStyle accepts:
+ * a URL string, or the FeatureCollection in the inline element a CSS selector
+ * points at.
+ *
+ * Any other value (inline JSON, a relative path without `./`, a selector that
+ * matches nothing, an element whose content is empty, not JSON or not a
+ * FeatureCollection) is ignored with a `console.warn`, so the rest of the map
+ * still works (https://github.com/geolonia/embed/issues/570).
+ */
+const resolveGeojson = (
+  value: string,
+): string | FeatureCollection | undefined => {
   const el = isCssSelector(value);
-  if (el && el.textContent) {
-    return JSON.parse(el.textContent) as FeatureCollection;
+  if (el) {
+    const text = (el.textContent ?? '').trim();
+    if (text === '') {
+      return warnGeojson(value, 'the element it points at is empty.');
+    }
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      return warnGeojson(
+        value,
+        'the content of the element is not valid JSON.',
+      );
+    }
+    if (!isFeatureCollection(parsed)) {
+      return warnGeojson(
+        value,
+        'the content of the element is not a GeoJSON FeatureCollection.',
+      );
+    }
+    return parsed;
   }
-  return value;
+  if (isUrlForMapsCore(value)) {
+    return value;
+  }
+  return warnGeojson(
+    value,
+    'which is neither a URL (https://..., /..., ./... or ../...) nor a CSS selector of an element with a FeatureCollection.',
+  );
+};
+
+/**
+ * Normalise `data-lang` into the `'ja' | 'en' | 'auto'` maps-core accepts.
+ * maps-core passes the value on to the gesture handling control, which only
+ * knows `ja` and `en` (https://github.com/geolonia/embed/issues/571). The
+ * mapping matches maps-core's own style language: `ja` and `ja-jp` are
+ * Japanese, `auto` and an empty value follow the browser, and everything else
+ * (compared case-sensitively) is English.
+ */
+const normalizeLang = (value: unknown): 'ja' | 'en' | 'auto' => {
+  const lang = String(value ?? '');
+  if (lang === '' || lang === 'auto') {
+    return 'auto';
+  }
+  return lang === 'ja' || lang === 'ja-jp' ? 'ja' : 'en';
 };
 
 /**
@@ -459,7 +527,7 @@ export const attsToOptions = (
   const options: GeoloniaMapOptions = {
     container,
     style: String(atts.style),
-    lang: atts.lang as 'ja' | 'en' | 'auto',
+    lang: normalizeLang(atts.lang),
     bearing: parseFloat(String(atts.bearing)) || 0,
     pitch: parseFloat(String(atts.pitch)) || 0,
     zoom: parseFloat(String(atts.zoom)) || 0,
@@ -509,7 +577,10 @@ export const attsToOptions = (
   }
 
   if (atts.geojson) {
-    options.geojson = resolveGeojson(String(atts.geojson));
+    const geojson = resolveGeojson(String(atts.geojson));
+    if (geojson !== undefined) {
+      options.geojson = geojson;
+    }
   }
   if (atts.simpleVector) {
     options.simpleVector = String(atts.simpleVector);
