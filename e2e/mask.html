@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../style.css">
+  <meta name="viewport" content="initial-scale=1" />
+  <title>@geolonia/embed - data-mask</title>
+  <script>
+    // 地図ごとに MapLibre の error イベントを記録する（data-driven.html と同じ）。
+    window.__mapErrors = {};
+    document.addEventListener('DOMContentLoaded', function () {
+      window.geolonia.registerPlugin(function (map, target) {
+        window.__mapErrors[target.id] = [];
+        map.on('error', function (e) {
+          var error = e.error || {};
+          window.__mapErrors[target.id].push({
+            message: String(error.message || e),
+            status: error.status,
+            url: error.url,
+          });
+        });
+      });
+    });
+  </script>
+</head>
+<body>
+  <div class="example">
+    <h2>data-mask</h2>
+    <div
+      id="mask"
+      class="geolonia"
+      style="width: 400px; height: 300px;"
+      data-lat="35.05"
+      data-lng="139.1"
+      data-zoom="10"
+      data-marker="off"
+      data-lazy-loading="off"
+      data-mask="https://mask.example.com/area.geojson"
+      data-mask-color="#123456"
+      data-mask-opacity="0.5"
+      data-mask-outline="on"
+    ></div>
+  </div>
+
+  <script src="../embed?geolonia-api-key=YOUR-API-KEY"></script>
+</body>
+</html>
