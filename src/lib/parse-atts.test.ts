@@ -431,12 +431,13 @@ describe('-colors の値と色の組 (ColorMap)', () => {
   });
 });
 
-// data-lang の言語解決 (embed#462 / maps-core#50)。
-// 正しい契約 (maps-core#50 のテストが基準):
-//   - `ja` / `ja-jp` のみ日本語スタイル、それ以外は英語スタイル (大文字と小文字を区別する)
+// data-lang の言語解決 (embed#462 / maps-core#50 / embed#571)。
+// 契約 (ラベルの言語は maps-core#50 のテストが基準):
+//   - `ja` / `ja-jp` のみ日本語、それ以外は英語 (大文字と小文字を区別する)
 //   - `auto` と空文字はブラウザ言語に追従 (解決するのは maps-core の GeoloniaMap のコンストラクタ)
-// embed の責務: `data-lang` を options.lang へ転送する (最終的な ja/en 判定は
-// maps-core の getStyle が担う)。未指定時のみ embed が getLang() で具体値に解決する。
+// embed の責務: `data-lang` を maps-core の型どおり `ja` / `en` / `auto` に正規化して
+// options.lang へ渡す。maps-core はこの値をジェスチャー制御にも渡し、そこは `ja` と
+// `en` しか扱えないため (embed#571)。未指定時のみ embed が getLang() で具体値に解決する。
 describe('data-lang 言語解決', () => {
   beforeEach(() => {
     keyring.reset();
@@ -473,11 +474,11 @@ describe('data-lang 言語解決', () => {
     ).toContain('/ja.json');
   });
 
-  it('data-lang="ja-jp" は日本語スタイルになる (maps-core#50)', () => {
+  it('data-lang="ja-jp" は ja に正規化して日本語スタイルになる (maps-core#50)', () => {
     const opts = optionsFor('ja-jp', ['en']);
-    expect(opts.lang).toBe('ja-jp');
+    expect(opts.lang).toBe('ja');
     expect(
-      getStyle('geolonia/basic-v2', { lang: 'ja-jp', apiKey: 'KEY' }),
+      getStyle('geolonia/basic-v2', { lang: 'ja', apiKey: 'KEY' }),
     ).toContain('/ja.json');
   });
 
@@ -491,34 +492,68 @@ describe('data-lang 言語解決', () => {
     expect(optionsFor('auto', ['ja']).lang).toBe('auto');
   });
 
-  it('data-lang の明示値は ja / en に解決せず、生の値のまま転送する', () => {
-    expect(optionsFor('', ['ja']).lang).toBe('');
-    expect(optionsFor('ja-JP', ['ja']).lang).toBe('ja-JP');
-    expect(optionsFor('fr', ['ja']).lang).toBe('fr');
+  it('data-lang の空文字は auto として maps-core へ委譲される', () => {
+    expect(optionsFor('', ['ja']).lang).toBe('auto');
   });
 
-  // embed が生の値を転送することは直前のテストで見ている。ここでは転送先の
-  // maps-core が大文字を含む値を日本語として扱わないことを確かめる。
-  it('大文字を含む data-lang="ja-JP" は英語スタイルになる', () => {
-    expect(
-      getStyle('geolonia/basic-v2', { lang: 'ja-JP', apiKey: 'KEY' }),
-    ).toContain('/en.json');
+  // ジェスチャー制御は ja / en 以外の値で例外になり、コントロールが付かない (embed#571)。
+  it('ja / ja-jp / auto / 空文字以外の値は en に正規化する', () => {
+    for (const value of ['fr', 'ja-JP', 'JA', 'AUTO', ' ja ', 'en-US']) {
+      expect(optionsFor(value, ['ja']).lang).toBe('en');
+    }
+  });
+
+  it('正規化後の値は maps-core の lang の型 (ja / en / auto) に収まる', () => {
+    for (const value of ['ja', 'ja-jp', 'en', 'auto', '', 'fr', 'ja-JP']) {
+      expect(['ja', 'en', 'auto']).toContain(optionsFor(value, ['ja']).lang);
+    }
+  });
+
+  it('plugin に渡す EmbedAttributes の lang は生の値のまま', () => {
+    const c = document.createElement('div');
+    c.dataset.lang = 'ja-jp';
+    expect(parseAtts(c).lang).toBe('ja-jp');
   });
 });
 
-// 「そのまま返す」「例外を投げる」のテストは、現状の挙動を固定している。
-// 対応外の値の扱いを変えるときは、これらのテストも書き換える
+// 対応外の値は console.warn を出して無視し、地図のほかのオプションは作る
 // (https://github.com/geolonia/embed/issues/570)。
 describe('data-geojson の解決', () => {
+  let warn: ReturnType<typeof vi.spyOn>;
+
+  beforeEach(() => {
+    warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+  });
+
   const geojsonFor = (value: string) => {
     const c = document.createElement('div');
     c.dataset.geojson = value;
     return attsToOptions(c, parseAtts(c)).geojson;
   };
 
+  const addInline = (
+    attrs: { id?: string; className?: string },
+    text?: string,
+  ) => {
+    const el = document.createElement('script');
+    el.type = 'application/json';
+    if (attrs.id) el.id = attrs.id;
+    if (attrs.className) el.className = attrs.className;
+    if (text !== undefined) el.textContent = text;
+    document.body.appendChild(el);
+  };
+
   afterEach(() => {
     document.body.innerHTML = '';
+    warn.mockRestore();
   });
+
+  const expectIgnored = (value: string) => {
+    warn.mockClear();
+    expect(geojsonFor(value)).toBeUndefined();
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(String(warn.mock.calls[0][0])).toContain('[Geolonia] data-geojson');
+  };
 
   it('URL と相対パスは文字列のまま渡す', () => {
     for (const value of [
@@ -541,61 +576,63 @@ describe('data-geojson の解決', () => {
     expect(geojsonFor('#points')).toEqual(fc);
   });
 
-  it('. で始まる値は、一致する要素があればセレクタ、無ければそのまま返す', () => {
+  // maps-core の isURL は . で始まる値を相対 URL として取得する。
+  it('. で始まる値は、一致する要素があればセレクタ、無ければ相対 URL として返す', () => {
     const fc = { type: 'FeatureCollection', features: [] };
-    const el = document.createElement('script');
-    el.type = 'application/json';
-    el.className = 'points';
-    el.textContent = JSON.stringify(fc);
-    document.body.appendChild(el);
+    addInline({ className: 'points' }, JSON.stringify(fc));
     expect(geojsonFor('.points')).toEqual(fc);
     expect(geojsonFor('.missing')).toBe('.missing');
+    expect(warn).not.toHaveBeenCalled();
   });
 
-  it('何も指さないセレクタは、そのまま返す', () => {
-    expect(geojsonFor('#missing')).toBe('#missing');
+  it('何も指さないセレクタは、警告を出して無視する', () => {
+    expectIgnored('#missing');
   });
 
-  it('要素の中身は検証せずに解析結果を返す (FeatureCollection 以外も通る)', () => {
+  it('要素の中身が FeatureCollection でないときは、警告を出して無視する', () => {
     const feature = {
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [0, 0] },
       properties: {},
     };
-    const el = document.createElement('script');
-    el.type = 'application/json';
-    el.id = 'feature';
-    el.textContent = JSON.stringify(feature);
-    document.body.appendChild(el);
-    expect(geojsonFor('#feature')).toEqual(feature);
+    addInline({ id: 'feature' }, JSON.stringify(feature));
+    addInline({ id: 'nofeatures' }, '{"type":"FeatureCollection"}');
+    addInline({ id: 'null' }, 'null');
+    expectIgnored('#feature');
+    expectIgnored('#nofeatures');
+    expectIgnored('#null');
   });
 
-  it('インラインの JSON 文字列と ./ の無い相対パスは、そのまま返す', () => {
-    const json = '{"type":"FeatureCollection","features":[]}';
-    expect(geojsonFor(json)).toBe(json);
-    expect(geojsonFor('data.geojson')).toBe('data.geojson');
+  it('インラインの JSON 文字列と ./ の無い相対パスは、警告を出して無視する', () => {
+    expectIgnored('{"type":"FeatureCollection","features":[]}');
+    expectIgnored('data.geojson');
   });
 
-  it('中身が空の要素を指すセレクタは、そのまま返す', () => {
-    const el = document.createElement('script');
-    el.type = 'application/json';
-    el.id = 'empty';
-    document.body.appendChild(el);
-    expect(geojsonFor('#empty')).toBe('#empty');
+  it('中身が空の要素を指すセレクタは、警告を出して無視する', () => {
+    addInline({ id: 'empty' });
+    addInline({ className: 'empty' });
+    expectIgnored('#empty');
+    expectIgnored('.empty');
   });
 
-  it('要素の中身が JSON として読めないときは例外を投げる (空白だけの中身を含む)', () => {
-    for (const [id, text] of [
-      ['broken', '{'],
-      ['blank', '\n  '],
-    ]) {
-      const el = document.createElement('script');
-      el.type = 'application/json';
-      el.id = id;
-      el.textContent = text;
-      document.body.appendChild(el);
-      expect(() => geojsonFor(`#${id}`)).toThrow(SyntaxError);
-    }
+  it('要素の中身が JSON として読めないときは、例外を投げずに警告を出して無視する (空白だけの中身を含む)', () => {
+    addInline({ id: 'broken' }, '{');
+    addInline({ id: 'blank' }, '\n  ');
+    expectIgnored('#broken');
+    expectIgnored('#blank');
+  });
+
+  it('対応外の値でも、ほかのオプションは作られる', () => {
+    const c = document.createElement('div');
+    c.dataset.geojson = 'data.geojson';
+    c.dataset.lat = '35';
+    c.dataset.lng = '139';
+    c.dataset['3d'] = 'on';
+    const opts = attsToOptions(c, parseAtts(c));
+    expect(opts.geojson).toBeUndefined();
+    expect('geojson' in opts).toBe(false);
+    expect(opts.center).toEqual([139, 35]);
+    expect(opts['3d']).toBe(true);
   });
 });
 
