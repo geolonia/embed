@@ -622,14 +622,15 @@ describe('data-geojson の解決', () => {
     expectIgnored('#blank');
   });
 
-  it('対応外の値でも、ほかのオプションは作られる', () => {
+  // 変更前は JSON.parse の例外が attsToOptions から漏れ、地図そのものが作られなかった。
+  it('要素の中身が JSON として読めなくても、ほかのオプションは作られる', () => {
+    addInline({ id: 'broken' }, '{');
     const c = document.createElement('div');
-    c.dataset.geojson = 'data.geojson';
+    c.dataset.geojson = '#broken';
     c.dataset.lat = '35';
     c.dataset.lng = '139';
     c.dataset['3d'] = 'on';
     const opts = attsToOptions(c, parseAtts(c));
-    expect(opts.geojson).toBeUndefined();
     expect('geojson' in opts).toBe(false);
     expect(opts.center).toEqual([139, 35]);
     expect(opts['3d']).toBe(true);

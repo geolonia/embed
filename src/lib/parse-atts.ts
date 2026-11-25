@@ -126,6 +126,10 @@ const isCssSelector = (value: string): Element | false => {
 const isUrlForMapsCore = (value: string): boolean =>
   /^https?:\/\//.test(value) || /^\//.test(value) || /^\.\.?/.test(value);
 
+/**
+ * Check only the top-level shape. Features without a geometry still reach
+ * maps-core, which logs the failure with `console.error`.
+ */
 const isFeatureCollection = (value: unknown): value is FeatureCollection =>
   typeof value === 'object' &&
   value !== null &&
